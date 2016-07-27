@@ -7,10 +7,11 @@ settings = configparser.RawConfigParser()
 settings.read('config.ini')
 access_key = settings.get('Amazon', 'AccessKey')
 secret_key = settings.get('Amazon', 'SecretKey')
+bucket = settings.get('Amazon', 'Bucket')
 
 connection = tinys3.Connection(access_key,
                                secret_key,
-                               default_bucket='serenata-de-amor-data',
+                               default_bucket=bucket,
                                endpoint='s3-sa-east-1.amazonaws.com')
 
 date = datetime.datetime.utcnow().isoformat()[:10]
