@@ -1,11 +1,11 @@
 # Serenata de amor
 > Combater a corrupção de forma massiva e eficaz.
 
-*:uk: [English version](README-en.md)*
+*:uk: [Jump to the English version](README-en.md)*
 
 A ideia de automatizar a análise de contas públicas é inédita: engajar a população para treinar nossa plataforma na análise e revisão de contas. Após esse estágio inicial a automatização potencializa análise de dados em volumes inéditos, aumentando a chance de acharmos furos e corruptos.
 
-Em outras palavras, a plataforma de machine learning convida a população a ensinala, aprende com isso, e expande os métodos massivamente. Em paralelo a produção de conteúdo e uma interface amigável para explorar os dados expandirão o acesso a informação. Ao massificarmos a análise do que é feito com dinheiro público e a exposição dessas análises de forma aberta, toda a sociedade terá argumentos para pressionar políticos e exigir que dinheiro desviado seja devolvido aos cofres públicos.
+Em outras palavras, a plataforma de Machine Learning convida a população a ensiná-la, aprende com isso, e expande os métodos massivamente. Em paralelo a produção de conteúdo e uma interface amigável para explorar os dados expandirão o acesso a informação. Ao massificarmos a análise do que é feito com dinheiro público e a exposição dessas análises de forma aberta, toda a sociedade terá argumentos para pressionar políticos e exigir que dinheiro desviado seja devolvido aos cofres públicos.
 
 Em segundo plano esse movimento ajuda a criar uma imagem mais transparente sobre a atuação política de parlamentares, fazendo com que todos tenhamos mais parâmetros na hora de decidir quem leva nosso voto nas próximas eleições.
 
