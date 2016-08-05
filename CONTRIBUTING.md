@@ -8,6 +8,19 @@
 4. Push to the branch to your fork: `$ git push origin my-new-feature`
 5. Create a new _Pull Request_
 
+## Environment
+
+The recommended way of setting your environment up is with [Anaconda](https://www.continuum.io/downloads), a Python distribution with packages useful for Data Science already preinstalled. Download it from the link above and create an "environment" for the project.
+
+```
+$ conda update conda
+$ conda create --name serenata_de_amor python=3
+$ source activate serenata_de_amor
+$ ./setup
+```
+
+The `activate serenata_de_amor` command must be run every time you enter in the project folder to start working.
+
 ## Best practices
 
 In order to avoid tons of conflicts when trying to merge [Jupyter Notebooks](http://jupyter.org), there are some [guidelines we follow](http://www.svds.com/jupyter-notebook-best-practices-for-data-science/).
@@ -31,4 +44,3 @@ The project basically happens in four moments, and contributions are welcomed in
 | **Getting the data** | Once one agrees that a certain _possibility_ is worth it, one might want to start writing code to get the data; this script goes into the src directory. | Technical skills in scrapping data and using APIs. | `src/` and `data/` |
 | **Exploring** | Once data is ready to be used, one might want to start to analyze it. | Here what matters is mostly data science skills. | `develop/` |
 | **Reporting** | Once a relevante finding emerge from the previous stages, this finding might be gathered with similar other findings (e.g. put together explorations on air tickets, car rentals and geolocation under a report on transportation) on a report. | Contributions here requires basic understanding of quantitative methods and also communication skills. | `report/` |
-
