@@ -1,7 +1,7 @@
 # Serenata de amor
 > Fighting corruptions in a massive and effective way
 
-[Jump to the PT-BR version](README.md)*
+[🇧🇷 Ir para versão em Português](README.md)
 
 The idea of automating the analysis of public accounts is unprecedented: engaging the population on training our platform in the analysis and audit. After this initial stage automation enhances data analysis in unseen volumes, increasing the chances of finding mistakes and corruption.
 
