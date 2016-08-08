@@ -12,3 +12,5 @@ for url, filename in zip(dataset_urls, filenames):
     urlretrieve(url, filepath)
     subprocess.call(['unzip', '-o', filepath, '-d', 'data'])
 
+urlretrieve('http://www2.camara.leg.br/transparencia/cota-para-exercicio-da-atividade-parlamentar/explicacoes-sobre-o-formato-dos-arquivos-xml',
+            'data/datasets_format.html')
