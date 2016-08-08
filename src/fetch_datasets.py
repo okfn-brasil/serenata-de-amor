@@ -1,3 +1,4 @@
+import subprocess
 from urllib.request import urlretrieve
 
 dataset_urls = [
@@ -7,4 +8,7 @@ dataset_urls = [
 filenames = map(lambda url: url.split('/')[-1], dataset_urls)
 
 for url, filename in zip(dataset_urls, filenames):
-    urlretrieve(url, 'data/%s' % filename)
+    filepath = 'data/%s' % filename
+    urlretrieve(url, filepath)
+    subprocess.call(['unzip', '-o', filepath, '-d', 'data'])
+
