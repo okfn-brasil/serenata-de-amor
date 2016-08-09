@@ -12056,11 +12056,11 @@ Name: 0, dtype: object</pre>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
         <span class="s1">&#39;ideDocumento&#39;</span><span class="p">:</span> <span class="s1">&#39;document_id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txNomeParlamentar&#39;</span><span class="p">:</span> <span class="s1">&#39;congressman_name&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;ideCadastro&#39;</span><span class="p">:</span> <span class="s1">&#39;congressman_id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;nuCarteiraParlamentar&#39;</span><span class="p">:</span> <span class="s1">&#39;congressman_document&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;txNomeParlamentar&#39;</span><span class="p">:</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ideCadastro&#39;</span><span class="p">:</span> <span class="s1">&#39;congressperson_id&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nuCarteiraParlamentar&#39;</span><span class="p">:</span> <span class="s1">&#39;congressperson_document&#39;</span><span class="p">,</span>
         <span class="s1">&#39;nuLegislatura&#39;</span><span class="p">:</span> <span class="s1">&#39;term&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;sgUF&#39;</span><span class="p">:</span> <span class="s1">&#39;uf&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sgUF&#39;</span><span class="p">:</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span>
         <span class="s1">&#39;sgPartido&#39;</span><span class="p">:</span> <span class="s1">&#39;party&#39;</span><span class="p">,</span>
         <span class="s1">&#39;codLegislatura&#39;</span><span class="p">:</span> <span class="s1">&#39;term_id&#39;</span><span class="p">,</span>
         <span class="s1">&#39;numSubCota&#39;</span><span class="p">:</span> <span class="s1">&#39;subquota_number&#39;</span><span class="p">,</span>
@@ -12079,7 +12079,7 @@ Name: 0, dtype: object</pre>
         <span class="s1">&#39;numAno&#39;</span><span class="p">:</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span>
         <span class="s1">&#39;numParcela&#39;</span><span class="p">:</span> <span class="s1">&#39;installment&#39;</span><span class="p">,</span>
         <span class="s1">&#39;txtPassageiro&#39;</span><span class="p">:</span> <span class="s1">&#39;passenger&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txtTrecho&#39;</span><span class="p">:</span> <span class="s1">&#39;stretch&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;txtTrecho&#39;</span><span class="p">:</span> <span class="s1">&#39;leg_of_the_trip&#39;</span><span class="p">,</span>
         <span class="s1">&#39;numLote&#39;</span><span class="p">:</span> <span class="s1">&#39;batch_number&#39;</span><span class="p">,</span>
         <span class="s1">&#39;numRessarcimento&#39;</span><span class="p">:</span> <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">,</span>
         <span class="s1">&#39;vlrRestituicao&#39;</span><span class="p">:</span> <span class="s1">&#39;reimbursement_value&#39;</span><span class="p">,</span>
@@ -12152,16 +12152,16 @@ Name: 0, dtype: object</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">rename_categories</span><span class="p">([</span>
-        <span class="s1">&#39;Subscription of publications&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Publication subscriptions&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Fuels and lubricants&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Consultancy, research and tecnical work&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Promotion of parliamentary activity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Flight ticket issuance&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Congressman meal&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Lodging, except for congressman from Distrito Federal&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Renting or chartering of aircraft&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Renting or chartering of watercraft&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Renting or chartering of automotive vehicle&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Consultancy, research and technical work&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Publicity of parliamentary activity&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Flight ticket issue&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Congressperson meal&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Lodging, except for congressperson from Distrito Federal&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Aircraft renting or charter of aircraft&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Watercraft renting or charter&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Automotive vehicle renting or charter&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Maintenance of office supporting parliamentary activity&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Participation in course, talk or similar event&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Flight tickets&#39;</span><span class="p">,</span>
@@ -12169,7 +12169,7 @@ Name: 0, dtype: object</pre>
         <span class="s1">&#39;Security service provided by specialized company&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Taxi, toll and parking&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Postal services&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Telephony&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Telecommunication&#39;</span><span class="p">,</span>
     <span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
@@ -12203,11 +12203,11 @@ Name: 0, dtype: object</pre>
     <tr style="text-align: right;">
       <th></th>
       <th>document_id</th>
-      <th>congressman_name</th>
-      <th>congressman_id</th>
-      <th>congressman_document</th>
+      <th>congressperson_name</th>
+      <th>congressperson_id</th>
+      <th>congressperson_document</th>
       <th>term</th>
-      <th>uf</th>
+      <th>state</th>
       <th>party</th>
       <th>term_id</th>
       <th>subquota_number</th>
@@ -12218,7 +12218,7 @@ Name: 0, dtype: object</pre>
       <th>year</th>
       <th>installment</th>
       <th>passenger</th>
-      <th>stretch</th>
+      <th>leg_of_the_trip</th>
       <th>batch_number</th>
       <th>reimbursement_number</th>
       <th>reimbursement_value</th>
@@ -12379,11 +12379,11 @@ Name: 0, dtype: object</pre>
 
 <div class="output_text output_subarea output_execute_result">
 <pre>document_id                                                         5.92874e+06
-congressman_name                                              ABEL MESQUITA JR.
-congressman_id                                                           178957
-congressman_document                                                          1
+congressperson_name                                           ABEL MESQUITA JR.
+congressperson_id                                                        178957
+congressperson_document                                                       1
 term                                                                       2015
-uf                                                                           RR
+state                                                                        RR
 party                                                                       DEM
 term_id                                                                      55
 subquota_number                                                               1
@@ -12402,7 +12402,7 @@ month                                                                         1
 year                                                                       2016
 installment                                                                   0
 passenger                                                                   NaN
-stretch                                                                     NaN
+leg_of_the_trip                                                             NaN
 batch_number                                                            1268870
 reimbursement_number                                                       5369
 reimbursement_value                                                         NaN

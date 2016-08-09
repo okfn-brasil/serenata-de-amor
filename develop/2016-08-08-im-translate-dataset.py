@@ -31,11 +31,11 @@ data.iloc[0]
 
 data.rename(columns={
         'ideDocumento': 'document_id',
-        'txNomeParlamentar': 'congressman_name',
-        'ideCadastro': 'congressman_id',
-        'nuCarteiraParlamentar': 'congressman_document',
+        'txNomeParlamentar': 'congressperson_name',
+        'ideCadastro': 'congressperson_id',
+        'nuCarteiraParlamentar': 'congressperson_document',
         'nuLegislatura': 'term',
-        'sgUF': 'uf',
+        'sgUF': 'state',
         'sgPartido': 'party',
         'codLegislatura': 'term_id',
         'numSubCota': 'subquota_number',
@@ -54,7 +54,7 @@ data.rename(columns={
         'numAno': 'year',
         'numParcela': 'installment',
         'txtPassageiro': 'passenger',
-        'txtTrecho': 'stretch',
+        'txtTrecho': 'leg_of_the_trip',
         'numLote': 'batch_number',
         'numRessarcimento': 'reimbursement_number',
         'vlrRestituicao': 'reimbursement_value',
@@ -73,16 +73,16 @@ data['subquota_description'].cat.categories
 # In[6]:
 
 data['subquota_description'].cat.rename_categories([
-        'Subscription of publications',
+        'Publication subscriptions',
         'Fuels and lubricants',
-        'Consultancy, research and tecnical work',
-        'Promotion of parliamentary activity',
-        'Flight ticket issuance',
-        'Congressman meal',
-        'Lodging, except for congressman from Distrito Federal',
-        'Renting or chartering of aircraft',
-        'Renting or chartering of watercraft',
-        'Renting or chartering of automotive vehicle',
+        'Consultancy, research and technical work',
+        'Publicity of parliamentary activity',
+        'Flight ticket issue',
+        'Congressperson meal',
+        'Lodging, except for congressperson from Distrito Federal',
+        'Aircraft renting or charter of aircraft',
+        'Watercraft renting or charter',
+        'Automotive vehicle renting or charter',
         'Maintenance of office supporting parliamentary activity',
         'Participation in course, talk or similar event',
         'Flight tickets',
@@ -90,7 +90,7 @@ data['subquota_description'].cat.rename_categories([
         'Security service provided by specialized company',
         'Taxi, toll and parking',
         'Postal services',
-        'Telephony',
+        'Telecommunication',
     ], inplace=True)
 
 
