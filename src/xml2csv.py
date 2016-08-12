@@ -29,8 +29,9 @@ with open('data/datasets_format.html', 'rb') as file_handler:
             field_names.append(row.select('td')[0].text.strip())
         except IndexError:
             pass
-    del(parsed)
-    gc.collect()
+
+del(parsed)
+gc.collect()
 
 # read and parse XML source
 output('Reading XML file')
