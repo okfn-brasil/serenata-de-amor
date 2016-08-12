@@ -25,12 +25,13 @@ def download_backup():
     region = settings.get('Amazon', 'Region')
 
     files = ['2016-08-08-AnoAtual.csv',
-             '2016-08-08-AnoAnterior',
+             '2016-08-08-AnoAnterior.csv',
              '2016-08-08-AnosAnteriores.csv',
              '2016-08-08-datasets_format.html']
     for filename in files:
         url = 'https://%s.amazonaws.com/%s/%s' % (region, bucket, filename)
         filepath = 'data/%s' % filename
+        print('Downloading %s' % filename)
         urlretrieve(url, filepath)
 
 
