@@ -12,7 +12,7 @@ HEADERS = (
 EN = (
     {
         'variable': 'congressperson_name',
-        'name': 'Nome Parlamentar',
+        'name': 'Congressperson Name',
         'description': """Nome adotado pelo Parlamentar ao tomar posse do seu
             mandato.  Compõe-se de dois elementos: um prenome e o nome; dois
             nomes; ou dois prenomes, salvo, a juízo do Presidente da Casa
@@ -21,19 +21,19 @@ EN = (
     },
     {
         'variable': 'congressperson_id',
-        'name': 'Identificador Único do Parlamentar',
+        'name': 'Unique Identifier of Congressperson',
         'description': """Número que identifica unicamente um deputado federal
             na CD."""
     },
     {
         'variable': 'congressperson_document',
-        'name': 'úmero da  Carteira Parlamentar',
+        'name': 'Congressperson Document Number',
         'description': """Documento usado para identificar um deputado federal
             na CD. Pode alt """
     },
     {
         'variable': 'term',
-        'name': 'Número da  Legislatura',
+        'name': 'Legislative Period Number',
         'description': """Legislatura: Período de quatro anos coincidente com o
             mandato parlamentar dos Deputados Federais. No contexto da cota
             CEAP, representa o ano base de início da legislatura e é utilizado
@@ -42,14 +42,14 @@ EN = (
     },
     {
         'variable': 'state',
-        'name': 'Sigla da UF',
+        'name': 'State',
         'description': """No contexto da cota CEAP, representa a unidade da
             federação pela qual o deputado foi eleito e é utilizada para
             definir o valor da cota a que o deputado tem."""
     },
     {
         'variable': 'party',
-        'name': 'Sigla do Partido',
+        'name': 'Party',
         'description': """O seu conteúdo representa a sigla de um partido.
             Definição de partido: é uma organização formada por pessoas com
             interesse ou ideologia comuns, que se associam com o fim de assumir
@@ -60,7 +60,7 @@ EN = (
     },
     {
         'variable': 'term_id',
-        'name': 'Código da Legislatura',
+        'name': 'Legislative Period Code',
         'description': """Legislatura: Período de quatro anos coincidente com o
             mandato parlamentar dos Deputados Federais. No contexto da cota
             CEAP, o seu conteúdo representa o código identificador da
@@ -70,7 +70,7 @@ EN = (
     },
     {
         'variable': 'subquota_number',
-        'name': 'Número da Subcota',
+        'name': 'Subquota Number',
         'description': """No contexto da Cota CEAP, o conteúdo deste dado
             representa o código do Tipo de Despesa referente à despesa
             realizada pelo deputado e comprovada por meio da emissão de um
@@ -78,13 +78,13 @@ EN = (
     },
     {
         'variable': 'subquota_description',
-        'name': 'Descrição da Subcota',
+        'name': 'Subquota Description',
         'description': """O seu conteúdo é a descrição do Tipo de Despesa
             relativo à despesa em questão."""
     },
     {
         'variable': 'subquota_group_id',
-        'name': 'Número da Especificação da Subcota',
+        'name': 'Subquota Specification Number',
         'description': """No contexto da Cota CEAP, há despesas cujo Tipo de
             Despesa necessita ter uma especificação mais detalhada (por
             exemplo, “Combustível”). O conteúdo deste dado representa o código
@@ -92,13 +92,13 @@ EN = (
     },
     {
         'variable': 'subquota_group_description',
-        'name': 'Descrição da Especificação da Subcota',
+        'name': 'Subquota Specification Description',
         'description': """Representa a descrição  especificação mais detalhada
             de um referido Tipo de Despesa."""
     },
     {
         'variable': 'supplier',
-        'name': 'Fornecedor',
+        'name': 'Supplier',
         'description': """O conteúdo deste dado representa o nome do
             fornecedor do produto ou serviço presente no documento fiscal"""
     },
@@ -112,28 +112,28 @@ EN = (
     },
     {
         'variable': 'document_number',
-        'name': 'Número do Documento',
+        'name': 'Document Number',
         'description': """O conteúdo deste dado representa o número de face do
             documento fiscal emitido ou o número do documento que deu causa à
             despesa debitada na cota do deputado."""
     },
     {
         'variable': 'document_type',
-        'name': 'Indicativo de Tipo de Documento Fiscal',
+        'name': 'Fiscal Document Type',
         'description': """Este dado representa o tipo de documento do fiscal –
             0 (Zero), para Nota Fiscal; 1 (um), para Recibo; e 2, para Despesa
             no Exterior. """
     },
     {
         'variable': 'issue_date',
-        'name': 'Data de Emissão',
+        'name': 'Issue Date',
         'description': """O conteúdo deste dado é a data de emissão do
             documento fiscal ou a data do documento que tenha dado causa à
             despesa. """
     },
     {
         'variable': 'document_value',
-        'name': 'Valor do Documento',
+        'name': 'Document Value',
         'description': """O seu conteúdo é o valor de face do documento fiscal
             ou o valor do documento que deu causa à despesa. Quando se tratar
             de bilhete aéreo, esse valor poderá ser negativo, significando que
@@ -143,14 +143,14 @@ EN = (
     },
     {
         'variable': 'remark_value',
-        'name': 'Valor da Glosa',
+        'name': 'Remark Value',
         'description': """O seu conteúdo representa o valor da glosa do
             documento fiscal que incidirá sobre o Valor do Documento, ou o
             valor da glosa do documento que deu causa à despesa. """
     },
     {
         'variable': 'net_value',
-        'name': 'Valor Líquido',
+        'name': 'Net Value',
         'description': """O seu conteúdo representa o valor líquido do
             documento fiscal ou do documento que deu causa à despesa e será
             calculado pela diferença entre o Valor do Documento e o Valor da
@@ -160,7 +160,7 @@ EN = (
     },
     {
         'variable': 'month',
-        'name': 'Mês',
+        'name': 'Month',
         'description': """O seu conteúdo representa o Mês da competência
             financeira do documento fiscal ou do documento que deu causa à
             despesa. É utilizado, junto com o ano, para determinar em que
@@ -168,7 +168,7 @@ EN = (
     },
     {
         'variable': 'year',
-        'name': 'Ano',
+        'name': 'Year',
         'description': """O seu conteúdo representa o Ano da competência
             financeira do documento fiscal ou do documento que deu causa à
             despesa. É utilizado, junto com o mês, para determinar em que
@@ -176,28 +176,28 @@ EN = (
     },
     {
         'variable': 'installment',
-        'name': 'Número da Parcela',
+        'name': 'Installment Number',
         'description': """O seu conteúdo representa o número da parcela do
             documento fiscal. Ocorre quando o documento tem de ser reembolsado
             de forma parcelada. """
     },
     {
         'variable': 'passenger',
-        'name': 'Passageiro',
+        'name': 'Passenger',
         'description': """O conteúdo deste dado representa o nome do passageiro
             , quando o documento que deu causa à despesa se tratar de emissão
             de bilhete aéreo. """
     },
     {
         'variable': 'leg_of_the_trip',
-        'name': 'Trecho',
+        'name': 'Leg of the Trip',
         'description': """O conteúdo deste dado representa o trecho da viagem,
             quando o documento que deu causa à despesa se tratar de emissão de
             bilhete aéreo. """
     },
     {
         'variable': 'batch_number',
-        'name': 'Número do Lote',
+        'name': 'Batch Number',
         'description': """No contexto da Cota CEAP, o Número do Lote
             representa uma capa de lote que agrupa os documentos que serão
             entregues à Câmara para serem ressarcidos. Este dado, juntamente
@@ -206,7 +206,7 @@ EN = (
     },
     {
         'variable': 'reimbursement_number',
-        'name': 'Número do Ressarcimento',
+        'name': 'Reimbursement Number',
         'description': """No contexto da Cota CEAP, o Número do Ressarcimento
             indica o ressarcimento do qual o documento fez parte por ocasião
             do processamento do seu reembolso. Este dado, juntamente com o
@@ -215,13 +215,13 @@ EN = (
     },
     {
         'variable': 'reimbursement_value',
-        'name': 'Valor da Restituição',
+        'name': 'Reimbursement Value',
         'description': """O seu conteúdo representa o valor restituído do
             documento fiscal que incidirá sobre o Valor do Documento. """
     },
     {
         'variable': 'applicant_id',
-        'name': 'Identificador do Solicitante',
+        'name': 'Applicant Identifier',
         'description': """Número que identifica um Parlamentar ou Liderança na
             Transparência da Cota para Exercício da Atividade Parlamentar. """
     }
