@@ -1,3 +1,4 @@
-data
-config.ini
+.ipynb_checkpoints
 .python-version
+config.ini
+data

@@ -1,9 +1,16 @@
 #!/usr/bin/env python
 
-from shutil import copyfile
 import pip
+from shutil import copyfile, which
+import subprocess
 
 copyfile('config.ini.example', 'config.ini')
-print('Edit config.ini according to your profile')
 
 pip.main(['install', '-r', 'requirements.txt'])
+subprocess.call(['conda', 'install', '--file', 'conda_requirements.txt'])
+
+if which('unzip') == None:
+    print('The following executables are needed and were not found: unzip')
+
+print('Downloading datasets (this might take several minutes depending on your internet connection)')
+subprocess.call(['python', 'src/fetch_datasets.py'])

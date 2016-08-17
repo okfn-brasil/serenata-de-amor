@@ -2,3 +2,4 @@
 AccessKey: YOUR_ACCESS_KEY
 SecretKey: YOUR_SECRET_KEY
 Bucket: serenata-de-amor-data
+Region: s3-sa-east-1

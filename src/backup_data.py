@@ -8,11 +8,12 @@ settings.read('config.ini')
 access_key = settings.get('Amazon', 'AccessKey')
 secret_key = settings.get('Amazon', 'SecretKey')
 bucket = settings.get('Amazon', 'Bucket')
+region = settings.get('Amazon', 'Region')
 
 connection = tinys3.Connection(access_key,
                                secret_key,
                                default_bucket=bucket,
-                               endpoint='s3-sa-east-1.amazonaws.com')
+                               endpoint='%s.amazonaws.com' % region)
 
 date = datetime.datetime.utcnow().isoformat()[:10]
 files = [name for name in os.listdir('data') if not name.startswith('.')]
