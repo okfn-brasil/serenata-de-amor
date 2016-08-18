@@ -6,8 +6,8 @@ import subprocess
 
 copyfile('config.ini.example', 'config.ini')
 
-pip.main(['install', '-r', 'requirements.txt'])
-subprocess.call(['conda', 'install', '--file', 'conda_requirements.txt'])
+pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
+subprocess.call(['conda', 'install', '--yes', '--file', 'conda_requirements.txt'])
 
 if which('unzip') == None:
     print('The following executables are needed and were not found: unzip')
