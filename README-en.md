@@ -9,6 +9,15 @@ In other words, the Machine Learning platform invites people to teach it, learn 
 
 In the background this movement helps to create a more clear perspective about the political activity of the parliament, making everyone of us have a better idea on deciding who to vote in the next election.
 
+## Support the project with money
+
+Unlike the politicians we investigate, we don't get fortunes in a daily basis. But maintaining infrastructure and a team working on the project costs money. Want to contribute?
+
+[Bitcoin Wallet](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor)
+```
+1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV
+```
+
 ## Public Data Lists and Strategies for Mass Collection
 
 ### Data scraping
