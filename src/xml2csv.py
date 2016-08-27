@@ -1,90 +1,81 @@
-import csv
-import gc
 import json
-import os
 import sys
+from csv import DictWriter
 from datetime import datetime
-from tempfile import TemporaryDirectory
+from io import StringIO
 
-import numpy as np
 from bs4 import BeautifulSoup
+from lxml.etree import iterparse
 
 XML_FILE_PATH = sys.argv[1]
 CSV_FILE_PATH = sys.argv[2]
-
-field_names = ['ideDocumento']
-tmp_files = []
+HTML_FILE_PATH = 'data/datasets_format.html'
 
 
-def output(msg, **kwargs):
+def output(*args, **kwargs):
+    """Helper to print messages with a date/time marker"""
     now = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
-    return print(now, msg, **kwargs)
+    return print(now, *args, **kwargs)
 
-# get extra field names
-output('Fetching CSV headers')
-with open('data/datasets_format.html', 'rb') as file_handler:
-    parsed = BeautifulSoup(file_handler.read(), 'lxml')
-    for row in parsed.select('.tabela-2 tr'):
-        try:
-            field_names.append(row.select('td')[0].text.strip())
-        except IndexError:
-            pass
 
-del(parsed)
-gc.collect()
+def xml_parser(xml_path, tag='DESPESA'):
+    """
+    Generator that parses the XML yielding a StringIO object for each record
+    found. The StringIO holds the data in JSON format.
+    """
+    for event, element in iterparse(xml_path, tag=tag):
 
-# read and parse XML source
-output('Reading XML file')
-xml_data = np.fromfile(XML_FILE_PATH, dtype=np.uint8, count=-1)
-output('Parsing XML contents (this might take several minutes)')
-xml_soup = BeautifulSoup(xml_data.tobytes(), 'lxml-xml')
-records = xml_soup.find_all('DESPESA')
+        # get data
+        fields = {c.tag: c.text for c in element.iter() if c.tag != tag}
+        element.clear()
 
-with TemporaryDirectory() as tmp_dir:
+        # export in JSON format
+        yield StringIO(json.dumps(fields))
 
-    # create tmp files with data (avoid requiring large amounts of RAM)
-    output('Saving XML data to a temporary directory')
-    for index, record in enumerate(records):
 
-        # print status
-        total = len(records)
-        count = index + 1
-        status = 'Saving record {:,} of {:,}'.format(count, total)
-        output(status, end='\r')
+def csv_header(html_path):
+    """
+    Generator that yields the CSV headers reading them from a HTML file (e.g.
+    datasets_format.html).
+    """
+    yield 'ideDocumento'  # this field is missing from the reference
+    with open(html_path, 'rb') as file_handler:
+        parsed = BeautifulSoup(file_handler.read(), 'lxml')
+        for row in parsed.select('.tabela-2 tr'):
+            try:
+                yield row.select('td')[0].text.strip()
+            except IndexError:
+                pass
 
-        # save contents to a tmp file and add file to the list of tmp files
-        attributes = {attr.name: attr.string for attr in record.contents}
-        tmp_path = os.path.join(tmp_dir, str(index) + '.json')
-        with open(tmp_path, 'w') as file_handler:
-            file_handler.write(json.dumps(attributes))
-        tmp_files.append(tmp_path)
 
-        if count == total:
-            output('Cleaning up (this might take several minutes)')
-
-    # free some memory
-    del(records)
-    del(xml_soup)
-    gc.collect()
-
-    # write contents to CSV
-    output('Writing data to CSV file')
-    with open(CSV_FILE_PATH, 'w') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=field_names)
+def create_csv(csv_path, headers):
+    """Creates the CSV file with the headers (must be a list)"""
+    with open(csv_path, 'w') as csv_file:
+        writer = DictWriter(csv_file, fieldnames=headers)
         writer.writeheader()
-        for index, tmp_path in enumerate(tmp_files):
 
-            # print status
-            total = len(tmp_files)
-            count = index + 1
-            status = 'Writing record {:,} of {:,}'.format(count, total)
-            output(status, end='\r')
 
-            # write to CSV (and delete temp file)
-            with open(tmp_path, 'r') as file_handler:
-                writer.writerow(json.loads(file_handler.read()))
+output('Creating the CSV file')
+headers = list(csv_header(HTML_FILE_PATH))
+create_csv(CSV_FILE_PATH, headers)
 
-            if count == total:
-                output('Cleaning up (this might take several minutes)')
+output('Reading the XML file')
+count = 1
+for json_io in xml_parser(XML_FILE_PATH):
 
+    # convert json to csv
+    csv_io = StringIO()
+    writer = DictWriter(csv_io, fieldnames=headers)
+    writer.writerow(json.loads(json_io.getvalue()))
+
+    output('Writing record #{:,} to the CSV'.format(count), end='\r')
+    with open(CSV_FILE_PATH, 'a') as csv_file:
+        print(csv_io.getvalue(), file=csv_file)
+    csv_io.close()
+
+    json_io.close()
+    csv_io.close()
+    count += 1
+
+print('')  # clean the last output (the one with end='\r')
 output('Done!')
