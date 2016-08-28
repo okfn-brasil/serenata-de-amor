@@ -13,217 +13,206 @@ EN = (
     {
         'variable': 'congressperson_name',
         'name': 'Congressperson Name',
-        'description': """Nome adotado pelo Parlamentar ao tomar posse do seu
-            mandato.  Compõe-se de dois elementos: um prenome e o nome; dois
-            nomes; ou dois prenomes, salvo, a juízo do Presidente da Casa
-            legislativa, que poderá alterar essa regra para que não ocorram
-            confusões."""
+        'desc': """Name used by the congress person during his term in
+            office. Usually it is composed by two elements: a given name and a
+            family name; two given names; or two forename, except if the head
+            of the Lower House explicitly alter this rule in order to avoid
+            confusion."""
     },
     {
         'variable': 'congressperson_id',
         'name': 'Unique Identifier of Congressperson',
-        'description': """Número que identifica unicamente um deputado federal
-            na CD."""
+        'desc': """Unique identifier number of a congressperson at the
+            Lower House."""
     },
     {
         'variable': 'congressperson_document',
         'name': 'Congressperson Document Number',
-        'description': """Documento usado para identificar um deputado federal
-            na CD. Pode alt """
+        'desc': """Document used to identify the congressperson at the
+            Lower House. Can be changed from one term to another."""
     },
     {
         'variable': 'term',
         'name': 'Legislative Period Number',
-        'description': """Legislatura: Período de quatro anos coincidente com o
-            mandato parlamentar dos Deputados Federais. No contexto da cota
-            CEAP, representa o ano base de início da legislatura e é utilizado
-            para compor a Carteira Parlamentar, pois esta poderá ser alterada à
-            medida que se muda de Legislatura."""
+        'desc': """Legislative period: 4 years period, the same period
+            of the term of congresspeople. In the context of this allowance,
+            it represents the initial year of the legislature. It is also used
+            as part of the Congressperson Document Number since it changes in
+            between legislatures."""
     },
     {
         'variable': 'state',
         'name': 'State',
-        'description': """No contexto da cota CEAP, representa a unidade da
-            federação pela qual o deputado foi eleito e é utilizada para
-            definir o valor da cota a que o deputado tem."""
+        'desc': """In the context of this allowance it represents the
+            state or federative unit that elected the congressperson; it is
+            also used to define the value of the allowance to the
+            congressperson."""
     },
     {
         'variable': 'party',
         'name': 'Party',
-        'description': """O seu conteúdo representa a sigla de um partido.
-            Definição de partido: é uma organização formada por pessoas com
-            interesse ou ideologia comuns, que se associam com o fim de assumir
-            o poder para implantar um programa de governo. Tem personalidade
-            jurídica de direito privado e goza de autonomia e liberdade no que
-            diz respeito à criação, organização e funcionamento, observados os
-            princípios e preceitos constitucionais."""
+        'desc': """It represents the abbreviation of a party. Definition
+            of party: it is an organization built by people with interests or
+            ideologies in common. They form an association with the purpose of
+            achieving power to implement a government program. They are legal
+            entities, free and autonomous when it comes to their creation and
+            self-organization, since they respect the constitutional
+            commandments."""
     },
     {
         'variable': 'term_id',
         'name': 'Legislative Period Code',
-        'description': """Legislatura: Período de quatro anos coincidente com o
-            mandato parlamentar dos Deputados Federais. No contexto da cota
-            CEAP, o seu conteúdo representa o código identificador da
-            Legislatura, que um número ordinal sequencial, alterado de um em
-            um, a cada início de uma nova Legislatura (por exemplo, a
-            Legislatura que iniciou em 2011 é a 54ª Legislatura)."""
+        'desc': """Legislative period: 4 years period, the same period
+            of the term of congresspeople. In the context of this allowance it
+            represents the identifying code of the legislature, an ordinal
+            number incremented by one each new legislature (e.g. the
+            2011 legislature if the 54th legislature)."""
     },
     {
         'variable': 'subquota_number',
         'name': 'Subquota Number',
-        'description': """No contexto da Cota CEAP, o conteúdo deste dado
-            representa o código do Tipo de Despesa referente à despesa
-            realizada pelo deputado e comprovada por meio da emissão de um
-            documento fiscal, a qual é debitada na cota do deputado."""
+        'desc': """In the context of this allowance this is the code of
+            the category group referring to the nature of the expense claimed
+            by the congressperson's receipt, the receipt of what was debited
+            from the congressperson's account."""
     },
     {
         'variable': 'subquota_description',
         'name': 'Subquota Description',
-        'description': """O seu conteúdo é a descrição do Tipo de Despesa
-            relativo à despesa em questão."""
+        'desc': """The description of the category group referring to
+            the nature of the expense."""
     },
     {
         'variable': 'subquota_group_id',
         'name': 'Subquota Specification Number',
-        'description': """No contexto da Cota CEAP, há despesas cujo Tipo de
-            Despesa necessita ter uma especificação mais detalhada (por
-            exemplo, “Combustível”). O conteúdo deste dado representa o código
-            desta especificação mais detalhada."""
+        'desc': """In the context of this allowance there are expenses
+            under certain category groups that require further specifications
+            (e.g. fuel). This variable represents the code of these detailed
+            specification."""
     },
     {
         'variable': 'subquota_group_description',
         'name': 'Subquota Specification Description',
-        'description': """Representa a descrição  especificação mais detalhada
-            de um referido Tipo de Despesa."""
+        'desc': """Description of the detailed specification required by
+            certain category groups."""
     },
     {
         'variable': 'supplier',
         'name': 'Supplier',
-        'description': """O conteúdo deste dado representa o nome do
-            fornecedor do produto ou serviço presente no documento fiscal"""
+        'desc': """Name of the supplier of the product or service
+            specified by the receipt."""
     },
     {
         'variable': 'cnpj_cpf',
         'name': 'CNPJ/CPF',
-        'description': """O conteúdo deste dado representa o CNPJ ou o CPF do
-            emitente do documento fiscal, quando se tratar do uso da cota em
-            razão do reembolso despesas comprovadas pela emissão de documentos
-            fiscais."""
+        'desc': """CNPJ or CPF are identification numbers issued for,
+            respectively, companies and people by Federal Revenue of Brazil.
+            CNPJ are 14 digits long and CPF are 11 digits long. This field is
+            the identification number (CNPJ or CPF) of the legal entity issuing
+            the receipt. The receipt is a proof of the expense and is a valid
+            document used to claim for a reimbursement."""
     },
     {
         'variable': 'document_number',
         'name': 'Document Number',
-        'description': """O conteúdo deste dado representa o número de face do
-            documento fiscal emitido ou o número do documento que deu causa à
-            despesa debitada na cota do deputado."""
+        'desc': """This field is the identifying number issued in the
+            receipt, in the proof of expense declared by the congressperson in
+            this allowance."""
     },
     {
         'variable': 'document_type',
         'name': 'Fiscal Document Type',
-        'description': """Este dado representa o tipo de documento do fiscal –
-            0 (Zero), para Nota Fiscal; 1 (um), para Recibo; e 2, para Despesa
-            no Exterior. """
+        'desc': """Type of receipt — 0 (zero) for bill of sale; 1 (one)
+            for simple receipt; and 2 (two) to expense made abroad."""
     },
     {
         'variable': 'issue_date',
         'name': 'Issue Date',
-        'description': """O conteúdo deste dado é a data de emissão do
-            documento fiscal ou a data do documento que tenha dado causa à
-            despesa. """
+        'desc': """Issuing date of the receipt."""
     },
     {
         'variable': 'document_value',
         'name': 'Document Value',
-        'description': """O seu conteúdo é o valor de face do documento fiscal
-            ou o valor do documento que deu causa à despesa. Quando se tratar
-            de bilhete aéreo, esse valor poderá ser negativo, significando que
-            o referido bilhete é um bilhete de compensação, pois compensa um
-            outro bilhete emitido e não utilizado pelo deputado (idem para o
-            dado vlrLiquido abaixo). """
+        'desc': """Value of the expense in the receipt. If it refers to
+            fly tickets this value can be negative, meaning that it is a
+            credit related to another fly tickets issued but not used by the
+            congress person (the same is valid for `net_value`)."""
     },
     {
         'variable': 'remark_value',
         'name': 'Remark Value',
-        'description': """O seu conteúdo representa o valor da glosa do
-            documento fiscal que incidirá sobre o Valor do Documento, ou o
-            valor da glosa do documento que deu causa à despesa. """
+        'desc': """Remarked value of the expense concerning the value of
+            the receipt, or remarked value of the expense."""
     },
     {
         'variable': 'net_value',
         'name': 'Net Value',
-        'description': """O seu conteúdo representa o valor líquido do
-            documento fiscal ou do documento que deu causa à despesa e será
-            calculado pela diferença entre o Valor do Documento e o Valor da
-            Glosa. É este valor que será debitado da cota do deputado. Caso o
-            débito seja do Tipo Telefonia e o valor seja igual a zero,
-            significa que a despesa foi franqueada. """
+        'desc': """Net value of the receipt calculated from the value of
+            the receipt and the remarked value. This is the value that is going
+            to be debited from the congressperson's account. If the category
+            group is Telephone and the value is zero, it means the expense was
+            franchised out."""
     },
     {
         'variable': 'month',
         'name': 'Month',
-        'description': """O seu conteúdo representa o Mês da competência
-            financeira do documento fiscal ou do documento que deu causa à
-            despesa. É utilizado, junto com o ano, para determinar em que
-            período o débito gerará efeito financeiro sobre a cota. """
+        'desc': """Month of the receipt. It is used together with the
+            year to determine in which month the debt will be considered in the
+            context of this allowance."""
     },
     {
         'variable': 'year',
         'name': 'Year',
-        'description': """O seu conteúdo representa o Ano da competência
-            financeira do documento fiscal ou do documento que deu causa à
-            despesa. É utilizado, junto com o mês, para determinar em que
-            período o débito gerará efeito financeiro sobre a cota. """
+        'desc': """Year of the receipt. It is used together with the
+            month to determine in which month the debt will be considered in
+            the context of this allowance."""
     },
     {
         'variable': 'installment',
         'name': 'Installment Number',
-        'description': """O seu conteúdo representa o número da parcela do
-            documento fiscal. Ocorre quando o documento tem de ser reembolsado
-            de forma parcelada. """
+        'desc': """The number of the installment of the receipt. Used
+            when the receipt has to be reimbursed in installments."""
     },
     {
         'variable': 'passenger',
         'name': 'Passenger',
-        'description': """O conteúdo deste dado representa o nome do passageiro
-            , quando o documento que deu causa à despesa se tratar de emissão
-            de bilhete aéreo. """
+        'desc': """Name of the passenger when the receipt refers to a
+            fly ticket."""
     },
     {
         'variable': 'leg_of_the_trip',
         'name': 'Leg of the Trip',
-        'description': """O conteúdo deste dado representa o trecho da viagem,
-            quando o documento que deu causa à despesa se tratar de emissão de
-            bilhete aéreo. """
+        'desc': """Leg of the trip when the receipt refers to a fly
+            ticket."""
     },
     {
         'variable': 'batch_number',
         'name': 'Batch Number',
-        'description': """No contexto da Cota CEAP, o Número do Lote
-            representa uma capa de lote que agrupa os documentos que serão
-            entregues à Câmara para serem ressarcidos. Este dado, juntamente
-            com o Número do Ressarcimento, auxilia a localização do documento
-            no Arquivo da Casa. """
+        'desc': """In the context of this allowance the batch number
+            refers to the cover number of a batch grouping receipts handed in
+            to the Lower House to be reimbursed. This data together with the
+            reimbursement number helps in finding the receipt in the Lower
+            House Archive."""
     },
     {
         'variable': 'reimbursement_number',
         'name': 'Reimbursement Number',
-        'description': """No contexto da Cota CEAP, o Número do Ressarcimento
-            indica o ressarcimento do qual o documento fez parte por ocasião
-            do processamento do seu reembolso. Este dado, juntamente com o
-            Número do Ressarcimento, auxilia a localização do documento no
-            Arquivo da Casa. """
+        'desc': """In the context of this allowance the reimbursement
+            number points to document issued in the reimbursement process.
+            This data together with the reimbursement number helps in finding
+            the receipt in the Lower House Archive."""
     },
     {
         'variable': 'reimbursement_value',
         'name': 'Reimbursement Value',
-        'description': """O seu conteúdo representa o valor restituído do
-            documento fiscal que incidirá sobre o Valor do Documento. """
+        'desc': 'Reimbursement value referring to the document value.'
     },
     {
         'variable': 'applicant_id',
         'name': 'Applicant Identifier',
-        'description': """Número que identifica um Parlamentar ou Liderança na
-            Transparência da Cota para Exercício da Atividade Parlamentar. """
+        'desc': """Identifying number of a congressperson or Lower House
+            leadership for the sake of transparency and accountability within
+            this allowance."""
     }
 )
 
