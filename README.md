@@ -9,6 +9,10 @@ Em outras palavras, a plataforma de Machine Learning convida a população a ens
 
 Em segundo plano esse movimento ajuda a criar uma imagem mais transparente sobre a atuação política de parlamentares, fazendo com que todos tenhamos mais parâmetros na hora de decidir quem leva nosso voto nas próximas eleições.
 
+## Apoie o projeto com suas habilidades
+
+Verifique nosso [guia de contribuição](CONTRIBUTING.md) e [pergunte](https://github.com/datasciencebr/serenata-de-amor/issues) se tiver dúvidas.
+
 ## Apoie o projeto com dinheiro
 
 Ao contrário dos políticos que investigamos, não ganhamos fortunas diárias. Mas manter infraestrutura e um time trabalhando no projeto custa dinheiro. Que tal contribuir?
