@@ -101,11 +101,31 @@ sns.distplot(negative_net_values['net_value'])
 negative_net_values.sample(random_state=0).iloc[0]
 
 
+# [According to Eduardo Cuducos](https://github.com/datasciencebr/serenata-de-amor/pull/24#issuecomment-242992477) on a pull request and the official documentation, negative values comprehend flight tickets issued but not used.
+
+# In[14]:
+
+negative_net_values['subquota_description'].unique()
+
+
+# In this specific case, it seems that Afonso Florence purchased a flight ticket of R\$ 556,73. When canceled it, the returned amount was just R\$ 356.73, generating a cancelation cost of R\$200 (or 64%).
+
+# In[15]:
+
+flight_tickets = data[data['document_number'] == 'Bilhete: MYJH2Y']
+flight_tickets.iloc[0]
+
+
+# In[16]:
+
+flight_tickets.iloc[1]
+
+
 # ## Long (right) tail
 
 # Let's try to remove outliers.
 
-# In[14]:
+# In[17]:
 
 dist_range = data['net_value'].mean() + data['net_value'].std() * 3 * np.r_[-1, 1]
 wo_outliers =     (data['net_value'] >= dist_range[0]) & (data['net_value'] <= dist_range[1])
@@ -117,25 +137,25 @@ sns.distplot(data_wo_outliers['net_value'])
 
 # 45% of the dataset have net values larger than 3 standard deviations from the mean. Meaning: tail does not contain just a few outliers, but a good portion of the dataset. Let's study what is contained in this long tail (greater than 3 stds).
 
-# In[15]:
+# In[18]:
 
 outliers = data[~data.isin(data_wo_outliers)['document_id']]
 print(len(outliers), len(outliers) / len(data))
 
 
-# In[16]:
+# In[19]:
 
 outliers.head()
 
 
-# In[17]:
+# In[20]:
 
 outliers['subquota_description'].describe()
 
 
 # Let's build a ranking of expenses with higher values.
 
-# In[18]:
+# In[21]:
 
 from functools import partial
 
@@ -148,12 +168,12 @@ subquota_number_ranking =     pd.merge(subquota_number_ranking,
     sort_values('net_value', ascending=False)
 
 
-# In[19]:
+# In[22]:
 
 subquota_number_ranking.head()
 
 
-# In[20]:
+# In[23]:
 
 sns.barplot(x='subquota_description',
             y='net_value',
@@ -166,7 +186,7 @@ plt.setp(labels, rotation=90); None
 
 # How the top 1% look like?
 
-# In[21]:
+# In[24]:
 
 top_1_percent_num = int(.01 * len(data))
 top_1_percent = data.     sort_values('net_value', ascending=False).     iloc[0:top_1_percent_num + 1]
@@ -179,12 +199,12 @@ top_1_percent_subquota_ranking =     pd.merge(top_1_percent_subquota_ranking,
     sort_values('net_value', ascending=False)
 
 
-# In[22]:
+# In[25]:
 
 top_1_percent_subquota_ranking.head()
 
 
-# In[23]:
+# In[26]:
 
 sns.barplot(x='subquota_description',
             y='net_value',
@@ -195,7 +215,7 @@ plt.setp(labels, rotation=90); None
 
 # This is the most expensive reimbursement from last year: R$189,600 for printing 120,000 units of something about the Elderly Statute.
 
-# In[24]:
+# In[27]:
 
 most_expensive_reimbursement
 
@@ -208,7 +228,7 @@ most_expensive_reimbursement
 # 
 # Taking the following PDF as an example: http://www.camara.gov.br/cota-parlamentar/documentos/publ/3016/2015/5651163.pdf
 
-# In[25]:
+# In[28]:
 
 records =     (data['applicant_id'] == 3016) &     (data['month'] == 4) &     (data['subquota_number'] == 3)
 data[records].iloc[0]
@@ -218,7 +238,7 @@ data[records].iloc[0]
 # 
 # From the document PDF, we could extract new features such as names of the products/services purchased, name of the seller, address of the business among other things.
 
-# In[26]:
+# In[29]:
 
 def document_url(record):
     return 'http://www.camara.gov.br/cota-parlamentar/documentos/publ/%s/%s/%s.pdf' %         (record['applicant_id'], record['year'], record['document_id'])
@@ -227,14 +247,14 @@ record = data[data['document_number'] == '632604'].iloc[0]
 record
 
 
-# In[27]:
+# In[30]:
 
 print(document_url(record))
 
 
 # How about a random record? Is its `document_url` valid? YES!
 
-# In[28]:
+# In[31]:
 
 record = data.sample(random_state=0).iloc[0]
 print(document_url(record))
@@ -245,23 +265,23 @@ record
 
 # There were 803 different people receiving reimbursements last year.
 
-# In[29]:
+# In[32]:
 
 len(data['applicant_id'].unique())
 
 
-# In[30]:
+# In[33]:
 
 len(data['congressperson_name'].cat.categories)
 
 
-# In[31]:
+# In[34]:
 
 applicants_by_net_value =     pd.DataFrame(data.groupby(['applicant_id'], as_index=False).sum()[['applicant_id', 'net_value']])
 applicants_by_net_value.head()
 
 
-# In[32]:
+# In[35]:
 
 congressperson_list = data[
     ['applicant_id', 'congressperson_name', 'party', 'state']]
@@ -273,12 +293,12 @@ ranking = pd.merge(applicants_by_net_value,
 ranking.head(10)
 
 
-# In[33]:
+# In[36]:
 
 ranking['net_value'].describe()
 
 
-# In[34]:
+# In[37]:
 
 graph = sns.barplot(x='congressperson_name',
                     y='net_value',
@@ -286,7 +306,7 @@ graph = sns.barplot(x='congressperson_name',
 graph.axes.get_xaxis().set_ticks([]); None
 
 
-# In[35]:
+# In[38]:
 
 def x_label_generator(record):
     return '%s (%s - %s)' % (record['congressperson_name'],
@@ -298,7 +318,7 @@ ranking['x_label'] = ranking.apply(x_label_generator, axis=1)
 
 # Apparently, politicians from states further away from Distrito Federal expent more. We could perform an analysis on distance to the capital and the home state from the politician.
 
-# In[36]:
+# In[39]:
 
 sns.barplot(x='x_label',
             y='net_value',
@@ -307,14 +327,14 @@ locs, labels = plt.xticks()
 plt.setp(labels, rotation=90); None
 
 
-# In[37]:
+# In[40]:
 
 list(congressperson_list['congressperson_name'].cat.categories)
 
 
 # A few `congressperson_name`s I can't properly explain yet:
 
-# In[38]:
+# In[41]:
 
 sdd = data[data['congressperson_name'] == 'SDD'].sample(random_state=0).iloc[0]
 print(document_url(sdd))
@@ -322,19 +342,19 @@ print(document_url(sdd))
 
 # 721 expenses reimbursed to parties.
 
-# In[39]:
+# In[42]:
 
 parties = congressperson_list[congressperson_list['party'].isnull()]
 parties
 
 
-# In[40]:
+# In[43]:
 
 party_expenses = data[data['applicant_id'].isin(parties['applicant_id'])]
 len(party_expenses)
 
 
-# In[41]:
+# In[44]:
 
 party_expenses.head()
 
@@ -343,50 +363,50 @@ party_expenses.head()
 
 # Are the expenses made outside of Brazil easily identifiable?
 
-# In[42]:
+# In[45]:
 
 wo_cnpj_cpf = data[data['cnpj_cpf'].isnull()]
 len(wo_cnpj_cpf)
 
 
-# In[43]:
+# In[46]:
 
 wo_cnpj_cpf.head()
 
 
-# In[44]:
+# In[47]:
 
 wo_cnpj_cpf.sample(random_state=10).iloc[0]
 
 
 # We could match politicians' location (from oficial agenda and social networks GPS info) with their expenses in a future analysis.
 
-# In[45]:
+# In[48]:
 
 wo_cnpj_cpf['supplier'].unique()
 
 
 # Let's see how one that we know for sure being from another country, try to find specificities. Aparently, nothing special about it.
 
-# In[46]:
+# In[49]:
 
 montevideo_expense = wo_cnpj_cpf[wo_cnpj_cpf['supplier'] == 'Dazzler Hotel Montevideo'].iloc[0]
 montevideo_expense
 
 
-# In[47]:
+# In[50]:
 
 print(document_url(montevideo_expense))
 
 
-# In[48]:
+# In[51]:
 
 wo_cnpj_cpf['supplier'] = wo_cnpj_cpf['supplier'].str.lower()
 ranking_suppliers_wo_cnpj = wo_cnpj_cpf.     groupby('supplier', as_index=False).     count()[['supplier', 'applicant_id']].     sort_values('applicant_id', ascending=False)
 ranking_suppliers_wo_cnpj.head()
 
 
-# In[49]:
+# In[52]:
 
 expenses_in_brazil = ranking_suppliers_wo_cnpj['supplier'].str.contains('correios') |     ranking_suppliers_wo_cnpj['supplier'].isin([
             'celular funcional',
@@ -395,13 +415,13 @@ expenses_in_brazil = ranking_suppliers_wo_cnpj['supplier'].str.contains('correio
 ranking_suppliers_wo_cnpj[~expenses_in_brazil]
 
 
-# In[50]:
+# In[53]:
 
 expense = data[data['supplier'].str.lower() == 'gordon ramsay\'s'].iloc[0]
 expense
 
 
-# In[51]:
+# In[54]:
 
 print(document_url(expense))
 
