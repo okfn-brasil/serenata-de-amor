@@ -42,4 +42,4 @@ Unlike the politicians we investigate, we don't get fortunes in a daily basis. B
 Please read and follow our **[contributing guidelines](CONTRIBUTING.md)**.
 
 ## Joining the conversation
-The conversation about the project happens in a [Telegram](https://telegram.org/) group. [Click here](https://telegram.me/joinchat/AKDWcwgjD0QPd6KqEG11tg) to join and get to know everyone involved.
+The conversation about the project (always in English) happens in a [Telegram](https://telegram.org/) group. [Click here](https://telegram.me/joinchat/AKDWcwgjD0QPd6KqEG11tg) to join and get to know everyone involved.
