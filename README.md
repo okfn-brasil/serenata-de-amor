@@ -9,6 +9,10 @@ Em outras palavras, a plataforma de Machine Learning convida a população a ens
 
 Em segundo plano esse movimento ajuda a criar uma imagem mais transparente sobre a atuação política de parlamentares, fazendo com que todos tenhamos mais parâmetros na hora de decidir quem leva nosso voto nas próximas eleições.
 
+## Siga nas redes sociais
+
+[Facebook] (https://www.facebook.com/operacaoSerenataDeAmor/)
+
 ## Apoie o projeto com suas habilidades
 
 Verifique nosso [guia de contribuição](CONTRIBUTING.md) e [pergunte](https://github.com/datasciencebr/serenata-de-amor/issues) se tiver dúvidas.
@@ -40,3 +44,5 @@ Ao contrário dos políticos que investigamos, não ganhamos fortunas diárias. 
 
 ## Contribuindo
 Para contribuir baste seguir nosso **[guia da contribuição](CONTRIBUTING.md)**.
+
+
