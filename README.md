@@ -40,3 +40,6 @@ Ao contrário dos políticos que investigamos, não ganhamos fortunas diárias. 
 
 ## Contribuindo
 Para contribuir baste seguir nosso **[guia da contribuição](CONTRIBUTING.md)**.
+
+## Participando da conversa
+A conversa sobre o projeto acontece em um grupo do [Telegram](https://telegram.org/). [Cique aqui](https://telegram.me/joinchat/AKDWcwgjD0QPd6KqEG11tg) para fazer entrar na conversa e conhecer os envolvidos.
