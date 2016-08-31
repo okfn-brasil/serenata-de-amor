@@ -9,6 +9,10 @@ In other words, the Machine Learning platform invites people to teach it, learn 
 
 In the background this movement helps to create a more clear perspective about the political activity of the parliament, making everyone of us have a better idea on deciding who to vote in the next election.
 
+## Social network
+
+[Facebook] (https://www.facebook.com/operacaoSerenataDeAmor/)
+
 ## Support the project with your expertise
 
 Check our [contribution guide](CONTRIBUTING.md) and [let us know](https://github.com/datasciencebr/serenata-de-amor/issues) if you have any doubt.
