@@ -9,14 +9,13 @@ import pandas as pd
 import re
 import shutil
 
-DATASET_PATH = 'data/companies.xz'
-TEMP_PATH = 'data/companies'
+DATASET_PATH = os.path.join('data', 'companies.xz')
+TEMP_PATH = os.path.join('data', 'companies')
 CNPJ_REGEX = r'[./-]'
 
 settings = configparser.RawConfigParser()
 settings.read('config.ini')
 geolocator = GoogleV3(settings.get('Google', 'APIKey'))
-
 
 def geocode_companies(companies):
     with futures.ThreadPoolExecutor(max_workers=40) as executor:

@@ -1,6 +1,7 @@
 from itertools import chain
 import json
 import numpy as np
+import os
 import pandas as pd
 
 def decompose_main_activity(value):
@@ -24,7 +25,7 @@ def decompose_secondary_activities(value):
 
 
 
-data = pd.read_csv('data/cnpj_info.xz',
+data = pd.read_csv(os.path.join('data', 'cnpj_info.xz'),
                    dtype={'atividade_principal': np.str,
                           'atividades_secundarias': np.str,
                           'complemento': np.str,
@@ -81,4 +82,7 @@ data = pd.concat([
     data['secondary_activities'].apply(decompose_secondary_activities)],
     axis=1)
 
-data.to_csv('data/companies.xz', compression='xz', encoding='utf-8', index=False)
+data.to_csv(os.path.join('data', 'companies.xz'),
+            compression='xz',
+            encoding='utf-8',
+            index=False)
