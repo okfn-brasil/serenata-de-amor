@@ -16,7 +16,8 @@ connection = tinys3.Connection(access_key,
                                endpoint='%s.amazonaws.com' % region)
 
 date = datetime.datetime.utcnow().isoformat()[:10]
-files = [name for name in os.listdir('data') if not name.startswith('.')]
+files = set(name for name in os.listdir('data') if not name.startswith('.'))
+files_in_bucket = set(attrs['key'] for attrs in connection.list(None, bucket))
 for filename in files:
     backup_filename = '%s-%s' % (date, filename)
     connection.upload(backup_filename, open('data/' + filename, 'rb'))
