@@ -8,8 +8,8 @@ import shutil
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
-INFO_DATASET_PATH = os.path.join('data', 'cnpj_info.xz')
-TEMP_PATH = os.path.join('data', 'cnpj_info')
+INFO_DATASET_PATH = os.path.join('data', 'cnpj-info.xz')
+TEMP_PATH = os.path.join('data', 'cnpj-info')
 
 def load_info_dataset():
     if os.path.exists(INFO_DATASET_PATH):

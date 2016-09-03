@@ -25,7 +25,7 @@ def decompose_secondary_activities(value):
 
 
 
-data = pd.read_csv(os.path.join('data', 'cnpj_info.xz'),
+data = pd.read_csv(os.path.join('data', 'cnpj-info.xz'),
                    dtype={'atividade_principal': np.str,
                           'atividades_secundarias': np.str,
                           'complemento': np.str,
