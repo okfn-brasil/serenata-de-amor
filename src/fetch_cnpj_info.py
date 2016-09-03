@@ -5,7 +5,6 @@ import os.path
 import pandas as pd
 import pickle
 import shutil
-from urllib.error import HTTPError
 from urllib.request import urlopen
 
 INFO_DATASET_PATH = os.path.join('data', 'cnpj-info.xz')
