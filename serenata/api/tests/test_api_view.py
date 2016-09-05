@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import resolve_url
 from django.test import TestCase
 
@@ -44,7 +46,9 @@ class TestGet(TestCase):
         self.assertEqual(200, self.resp.status_code)
 
     def test_content(self):
-        self.assertIn('ADELMO', self.resp.content.decode('utf-8'))
+        content = json.loads(self.resp.content.decode('utf-8'))
+        self.assertEqual('ADELMO LEÃO', content['congressperson_name'])
+        self.assertEqual(190.05, content['net_value'])
 
 
 class Test404(TestCase):
