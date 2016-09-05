@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, disabled, type', value)
+import Html.Attributes exposing (class, disabled, href, placeholder, type', value)
 import Html.Events exposing (onInput, onSubmit)
 import Html.App
 import Http
@@ -53,6 +53,25 @@ type alias Model =
     , document : Maybe Document
     , loading : Bool
     , error : Maybe Http.Error
+    , title : String
+    , github :
+        { main : String
+        , api : String
+        }
+    }
+
+
+initialModel : Model
+initialModel =
+    { documentId = ""
+    , document = Nothing
+    , loading = False
+    , error = Nothing
+    , title = "Serenata de Amor"
+    , github =
+        { main = "http://github.com/datasciencebr/serenata-de-amor"
+        , api = "http://github.com/datasciencebr/serenata-de-amor-api"
+        }
     }
 
 
@@ -138,6 +157,11 @@ viewWrapper html =
     div [ class "outer" ] [ div [ class "inner" ] [ html ] ]
 
 
+viewHeader : Model -> Html.Html Msg
+viewHeader model =
+    div [ class "header" ] [ h1 [] [ text model.title ] ]
+
+
 viewForm : String -> Bool -> Html.Html Msg
 viewForm documentId loading =
     let
@@ -154,6 +178,7 @@ viewForm documentId loading =
                 , value documentId
                 , onInput Change
                 , disabled loading
+                , placeholder "Enter a CEAP document #"
                 ]
                 []
             , button [ type' "submit", disabled loading ] [ text buttonLabel ]
@@ -164,10 +189,10 @@ viewError : Maybe Http.Error -> Html.Html Msg
 viewError error =
     case error of
         Just _ ->
-            div [] [ text "Document not found" ]
+            h2 [ class "error" ] [ text "Document not found" ]
 
         Nothing ->
-            div [] []
+            text ""
 
 
 viewDocument : Maybe Document -> Maybe Http.Error -> Html.Html Msg
@@ -244,12 +269,25 @@ viewDocumentRow ( header, content ) =
         ]
 
 
+viewFooter : Model -> Html.Html Msg
+viewFooter model =
+    div [ class "footer" ]
+        [ ul
+            []
+            [ li [] [ a [ href model.github.main ] [ text <| "About " ++ model.title ] ]
+            , li [] [ a [ href model.github.api ] [ text "Fork me on GitHub" ] ]
+            ]
+        ]
+
+
 view : Model -> Html.Html Msg
 view model =
     div
         []
-        [ viewWrapper <| viewForm model.documentId model.loading
+        [ viewWrapper <| viewHeader model
+        , viewWrapper <| viewForm model.documentId model.loading
         , viewWrapper <| viewDocument model.document model.error
+        , viewWrapper <| viewFooter model
         ]
 
 
@@ -262,7 +300,7 @@ view model =
 main : Platform.Program Never
 main =
     Html.App.program
-        { init = ( Model "" Nothing False Nothing, Cmd.none )
+        { init = ( initialModel, Cmd.none )
         , update = update
         , view = view
         , subscriptions = (\_ -> Sub.none)

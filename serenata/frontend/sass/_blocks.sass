@@ -1,0 +1,39 @@
+html, body
+  font-family: sans-serif
+
+.outer
+  +outer-container
+
+.inner
+  +span-columns(12)
+  padding: 1rem 0
+
+.header
+  text-align: center
+
+form
+  text-align: center
+
+table
+  border-collapse: collapse
+  width: 100%
+  td, th
+    border: 
+    padding: .5rem
+    text-align: left
+
+.footer
+  text-align: center
+  ul
+    margin: 0
+    padding: 0
+  li
+    border-left: rem(1) solid black
+    display: inline
+    margin-left: .5rem
+    padding-left: .5rem
+    &:first-child
+      border: 0
+      margin-left: 0
+      padding-left: 0
+
