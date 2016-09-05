@@ -206,8 +206,30 @@ viewDocument document error =
                     , ( "Reimbursement value", toString document.reimbursement_value )
                     , ( "Applicant ID", toString document.applicant_id )
                     ]
+
+                receiptUrl =
+                    "http://www.camara.gov.br/cota-parlamentar/documentos/publ/"
+                        ++ toString document.applicant_id
+                        ++ "/"
+                        ++ toString document.year
+                        ++ "/"
+                        ++ toString document.document_id
+                        ++ ".pdf"
+
+                rows =
+                    List.append
+                        (List.map viewDocumentRow labels)
+                        [ tr
+                            []
+                            [ th [] [ text "Receipt URL" ]
+                            , td [] [ a [ href receiptUrl ] [ text receiptUrl ] ] ]
+                            ]
             in
-                table [] (List.map viewDocumentRow labels)
+                div
+                    []
+                    [ h2 [] [ text "Document information" ]
+                    , table [] rows
+                    ]
 
         Nothing ->
             viewError error
