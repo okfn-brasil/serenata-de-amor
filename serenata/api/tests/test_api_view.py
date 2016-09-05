@@ -38,7 +38,7 @@ class TestGet(TestCase):
             reimbursement_value=0,
             applicant_id=705,
         )
-        self.resp = self.client.get(resolve_url('document', 5621548))
+        self.resp = self.client.get(resolve_url('api:document', 5621548))
 
     def test_status_code(self):
         self.assertEqual(200, self.resp.status_code)
@@ -50,7 +50,7 @@ class TestGet(TestCase):
 class Test404(TestCase):
 
     def setUp(self):
-        self.resp = self.client.get(resolve_url('document', 5621548))
+        self.resp = self.client.get(resolve_url('api:document', 5621548))
 
     def test_status_code(self):
         self.assertEqual(404, self.resp.status_code)
