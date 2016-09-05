@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Serenata de Amor</title>
+    {% load assets %}
+    {% assets "sass" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"> 
+    {% endassets %}
+    {% assets "elm" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+  </head>
+  <body>
+    <script type="text/javascript">
+      Elm.Main.fullscreen();
+    </script>
+  </body>
+</html>

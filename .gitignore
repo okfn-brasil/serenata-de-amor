@@ -1,4 +1,15 @@
-*.pyc
-*.sqlite3
+# development environment
 .env
+*.sqlite3
+
+# cache & compiled files
+*.pyc
+.webassets-cache/
+app.css
+app.js
 __pycache__/
+staticfiles/
+
+# third party
+elm-stuff/
+node_modules/

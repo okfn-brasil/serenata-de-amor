@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_assets',
     'serenata.core',
     'serenata.api',
+    'serenata.frontend',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +125,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Django Assets
+
+ASSETS_ROOT = os.path.join(BASE_DIR, 'serenata', 'frontend', 'static')
+LIBSASS_STYLE = 'compressed'

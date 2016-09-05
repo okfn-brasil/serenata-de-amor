@@ -1,2 +1,5 @@
 Django==1.10.1
+django-assets==0.12
+libsass==0.11.1
 python-decouple==3.0
+webassets-elm==0.1.3

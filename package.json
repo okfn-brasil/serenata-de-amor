@@ -1,0 +1,15 @@
+{
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/datasciencebr/serenata-de-amor.git"
+  },
+  "scripts": {
+    "postinstall": "elm-package install --yes"
+  },
+  "dependencies": {
+    "bourbon": "^4.2.7",
+    "bourbon-neat": "^1.8.0",
+    "elm": "^0.17.1"
+  }
+}
