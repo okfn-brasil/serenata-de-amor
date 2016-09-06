@@ -29,7 +29,6 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 #### Database
 
 * `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema)
-* `DATABASE_LIMIT` (_int_) Limit the number of documents to import to your database (`0` for unlimited)
 
 #### Amazon S3 settings
 
@@ -51,6 +50,8 @@ Now you can load the data from our datasets:
 ```
 python manage.py loaddatasets
 ```
+
+Use `python manage.py loaddatasets --help` to check options on limiting the number of documents to be loaded from the datasets.
 
 ### Generate static files
 

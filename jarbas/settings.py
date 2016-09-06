@@ -137,6 +137,3 @@ LIBSASS_STYLE = 'compressed'
 AMAZON_S3_BUCKET = config('AMAZON_S3_BUCKET', default='serenata-de-amor-data')
 AMAZON_S3_REGION = config('AMAZON_S3_REGIN', default='s3-sa-east-1')
 AMAZON_S3_DATASET_DATE = config('AMAZON_S3_DATASET_DATE', default='2016-08-08')
-
-# Database limit
-DATABASE_LIMIT = config('DATABASE_LIMIT', default=0, cast=int)
