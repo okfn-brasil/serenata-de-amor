@@ -70,7 +70,7 @@ initialModel =
     , title = "Serenata de Amor"
     , github =
         { main = "http://github.com/datasciencebr/serenata-de-amor"
-        , api = "http://github.com/datasciencebr/serenata-de-amor-api"
+        , api = "http://github.com/datasciencebr/jarbas"
         }
     }
 
