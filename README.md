@@ -12,6 +12,8 @@ Em segundo plano esse movimento ajuda a criar uma imagem mais transparente sobre
 ## Siga nas redes sociais
 
 [Facebook] (https://www.facebook.com/operacaoSerenataDeAmor/)
+[Twitter] (https://twitter.com/datascience_br)
+[Medium] (https://datasciencebr.com/)
 
 ## Apoie o projeto com suas habilidades
 
