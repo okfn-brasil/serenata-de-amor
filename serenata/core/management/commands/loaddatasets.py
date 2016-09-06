@@ -22,7 +22,14 @@ class Command(BaseCommand):
             with NamedTemporaryFile() as tmp:
                 urlretrieve(url, filename=tmp.name)
                 with lzma.open(tmp.name, mode='rt') as file_handler:
-                    yield from csv.DictReader(file_handler)
+                    for row in csv.DictReader(file_handler):
+                        if not self.has_reached_the_limit():
+                            yield row
+                        else:
+                            break
+            if self.has_reached_the_limit():
+                break
+
 
     def handle(self, *args, **options):
         """Create or update records (if they match `document_id`)"""
@@ -72,6 +79,13 @@ class Command(BaseCommand):
             document['issue_date'] = None
 
         return document
+
+    def has_reached_the_limit(self):
+        limit = settings.DATABASE_LIMIT
+        total = self.created + self.updated
+        if limit and total >= limit:
+            return True
+        return False
 
     @staticmethod
     def get_url(suffix):
