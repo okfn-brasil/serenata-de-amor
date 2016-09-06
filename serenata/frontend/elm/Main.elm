@@ -30,7 +30,7 @@ type alias Document =
     , subquota_group_description : String
     , supplier : String
     , cnpj_cpf : String
-    , document_number : Int
+    , document_number : String
     , document_type : Int
     , issue_date : String
     , document_value : Float
@@ -40,7 +40,7 @@ type alias Document =
     , year : Int
     , installment : Int
     , passenger : String
-    , leg_of_the_trip : Int
+    , leg_of_the_trip : String
     , batch_number : Int
     , reimbursement_number : Int
     , reimbursement_value : Float
@@ -113,7 +113,7 @@ documentDecoder =
         |> required "subquota_group_description" Json.Decode.string
         |> required "supplier" Json.Decode.string
         |> required "cnpj_cpf" Json.Decode.string
-        |> required "document_number" Json.Decode.int
+        |> required "document_number" Json.Decode.string
         |> required "document_type" Json.Decode.int
         |> required "issue_date" Json.Decode.string
         |> required "document_value" Json.Decode.float
@@ -123,7 +123,7 @@ documentDecoder =
         |> required "year" Json.Decode.int
         |> required "installment" Json.Decode.int
         |> required "passenger" Json.Decode.string
-        |> required "leg_of_the_trip" Json.Decode.int
+        |> required "leg_of_the_trip" Json.Decode.string
         |> required "batch_number" Json.Decode.int
         |> required "reimbursement_number" Json.Decode.int
         |> required "reimbursement_value" Json.Decode.float
@@ -215,7 +215,7 @@ viewDocument document error =
                     , ( "Subquota group description", document.subquota_group_description )
                     , ( "Supplier", document.supplier )
                     , ( "CNPJ/CPF", document.cnpj_cpf )
-                    , ( "Document number", toString document.document_number )
+                    , ( "Document number", document.document_number )
                     , ( "Document type", toString document.document_type )
                     , ( "Issue date", document.issue_date )
                     , ( "Document value", toString document.document_value )
@@ -225,7 +225,7 @@ viewDocument document error =
                     , ( "Year", toString document.year )
                     , ( "Installment", toString document.installment )
                     , ( "Passenger", document.passenger )
-                    , ( "Leg of the trip", toString document.leg_of_the_trip )
+                    , ( "Leg of the trip", document.leg_of_the_trip )
                     , ( "Batch number", toString document.batch_number )
                     , ( "Reimbursement number", toString document.reimbursement_number )
                     , ( "Reimbursement value", toString document.reimbursement_value )

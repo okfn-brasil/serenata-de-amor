@@ -24,7 +24,7 @@ class TestGet(TestCase):
             subquota_group_description='Subquota group description',
             supplier='Acme',
             cnpj_cpf='11111111111111',
-            document_number=6,
+            document_number='6',
             document_type=7,
             issue_date='1970-01-01 00:00:00',
             document_value=8.90,

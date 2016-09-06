@@ -4,9 +4,8 @@ from serenata.core.models import Document
 
 class TestCreate(TestCase):
 
-    def test_create(self):
-        self.assertEqual(0, Document.objects.count())
-        Document.objects.create(
+    def setUp(self):
+        self.data = dict(
             document_id=42,
             congressperson_name='Roger That',
             congressperson_id=1,
@@ -21,7 +20,7 @@ class TestCreate(TestCase):
             subquota_group_description='Subquota group description',
             supplier='Acme',
             cnpj_cpf='11111111111111',
-            document_number=6,
+            document_number='6',
             document_type=7,
             issue_date='1970-01-01 00:00:00',
             document_value=8.90,
@@ -37,4 +36,15 @@ class TestCreate(TestCase):
             reimbursement_value=11.12,
             applicant_id=13
         )
+
+    def test_create(self):
+        self.assertEqual(0, Document.objects.count())
+        Document.objects.create(**self.data)
+        self.assertEqual(1, Document.objects.count())
+
+    def test_create_without_date(self):
+        self.assertEqual(0, Document.objects.count())
+        new_data = self.data.copy()
+        new_data['issue_date'] = None
+        Document.objects.create(**new_data)
         self.assertEqual(1, Document.objects.count())
