@@ -36,6 +36,10 @@ class Command(BaseCommand):
         for document in map(self.serialize, self.parse()):
             obj, created = Document.objects.update_or_create(
                 document_id=document['document_id'],
+                year=document['year'],
+                month=document['month'],
+                applicant_id=document['applicant_id'],
+                congressperson_id=document['congressperson_id'],
                 defaults=document
             )
             if created:
