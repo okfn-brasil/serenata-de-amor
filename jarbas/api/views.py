@@ -4,7 +4,7 @@ from django.core.serializers import serialize
 from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 
-from serenata.core.models import Document
+from jarbas.core.models import Document
 
 
 def document(request, document_id):

@@ -2,7 +2,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/datasciencebr/serenata-de-amor.git"
+    "url": "git://github.com/datasciencebr/jarbas.git"
   },
   "scripts": {
     "postinstall": "elm-package install --yes"

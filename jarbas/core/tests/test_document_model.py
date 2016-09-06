@@ -1,5 +1,5 @@
 from django.test import TestCase
-from serenata.core.models import Document
+from jarbas.core.models import Document
 
 
 class TestCreate(TestCase):

@@ -1,1 +1,1 @@
-web: gunicorn serenata.wsgi --log-file -
+web: gunicorn jarbas.wsgi --log-file -

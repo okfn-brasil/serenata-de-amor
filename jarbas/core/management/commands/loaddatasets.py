@@ -6,7 +6,7 @@ from urllib.request import urlretrieve
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from serenata.core.models import Document
+from jarbas.core.models import Document
 
 
 class Command(BaseCommand):

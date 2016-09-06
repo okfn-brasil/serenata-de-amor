@@ -3,7 +3,7 @@ import json
 from django.shortcuts import resolve_url
 from django.test import TestCase
 
-from serenata.core.models import Document
+from jarbas.core.models import Document
 
 
 class TestGet(TestCase):
