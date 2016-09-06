@@ -28,12 +28,16 @@ class Command(BaseCommand):
     def documents(self):
         """Load datasets and return a dict similar to model Document"""
         suffixes = ('current-year', 'last-year', 'previous-years')
-        for url in map(self.get_url, suffixes):
+        for suffix in suffixes:
+            url = self.get_url(suffix)
             print("Loading " + url)
             with NamedTemporaryFile() as tmp:
                 urlretrieve(url, filename=tmp.name)
                 with lzma.open(tmp.name, mode='rt') as file_handler:
-                    yield from csv.DictReader(file_handler)
+                    for index, row in enumerate(csv.DictReader(file_handler)):
+                        row['source'] = suffix
+                        row['line'] = index + 1
+                        yield row
 
     def selected_documents(self, start, limit):
         documents = map(self.serialize, self.documents())
@@ -52,11 +56,8 @@ class Command(BaseCommand):
         documents = self.selected_documents(options['start'], options['limit'])
         for document in documents:
             obj, created = Document.objects.update_or_create(
-                document_id=document['document_id'],
-                year=document['year'],
-                month=document['month'],
-                applicant_id=document['applicant_id'],
-                congressperson_id=document['congressperson_id'],
+                source=document['source'],
+                line=document['line'],
                 defaults=document
             )
             if created:

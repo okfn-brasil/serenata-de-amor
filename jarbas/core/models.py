@@ -32,3 +32,5 @@ class Document(models.Model):
     reimbursement_number = models.IntegerField('Reimbursement number')
     reimbursement_value = models.DecimalField('Reimbusrsement value', max_digits=10, decimal_places=3)
     applicant_id = models.IntegerField('Applicant ID')
+    source = models.CharField('CSV file source', db_index=True, null=True, blank=True, max_length=16)
+    line = models.IntegerField('Line # in the source', db_index=True, null=True, blank=True)
