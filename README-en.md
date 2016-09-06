@@ -12,6 +12,8 @@ In the background this movement helps to create a more clear perspective about t
 ## Social network
 
 [Facebook] (https://www.facebook.com/operacaoSerenataDeAmor/)
+[Twitter] (https://twitter.com/datascience_br)
+[Medium] (https://datasciencebr.com)
 
 ## Support the project with your expertise
 
