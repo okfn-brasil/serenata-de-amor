@@ -46,6 +46,12 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
+Now you can load the data from our datasets:
+
+```
+python manage.py loaddatasets
+```
+
 ### Generate static files
 
 We generate assets through [webassets](http://webassets.readthedocs.io) and we serve static files through [WhiteNoise](http://whitenoise.evans.io), thus you might have to run:
