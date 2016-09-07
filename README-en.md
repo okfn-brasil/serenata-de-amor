@@ -23,10 +23,10 @@ Check our [contribution guide](CONTRIBUTING.md) and [let us know](https://github
 
 Unlike the politicians we investigate, we don't get fortunes in a daily basis. But maintaining infrastructure and a team working on the project costs money. Want to contribute?
 
-[Bitcoin Wallet](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor)
-```
-1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV
-```
+* [Catarse (crowdfunding)](https://www.catarse.me/serenata)
+
+* [Bitcoin Wallet](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor) `1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV`
+
 
 ## Public Data Lists and Strategies for Mass Collection
 

@@ -23,12 +23,9 @@ Verifique nosso [guia de contribuição](CONTRIBUTING.md) e [pergunte](https://g
 
 Ao contrário dos políticos que investigamos, não ganhamos fortunas diárias. Mas manter infraestrutura e um time trabalhando no projeto custa dinheiro. Que tal contribuir?
 
-* [Catarse(crowdfunding)](https://www.catarse.me/serenata)
+* [Catarse (financiamento coletivo)](https://www.catarse.me/serenata)
 
-* [Bitcoin Wallet](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor)
-```
-1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV
-```
+* [Bitcoin Wallet](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor) `1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV`
 
 ## Lista de Dados Públicos e Estratégias para Coleta em Massa
 
