@@ -13,7 +13,7 @@ The app is based in [Python 3](http://python.org) and [Node.js](http://nodejs.or
 
 ```console
 npm i
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt
 ```
 
 ### Settings
