@@ -3,10 +3,11 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (class, disabled, href, placeholder, type', value)
 import Html.Events exposing (onInput, onSubmit)
-import Html.App
 import Http
 import Json.Decode
 import Json.Decode.Pipeline exposing (required, decode)
+import Navigation
+import String
 import Task
 
 
@@ -134,10 +135,18 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Change documentId ->
-            ( { model | documentId = documentId }, Cmd.none )
+            ( { model | documentId = String.trim documentId }, Cmd.none )
 
         Submit ->
-            ( { model | loading = True }, loadDocument model.documentId )
+            if String.isEmpty model.documentId then
+                ( model, Cmd.none )
+            else
+                ( { model | loading = True }
+                , Cmd.batch
+                    [ loadDocument model.documentId
+                    , Navigation.newUrl <| toUrl model.documentId
+                    ]
+                )
 
         ApiSuccess document ->
             ( { model | document = Just document, loading = False }, Cmd.none )
@@ -247,8 +256,9 @@ viewDocument document error =
                         [ tr
                             []
                             [ th [] [ text "Receipt URL" ]
-                            , td [] [ a [ href receiptUrl ] [ text receiptUrl ] ] ]
+                            , td [] [ a [ href receiptUrl ] [ text receiptUrl ] ]
                             ]
+                        ]
             in
                 div
                     []
@@ -293,15 +303,58 @@ view model =
 
 
 --
+-- URL handling
+--
+
+
+toUrl : String -> String
+toUrl documentId =
+    if documentId == "" then
+        ""
+    else
+        "#/document/" ++ documentId
+
+
+fromUrl : String -> Maybe String
+fromUrl url =
+    String.split "/" url |> List.reverse |> List.head
+
+
+urlParser : Navigation.Parser (Maybe String)
+urlParser =
+    Navigation.makeParser (fromUrl << .hash)
+
+
+urlUpdate : Maybe String -> Model -> ( Model, Cmd Msg )
+urlUpdate documentId model =
+    case documentId of
+        Just id ->
+            if id == "" then
+                ( { model | documentId = id }, Cmd.none )
+            else
+                ( { model | documentId = id, loading = True }, loadDocument id )
+
+        Nothing ->
+            ( model, Navigation.modifyUrl "" )
+
+
+
+--
 -- Init
 --
 
 
+init : Maybe String -> ( Model, Cmd Msg )
+init documentId =
+    urlUpdate documentId initialModel
+
+
 main : Platform.Program Never
 main =
-    Html.App.program
-        { init = ( initialModel, Cmd.none )
+    Navigation.program urlParser
+        { init = init
         , update = update
+        , urlUpdate = urlUpdate
         , view = view
         , subscriptions = (\_ -> Sub.none)
         }
