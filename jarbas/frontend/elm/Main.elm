@@ -5,6 +5,7 @@ import Html.Attributes exposing (class, disabled, href, placeholder, type', valu
 import Html.Events exposing (onInput, onSubmit)
 import Http
 import Json.Decode
+import Json.Decode exposing ((:=))
 import Json.Decode.Pipeline exposing (required, decode)
 import Navigation
 import String
@@ -52,6 +53,8 @@ type alias Document =
 type alias Model =
     { documentId : String
     , document : Maybe Document
+    , documentCount : Maybe Int
+    , documentTotal : Int
     , loading : Bool
     , error : Maybe Http.Error
     , title : String
@@ -66,6 +69,8 @@ initialModel : Model
 initialModel =
     { documentId = ""
     , document = Nothing
+    , documentCount = Nothing
+    , documentTotal = 2072729
     , loading = False
     , error = Nothing
     , title = "Serenata de Amor"
@@ -87,6 +92,8 @@ type Msg
     | Submit
     | ApiFail Http.Error
     | ApiSuccess Document
+    | CountFail Http.Error
+    | CountSuccess Int
 
 
 loadDocument : String -> Cmd Msg
@@ -131,6 +138,19 @@ documentDecoder =
         |> required "applicant_id" Json.Decode.int
 
 
+loadTotalCount : Cmd Msg
+loadTotalCount =
+    Task.perform
+        CountFail
+        CountSuccess
+        (Http.get countDecoder "/api/")
+
+
+countDecoder : Json.Decode.Decoder Int
+countDecoder =
+    "total" := Json.Decode.int
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -147,6 +167,12 @@ update msg model =
                     , Navigation.newUrl <| toUrl model.documentId
                     ]
                 )
+
+        CountSuccess count ->
+            ( { model | documentCount = Just count }, Cmd.none )
+
+        CountFail _ ->
+            ( model, Cmd.none )
 
         ApiSuccess document ->
             ( { model | document = Just document, loading = False }, Cmd.none )
@@ -286,8 +312,32 @@ viewFooter model =
             []
             [ li [] [ a [ href model.github.main ] [ text <| "About " ++ model.title ] ]
             , li [] [ a [ href model.github.api ] [ text "Fork me on GitHub" ] ]
+            , viewPercent model.documentCount model.documentTotal
             ]
         ]
+
+
+viewPercent : Maybe Int -> Int -> Html.Html Msg
+viewPercent count total =
+    case count of
+        Just documents ->
+            let
+                percentLoaded =
+                    toFloat documents / toFloat total |> (*) 100 |> round |> toString
+
+                link =
+                    a
+                        [ href "http://www.camara.gov.br/cota-parlamentar/" ]
+                        [ text "CEAP" ]
+            in
+                li []
+                    [ text <| percentLoaded ++ "% of "
+                    , link
+                    , text <| " data loaded"
+                    ]
+
+        Nothing ->
+            text ""
 
 
 view : Model -> Html.Html Msg
@@ -346,7 +396,17 @@ urlUpdate documentId model =
 
 init : Maybe String -> ( Model, Cmd Msg )
 init documentId =
-    urlUpdate documentId initialModel
+    let
+        urlUpdateInit =
+            urlUpdate documentId initialModel
+
+        model =
+            fst urlUpdateInit
+
+        cmd =
+            snd urlUpdateInit
+    in
+        ( model, Cmd.batch [ loadTotalCount, cmd ] )
 
 
 main : Platform.Program Never

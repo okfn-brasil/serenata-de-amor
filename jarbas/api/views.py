@@ -7,6 +7,10 @@ from django.shortcuts import get_object_or_404
 from jarbas.core.models import Document
 
 
+def home(request):
+    return JsonResponse({'total': Document.objects.count()})
+
+
 def document(request, document_id):
 
     # query & serialize

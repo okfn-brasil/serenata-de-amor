@@ -6,7 +6,7 @@ from django.test import TestCase
 from jarbas.core.models import Document
 
 
-class TestGet(TestCase):
+class TestApi(TestCase):
 
     def setUp(self):
         Document.objects.create(
@@ -40,6 +40,25 @@ class TestGet(TestCase):
             reimbursement_value=11.12,
             applicant_id=13
         )
+
+class TestGetHome(TestApi):
+
+    def setUp(self):
+        super().setUp()
+        self.resp = self.client.get(resolve_url('api:home'))
+
+    def test_status_code(self):
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_content(self):
+        content = json.loads(self.resp.content.decode('utf-8'))
+        self.assertEqual(1, content['total'])
+
+
+class TestGetDocument(TestApi):
+
+    def setUp(self):
+        super().setUp()
         self.resp = self.client.get(resolve_url('api:document', 42))
 
     def test_status_code(self):
@@ -51,7 +70,7 @@ class TestGet(TestCase):
         self.assertEqual(4.56, content['net_value'])
 
 
-class Test404(TestCase):
+class TestGetNonExistentDocument(TestApi):
 
     def setUp(self):
         self.resp = self.client.get(resolve_url('api:document', 42))
