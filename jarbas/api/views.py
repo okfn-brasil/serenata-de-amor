@@ -1,34 +1,26 @@
-import json
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from django.core.serializers import serialize
-from django.http import JsonResponse, Http404
-from django.shortcuts import get_object_or_404
-
+from jarbas.api.serializers import DocumentSerializer
 from jarbas.core.models import Document
 
 
-def home(request):
-    return JsonResponse({'total': Document.objects.count()})
+class DocumentViewSet(ReadOnlyModelViewSet):
 
+    serializer_class = DocumentSerializer
 
-def document(request, document_id):
+    def get_queryset(self):
 
-    # query & serialize
-    document = get_object_or_404(Document, document_id=document_id)
-    serialized = json.loads(serialize('json', [document]))
-    try:
-        obj = serialized[0]['fields']
-    except (IndexError, KeyError):
-        raise Http404("Couldn't serialize document " + document.document_id)
+        # look up for filters in the query parameters
+        params = list(
+            field.name for field in DocumentSerializer.Meta.model._meta.fields
+            if field.name not in DocumentSerializer.Meta.exclude
+        )
+        values = map(self.request.query_params.get, params)
+        filters = {k: v for k, v in zip(params, values) if v is not None}
 
-    # convert DecimalField to Float
-    float_fields = (
-        'document_value',
-        'remark_value',
-        'net_value',
-        'reimbursement_value'
-    )
-    for float_field in float_fields:
-        obj[float_field] = float(obj[float_field])
+        # build queryset
+        queryset = Document.objects.all()
+        if filters:
+            queryset = queryset.filter(**filters)
 
-    return JsonResponse(obj)
+        return queryset
