@@ -8,6 +8,8 @@ from jarbas.core.models import Document
 
 class TestApi(TestCase):
 
+    url = resolve_url('api:document-list') + '?document_id=42'
+
     def setUp(self):
         Document.objects.create(
             document_id=42,
@@ -41,39 +43,32 @@ class TestApi(TestCase):
             applicant_id=13
         )
 
-class TestGetHome(TestApi):
+
+class TestGetDocuments(TestApi):
 
     def setUp(self):
         super().setUp()
-        self.resp = self.client.get(resolve_url('api:home'))
+        self.resp = self.client.get(self.url)
 
     def test_status_code(self):
         self.assertEqual(200, self.resp.status_code)
 
     def test_content(self):
         content = json.loads(self.resp.content.decode('utf-8'))
-        self.assertEqual(1, content['total'])
-
-
-class TestGetDocument(TestApi):
-
-    def setUp(self):
-        super().setUp()
-        self.resp = self.client.get(resolve_url('api:document', 42))
-
-    def test_status_code(self):
-        self.assertEqual(200, self.resp.status_code)
-
-    def test_content(self):
-        content = json.loads(self.resp.content.decode('utf-8'))
-        self.assertEqual('Roger That', content['congressperson_name'])
-        self.assertEqual(4.56, content['net_value'])
+        first_row = content[0]
+        self.assertEqual(1, len(content))
+        self.assertEqual('Roger That', first_row['congressperson_name'])
+        self.assertEqual(4.56, float(first_row['net_value']))
 
 
 class TestGetNonExistentDocument(TestApi):
 
     def setUp(self):
-        self.resp = self.client.get(resolve_url('api:document', 42))
+        self.resp = self.client.get(self.url)
 
     def test_status_code(self):
-        self.assertEqual(404, self.resp.status_code)
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_content(self):
+        content = json.loads(self.resp.content.decode('utf-8'))
+        self.assertEqual(0, len(content))

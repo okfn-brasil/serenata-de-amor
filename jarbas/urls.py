@@ -15,11 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from rest_framework import routers
 
+from jarbas.api.views import DocumentViewSet
 from jarbas.frontend.views import home
+
+router = routers.DefaultRouter()
+router.register(r'document', DocumentViewSet, base_name='document')
 
 urlpatterns = [
     url(r'^$', home, name='home'),
-    url(r'^api/', include('jarbas.api.urls', namespace='api')),
+    url(r'^api/', include(router.urls, namespace='api')),
     url(r'^admin/', admin.site.urls),
 ]

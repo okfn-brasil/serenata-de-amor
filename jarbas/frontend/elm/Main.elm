@@ -35,9 +35,9 @@ type alias Document =
     , document_number : String
     , document_type : Int
     , issue_date : String
-    , document_value : Float
-    , remark_value : Float
-    , net_value : Float
+    , document_value : String
+    , remark_value : String
+    , net_value : String
     , month : Int
     , year : Int
     , installment : Int
@@ -45,14 +45,14 @@ type alias Document =
     , leg_of_the_trip : String
     , batch_number : Int
     , reimbursement_number : Int
-    , reimbursement_value : Float
+    , reimbursement_value : String
     , applicant_id : Int
     }
 
 
 type alias Model =
     { documentId : String
-    , document : Maybe Document
+    , documents : List Document
     , documentCount : Maybe Int
     , documentTotal : Int
     , loading : Bool
@@ -68,7 +68,7 @@ type alias Model =
 initialModel : Model
 initialModel =
     { documentId = ""
-    , document = Nothing
+    , documents = []
     , documentCount = Nothing
     , documentTotal = 2072729
     , loading = False
@@ -91,18 +91,23 @@ type Msg
     = Change String
     | Submit
     | ApiFail Http.Error
-    | ApiSuccess Document
-    | CountFail Http.Error
-    | CountSuccess Int
+    | ApiSuccess (List Document)
 
 
-loadDocument : String -> Cmd Msg
-loadDocument documentId =
-    Task.perform
-        ApiFail
-        ApiSuccess
-        (Http.get documentDecoder <| "/api/document/" ++ documentId)
+loadDocuments : String -> Cmd Msg
+loadDocuments documentId =
+    let
+        url =
+            Http.url "/api/document/" [ ( "document_id", documentId ) ]
+    in
+        Task.perform
+            ApiFail
+            ApiSuccess
+            (Http.get documentsDecoder url)
 
+documentsDecoder : Json.Decode.Decoder (List Document)
+documentsDecoder =
+    Json.Decode.list documentDecoder
 
 documentDecoder : Json.Decode.Decoder Document
 documentDecoder =
@@ -124,9 +129,9 @@ documentDecoder =
         |> required "document_number" Json.Decode.string
         |> required "document_type" Json.Decode.int
         |> required "issue_date" Json.Decode.string
-        |> required "document_value" Json.Decode.float
-        |> required "remark_value" Json.Decode.float
-        |> required "net_value" Json.Decode.float
+        |> required "document_value" Json.Decode.string
+        |> required "remark_value" Json.Decode.string
+        |> required "net_value" Json.Decode.string
         |> required "month" Json.Decode.int
         |> required "year" Json.Decode.int
         |> required "installment" Json.Decode.int
@@ -134,21 +139,8 @@ documentDecoder =
         |> required "leg_of_the_trip" Json.Decode.string
         |> required "batch_number" Json.Decode.int
         |> required "reimbursement_number" Json.Decode.int
-        |> required "reimbursement_value" Json.Decode.float
+        |> required "reimbursement_value" Json.Decode.string
         |> required "applicant_id" Json.Decode.int
-
-
-loadTotalCount : Cmd Msg
-loadTotalCount =
-    Task.perform
-        CountFail
-        CountSuccess
-        (Http.get countDecoder "/api/")
-
-
-countDecoder : Json.Decode.Decoder Int
-countDecoder =
-    "total" := Json.Decode.int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -163,22 +155,16 @@ update msg model =
             else
                 ( { model | loading = True }
                 , Cmd.batch
-                    [ loadDocument model.documentId
+                    [ loadDocuments model.documentId
                     , Navigation.newUrl <| toUrl model.documentId
                     ]
                 )
 
-        CountSuccess count ->
-            ( { model | documentCount = Just count }, Cmd.none )
-
-        CountFail _ ->
-            ( model, Cmd.none )
-
-        ApiSuccess document ->
-            ( { model | document = Just document, loading = False }, Cmd.none )
+        ApiSuccess documents ->
+            ( { model | documents = documents, loading = False }, Cmd.none )
 
         ApiFail error ->
-            ( { model | document = Nothing, error = Just error, loading = False }, Cmd.none )
+            ( { model | documents = [], error = Just error, loading = False }, Cmd.none )
 
 
 
@@ -230,10 +216,8 @@ viewError error =
             text ""
 
 
-viewDocument : Maybe Document -> Maybe Http.Error -> Html.Html Msg
-viewDocument document error =
-    case document of
-        Just document ->
+viewDocument : Document -> Html.Html Msg
+viewDocument document =
             let
                 labels =
                     [ ( "Document ID", toString document.document_id )
@@ -285,15 +269,23 @@ viewDocument document error =
                             , td [] [ a [ href receiptUrl ] [ text receiptUrl ] ]
                             ]
                         ]
+                title =
+                    "Document #" ++ (toString document.document_id)
             in
                 div
                     []
-                    [ h2 [] [ text "Document information" ]
+                    [ h2 [] [ text title ]
                     , table [] rows
                     ]
 
-        Nothing ->
-            viewError error
+
+viewDocuments : List Document -> Html.Html Msg
+viewDocuments documents =
+    if List.length documents == 0 then
+        viewError Nothing
+    else
+        div [] (List.map viewDocument documents)
+
 
 
 viewDocumentRow : ( String, String ) -> Html.Html Msg
@@ -346,7 +338,7 @@ view model =
         []
         [ viewWrapper <| viewHeader model
         , viewWrapper <| viewForm model.documentId model.loading
-        , viewWrapper <| viewDocument model.document model.error
+        , viewWrapper <| viewDocuments model.documents
         , viewWrapper <| viewFooter model
         ]
 
@@ -382,7 +374,7 @@ urlUpdate documentId model =
             if id == "" then
                 ( { model | documentId = id }, Cmd.none )
             else
-                ( { model | documentId = id, loading = True }, loadDocument id )
+                ( { model | documentId = id, loading = True }, loadDocuments id )
 
         Nothing ->
             ( model, Navigation.modifyUrl "" )
@@ -394,24 +386,18 @@ urlUpdate documentId model =
 --
 
 
-init : Maybe String -> ( Model, Cmd Msg )
-init documentId =
-    let
-        urlUpdateInit =
-            urlUpdate documentId initialModel
-
-        model =
-            fst urlUpdateInit
-
-        cmd =
-            snd urlUpdateInit
-    in
-        ( model, Cmd.batch [ loadTotalCount, cmd ] )
+type alias Flags =
+    { count : Int }
 
 
-main : Platform.Program Never
+init : Flags -> Maybe String -> ( Model, Cmd Msg )
+init flags documentId =
+    urlUpdate documentId { initialModel | documentCount = Just flags.count }
+
+
+main : Platform.Program Flags
 main =
-    Navigation.program urlParser
+    Navigation.programWithFlags urlParser
         { init = init
         , update = update
         , urlUpdate = urlUpdate
