@@ -1,4 +1,6 @@
+*.pyc
 .ipynb_checkpoints
 .python-version
+__pycache__/
 config.ini
 data
