@@ -3,7 +3,45 @@
 
 [Jarbas](http://serenata-jarbas.herokuapp.com/) is a tool for [Serenata de Amor](http://github.com/datasciencebr/serenata-de-amor).
 
-For a JSON API try `GET /api/document/<document_id>` or [just browse](http://serenata-jarbas.herokuapp.com/) with your favorite browser.
+## JSON API
+
+
+Endpoint: `GET /api/document/`
+
+You can use any field (and combine them) to filter the results. For example:
+
+`GET /api/document/?year=2015&state=RS&congressperson_id=42`
+
+List of fields that can be combined for filter the results: 
+* `document_id`
+* `congressperson_name`
+* `congressperson_id`
+* `congressperson_document`
+* `term`
+* `state`
+* `party`
+* `term_id`
+* `subquota_number`
+* `subquota_description`
+* `subquota_group_id`
+* `subquota_group_description`
+* `supplier`
+* `cnpj_cpf`
+* `document_number`
+* `document_type`
+* `issue_date`
+* `document_value`
+* `remark_value`
+* `net_value`
+* `month`
+* `year`
+* `installment`
+* `passenger`
+* `leg_of_the_trip`
+* `batch_number`
+* `reimbursement_number`
+* `reimbursement_value`
+* `applicant_id`
 
 ## Install
 
