@@ -107,7 +107,7 @@ loadDocuments documentId =
 
 documentsDecoder : Json.Decode.Decoder (List Document)
 documentsDecoder =
-    Json.Decode.list documentDecoder
+    Json.Decode.at ["results"] <| Json.Decode.list documentDecoder
 
 documentDecoder : Json.Decode.Decoder Document
 documentDecoder =

@@ -55,8 +55,8 @@ class TestGetDocuments(TestApi):
 
     def test_content(self):
         content = json.loads(self.resp.content.decode('utf-8'))
-        first_row = content[0]
-        self.assertEqual(1, len(content))
+        first_row = content['results'][0]
+        self.assertEqual(1, content['count'])
         self.assertEqual('Roger That', first_row['congressperson_name'])
         self.assertEqual(4.56, float(first_row['net_value']))
 
@@ -71,4 +71,4 @@ class TestGetNonExistentDocument(TestApi):
 
     def test_content(self):
         content = json.loads(self.resp.content.decode('utf-8'))
-        self.assertEqual(0, len(content))
+        self.assertEqual(0, content['count'])

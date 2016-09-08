@@ -144,5 +144,6 @@ AMAZON_S3_DATASET_DATE = config('AMAZON_S3_DATASET_DATE', default='2016-08-08')
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'PAGE_SIZE': 25
 }
