@@ -13,35 +13,24 @@ You can use any field (and combine them) to filter the results. For example:
 `GET /api/document/?year=2015&state=RS&congressperson_id=42`
 
 List of fields that can be combined for filter the results: 
-* `document_id`
-* `congressperson_name`
-* `congressperson_id`
-* `congressperson_document`
-* `term`
-* `state`
-* `party`
-* `term_id`
-* `subquota_number`
-* `subquota_description`
-* `subquota_group_id`
-* `subquota_group_description`
-* `supplier`
+
+* `applicant_id`
 * `cnpj_cpf`
-* `document_number`
+* `congressperson_id`
+* `document_id`
 * `document_type`
-* `issue_date`
 * `document_value`
-* `remark_value`
-* `net_value`
 * `month`
-* `year`
-* `installment`
-* `passenger`
-* `leg_of_the_trip`
-* `batch_number`
+* `net_value`
+* `party`
 * `reimbursement_number`
 * `reimbursement_value`
-* `applicant_id`
+* `remark_value`
+* `state`
+* `subquota_group_id`
+* `subquota_number`
+* `term`
+* `year`
 
 ## Install
 

@@ -11,9 +11,24 @@ class DocumentViewSet(ReadOnlyModelViewSet):
     def get_queryset(self):
 
         # look up for filters in the query parameters
-        params = list(
-            field.name for field in DocumentSerializer.Meta.model._meta.fields
-            if field.name not in DocumentSerializer.Meta.exclude
+        params = (
+            'applicant_id',
+            'cnpj_cpf',
+            'congressperson_id',
+            'document_id',
+            'document_type',
+            'document_value',
+            'month',
+            'net_value',
+            'party',
+            'reimbursement_number',
+            'reimbursement_value',
+            'remark_value',
+            'state',
+            'subquota_group_id',
+            'subquota_number',
+            'term',
+            'year',
         )
         values = map(self.request.query_params.get, params)
         filters = {k: v for k, v in zip(params, values) if v is not None}
