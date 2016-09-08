@@ -11,48 +11,19 @@ import Navigation
 import String
 import Task
 
+import Document
+
 
 --
 -- Model
 --
 
 
-type alias Document =
-    { document_id : Int
-    , congressperson_name : String
-    , congressperson_id : Int
-    , congressperson_document : Int
-    , term : Int
-    , state : String
-    , party : String
-    , term_id : Int
-    , subquota_number : Int
-    , subquota_description : String
-    , subquota_group_id : Int
-    , subquota_group_description : String
-    , supplier : String
-    , cnpj_cpf : String
-    , document_number : String
-    , document_type : Int
-    , issue_date : String
-    , document_value : String
-    , remark_value : String
-    , net_value : String
-    , month : Int
-    , year : Int
-    , installment : Int
-    , passenger : String
-    , leg_of_the_trip : String
-    , batch_number : Int
-    , reimbursement_number : Int
-    , reimbursement_value : String
-    , applicant_id : Int
-    }
 
 
 type alias Model =
     { documentId : String
-    , documents : List Document
+    , documents : List Document.Model
     , documentCount : Maybe Int
     , documentTotal : Int
     , loading : Bool
@@ -91,7 +62,7 @@ type Msg
     = Change String
     | Submit
     | ApiFail Http.Error
-    | ApiSuccess (List Document)
+    | ApiSuccess (List Document.Model)
 
 
 loadDocuments : String -> Cmd Msg
