@@ -15,8 +15,6 @@ import Document
 
 type alias Model =
     { documents : Document.Model
-    , documentCount : Maybe Int
-    , documentTotal : Int
     , title : String
     , github :
         { main : String
@@ -33,8 +31,6 @@ initialDocumentModel =
 initialModel : Model
 initialModel =
     { documents = initialDocumentModel
-    , documentCount = Nothing
-    , documentTotal = 2072729
     , title = "Serenata de Amor"
     , github =
         { main = "http://github.com/datasciencebr/serenata-de-amor"
@@ -93,32 +89,8 @@ viewFooter model =
             []
             [ li [] [ a [ href model.github.main ] [ text <| "About " ++ model.title ] ]
             , li [] [ a [ href model.github.api ] [ text "Fork me on GitHub" ] ]
-            , viewPercent model.documentCount model.documentTotal
             ]
         ]
-
-
-viewPercent : Maybe Int -> Int -> Html.Html Msg
-viewPercent count total =
-    case count of
-        Just documents ->
-            let
-                percentLoaded =
-                    toFloat documents / toFloat total |> (*) 100 |> round |> toString
-
-                link =
-                    a
-                        [ href "http://www.camara.gov.br/cota-parlamentar/" ]
-                        [ text "CEAP" ]
-            in
-                li []
-                    [ text <| percentLoaded ++ "% of "
-                    , link
-                    , text <| " data loaded"
-                    ]
-
-        Nothing ->
-            text ""
 
 
 view : Model -> Html.Html Msg
@@ -182,14 +154,14 @@ type alias Flags =
     { count : Int }
 
 
-init : Flags -> Maybe String -> ( Model, Cmd Msg )
-init flags documentId =
-    urlUpdate documentId { initialModel | documentCount = Just flags.count }
+init : Maybe String -> ( Model, Cmd Msg )
+init documentId =
+    urlUpdate documentId initialModel
 
 
-main : Platform.Program Flags
+main : Platform.Program Never
 main =
-    Navigation.programWithFlags urlParser
+    Navigation.program urlParser
         { init = init
         , update = update
         , urlUpdate = urlUpdate
