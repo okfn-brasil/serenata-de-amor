@@ -1,4 +1,4 @@
-module Document exposing (Msg, Model, loadDocuments, update, view)
+module Document exposing (Msg, Model, initialModel, loadDocuments, update, view)
 
 import Html exposing (a, button, div, form, input, h2, table, td, text, th, tr)
 import Html.Attributes exposing (class, disabled, href, placeholder, type', value)
@@ -55,6 +55,11 @@ type alias Model =
     , loading : Bool
     , error : Maybe Http.Error
     }
+
+
+initialModel : Model
+initialModel =
+    Model [] "" False Nothing
 
 
 

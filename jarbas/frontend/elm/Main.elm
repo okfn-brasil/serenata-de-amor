@@ -6,6 +6,7 @@ import Html.Attributes exposing (class, href)
 import Navigation
 import String
 import Document
+import Template
 
 
 --
@@ -15,27 +16,14 @@ import Document
 
 type alias Model =
     { documents : Document.Model
-    , title : String
-    , github :
-        { main : String
-        , api : String
-        }
+    , template : Template.Model
     }
-
-
-initialDocumentModel : Document.Model
-initialDocumentModel =
-    Document.Model [] "" False Nothing
 
 
 initialModel : Model
 initialModel =
-    { documents = initialDocumentModel
-    , title = "Serenata de Amor"
-    , github =
-        { main = "http://github.com/datasciencebr/serenata-de-amor"
-        , api = "http://github.com/datasciencebr/jarbas"
-        }
+    { documents = Document.initialModel
+    , template = Template.initialModel
     }
 
 
@@ -47,6 +35,7 @@ initialModel =
 
 type Msg
     = DocumentMsg Document.Msg
+    | TemplateMsg Template.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -65,6 +54,9 @@ update msg model =
             in
                 ( { model | documents = documents }, cmd )
 
+        TemplateMsg _ ->
+            ( model, Cmd.none )
+
 
 
 --
@@ -72,25 +64,9 @@ update msg model =
 --
 
 
-viewWrapper : Html.Html Msg -> Html.Html Msg
+viewWrapper : Html.Html a -> Html.Html a
 viewWrapper html =
     div [ class "outer" ] [ div [ class "inner" ] [ html ] ]
-
-
-viewHeader : Model -> Html.Html Msg
-viewHeader model =
-    div [ class "header" ] [ h1 [] [ text model.title ] ]
-
-
-viewFooter : Model -> Html.Html Msg
-viewFooter model =
-    div [ class "footer" ]
-        [ ul
-            []
-            [ li [] [ a [ href model.github.main ] [ text <| "About " ++ model.title ] ]
-            , li [] [ a [ href model.github.api ] [ text "Fork me on GitHub" ] ]
-            ]
-        ]
 
 
 view : Model -> Html.Html Msg
@@ -98,13 +74,14 @@ view model =
     let
         documents =
             Html.App.map DocumentMsg <| Document.view model.documents
+
+        header =
+            Html.App.map TemplateMsg <| Template.header model.template
+
+        footer =
+            Html.App.map TemplateMsg <| Template.footer model.template
     in
-        div
-            []
-            [ viewWrapper <| viewHeader model
-            , viewWrapper <| documents
-            , viewWrapper <| viewFooter model
-            ]
+        div [] (List.map viewWrapper [ header, documents, footer ])
 
 
 
@@ -136,7 +113,7 @@ urlUpdate query model =
     case query of
         Just id ->
             if id == "" then
-                ( { model | documents = initialDocumentModel }, Cmd.none )
+                ( { model | documents = Document.initialModel }, Cmd.none )
             else
                 ( model, Cmd.map DocumentMsg <| Document.loadDocuments id )
 
