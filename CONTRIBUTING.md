@@ -31,8 +31,8 @@ Basically we have four big directories with different purposes:
 |-----------|---------|-------------|
 | **`develop/`** | This is where we _explore_ data, feel free to create your own notebook for your exploration. | `[ISO 8601 date]-[author-initials]-[2-4 word description].ipynb` (e.g. `2016-05-13-ec-air-tickets.ipynb`) |
 |**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaninful title for the report (e.g. `Transport-allowances.ipybn` |
-| **`src/`** | This is where our auxiliar scripts lies, code to scrap data, to convert stuff etc. | Small caps, no special character, `-` instead of spaces. |
-| **`data/`** | This is not suppose to be commit, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be avaliable elsewhere (_just in case_…). | Small caps, no special character, `-` instead of spaces. |
+| **`src/`** | This is where our auxiliary scripts lies, code to scrap data, to convert stuff etc. | Small caps, no special character, `-` instead of spaces. |
+| **`data/`** | This is not suppose to be commit, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_…). | Small caps, no special character, `-` instead of spaces. |
 
 ## Four moments
 
