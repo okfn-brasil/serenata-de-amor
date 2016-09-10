@@ -8,20 +8,20 @@ EN = (
         'desc': """Name used by the congressperson during his term in
             office. Usually it is composed by two elements: a given name and a
             family name; two given names; or two forename, except if the head
-            of the Lower House explicitly alter this rule in order to avoid
+            of the Chamber of Deputies explicitly alter this rule in order to avoid
             confusion."""
     },
     {
         'variable': 'congressperson_id',
         'name': 'Unique Identifier of Congressperson',
         'desc': """Unique identifier number of a congressperson at the
-            Lower House."""
+            Chamber of Deputies."""
     },
     {
         'variable': 'congressperson_document',
         'name': 'Congressperson Document Number',
         'desc': """Document used to identify the congressperson at the
-            Lower House. May change from one term to another."""
+            Chamber of Deputies. May change from one term to another."""
     },
     {
         'variable': 'term',
@@ -182,7 +182,7 @@ EN = (
         'name': 'Batch Number',
         'desc': """In the context of this allowance the batch number
             refers to the cover number of a batch grouping receipts handed in
-            to the Lower House to be reimbursed. This data together with the
+            to the Chamber of Deputies to be reimbursed. This data together with the
             reimbursement number helps in finding the receipt in the Lower
             House Archive."""
     },
@@ -192,7 +192,7 @@ EN = (
         'desc': """In the context of this allowance the reimbursement
             number points to document issued in the reimbursement process.
             This data together with the reimbursement number helps in finding
-            the receipt in the Lower House Archive."""
+            the receipt in the Chamber of Deputies Archive."""
     },
     {
         'variable': 'reimbursement_value',
@@ -202,7 +202,7 @@ EN = (
     {
         'variable': 'applicant_id',
         'name': 'Applicant Identifier',
-        'desc': """Identifying number of a congressperson or Lower House
+        'desc': """Identifying number of a congressperson or the Chamber of Deputies
             leadership for the sake of transparency and accountability within
             this allowance."""
     }
