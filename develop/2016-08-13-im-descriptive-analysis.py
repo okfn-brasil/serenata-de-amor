@@ -108,7 +108,7 @@ negative_net_values.sample(random_state=0).iloc[0]
 negative_net_values['subquota_description'].unique()
 
 
-# In this specific case, it seems that Afonso Florence purchased a flight ticket of R\$ 556,73. When canceled it, the returned amount was just R\$ 356.73, generating a cancelation cost of R\$200 (or 64%).
+# In this specific case, it seems that Afonso Florence purchased a flight ticket of R\$ 556,73. When canceled it, the returned amount was just R\$ 356.73, generating a cancellation cost of R\$200 (or 64%).
 
 # In[15]:
 
