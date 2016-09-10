@@ -5,7 +5,7 @@ EN = (
     {
         'variable': 'congressperson_name',
         'name': 'Congressperson Name',
-        'desc': """Name used by the congress person during his term in
+        'desc': """Name used by the congressperson during his term in
             office. Usually it is composed by two elements: a given name and a
             family name; two given names; or two forename, except if the head
             of the Lower House explicitly alter this rule in order to avoid
@@ -21,7 +21,7 @@ EN = (
         'variable': 'congressperson_document',
         'name': 'Congressperson Document Number',
         'desc': """Document used to identify the congressperson at the
-            Lower House. Can be changed from one term to another."""
+            Lower House. May change from one term to another."""
     },
     {
         'variable': 'term',
@@ -58,7 +58,7 @@ EN = (
             of the term of congresspeople. In the context of this allowance it
             represents the identifying code of the legislature, an ordinal
             number incremented by one each new legislature (e.g. the
-            2011 legislature if the 54th legislature)."""
+            2011 legislature is the 54th legislature)."""
     },
     {
         'variable': 'subquota_number',
@@ -128,7 +128,7 @@ EN = (
         'desc': """Value of the expense in the receipt. If it refers to
             fly tickets this value can be negative, meaning that it is a
             credit related to another fly tickets issued but not used by the
-            congress person (the same is valid for `net_value`)."""
+            congressperson (the same is valid for `net_value`)."""
     },
     {
         'variable': 'remark_value',
