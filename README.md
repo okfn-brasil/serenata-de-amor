@@ -27,25 +27,6 @@ Ao contrário dos políticos que investigamos, não ganhamos fortunas diárias. 
 
 * [Bitcoin Wallet](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor) `1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV`
 
-## Lista de Dados Públicos e Estratégias para Coleta em Massa
-
-### Scraping de dados
-| Informação | Motivo | Estratégia |
-|------------|--------|------------|
-| [Cota para Exercício da Atividade Parlamentar](http://www.camara.gov.br/cota-parlamentar/) (Deputados Federais) | Listar gastos de deputados federais | Scraping de dados |
-| [Cota para Exercício da Atividade Parlamentar](http://www25.senado.leg.br/web/transparencia/sen/) (Senadores) | Listar gastos de senadores | Scraping de dados |
-| [Estimativa do aluguel de imóveis](ftp://ftp.ibge.gov.br/Contas_Nacionais/Sistema_de_Contas_Nacionais/Notas_Metodologicas_2010/06_aluguel.pdf) | Comparar o preço em notas fiscais com o valor do metro quadrado na área. | Scraping de dados de [estudo do IBGE](http://seriesestatisticas.ibge.gov.br/series.aspx?vcodigo=PRECO415). |
-
-### API
-| Informação | Motivo | Estratégia |
-|------------|--------|------------|
-| [Facebook Graph API](https://developers.facebook.com/docs/graph-api) | Identificar se duas pessoas se conhecem |  _Pendente_: [API mostra apenas amigos com o mesmo _app_ instalado](https://developers.facebook.com/docs/graph-api/reference/user/friends/).
-| [Consulta de CNPJ na Receita Federal](http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/cnpjreva_solicitacao.asp) | Levantar informações sobre onde foi gasto o dinheiro público | Captcha. (testar [API “alternativa” sem captcha](http://receitaws.com.br) e estudar viabilidade) |
-| [Google Street View](https://developers.google.com/maps/documentation/streetview/) | Identificar se o endereço é comercial ou residencial | API |
-
-## Contribuindo
-Para contribuir baste seguir nosso **[guia da contribuição](CONTRIBUTING.md)**.
-
 ## Participando da conversa
 A conversa sobre o projeto acontece em um grupo do [Telegram](https://telegram.org/) — **tudo em inglês**, já que temos contribuidores de outros países e queremos contribuir com outros países também.
 

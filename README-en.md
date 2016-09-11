@@ -27,25 +27,5 @@ Unlike the politicians we investigate, we don't get fortunes in a daily basis. B
 
 * [Bitcoin Wallet](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor) `1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV`
 
-
-## Public Data Lists and Strategies for Mass Collection
-
-### Data scraping
-| Information | Reason | Strategy |
-|------------|--------|------------|
-| [Quota for Exercising Parliamentary Activity](http://www.camara.gov.br/cota-parlamentar/) (Federal Deputies) | List expenses of federal deputies | Data scraping |
-| [Quota for Exercising Parliamentary Activity](http://www25.senado.leg.br/web/transparencia/sen/) (Senators) | List expenses of senators | Data scraping |
-| [Lease sale estimation of real estate](ftp://ftp.ibge.gov.br/Contas_Nacionais/Sistema_de_Contas_Nacionais/Notas_Metodologicas_2010/06_aluguel.pdf) | Compare the price on invoices to the value of square meter in the area. | Data scraping from [a study by IBGE](http://seriesestatisticas.ibge.gov.br/series.aspx?vcodigo=PRECO415). |
-
-### API
-| Information | Reason | Strategy |
-|------------|--------|------------|
-| [Google Street View](https://developers.google.com/maps/documentation/streetview/) | Identify whether the address is residential or commercial | API |
-| [CNPJ consultation with the Federal Revenue](http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/cnpjreva_solicitacao.asp) | Gather information on where public money was spent | Captcha. (test [“alternative” API without captcha](http://receitaws.com.br) and assess viability) |
-| [Facebook Graph API](https://developers.facebook.com/docs/graph-api) | Identify if two people know eachother |  _Pending_: [API shows just friends with the same app installed.](https://developers.facebook.com/docs/graph-api/reference/user/friends/).
-
-## Contribute
-Please read and follow our **[contributing guidelines](CONTRIBUTING.md)**.
-
 ## Joining the conversation
 The conversation about the project (always in English) happens in a [Telegram](https://telegram.org/) group. [Click here](https://telegram.me/joinchat/AKDWcwgjD0QPd6KqEG11tg) to join and get to know everyone involved.
