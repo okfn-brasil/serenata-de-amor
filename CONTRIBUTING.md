@@ -47,3 +47,10 @@ The project basically happens in four moments, and contributions are welcomed in
 | **Data collection** | Once one agrees that a certain _possibility_ is worth it, one might want to start writing code to get the data (this script's go into `src/`). | Technical skills in scrapping data and using APIs. | `src/` and `data/` |
 | **Exploring** | Once data is ready to be used, one might want to start explore and analyze it. | Here what matters is mostly data science skills. | `develop/` |
 | **Reporting** | Once a relevante finding emerge from the previous stages, this finding might be gathered with similar other findings (e.g. put together explorations on air tickets, car rentals and geolocation under a report on transportation) on a report. | Contributions here requires good communication skills and very basic understanding of quantitative methods. | `report/` |
+
+## Jarbas
+
+As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browser our data and refer to documens we analize. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
+
+If you fancy web developmemtn, feel free to check Jarba's source code, to check [Jarba's own Issues](https://github.com/datasciencebr/jarbas/issues) and to contribute there too.
+
