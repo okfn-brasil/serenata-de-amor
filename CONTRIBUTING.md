@@ -62,6 +62,15 @@ Here we explain what each script from `src/` does for you:
 ##### Miscellaneous
 1. `src/backup_data.py` uploads files from `data/` to a Amazon S3 bucket set on `config.ini` .
 
+### Datasets (`data/`)
+
+Here we explain what are the datasets inside `data/`. They are not part of this repository, but downloaded with the scripts from `src/`. Most files are `.xz` compressed CSV. 
+All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
+
+1. `current-year`, `last-year` and `previous-years`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `translation_table`. 
+1. `translation_table`: Table comparing contents from `datasets_format` and our translation of varible names and descriptions.
+1. `companies`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
+1. `datasets_format`: Original HTML in Portuguese from the Chamber of Deputies explaining CEAP dataset varibales.
 
 ## Four moments
 
