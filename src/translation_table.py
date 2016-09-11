@@ -270,5 +270,5 @@ def markdown():
         yield from variable_block(index + 1, *contents)
 
 
-with open('data/2016-08-08-ceap_datasets.md', 'w') as file_handler:
+with open('data/2016-08-08-ceap-datasets.md', 'w') as file_handler:
     file_handler.write('\n'.join(markdown()))
