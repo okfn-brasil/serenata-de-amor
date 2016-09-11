@@ -33,8 +33,8 @@ Unlike the politicians we investigate, we don't get fortunes in a daily basis. B
 ### Data scraping
 | Information | Reason | Strategy |
 |------------|--------|------------|
-| [Quota for exercising Parliamentary Activity](http://www.camara.gov.br/cota-parlamentar/) (Federal Deputies) | List expenses of federal deputies | Data scraping |
-| [Quota for exercising Parliamentary Activity](http://www25.senado.leg.br/web/transparencia/sen/) (Senators) | List expenses of senators | Data scraping |
+| [Quota for Exercising Parliamentary Activity](http://www.camara.gov.br/cota-parlamentar/) (Federal Deputies) | List expenses of federal deputies | Data scraping |
+| [Quota for Exercising Parliamentary Activity](http://www25.senado.leg.br/web/transparencia/sen/) (Senators) | List expenses of senators | Data scraping |
 | [Lease sale estimation of real estate](ftp://ftp.ibge.gov.br/Contas_Nacionais/Sistema_de_Contas_Nacionais/Notas_Metodologicas_2010/06_aluguel.pdf) | Compare the price on invoices to the value of square meter in the area. | Data scraping from [a study by IBGE](http://seriesestatisticas.ibge.gov.br/series.aspx?vcodigo=PRECO415). |
 
 ### API
