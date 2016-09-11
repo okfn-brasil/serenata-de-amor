@@ -25,7 +25,7 @@ data.head()
 data.iloc[0]
 
 
-# New names are based on the "**Nome do Dado**" column of the table available at [`data/datasets_format.html`](http://www2.camara.leg.br/transparencia/cota-para-exercicio-da-atividade-parlamentar/explicacoes-sobre-o-formato-dos-arquivos-xml), not "**Elemento de Dado**", their current names.
+# New names are based on the "**Nome do Dado**" column of the table available at [`data/datasets-format.html`](http://www2.camara.leg.br/transparencia/cota-para-exercicio-da-atividade-parlamentar/explicacoes-sobre-o-formato-dos-arquivos-xml), not "**Elemento de Dado**", their current names.
 
 # In[4]:
 

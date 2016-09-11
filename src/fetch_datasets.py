@@ -16,7 +16,7 @@ def download_source():
         subprocess.call(['unzip', '-o', filepath, '-d', 'data'])
 
     urlretrieve('http://www2.camara.leg.br/transparencia/cota-para-exercicio-da-atividade-parlamentar/explicacoes-sobre-o-formato-dos-arquivos-xml',
-                'data/datasets_format.html')
+                'data/datasets-format.html')
 
 def download_backup():
     settings = configparser.RawConfigParser()
