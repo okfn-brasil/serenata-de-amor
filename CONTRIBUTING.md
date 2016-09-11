@@ -36,6 +36,32 @@ Basically we have four big directories with different purposes:
 | **`src/`** | This is where our auxiliary scripts lies, code to scrap data, to convert stuff etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not suppose to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Small caps, no special character, `-` instead of spaces. |
 
+### Source files (`src/`)
+
+Here we explain what each script from `src/` does for you:
+
+##### One script to rule them all
+
+1. `src/fetch_datasets.py` dowloads all the available datasets to `data/` is `.xz` compressed CSV format with headers translated to English.
+
+
+##### Quota for Exercising Parliamentary Activity (CEAP)
+
+1. `src/fetch_datasets.py --from-source` dowloads all CEAP datasets to `data/` from the oficial source (in XML format in Portuguese) .
+1. `src/fetch_datasets.py` dowloads the CEAP datasets into `data/`; it can download them from the oficial source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
+1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
+1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
+1. `translation_table.py` creates a `data/YYYY-MM-DD-ceap_datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
+
+##### Suppliers information (CNPJ)
+
+1. `fetch_cnpj_info.py` iterate over the CEAP datasets looking for supplier unique documents (CNPJ) and create a local dataset with each supplier info.
+1. `clean_cnpj_info_dataset.py` clean up and translate the supplier info dataset.
+1. `geocode_addresses.py` iterate over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
+
+##### Miscellaneous
+1. `src/backup_data.py` uploads files from `data/` to a Amazon S3 bucket set on `config.ini` .
+
 
 ## Four moments
 
