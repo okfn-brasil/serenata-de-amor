@@ -1,5 +1,6 @@
 import configparser
 from optparse import OptionParser
+import os.path
 import subprocess
 from urllib.request import urlretrieve
 
@@ -32,8 +33,9 @@ def download_backup():
     for filename in files:
         url = 'https://%s.amazonaws.com/%s/%s' % (region, bucket, filename)
         filepath = 'data/%s' % filename
-        print('Downloading %s' % filename)
-        urlretrieve(url, filepath)
+        if not os.path.exists('data/%s' % filename):
+            print('Downloading %s' % filename)
+            urlretrieve(url, filepath)
 
 
 
