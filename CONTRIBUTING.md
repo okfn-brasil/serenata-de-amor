@@ -51,7 +51,7 @@ Here we explain what each script from `src/` does for you:
 1. `src/fetch_datasets.py` dowloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
 1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
 1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
-1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap_datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
+1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
 
 ##### Suppliers information (CNPJ)
 
@@ -67,7 +67,7 @@ Here we explain what each script from `src/` does for you:
 Here we explain what are the datasets inside `data/`. They are not part of this repository, but downloaded with the scripts from `src/`. Most files are `.xz` compressed CSV. 
 All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
 
-1. `data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `data/YYYY-MM-DD-ceap_datasets.md`. 
+1. `data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `data/YYYY-MM-DD-ceap-datasets.md`. 
 1. `data/datasets-format.html`: Original HTML in Portuguese from the Chamber of Deputies explaining CEAP dataset varibales.
 1. `data/YYYY-MM-DD-ceap-datasets.md`: Table comparing contents from `data/YYYY-MM-DD-datasets_format.html` and our translation of varible names and descriptions.
 1. `data/YYYY-MM-DD-companies.xz`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
