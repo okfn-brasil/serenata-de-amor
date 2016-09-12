@@ -5,6 +5,7 @@ data <- read.csv("../data/2016-08-08-last-year.xz")
 
 # Performs benford analysis with first 2 digits
 net_value.benford <- benford(data$net_value,number.of.digits = 2)
+
 # Mean absolute deviation
 MAD(net_value.benford)
 
