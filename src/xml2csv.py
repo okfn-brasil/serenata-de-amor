@@ -9,7 +9,7 @@ from lxml.etree import iterparse
 
 XML_FILE_PATH = sys.argv[1]
 CSV_FILE_PATH = sys.argv[2]
-HTML_FILE_PATH = 'data/datasets-format.html'
+HTML_FILE_PATH = 'data/2016-08-08-datasets-format.html'
 
 
 def output(*args, **kwargs):
