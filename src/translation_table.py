@@ -212,9 +212,9 @@ EN = (
 def get_portuguese():
     """
     Returns a generator of dictionaries with variable, name and description in
-    pt-BR (based on data/2016-08-08-datasets_format.html)
+    pt-BR (based on data/2016-08-08-datasets-format.html)
     """
-    with open('data/2016-08-08-datasets_format.html', 'rb') as file_handler:
+    with open('data/2016-08-08-datasets-format.html', 'rb') as file_handler:
         parsed = BeautifulSoup(file_handler.read(), 'lxml')
         for row in parsed.select('.tabela-2 tr'):
             cells = row.select('td')
@@ -270,5 +270,5 @@ def markdown():
         yield from variable_block(index + 1, *contents)
 
 
-with open('data/2016-08-08-ceap_datasets.md', 'w') as file_handler:
+with open('data/2016-08-08-ceap-datasets.md', 'w') as file_handler:
     file_handler.write('\n'.join(markdown()))

@@ -1,5 +1,6 @@
 import configparser
 from optparse import OptionParser
+import os.path
 import subprocess
 from urllib.request import urlretrieve
 
@@ -16,7 +17,7 @@ def download_source():
         subprocess.call(['unzip', '-o', filepath, '-d', 'data'])
 
     urlretrieve('http://www2.camara.leg.br/transparencia/cota-para-exercicio-da-atividade-parlamentar/explicacoes-sobre-o-formato-dos-arquivos-xml',
-                'data/datasets_format.html')
+                'data/datasets-format.html')
 
 def download_backup():
     settings = configparser.RawConfigParser()
@@ -27,13 +28,15 @@ def download_backup():
     files = ['2016-08-08-current-year.xz',
              '2016-08-08-last-year.xz',
              '2016-08-08-previous-years.xz',
-             '2016-08-08-datasets_format.html',
+             '2016-08-08-ceap-datasets.md',
+             '2016-08-08-datasets-format.html',
              '2016-09-03-companies.xz']
     for filename in files:
         url = 'https://%s.amazonaws.com/%s/%s' % (region, bucket, filename)
         filepath = 'data/%s' % filename
-        print('Downloading %s' % filename)
-        urlretrieve(url, filepath)
+        if not os.path.exists('data/%s' % filename):
+            print('Downloading %s' % filename)
+            urlretrieve(url, filepath)
 
 
 

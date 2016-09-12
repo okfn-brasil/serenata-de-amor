@@ -9,7 +9,7 @@ from lxml.etree import iterparse
 
 XML_FILE_PATH = sys.argv[1]
 CSV_FILE_PATH = sys.argv[2]
-HTML_FILE_PATH = 'data/datasets_format.html'
+HTML_FILE_PATH = 'data/2016-08-08-datasets-format.html'
 
 
 def output(*args, **kwargs):
@@ -36,7 +36,7 @@ def xml_parser(xml_path, tag='DESPESA'):
 def csv_header(html_path):
     """
     Generator that yields the CSV headers reading them from a HTML file (e.g.
-    datasets_format.html).
+    datasets-format.html).
     """
     yield 'ideDocumento'  # this field is missing from the reference
     with open(html_path, 'rb') as file_handler:
