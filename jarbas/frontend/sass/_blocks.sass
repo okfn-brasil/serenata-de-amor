@@ -3,6 +3,7 @@ html, body
 
 .outer
   +outer-container
+  padding: 0 1rem
 
 .inner
   +span-columns(12)
@@ -13,6 +14,33 @@ html, body
 
 form
   text-align: center
+
+  .field
+    +span-columns(12 of 12)
+    +omega(1n);
+    margin-top: 2.4rem
+    +media($mobile)
+      +omega-reset(1n)
+      +span-columns(6 of 12)
+      +omega(2n);
+    +media($tablet)
+      +omega-reset(2n)
+      +span-columns(4 of 12)
+      +omega(3n);
+    +media($desktop)
+      +omega-reset(3n)
+      +span-columns(3 of 12)
+      +omega(4n);
+    +media($wide)
+      +omega-reset(4n)
+      +span-columns(2 of 12)
+      +omega(6n);
+
+  .fields
+    +clearfix
+    +span-columns(12)
+    &:last-child
+      margin: 3rem 0
 
 table
   border-collapse: collapse

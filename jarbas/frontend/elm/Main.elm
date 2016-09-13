@@ -91,46 +91,56 @@ view model =
 --
 
 
-fromUrl : String -> Maybe String
-fromUrl url =
-    String.split "/" url |> List.reverse |> List.head
+fromUrl : String -> List ( String, String )
+fromUrl hash =
+    let
+        indexedList =
+            String.split "/" hash |> List.drop 1 |> List.indexedMap (,)
+
+        headersAndValues =
+            List.partition (\( i, v ) -> i `rem` 2 == 0) indexedList
+
+        headers =
+            fst headersAndValues |> List.map (\( i, v ) -> v)
+
+        values =
+            snd headersAndValues |> List.map (\( i, v ) -> v)
+    in
+        List.map2 (,) headers values
 
 
-urlParser : Navigation.Parser (Maybe String)
+urlParser : Navigation.Parser (List ( String, String ))
 urlParser =
     Navigation.makeParser (fromUrl << .hash)
 
 
-urlUpdate : Maybe String -> Model -> ( Model, Cmd Msg )
+urlUpdate : List ( String, String ) -> Model -> ( Model, Cmd Msg )
 urlUpdate query model =
-    case query of
-        Just id ->
-            if id == "" then
-                ( { model | documents = Document.initialModel }, Cmd.none )
-            else
-                let
-                    documents =
-                        model.documents
-                in
-                    ( { model | documents = { documents | query = id } }
-                    , Cmd.map DocumentMsg <| Document.loadDocuments id
-                    )
+    if List.isEmpty query then
+        ( { model | documents = Document.initialModel }
+        , Navigation.modifyUrl ""
+        )
+    else
+        let
+            documents =
+                model.documents
 
-        Nothing ->
-            ( model, Navigation.modifyUrl "" )
+            form =
+                documents.form
 
-
-
---
--- Init
---
+            newDocuments =
+                { documents | form = Document.updateFormFields form query }
+        in
+            ( { model | documents = newDocuments }
+            , Cmd.map DocumentMsg <| Document.loadDocuments query
+            )
 
 
 type alias Flags =
     { count : Int }
 
 
-init : Maybe String -> ( Model, Cmd Msg )
+init : List ( String, String ) -> ( Model, Cmd Msg )
 init documentId =
     urlUpdate documentId initialModel
 

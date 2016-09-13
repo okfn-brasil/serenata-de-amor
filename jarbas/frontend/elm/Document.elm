@@ -1,11 +1,10 @@
-module Document exposing (Msg, Model, initialModel, loadDocuments, update, view)
+module Document exposing (Msg, Model, initialModel, loadDocuments, updateFormFields, update, view)
 
-import Char
-import Html exposing (a, button, div, form, input, h2, table, td, text, th, tr)
-import Html.Attributes exposing (class, disabled, href, placeholder, type', value)
+import Dict exposing (Dict)
+import Html exposing (a, button, div, form, input, h2, h3, label, table, td, text, th, tr)
+import Html.Attributes exposing (class, disabled, for, href, id, type', value)
 import Html.Events exposing (onInput, onSubmit)
 import Http
-import Json.Decode
 import Json.Decode exposing ((:=))
 import Json.Decode.Pipeline exposing (required, decode)
 import Navigation
@@ -35,7 +34,7 @@ type alias SingleModel =
     , cnpj_cpf : String
     , document_number : String
     , document_type : Int
-    , issue_date : String
+    , issue_date : Maybe String
     , document_value : String
     , remark_value : String
     , net_value : String
@@ -51,17 +50,120 @@ type alias SingleModel =
     }
 
 
+type alias Results =
+    { documents : List SingleModel
+    , total : Maybe Int
+    }
+
+
+type alias FormField =
+    { label : String
+    , selected : Bool
+    , value : String
+    }
+
+
+type alias Form =
+    Dict String FormField
+
+
 type alias Model =
-    { results : List SingleModel
-    , query : String
+    { results : Results
+    , form : Form
     , loading : Bool
     , error : Maybe Http.Error
     }
 
 
+fieldsAndLabels : List ( String, String )
+fieldsAndLabels =
+    [ ( "document_id", "Document ID" )
+    , ( "congressperson_name", "Congressperson name" )
+    , ( "congressperson_id", "Congressperson ID" )
+    , ( "congressperson_document", "Congressperson document" )
+    , ( "term", "Term" )
+    , ( "state", "State" )
+    , ( "party", "Party" )
+    , ( "term_id", "Term ID" )
+    , ( "subquota_number", "Subquota number" )
+    , ( "subquota_description", "Subquota description" )
+    , ( "subquota_group_id", "Subquota group ID" )
+    , ( "subquota_group_description", "Subquota group description" )
+    , ( "supplier", "Supplier" )
+    , ( "cnpj_cpf", "CNPJ or CPF" )
+    , ( "document_number", "Document number" )
+    , ( "document_type", "Document type" )
+    , ( "issue_date", "Issue date" )
+    , ( "document_value", "Document value" )
+    , ( "remark_value", "Remark value" )
+    , ( "net_value", "Net value" )
+    , ( "month", "Month" )
+    , ( "year", "Year" )
+    , ( "installment", "Installment" )
+    , ( "passenger", "Passenger" )
+    , ( "leg_of_the_trip", "Leg of the trip" )
+    , ( "batch_number", "Batch number" )
+    , ( "reimbursement_number", "Reimbursement number" )
+    , ( "reimbursement_value", "Reimbursement value" )
+    , ( "applicant_id", "Applicant ID" )
+    ]
+
+
+isSearchable : ( String, String ) -> Bool
+isSearchable fieldAndLabel =
+    let
+        field =
+            fst fieldAndLabel
+
+        searchable =
+            [ "applicant_id"
+            , "cnpj_cpf"
+            , "congressperson_id"
+            , "document_id"
+            , "document_type"
+            , "month"
+            , "party"
+            , "reimbursement_number"
+            , "state"
+            , "subquota_group_id"
+            , "subquota_number"
+            , "term"
+            , "year"
+            ]
+    in
+        List.member field searchable
+
+
+toFormField : ( String, String ) -> ( String, FormField )
+toFormField ( name, label ) =
+    ( name
+    , FormField label False ""
+    )
+
+
+initialResults : Results
+initialResults =
+    Results [] Nothing
+
+
+initialForm : Form
+initialForm =
+    List.filter isSearchable fieldsAndLabels
+        |> List.map toFormField
+        |> Dict.fromList
+
+
 initialModel : Model
 initialModel =
-    Model [] "" False Nothing
+    Model initialResults initialForm False Nothing
+
+
+getQuery : Form -> List ( String, String )
+getQuery form =
+    form
+        |> Dict.filter (\index field -> not (String.isEmpty field.value))
+        |> Dict.map (\index field -> field.value)
+        |> Dict.toList
 
 
 
@@ -71,38 +173,76 @@ initialModel =
 
 
 type Msg
-    = Change String
+    = Change String String
     | Submit
     | ApiFail Http.Error
-    | ApiSuccess (List SingleModel)
+    | ApiSuccess Results
+
+
+updateFormField : Form -> String -> String -> Form
+updateFormField form name value =
+    let
+        formField =
+            Dict.get name form
+    in
+        case formField of
+            Just field ->
+                Dict.insert name { field | value = value } form
+
+            Nothing ->
+                form
+
+
+updateFormFields : Form -> List ( String, String ) -> Form
+updateFormFields form queryList =
+    let
+        maybeQuery =
+            List.head queryList
+
+        remainingQueries =
+            List.drop 1 queryList
+    in
+        case maybeQuery of
+            Just query ->
+                let
+                    newForm =
+                        updateFormField form (fst query) (snd query)
+                in
+                    updateFormFields newForm remainingQueries
+
+            Nothing ->
+                form
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Change query ->
-            ( { model | query = (String.filter Char.isDigit query) }, Cmd.none )
+        Change name value ->
+            let
+                form =
+                    updateFormField model.form name value
+            in
+                ( { model | form = form }, Cmd.none )
 
         Submit ->
-            ( { model | loading = True }
-            , Cmd.batch
-                [ loadDocuments model.query
-                , Navigation.newUrl <| toUrl model.query
-                ]
-            )
+            let
+                url =
+                    getQuery model.form |> toUrl
+            in
+                ( { model | loading = True }, Navigation.newUrl url )
 
         ApiSuccess results ->
             ( { model | results = results, loading = False, error = Nothing }, Cmd.none )
 
         ApiFail error ->
-            ( { model | results = [], error = Just error, loading = False }, Cmd.none )
+            ( { model | results = initialResults, error = Just error, loading = False }, Cmd.none )
 
 
-loadDocuments : String -> Cmd Msg
+loadDocuments : List ( String, String ) -> Cmd Msg
 loadDocuments query =
     let
         url =
-            Http.url "/api/document/" [ ( "document_id", query ) ]
+            Http.url "/api/document/" query
     in
         Task.perform
             ApiFail
@@ -110,12 +250,22 @@ loadDocuments query =
             (Http.get decoder url)
 
 
-toUrl : String -> String
-toUrl documentId =
-    if documentId == "" then
-        ""
-    else
-        "#/document/" ++ documentId
+toUrl : List ( String, String ) -> String
+toUrl query =
+    let
+        validQueries =
+            List.filter isSearchable query
+
+        pairs =
+            List.map (\( index, value ) -> index ++ "/" ++ value) validQueries
+
+        trailing =
+            String.join "/" pairs
+    in
+        if List.isEmpty validQueries then
+            ""
+        else
+            "#/" ++ trailing
 
 
 
@@ -124,9 +274,11 @@ toUrl documentId =
 --
 
 
-decoder : Json.Decode.Decoder (List SingleModel)
+decoder : Json.Decode.Decoder Results
 decoder =
-    Json.Decode.at [ "results" ] <| Json.Decode.list singleDecoder
+    Json.Decode.object2 Results
+        (Json.Decode.at [ "results" ] <| Json.Decode.list singleDecoder)
+        (Json.Decode.at [ "count" ] <| Json.Decode.Pipeline.nullable Json.Decode.int)
 
 
 singleDecoder : Json.Decode.Decoder SingleModel
@@ -148,7 +300,7 @@ singleDecoder =
         |> required "cnpj_cpf" Json.Decode.string
         |> required "document_number" Json.Decode.string
         |> required "document_type" Json.Decode.int
-        |> required "issue_date" Json.Decode.string
+        |> required "issue_date" (Json.Decode.Pipeline.nullable Json.Decode.string)
         |> required "document_value" Json.Decode.string
         |> required "remark_value" Json.Decode.string
         |> required "net_value" Json.Decode.string
@@ -169,27 +321,46 @@ singleDecoder =
 --
 
 
-viewForm : String -> Bool -> Html.Html Msg
-viewForm query loading =
+viewFormField : Bool -> ( String, FormField ) -> Html.Html Msg
+viewFormField loading ( fieldName, field ) =
+    div
+        [ class "field" ]
+        [ label [ for <| "id_" ++ fieldName ] [ text field.label ]
+        , input
+            [ type' "text"
+            , id <| "id_" ++ fieldName
+            , value field.value
+            , Change fieldName |> onInput
+            , disabled loading
+            ]
+            []
+        ]
+
+
+viewForm : Model -> Html.Html Msg
+viewForm model =
     let
         buttonLabel =
-            if loading then
+            if model.loading then
                 "Loading"
             else
                 "Search"
-    in
-        form
-            [ onSubmit Submit ]
-            [ input
-                [ type' "text"
-                , value query
-                , onInput Change
-                , disabled loading
-                , placeholder "Enter a CEAP document #"
-                ]
-                []
-            , button [ type' "submit", disabled loading ] [ text buttonLabel ]
+
+        fields =
+            Dict.toList model.form
+
+        inputs =
+            List.map (viewFormField model.loading) fields
+
+        sendButton =
+            [ button [ type' "submit", disabled model.loading ] [ text buttonLabel ] ]
+
+        children =
+            [ div [ class "fields" ] inputs
+            , div [ class "fields" ] sendButton
             ]
+    in
+        form [ onSubmit Submit ] children
 
 
 viewError : Maybe Http.Error -> Html.Html Msg
@@ -222,7 +393,7 @@ viewDocument document =
             , ( "CNPJ/CPF", document.cnpj_cpf )
             , ( "Document number", document.document_number )
             , ( "Document type", toString document.document_type )
-            , ( "Issue date", document.issue_date )
+            , ( "Issue date", Maybe.withDefault "" document.issue_date )
             , ( "Document value", toString document.document_value )
             , ( "Remark value", toString document.remark_value )
             , ( "Net value", toString document.net_value )
@@ -261,17 +432,33 @@ viewDocument document =
     in
         div
             []
-            [ h2 [] [ text title ]
+            [ h3 [] [ text title ]
             , table [] rows
             ]
 
 
-viewDocuments : List SingleModel -> Html.Html Msg
-viewDocuments documents =
-    if List.length documents == 0 then
+viewDocuments : Results -> Html.Html Msg
+viewDocuments results =
+    if List.length results.documents == 0 then
         viewError Nothing
     else
-        div [] (List.map viewDocument documents)
+        let
+            documents =
+                List.map viewDocument results.documents
+
+            total =
+                Maybe.withDefault 0 results.total |> toString
+
+            showing =
+                List.length results.documents |> toString
+
+            title =
+                if total == showing then
+                    text ""
+                else
+                    h2 [] [ text <| total ++ " documents found. Showing " ++ showing ++ "." ]
+        in
+            div [] (title :: documents)
 
 
 viewDocumentRow : ( String, String ) -> Html.Html Msg
@@ -287,6 +474,6 @@ view : Model -> Html.Html Msg
 view model =
     div
         []
-        [ viewForm model.query model.loading
+        [ viewForm model
         , viewDocuments model.results
         ]
