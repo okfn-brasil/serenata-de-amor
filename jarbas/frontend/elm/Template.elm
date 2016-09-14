@@ -10,14 +10,15 @@ import Html.Attributes exposing (class, href)
 
 
 type alias Model =
-    { title : String
+    { jarbas : String
+    , serenata : String
     , github : String
     }
 
 
 initialModel : Model
 initialModel =
-    Model "Serenata de Amor" "http://github.com/datasciencebr/"
+    Model "Jarbas" "Serenata de Amor" "http://github.com/datasciencebr/"
 
 
 
@@ -38,15 +39,12 @@ type Msg
 
 header : Model -> Html.Html a
 header model =
-    div [ class "header" ] [ h1 [] [ text model.title ] ]
+    div [ class "header" ] [ h1 [] [ text model.jarbas ] ]
 
 
 footer : Model -> Html.Html a
 footer model =
     let
-        about =
-            "About " ++ model.title
-
         serenata =
             model.github ++ "serenata-de-amor"
 
@@ -56,7 +54,7 @@ footer model =
         div [ class "footer" ]
             [ ul
                 []
-                [ li [] [ a [ href serenata ] [ text about ] ]
-                , li [] [ a [ href jarbas ] [ text "Fork me on GitHub" ] ]
+                [ li [] [ a [ href serenata ] [ "About " ++ model.serenata |> text ] ]
+                , li [] [ a [ href jarbas ] [ "About " ++ model.jarbas |> text ] ]
                 ]
             ]
