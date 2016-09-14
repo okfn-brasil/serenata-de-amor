@@ -30,4 +30,4 @@ Ao contrário dos políticos que investigamos, não ganhamos fortunas diárias. 
 ## Participando da conversa
 A conversa sobre o projeto acontece em um grupo do [Telegram](https://telegram.org/) — **tudo em inglês**, já que temos contribuidores de outros países e queremos contribuir com outros países também.
 
-[Clique aqui](https://telegram.me/joinchat/AKDWcwgjD0QPd6KqEG11tg) para entrar na conversa e conhecer os envolvidos.
+[Clique aqui](https://telegram.me/joinchat/AKDWc0BDOqriD1n-mntRBg) para entrar na conversa e conhecer os envolvidos.

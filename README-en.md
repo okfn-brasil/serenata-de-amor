@@ -28,4 +28,4 @@ Unlike the politicians we investigate, we don't get fortunes in a daily basis. B
 * [Bitcoin Wallet](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor) `1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV`
 
 ## Joining the conversation
-The conversation about the project (always in English) happens in a [Telegram](https://telegram.org/) group. [Click here](https://telegram.me/joinchat/AKDWcwgjD0QPd6KqEG11tg) to join and get to know everyone involved.
+The conversation about the project (always in English) happens in a [Telegram](https://telegram.org/) group. [Click here](https://telegram.me/joinchat/AKDWc0BDOqriD1n-mntRBg) to join and get to know everyone involved.
