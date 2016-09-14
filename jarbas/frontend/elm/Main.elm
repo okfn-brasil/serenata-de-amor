@@ -103,10 +103,20 @@ fromUrl hash =
         headers =
             fst headersAndValues |> List.map (\( i, v ) -> v)
 
+        retroCompatibileHeaders =
+            List.map
+                (\header ->
+                    if header == "document" then
+                        "document_id"
+                    else
+                        header
+                )
+                headers
+
         values =
             snd headersAndValues |> List.map (\( i, v ) -> v)
     in
-        List.map2 (,) headers values
+        List.map2 (,) retroCompatibileHeaders values
 
 
 urlParser : Navigation.Parser (List ( String, String ))
