@@ -454,7 +454,7 @@ viewDocuments results =
 
             title =
                 if total == showing then
-                    text ""
+                    h2 [] [ text <| total ++ " documents found." ]
                 else
                     h2 [] [ text <| total ++ " documents found. Showing " ++ showing ++ "." ]
         in

@@ -19,13 +19,9 @@ List of fields that can be combined for filter the results:
 * `congressperson_id`
 * `document_id`
 * `document_type`
-* `document_value`
 * `month`
-* `net_value`
 * `party`
 * `reimbursement_number`
-* `reimbursement_value`
-* `remark_value`
 * `state`
 * `subquota_group_id`
 * `subquota_number`
