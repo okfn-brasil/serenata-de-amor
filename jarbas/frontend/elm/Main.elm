@@ -128,7 +128,7 @@ urlUpdate : List ( String, String ) -> Model -> ( Model, Cmd Msg )
 urlUpdate query model =
     if List.isEmpty query then
         ( { model | documents = Document.initialModel }
-        , Navigation.modifyUrl ""
+        , Cmd.none
         )
     else
         let
