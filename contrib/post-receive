@@ -1,0 +1,26 @@
+#!/bin/bash
+
+GIT_REPO=/opt/jarbas.git
+PUBLIC_WWW=/opt/jarbas
+
+echo "==> Deploying to application directory…"
+cd $PUBLIC_WWW || exit
+unset GIT_DIR
+git pull $GIT_REPO master
+
+echo "==> Activating virtualenv…"
+. /opt/jarbas.venv/bin/activate
+
+echo "==> Installing NodeJS packages…"
+npm install
+
+echo "==> Installing Python packages…"
+pip install -r requirements.txt
+
+echo "==> Running migrations…"
+python manage.py migrate
+
+echo "==> Running post compile script…"
+source bin/post_compile
+
+echo "==> Done!"
