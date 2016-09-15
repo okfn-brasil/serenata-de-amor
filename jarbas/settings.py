@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'jarbas.frontend.context_processor.google_analytics',
             ],
         },
     },
@@ -147,3 +148,7 @@ REST_FRAMEWORK = {
     ],
     'PAGE_SIZE': 25
 }
+
+# Google Analytics
+
+GOOGLE_ANALYTICS = config('GOOGLE_ANALYTICS', default='')

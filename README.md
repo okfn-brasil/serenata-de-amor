@@ -59,6 +59,10 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 * `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
 * `AMAZON_S3_DATASET_DATE` (_str_) Datasets file name prefix (e.g. `2016-08-08` for `2016-08-08-current-year.xz`)
 
+#### Google Analytics
+
+* `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
+
 ### Migrations
 
 Once you're done with requirements, dependencies and settings, create the basic structure at the database (and if you like create a super-user for you, so you can use [Django Admin](http://localhost:8000/admin) later):
