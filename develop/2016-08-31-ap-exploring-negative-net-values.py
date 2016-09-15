@@ -109,19 +109,19 @@ counterparts = negatives_and_counterparts[negatives_and_counterparts['net_value'
 len(counterparts)
 
 
+# In[16]:
+
+# If every negative document is to have a pair, we're short on positive ones by:
+len(negative_documents) - len(counterparts)
+
+
 # What comes to mind is: 
 # - Those remaining **4.188** are negative expenses without a corresponding positive one?;
 # - The document numbers are messed up? Maybe something like: "Bilhete: 957-2117.270689" for the negative and "Vôo: 957-2117.270689" for the positive;
 # - The net_values are messed up? Maybe some positive one were registered as negatives;
 # - The positive expense is not in this dataset? Maybe in an older one;
 
-# In[16]:
-
-# If every negative document is to have a pair, we're short on positive ones by:
-(len(negative_documents) * 2) - len(negatives_and_counterparts)
-
-
-# Taking from negatives without counterparts (**31.104**) and removing every document with a matching document number in counterparts(**13.458**) gives us a total of **4458** expenses. More than the **4.188** I antecipaded.
+# Taking from negatives without counterparts (**31.104**) and removing every document with a matching document number in counterparts(**13.458**) gives us a total of **4.458** expenses. More than the **4.188** I antecipaded.
 
 # In[17]:
 
@@ -135,4 +135,41 @@ len(negatives_without_counterparts)
 # In[18]:
 
 len(negatives_without_counterparts['document_number'].unique())
+
+
+# Here I'm importing previous year's dataset
+
+# In[19]:
+
+old_data = pd.read_csv('../data/2016-08-08-previous-years.xz',
+                   parse_dates=[16],
+                   dtype={'document_id': np.str,
+                          'congressperson_id': np.str,
+                          'congressperson_document': np.str,
+                          'term_id': np.str,
+                          'cnpj_cpf': np.str,
+                          'reimbursement_number': np.str})
+
+
+# In[20]:
+
+print(old_data.shape)
+
+
+# It seems we have **6.655** matches for our negatives without counterparts (**4.458**) list's document numbers in the old data. It's more than the number of negatives.
+
+# In[21]:
+
+old_data_counterparts = old_data[old_data['document_number'].isin(negatives_without_counterparts['document_number'])]
+
+len(old_data_counterparts)
+
+
+# **Most** but not all are positives.
+
+# In[22]:
+
+old_data_only_positives = old_data_counterparts[old_data_counterparts['net_value'] > 0]
+
+len(old_data_only_positives)
 

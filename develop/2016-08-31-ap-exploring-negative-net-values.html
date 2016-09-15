@@ -12535,29 +12535,13 @@ Name: 332049, dtype: object</pre>
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>What comes to mind is:</p>
-<ul>
-<li>Those remaining <strong>4.188</strong> are negative expenses without a corresponding positive one?;</li>
-<li>The document numbers are messed up? Maybe something like: "Bilhete: 957-2117.270689" for the negative and "Vôo: 957-2117.270689" for the positive;</li>
-<li>The net_values are messed up? Maybe some positive one were registered as negatives;</li>
-<li>The positive expense is not in this dataset? Maybe in an older one;</li>
-</ul>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># If every negative document is to have a pair, we&#39;re short on positive ones by:</span>
-<span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">negative_documents</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">negatives_and_counterparts</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">negative_documents</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">counterparts</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12586,7 +12570,23 @@ Name: 332049, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Taking from negatives without counterparts (<strong>31.104</strong>) and removing every document with a matching document number in counterparts(<strong>13.458</strong>) gives us a total of <strong>4458</strong> expenses. More than the <strong>4.188</strong> I antecipaded.</p>
+<p>What comes to mind is:</p>
+<ul>
+<li>Those remaining <strong>4.188</strong> are negative expenses without a corresponding positive one?;</li>
+<li>The document numbers are messed up? Maybe something like: "Bilhete: 957-2117.270689" for the negative and "Vôo: 957-2117.270689" for the positive;</li>
+<li>The net_values are messed up? Maybe some positive one were registered as negatives;</li>
+<li>The positive expense is not in this dataset? Maybe in an older one;</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Taking from negatives without counterparts (<strong>31.104</strong>) and removing every document with a matching document number in counterparts(<strong>13.458</strong>) gives us a total of <strong>4.458</strong> expenses. More than the <strong>4.188</strong> I antecipaded.</p>
 
 </div>
 </div>
@@ -12653,6 +12653,145 @@ Name: 332049, dtype: object</pre>
 
 <div class="output_text output_subarea output_execute_result">
 <pre>4403</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here I'm importing previous year's dataset</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-08-08-previous-years.xz&#39;</span><span class="p">,</span>
+                   <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span>
+                   <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;document_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;congressperson_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;congressperson_document&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;term_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">})</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">old_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(1512786, 29)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It seems we have <strong>6.655</strong> matches for our negatives without counterparts (<strong>4.458</strong>) list's document numbers in the old data. It's more than the number of negatives.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_data_counterparts</span> <span class="o">=</span> <span class="n">old_data</span><span class="p">[</span><span class="n">old_data</span><span class="p">[</span><span class="s1">&#39;document_number&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">negatives_without_counterparts</span><span class="p">[</span><span class="s1">&#39;document_number&#39;</span><span class="p">])]</span>
+
+<span class="nb">len</span><span class="p">(</span><span class="n">old_data_counterparts</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>6655</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Most</strong> but not all are positives.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_data_only_positives</span> <span class="o">=</span> <span class="n">old_data_counterparts</span><span class="p">[</span><span class="n">old_data_counterparts</span><span class="p">[</span><span class="s1">&#39;net_value&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">len</span><span class="p">(</span><span class="n">old_data_only_positives</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[22]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>6638</pre>
 </div>
 
 </div>
