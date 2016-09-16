@@ -1,4 +1,6 @@
 # Serenata de amor
+
+[![Join the chat at https://gitter.im/serenata-de-amor/Lobby](https://badges.gitter.im/serenata-de-amor/Lobby.svg)](https://gitter.im/serenata-de-amor/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 > Combater a corrupção de forma massiva e eficaz.
 
 *:uk: [Jump to the English version](README-en.md)*
