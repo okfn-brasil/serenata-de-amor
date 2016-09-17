@@ -1,33 +1,17 @@
-# Serenata de amor
-> Combater a corrupção de forma massiva e eficaz.
+![Operação Serenata de Amor](logo.png)
 
-*:uk: [Jump to the English version](README-en.md)*
+The Operation Serenata de Amor arose from a combination of needs, from many people, of many nationalities: of seeing Machine Learning better applied to improve population's lives, of learning whom to vote, of doing something about the corruption problem present in the whole world.
 
-A ideia de automatizar a análise de contas públicas é inédita: engajar a população para treinar nossa plataforma na análise e revisão de contas. Após esse estágio inicial a automatização potencializa análise de dados em volumes inéditos, aumentando a chance de acharmos furos e corruptos.
+We are building an intelligence capable of analyzing public spending and saying, with reliability, the possibility of each receipt being unlawful. This information will be used beyond the code, in the world outside of GitHub. Everything is open source from the beginning, allowing others to fork the project when their ideas diverge from the Operation Serenata de Amor.
 
-Em outras palavras, a plataforma de Machine Learning convida a população a ensiná-la, aprende com isso, e expande os métodos massivamente. Em paralelo a produção de conteúdo e uma interface amigável para explorar os dados expandirão o acesso a informação. Ao massificarmos a análise do que é feito com dinheiro público e a exposição dessas análises de forma aberta, toda a sociedade terá argumentos para pressionar políticos e exigir que dinheiro desviado seja devolvido aos cofres públicos.
+Our current milestone is to create the means for this kind of automation with the Quota for Exercising Parliamentary Activity (CEAP), from the Brazilian Chamber of Deputies. This job includes the development of APIs, data cleaning and analyses, conception and validation of scientific hyphotheses, confirmation of illicit acts via investigation and reports - to the population and to legal authorities.
 
-Em segundo plano esse movimento ajuda a criar uma imagem mais transparente sobre a atuação política de parlamentares, fazendo com que todos tenhamos mais parâmetros na hora de decidir quem leva nosso voto nas próximas eleições.
+To achieve this goal, unprecedented, we invite everyone to train the intelligence, collect information, cross databases, validate hyphotheses and apply Machine Learning with models competing against each other and getting combined in ensembles with higher precision than any previous option.
 
-## Siga nas redes sociais
+## Before contributing
 
-* [Facebook](https://www.facebook.com/operacaoSerenataDeAmor/)
-* [Twitter](https://twitter.com/datascience_br)
-* [Medium](https://datasciencebr.com/)
+**[Visit out official website](http://serenata.datasciencebr.com/)** and remember to **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
 
-## Apoie o projeto com suas habilidades
+## License
 
-Verifique nosso [guia de contribuição](CONTRIBUTING.md) e [pergunte](https://github.com/datasciencebr/serenata-de-amor/issues) se tiver dúvidas.
-
-## Apoie o projeto com dinheiro
-
-Ao contrário dos políticos que investigamos, não ganhamos fortunas diárias. Mas manter infraestrutura e um time trabalhando no projeto custa dinheiro. Que tal contribuir?
-
-* [Catarse (financiamento coletivo)](https://www.catarse.me/serenata)
-
-* [Bitcoin Wallet](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor) `1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV`
-
-## Participando da conversa
-A conversa sobre o projeto acontece em um grupo do [Telegram](https://telegram.org/) — **tudo em inglês**, já que temos contribuidores de outros países e queremos contribuir com outros países também.
-
-[Clique aqui](https://telegram.me/joinchat/AKDWc0BDOqriD1n-mntRBg) para entrar na conversa e conhecer os envolvidos.
+The project Operation Serenata de Amor is available under [MIT license](LICENSE).
