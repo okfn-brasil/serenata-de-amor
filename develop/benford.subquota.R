@@ -1,11 +1,17 @@
-## Performs Benford analysis on .csv dataset with variables:
-### net_value, issue_date and congressperson_name
+## Performs Benford analysis on dataset and returns summary stats and values for suspects
+
 ## Returns list with two matrix objetics:
-### 1 - Sample stats from Benford analysis; 2 - Frequency of cases per congressman for frequent initial digit sequences  
+### 1 - Sample stats from Benford analysis; 
+### 2 - Frequency of cases per congressman for frequent initial digit sequences  
+
 # To do
 # ( ) Parse issue_date and get results per month/trimester (good for detecting pattern changes) 
 
-benford.subquota <- function(data, mode = "std",value = "net_value",
+# We can use "output.size" argument to get more values and "by" 
+# to change stat used for classification (’abs.excess.summation’,’difference’,’squared.diff’
+# or’absolute.diff’).
+
+benford.subquota <- function(data,value = "net_value",
                              date.str = "issue_date",congr.name = "congressperson_name",
                              ndigits = 2, output.size = 3,by = "absolute.diff"){
   require(benford.analysis)
