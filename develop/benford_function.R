@@ -1,13 +1,15 @@
-# Function - Performs Benford analysis on .csv dataset with variables 
-# net_value, issue_date, congressperson_name
+## Performs Benford analysis on .csv dataset with variables:
+### net_value, issue_date and congressperson_name
+## Returns list with two matrix objetics:
+### 1 - Sample stats from Benford analysis; 2 - Frequency of cases per congressman for frequent initial digit sequences  
 # To do
-# (X) Return summary stats of benford analysis 
-# ( ) Use data.table to improve loading speed data.table
-library(benford.analysis)
+# ( ) Parse issue_date and get results per month/trimester (good for detecting pattern changes) 
 
 benford.subquota <- function(data, mode = "std",value = "net_value",
-                             date.str = "issue_date",congr.name = "congressperson_name",ndigits = 2){
+                             date.str = "issue_date",congr.name = "congressperson_name",
+                             ndigits = 2, output.size = 3,by = "absolute.diff"){
   require(benford.analysis)
+  require(dplyr)
   # Input checking
   if(!(is.data.frame(data))) stop ("Data must be in data.frame format",call. = TRUE)
   vars.list <- c(value,date.str,congr.name) 
@@ -15,30 +17,34 @@ benford.subquota <- function(data, mode = "std",value = "net_value",
   if (match.values != length(vars.list)) stop("Variables not found in data set",call. = TRUE) #Check if variables are in dataset
   
   # Analysis and saving values
-  net_value.benford <- benford(data$net_value,number.of.digits = ndigits)
+  net_value.benford <- benford(data[,value],number.of.digits = ndigits)
   sample.stats <- matrix(nrow = 13,ncol = 1)
   row.names(sample.stats) <- c("no_obsv","no_2obsv","no_digits",
                                "mantiss_mean","mantiss_var","mantiss_exkurt","mantiss_skew",
                                "mantiss_l2","mantiss_df",
                                "chi_square","df",
                                "mean_abs_dev","distort_fact")
+  colnames(sample.stats) <- "value"
   sample.stats[,1] <- c(nrow(net_value.benford$data),nrow(net_value.benford$s.o.data),ndigits,
                     net_value.benford$mantissa[1:4][[2]],
                     as.numeric(net_value.benford$stats[[2]][1:2]),
                     as.numeric(net_value.benford$stats[[1]][1:2]),
                     net_value.benford$MAD,net_value.benford$distortion.factor)
-  return(sample.stats)
+  # Creates ID var to identify cases, since document_id has NA values
+  data$id <- numeric(length = nrow(data))
+  data$id <- c(1:nrow(data))
+  
+  # The following is 'imported' from getSuspects function
+  benf.digits <- net_value.benford[["bfd"]][order(get(by), decreasing = TRUE)][, 
+                                                            list(digits)][1:output.size]
+  suspect.lines <- list()
+  data$digit <- numeric(length = nrow(data))
+  data$digit <- NA
+  for (i in 1:length(benf.digits$digits)){
+  suspect.lines[[i]] <- net_value.benford[["data"]]$lines.used[net_value.benford[["data"]]$data.digits %in% 
+                                               benf.digits$digits[i]]
+  data[suspect.lines[[i]],"digit"] <- benf.digits$digits[[i]]
   }
-
-# Reads data
-data.set <- read.csv("../data/2016-08-08-last-year.xz")
-
-# Performs benford analysis with first 2 digits
-net_value.benford <- benford(data$net_value,number.of.digits = 2)
-
-# Selects cases with 2 most frequent digits
-suspects <- getSuspects(net_value.benford,data, how.many=2)
-
-# Here we have the most cited names 
-sort(table(suspects$congressperson_name)) #Looks like we have some suspects:)
-
+  congress.values <- table(data[,c("congressperson_name","digit")])
+  return (list(sample_stats = sample.stats,congress_values = congress.values))
+  }
