@@ -15,7 +15,7 @@ benford.subquota <- function(data,value = "net_value",
                              date.str = "issue_date",congr.name = "congressperson_name",
                              ndigits = 2, output.size = 3,by = "absolute.diff"){
   require(benford.analysis)
-  require(dplyr)
+
   # Input checking
   if(!(is.data.frame(data))) stop ("Data must be in data.frame format",call. = TRUE)
   vars.list <- c(value,date.str,congr.name) 
@@ -36,9 +36,6 @@ benford.subquota <- function(data,value = "net_value",
                     as.numeric(net_value.benford$stats[[2]][1:2]),
                     as.numeric(net_value.benford$stats[[1]][1:2]),
                     net_value.benford$MAD,net_value.benford$distortion.factor)
-  # Creates ID var to identify cases, since document_id has NA values
-  data$id <- numeric(length = nrow(data))
-  data$id <- c(1:nrow(data))
   
   # The following is 'imported' from getSuspects function
   benf.digits <- net_value.benford[["bfd"]][order(get(by), decreasing = TRUE)][, 
