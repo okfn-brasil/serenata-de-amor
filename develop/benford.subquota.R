@@ -15,7 +15,6 @@ benford.subquota <- function(data,value = "net_value",
                              date.str = "issue_date",congr.name = "congressperson_name",
                              ndigits = 2, output.size = 3,by = "absolute.diff"){
   require(benford.analysis)
-  require(dplyr)
   # Input checking
   if(!(is.data.frame(data))) stop ("Data must be in data.frame format",call. = TRUE)
   vars.list <- c(value,date.str,congr.name) 
