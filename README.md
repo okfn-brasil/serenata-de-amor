@@ -10,7 +10,7 @@ To achieve this goal, unprecedented, we invite everyone to train the intelligenc
 
 ## Before contributing
 
-**[Visit out official website](http://serenata.datasciencebr.com/)** and remember to **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
+**[Visit out official website](http://serenata.datasciencebr.com/)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
 
 ## License
 
