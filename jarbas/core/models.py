@@ -34,3 +34,13 @@ class Document(models.Model):
     applicant_id = models.IntegerField('Applicant ID', db_index=True)
     source = models.CharField('CSV file source', db_index=True, null=True, blank=True, max_length=16)
     line = models.IntegerField('Line # in the source', db_index=True, null=True, blank=True)
+    receipt_url = models.URLField('Receipt URL', null=True, blank=True, default=None, max_length=16)
+
+    def get_receipt_url(self):
+        server = 'www.camara.gov.br'
+        path = 'cota-parlamentar/documentos/publ/{}/{}/{}.pdf'.format(
+            self.applicant_id,
+            self.year,
+            self.document_id
+        )
+        return 'http://{}/{}'.format(server, path)

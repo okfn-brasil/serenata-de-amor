@@ -7,4 +7,4 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
-        exclude = ('id', 'source', 'line')
+        exclude = ('id', 'source', 'line', 'receipt_url')

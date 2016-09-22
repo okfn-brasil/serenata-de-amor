@@ -30,7 +30,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        """Create or update records (if they match `document_id`)"""
         print('Starting with {:,} document'.format(Document.objects.count()))
 
         if options.get('drop', False):
@@ -119,9 +118,10 @@ class Command(BaseCommand):
         self.print_count(permanent=True)
 
     def drop_documents(self):
-        print('Deleting all existing documents')
-        Document.objects.all().delete()
-        self.print_count(permanent=True)
+        if Document.objects.count() != 0:
+            print('Deleting all existing documents')
+            Document.objects.all().delete()
+            self.print_count(permanent=True)
 
     @staticmethod
     def get_file_name(suffix):

@@ -72,6 +72,8 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
+### Load data
+
 Now you can load the data from our datasets:
 
 ```
@@ -79,6 +81,12 @@ python manage.py loaddatasets
 ```
 
 Use `python manage.py loaddatasets --help` to check options on limiting the number of documents to be loaded from the datasets.
+
+And you'll have to check for receipt URLs:
+
+```
+python manage.py receipturls
+```
 
 ### Generate static files
 
