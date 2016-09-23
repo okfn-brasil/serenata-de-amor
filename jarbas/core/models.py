@@ -1,4 +1,9 @@
+from datetime import datetime, timezone
+
 from django.db import models
+from django.utils.timezone import get_default_timezone
+
+UNIX_EPOCH = default=datetime(1970, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
 
 class Document(models.Model):
@@ -35,6 +40,7 @@ class Document(models.Model):
     source = models.CharField('CSV file source', db_index=True, null=True, blank=True, max_length=16)
     line = models.IntegerField('Line # in the source', db_index=True, null=True, blank=True)
     receipt_url = models.URLField('Receipt URL', null=True, blank=True, default=None, max_length=16)
+    receipt_url_last_update = models.URLField('Receipt URL Last Update', db_index=True, default=UNIX_EPOCH)
 
     def get_receipt_url(self):
         server = 'www.camara.gov.br'

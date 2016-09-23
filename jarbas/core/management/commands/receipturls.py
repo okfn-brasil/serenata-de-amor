@@ -1,8 +1,9 @@
+from datetime import timedelta
 from http.client import HTTPConnection
-from multiprocessing import Pool
 from urllib.parse import urlparse
 
 from django.core.management.base import BaseCommand
+from django.utils.timezone import now
 
 from jarbas.core.models import Document
 
@@ -12,26 +13,27 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--processes', '-p', dest='processes', type=int, default=4,
-            help='Number parallel processes alloweded (default: 4)'
+            '--days', '-d', dest='days', type=int, default=7,
+            help='Update URLs older than DAYS days (default: 7)'
         )
 
     def handle(self, *args, **options):
+        print('==> Looking for documents to update')
+        limit = now() - timedelta(days=options['days'])
+        qs = Document.objects.filter(receipt_url_last_update__lt=limit)
+        total = qs.count()
         self.progress = {
-            'total': Document.objects.count(),
+            'total': total,
             'count': 0,
             'updated': 0,
             'valid': 0,
             'errors': list()
         }
 
-        fields = ('pk', 'applicant_id', 'year', 'document_id')
-        documents = Document.objects.only(*fields).iterator()
-
-        with Pool(processes=options['processes']) as pool:
-            for url, updated, error in pool.imap(update_url, documents):
-                self.update_progress(url, updated, error)
-                print(self.summary(), end='\r')
+        print('==> {:,} documents to process'.format(total))
+        for url, updated, error in map(update_url, qs.iterator()):
+            self.update_progress(url, updated, error)
+            print(self.summary(), end='\r')
 
         print('\r\n')
         print(self.summary())
@@ -39,6 +41,7 @@ class Command(BaseCommand):
             print('==> Errors:')
             for count, error in enumerate(progress['errors']):
                 print('    {}. {}'.format(count, erro))
+        print('==> Done!')
 
     def update_progress(self, url, updated, error):
         """Update instace's progress according to the return of update_url()"""
@@ -86,17 +89,17 @@ def update_url(document):
         error = None
     except TimeoutError:
         status = 408
-        error = 'TimeoutError: [pk={}] {}'.format(
-            document.pk,
+        error = 'TimeoutError: {}'.format(
             document.get_receipt_url()
         )
 
     url = document.get_receipt_url() if 200 <= status < 400 else None
     needs_update = document.receipt_url != url
 
+    document.receipt_url_last_update = now()
     if needs_update:
         document.receipt_url = url
-        document.save()
+    document.save()
 
     return url, needs_update, error
 
