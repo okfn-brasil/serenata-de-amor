@@ -1,7 +1,7 @@
 # Jarbas — a tool for [Serenata de Amor](http://github.com/datasciencebr/serenata-de-amor)
 
 
-[Jarbas](http://serenata-jarbas.herokuapp.com/) is a tool for [Serenata de Amor](http://github.com/datasciencebr/serenata-de-amor).
+[Jarbas](http://jarbas.datasciencebr.com/) is a tool for [Serenata de Amor](http://github.com/datasciencebr/serenata-de-amor) contributors.
 
 ## JSON API
 
