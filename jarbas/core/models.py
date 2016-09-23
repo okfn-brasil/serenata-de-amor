@@ -1,9 +1,8 @@
 from datetime import datetime, timezone
 
 from django.db import models
-from django.utils.timezone import get_default_timezone
 
-UNIX_EPOCH = default=datetime(1970, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+UNIX_EPOCH = datetime(1970, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
 
 class Document(models.Model):

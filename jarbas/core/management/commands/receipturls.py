@@ -39,8 +39,8 @@ class Command(BaseCommand):
         print(self.summary())
         if self.progress['errors']:
             print('==> Errors:')
-            for count, error in enumerate(progress['errors']):
-                print('    {}. {}'.format(count, erro))
+            for count, error in enumerate(self.progress['errors']):
+                print('    {}. {}'.format(count, error))
         print('==> Done!')
 
     def update_progress(self, url, updated, error):
@@ -51,7 +51,7 @@ class Command(BaseCommand):
             self.progress['updated'] += 1
 
         if url:
-            self.progress['valid'] +=1
+            self.progress['valid'] += 1
 
         if error:
             self.progress['errors'].append(error)
@@ -102,4 +102,3 @@ def update_url(document):
     document.save()
 
     return url, needs_update, error
-

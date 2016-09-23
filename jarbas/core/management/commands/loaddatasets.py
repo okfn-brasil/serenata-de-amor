@@ -148,11 +148,19 @@ class Command(BaseCommand):
         if match:
             return match.group(1)
 
-    @staticmethod
-    def to_number(value, type_of_number):
+    def to_number(self, value, type_of_number):
+        if value in ('NaN', ''):
+            return 0
+
         if type_of_number == int:
-            type_of_number = lambda x: int(float(x))
-        return 0 if value in ('NaN', '') else type_of_number(value)
+            type_of_number = self.force_int
+
+        return type_of_number(value)
+
+    @staticmethod
+    def force_int(number):
+        """Helps converting strings like '1.0' to integer"""
+        return int(float(number))
 
     @staticmethod
     def print_count(**kwargs):

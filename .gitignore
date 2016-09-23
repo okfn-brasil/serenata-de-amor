@@ -1,4 +1,5 @@
 # development environment
+.coverage
 .env
 *.sqlite3
 
