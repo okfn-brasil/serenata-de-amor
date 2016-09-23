@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+echo "-----> $ python manage.py ceapdatasets"
+python manage.py ceapdatasets
+
 echo "-----> $ python manage.py assets build --no-cache"
 python manage.py assets build --no-cache
 

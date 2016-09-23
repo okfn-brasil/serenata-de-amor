@@ -10,6 +10,7 @@
   "dependencies": {
     "bourbon": "^4.2.7",
     "bourbon-neat": "^1.8.0",
-    "elm": "^0.17.1"
+    "elm": "^0.17.1",
+    "github-markdown-css": "^2.4.1"
   }
 }

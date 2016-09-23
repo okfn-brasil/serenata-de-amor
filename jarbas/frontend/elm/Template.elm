@@ -9,16 +9,43 @@ import Html.Attributes exposing (class, href, src, alt)
 --
 
 
-type alias Model =
-    { jarbas : String
-    , serenata : String
-    , github : String
+type alias Link =
+    { label : String
+    , url : String
     }
+
+
+type alias Model =
+    { jarbas : Link
+    , serenata : Link
+    , table : Link
+    , digitalOcean : Link
+    }
+
+
+jarbas : Link
+jarbas =
+    Link "Jarbas" "http://github.com/datasciencebr/jarbas"
+
+
+serenata : Link
+serenata =
+    Link "About Serenata de Amor" "http://github.com/datasciencebr/serenata-de-Amor"
+
+
+table : Link
+table =
+    Link "Dataset description" "/static/ceap-datasets.html"
+
+
+digitalOcean : Link
+digitalOcean =
+    Link "Powered by Digital Ocean" "http://digitalocean.com"
 
 
 initialModel : Model
 initialModel =
-    Model "Jarbas" "Serenata de Amor" "http://github.com/datasciencebr/"
+    Model jarbas serenata table digitalOcean
 
 
 
@@ -39,24 +66,18 @@ type Msg
 
 header : Model -> Html.Html Msg
 header model =
-    div [ class "header" ] [ h1 [] [ text model.jarbas ] ]
+    div [ class "header" ] [ h1 [] [ text model.jarbas.label ] ]
 
 
 footer : Model -> Html.Html Msg
 footer model =
     let
-        serenata =
-            model.github ++ "serenata-de-amor"
-
-        jarbas =
-            model.github ++ "jarbas"
-
         digitalocean =
             a
-                [ href "https://www.digitalocean.com/" ]
+                [ href model.digitalOcean.url ]
                 [ img
                     [ src "/static/digitalocean.png"
-                    , alt "Powered by Digital Ocean"
+                    , alt model.digitalOcean.label
                     ]
                     []
                 ]
@@ -64,8 +85,9 @@ footer model =
         div [ class "footer" ]
             [ ul
                 []
-                [ li [] [ a [ href serenata ] [ "About " ++ model.serenata |> text ] ]
-                , li [] [ a [ href jarbas ] [ "About " ++ model.jarbas |> text ] ]
+                [ li [] [ a [ href model.table.url ] [ model.table.label |> text ] ]
+                , li [] [ a [ href model.serenata.url ] [ model.serenata.label |> text ] ]
+                , li [] [ a [ href model.jarbas.url ] [ "About " ++ model.jarbas.label |> text ] ]
                 , li [] [ digitalocean ]
                 ]
             ]

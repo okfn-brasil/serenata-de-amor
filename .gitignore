@@ -3,14 +3,13 @@
 .env
 *.sqlite3
 
-# cache & compiled files
+# cache, compiled & downloaded files
 *.pyc
 .webassets-cache/
+__pycache__/
 app.css
 app.js
-__pycache__/
-staticfiles/
-
-# third party
+ceap-datasets.html
 elm-stuff/
 node_modules/
+staticfiles/
