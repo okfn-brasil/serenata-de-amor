@@ -1,0 +1,30 @@
+sudo: false
+language: python
+python:
+  - 3.5
+services:
+    - postgresql
+
+branches:
+  only:
+    - master
+
+install:
+  - psql -c 'create database jarbas;' -U postgres
+  - npm install
+  - pip install -r requirements.txt
+  - pip install coveralls
+
+env:
+  - DATABASE_URL="postgres://postgres@localhost/jarbas"
+
+before_script:
+  - python manage.py migrate
+  - python manage.py assets build --no-cache
+  - python manage.py collectstatic --no-input
+
+script:
+  - coverage run manage.py test -v 3
+
+after_success:
+  - coveralls

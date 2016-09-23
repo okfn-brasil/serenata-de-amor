@@ -1,0 +1,5 @@
+  [run]
+  source = jarbas
+  omit =
+      jarbas/wsgi.py
+      jarbas/core/migrations/*.py
