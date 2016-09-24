@@ -1,4 +1,7 @@
-from rest_framework.viewsets import ReadOnlyModelViewSet
+
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet, ViewSet
 
 from jarbas.api.serializers import DocumentSerializer
 from jarbas.core.models import Document
@@ -35,3 +38,12 @@ class DocumentViewSet(ReadOnlyModelViewSet):
             queryset = queryset.filter(**filters)
 
         return queryset
+
+
+class ReceiptViewSet(ViewSet):
+
+    queryset = Document.objects.all()
+
+    def retrieve(self, request, pk=None):
+        document = get_object_or_404(Document, pk=pk)
+        return Response({'url': document.fetch_receipt()})

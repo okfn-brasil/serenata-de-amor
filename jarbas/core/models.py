@@ -1,8 +1,7 @@
-from datetime import datetime, timezone
+from urllib.request import urlopen
+from urllib.error import HTTPError
 
 from django.db import models
-
-UNIX_EPOCH = datetime(1970, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
 
 class Document(models.Model):
@@ -38,8 +37,8 @@ class Document(models.Model):
     applicant_id = models.IntegerField('Applicant ID', db_index=True)
     source = models.CharField('CSV file source', db_index=True, null=True, blank=True, max_length=16)
     line = models.IntegerField('Line # in the source', db_index=True, null=True, blank=True)
-    receipt_url = models.URLField('Receipt URL', null=True, blank=True, default=None, max_length=16)
-    receipt_url_last_update = models.URLField('Receipt URL Last Update', db_index=True, default=UNIX_EPOCH)
+    receipt_url = models.URLField('Receipt URL', null=True, blank=True, default=None, max_length=128)
+    receipt_fetched = models.BooleanField('Was receipt fetched?', default=False)
 
     def get_receipt_url(self):
         server = 'www.camara.gov.br'
@@ -49,3 +48,22 @@ class Document(models.Model):
             self.document_id
         )
         return 'http://{}/{}'.format(server, path)
+
+    def fetch_receipt(self):
+        if self.receipt_url:
+            return self.receipt_url
+
+        probable_url = self.get_receipt_url()
+
+        try:
+            request = urlopen(probable_url)
+            status = request.status
+        except HTTPError as error:
+            status = error.code
+
+        url = probable_url if 200 <= status < 400 else None
+        self.receipt_url = url
+        self.receipt_fetched = True
+        self.save()
+
+        return url

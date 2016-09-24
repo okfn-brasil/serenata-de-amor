@@ -86,12 +86,6 @@ python manage.py loaddatasets
 
 Use `python manage.py loaddatasets --help` to check options on limiting the number of documents to be loaded from the datasets.
 
-And you'll have to check for receipt URLs:
-
-```
-python manage.py receipturls
-```
-
 ### Generate static files
 
 We generate assets through [webassets](http://webassets.readthedocs.io) and we serve static files through [WhiteNoise](http://whitenoise.evans.io), thus you might have to run:

@@ -3,10 +3,10 @@ module Document exposing (Msg, Model, initialModel, loadDocuments, updateFormFie
 import Dict exposing (Dict)
 import Html exposing (a, button, div, form, input, h2, h3, label, table, td, text, th, tr)
 import Html.Attributes exposing (class, disabled, for, href, id, type', value)
-import Html.Events exposing (onInput, onSubmit)
+import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
 import Json.Decode exposing ((:=))
-import Json.Decode.Pipeline exposing (required, decode)
+import Json.Decode.Pipeline exposing (decode, hardcoded, required)
 import Navigation
 import String
 import Task
@@ -18,7 +18,8 @@ import Task
 
 
 type alias SingleModel =
-    { document_id : Int
+    { id : Int
+    , document_id : Int
     , congressperson_name : String
     , congressperson_id : Int
     , congressperson_document : Int
@@ -47,6 +48,9 @@ type alias SingleModel =
     , reimbursement_number : Int
     , reimbursement_value : String
     , applicant_id : Int
+    , receipt_url : Maybe String
+    , receipt_fetched : Bool
+    , receipt_loading : Bool
     }
 
 
@@ -177,6 +181,9 @@ type Msg
     | Submit
     | ApiFail Http.Error
     | ApiSuccess Results
+    | FetchReceipt Int Int
+    | ReceiptSuccess Int (Maybe String)
+    | ReceiptFail Http.Error
 
 
 updateFormField : Form -> String -> String -> Form
@@ -214,6 +221,18 @@ updateFormFields form queryList =
                 form
 
 
+updateReceipt : Int -> Maybe String -> ( Int, SingleModel ) -> SingleModel
+updateReceipt target url ( index, document ) =
+    if target == index then
+        { document
+            | receipt_url = url
+            , receipt_fetched = True
+            , receipt_loading = False
+        }
+    else
+        document
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -237,6 +256,44 @@ update msg model =
         ApiFail error ->
             ( { model | results = initialResults, error = Just error, loading = False }, Cmd.none )
 
+        FetchReceipt index id ->
+            ( model, fetchReceipt index id )
+
+        ReceiptSuccess index url ->
+            let
+                results =
+                    model.results
+
+                documents =
+                    results.documents
+
+                indexedDocuments =
+                    List.indexedMap (,) documents
+
+                newDocuments =
+                    List.map (updateReceipt index url) indexedDocuments
+
+                newResults =
+                    { results | documents = newDocuments }
+            in
+                ( { model | results = newResults }, Cmd.none )
+
+        ReceiptFail error ->
+            let
+                results =
+                    model.results
+
+                documents =
+                    results.documents
+
+                newDocuments =
+                    List.map (\d -> { d | receipt_loading = False }) documents
+
+                newResults =
+                    { results | documents = newDocuments }
+            in
+                ( { model | results = results, error = Just error }, Cmd.none )
+
 
 loadDocuments : List ( String, String ) -> Cmd Msg
 loadDocuments query =
@@ -248,6 +305,18 @@ loadDocuments query =
             ApiFail
             ApiSuccess
             (Http.get decoder url)
+
+
+fetchReceipt : Int -> Int -> Cmd Msg
+fetchReceipt index id =
+    let
+        url =
+            "/api/receipt/" ++ (toString id) ++ "/"
+    in
+        Task.perform
+            ReceiptFail
+            (ReceiptSuccess index)
+            (Http.get receiptDecoder url)
 
 
 toUrl : List ( String, String ) -> String
@@ -284,6 +353,7 @@ decoder =
 singleDecoder : Json.Decode.Decoder SingleModel
 singleDecoder =
     decode SingleModel
+        |> required "id" Json.Decode.int
         |> required "document_id" Json.Decode.int
         |> required "congressperson_name" Json.Decode.string
         |> required "congressperson_id" Json.Decode.int
@@ -313,6 +383,14 @@ singleDecoder =
         |> required "reimbursement_number" Json.Decode.int
         |> required "reimbursement_value" Json.Decode.string
         |> required "applicant_id" Json.Decode.int
+        |> required "receipt_url" (Json.Decode.Pipeline.nullable Json.Decode.string)
+        |> required "receipt_fetched" Json.Decode.bool
+        |> hardcoded False
+
+
+receiptDecoder : Json.Decode.Decoder (Maybe String)
+receiptDecoder =
+    Json.Decode.at [ "url" ] (Json.Decode.maybe Json.Decode.string)
 
 
 
@@ -342,7 +420,7 @@ viewForm model =
     let
         buttonLabel =
             if model.loading then
-                "Loading"
+                "Loading…"
             else
                 "Search"
 
@@ -373,8 +451,32 @@ viewError error =
             text ""
 
 
-viewDocument : SingleModel -> Html.Html Msg
-viewDocument document =
+viewReceipt : Int -> SingleModel -> Html.Html Msg
+viewReceipt index document =
+    case document.receipt_url of
+        Just url ->
+            a [ href url ] [ text url ]
+
+        Nothing ->
+            if document.receipt_fetched then
+                div [] [ text "Not available" ]
+            else
+                let
+                    label =
+                        if document.receipt_loading then
+                            "Loading…"
+                        else
+                            "Fetch receipt URL"
+                in
+                    button
+                        [ onClick (FetchReceipt index document.id)
+                        , disabled document.receipt_loading
+                        ]
+                        [ text label ]
+
+
+viewDocument : Int -> SingleModel -> Html.Html Msg
+viewDocument index document =
     let
         labels =
             [ ( "Document ID", toString document.document_id )
@@ -408,22 +510,13 @@ viewDocument document =
             , ( "Applicant ID", toString document.applicant_id )
             ]
 
-        receiptUrl =
-            "http://www.camara.gov.br/cota-parlamentar/documentos/publ/"
-                ++ toString document.applicant_id
-                ++ "/"
-                ++ toString document.year
-                ++ "/"
-                ++ toString document.document_id
-                ++ ".pdf"
-
         rows =
             List.append
                 (List.map viewDocumentRow labels)
                 [ tr
                     []
                     [ th [] [ text "Receipt URL" ]
-                    , td [] [ a [ href receiptUrl ] [ text receiptUrl ] ]
+                    , td [] [ viewReceipt index document ]
                     ]
                 ]
 
@@ -444,7 +537,7 @@ viewDocuments results =
     else
         let
             documents =
-                List.map viewDocument results.documents
+                List.indexedMap (\idx doc -> (viewDocument idx doc)) results.documents
 
             total =
                 Maybe.withDefault 0 results.total |> toString
