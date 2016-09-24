@@ -1,5 +1,5 @@
 server {
-    server_name 45.55.37.68;
+    server_name jarbas.datasciencebr.com;
 
     access_log on;
 

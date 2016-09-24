@@ -150,3 +150,7 @@ REST_FRAMEWORK = {
 # Google Analytics
 
 GOOGLE_ANALYTICS = config('GOOGLE_ANALYTICS', default='')
+
+# Server headers
+
+USE_X_FORWARDED_HOST = config('USE_X_FORWARDED_HOST', default=False, cast=bool)
