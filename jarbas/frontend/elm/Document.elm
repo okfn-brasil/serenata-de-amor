@@ -257,7 +257,30 @@ update msg model =
             ( { model | results = initialResults, error = Just error, loading = False }, Cmd.none )
 
         FetchReceipt index id ->
-            ( model, fetchReceipt index id )
+            let
+                results =
+                    model.results
+
+                documents =
+                    results.documents
+
+                indexedDocuments =
+                    List.indexedMap (,) documents
+
+                newDocuments =
+                    List.indexedMap
+                        (\idx doc ->
+                            if idx == index then
+                                { doc | receipt_loading = True }
+                            else
+                                doc
+                        )
+                        documents
+
+                newResults =
+                    { results | documents = newDocuments }
+            in
+                ( { model | results = newResults }, fetchReceipt index id )
 
         ReceiptSuccess index url ->
             let
