@@ -1,7 +1,5 @@
-from urllib.request import urlopen
-from urllib.error import HTTPError
-
 from django.db import models
+from requests import head
 
 
 class Document(models.Model):
@@ -54,14 +52,9 @@ class Document(models.Model):
             return self.receipt_url
 
         probable_url = self.get_receipt_url()
-
-        try:
-            request = urlopen(probable_url)
-            status = request.status
-        except HTTPError as error:
-            status = error.code
-
+        status = head(probable_url).status_code
         url = probable_url if 200 <= status < 400 else None
+
         self.receipt_url = url
         self.receipt_fetched = True
         self.save()

@@ -6,4 +6,5 @@ djangorestframework==3.4.7
 libsass==0.11.1
 py-gfm==0.1.3
 python-decouple==3.0
+requests==2.11.1
 webassets-elm==0.1.3
