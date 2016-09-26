@@ -17,11 +17,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from rest_framework import routers
 
-from jarbas.api.views import DocumentViewSet, ReceiptViewSet
+from jarbas.api.views import DocumentViewSet, SupplierViewSet, ReceiptViewSet
 from jarbas.frontend.views import home
 
 router = routers.DefaultRouter()
 router.register(r'document', DocumentViewSet, base_name='document')
+router.register(r'supplier', SupplierViewSet)
 router.register(r'receipt', ReceiptViewSet, base_name='receipt')
 
 urlpatterns = [

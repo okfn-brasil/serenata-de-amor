@@ -50,8 +50,6 @@ class Command(LoadCommand):
 
                 self.print_count(Supplier)
 
-        print(self.longest)
-
     def save_activities(self, row):
         data = dict(
             code=row['main_activity_code'],

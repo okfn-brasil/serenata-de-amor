@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ViewSet
 
-from jarbas.api.serializers import DocumentSerializer
-from jarbas.core.models import Document
+from jarbas.api.serializers import DocumentSerializer, SupplierSerializer
+from jarbas.core.models import Document, Supplier
 
 
 class DocumentViewSet(ReadOnlyModelViewSet):
@@ -47,3 +47,22 @@ class ReceiptViewSet(ViewSet):
     def retrieve(self, request, pk=None):
         document = get_object_or_404(Document, pk=pk)
         return Response({'url': document.fetch_receipt()})
+
+
+class SupplierViewSet(ViewSet):
+
+    serializer_class = SupplierSerializer
+    queryset = Supplier.objects.all()
+
+    def retrieve(self, request, pk=None):
+        cnpj = str(pk).zfill(14)
+        formatted = '{}.{}.{}/{}-{}'.format(
+            cnpj[0:2],
+            cnpj[2:5],
+            cnpj[5:8],
+            cnpj[8:12],
+            cnpj[12:14]
+        )
+        supplier = get_object_or_404(Supplier, cnpj=formatted)
+        serializer = SupplierSerializer(supplier)
+        return Response(serializer.data)

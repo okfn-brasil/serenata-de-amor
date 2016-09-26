@@ -7,16 +7,19 @@
 
 [Jarbas](http://jarbas.datasciencebr.com/) is a tool for [Serenata de Amor](http://github.com/datasciencebr/serenata-de-amor) contributors.
 
-## JSON API
+## JSON API endpoints
 
+### Documents
 
-Endpoint: `GET /api/document/`
+In Jarbas context a `Document` refers to a document (a reimbursement claim) from [CEAP](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar).
 
-You can use any field (and combine them) to filter the results. For example:
+#### `GET /api/document/`
+
+This endopoins list `Document` objects and it accepts any field (and any combination among them) as a filter. For example:
 
 `GET /api/document/?year=2015&state=RS&congressperson_id=42`
 
-List of fields that can be combined for filter the results: 
+These are the fields that can be combined for filtering purposes:
 
 * `applicant_id`
 * `cnpj_cpf`
@@ -31,6 +34,18 @@ List of fields that can be combined for filter the results:
 * `subquota_number`
 * `term`
 * `year`
+
+#### `GET /api/receipt/<Document.pk>`
+
+This endpoit gets the URL to the digitalized version of the receipt of a `Document`. It returns `{ url: null }` if the digitalized version is not available. The endpoint expects a `Document.pk` (i.e. the primary key of the `Document` object).
+
+### Supplier
+
+A supplier is a Brazilian company in which congressperson have made expenses and claimed for reimbursement.
+
+#### `GET /api/supplier/<Supplier.cnpj>`
+
+This endpoit gets the info we have for a specific supplier. The endpoint expects a `Supplier.cnpj` (i.e. the CNPJ of a `Supplier` object). It returns `404` if the supplier is not found.
 
 ## Install
 
