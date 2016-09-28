@@ -1,14 +1,15 @@
 module Document exposing (Msg, Model, initialModel, loadDocuments, updateFormFields, update, view)
 
 import Dict exposing (Dict)
-import Html exposing (a, button, div, form, input, h2, h3, label, table, td, text, th, tr)
+import Html exposing (a, button, div, form, input, h2, h3, hr, label, table, td, text, th, tr)
 import Html.Attributes exposing (class, disabled, for, href, id, type', value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
-import Json.Decode exposing ((:=))
+import Json.Decode
 import Json.Decode.Pipeline exposing (decode, hardcoded, required)
 import Navigation
 import String
+import Supplier
 import Task
 
 
@@ -51,6 +52,7 @@ type alias SingleModel =
     , receipt_url : Maybe String
     , receipt_fetched : Bool
     , receipt_loading : Bool
+    , supplier_info : Supplier.Model
     }
 
 
@@ -184,6 +186,7 @@ type Msg
     | FetchReceipt Int Int
     | ReceiptSuccess Int (Maybe String)
     | ReceiptFail Http.Error
+    | SupplierMsg Int Supplier.Msg
 
 
 updateFormField : Form -> String -> String -> Form
@@ -233,6 +236,24 @@ updateReceipt target url ( index, document ) =
         document
 
 
+updateSupplier : Int -> Supplier.Msg -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )
+updateSupplier target msg ( index, document ) =
+    if target == index then
+        let
+            updated =
+                Supplier.update msg document.supplier_info
+
+            newSupplier =
+                fst updated
+
+            newCmd =
+                Cmd.map (SupplierMsg target) (snd updated)
+        in
+            ( { document | supplier_info = newSupplier }, newCmd )
+    else
+        ( document, Cmd.none )
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -250,8 +271,27 @@ update msg model =
             in
                 ( { model | loading = True }, Navigation.newUrl url )
 
-        ApiSuccess results ->
-            ( { model | results = results, loading = False, error = Nothing }, Cmd.none )
+        ApiSuccess newResults ->
+            let
+                results =
+                    model.results
+
+                documents =
+                    results.documents
+
+                indexedDocuments =
+                    List.indexedMap (,) newResults.documents
+
+                newModel =
+                    { model | results = newResults, loading = False, error = Nothing }
+
+                indexedSupplierCmds =
+                    List.map (\( idx, doc ) -> ( idx, Supplier.load doc.cnpj_cpf )) indexedDocuments
+
+                cmds =
+                    List.map (\( idx, cmd ) -> Cmd.map (SupplierMsg idx) cmd) indexedSupplierCmds
+            in
+                ( newModel, Cmd.batch cmds )
 
         ApiFail error ->
             ( { model | results = initialResults, error = Just error, loading = False }, Cmd.none )
@@ -280,7 +320,7 @@ update msg model =
                 newResults =
                     { results | documents = newDocuments }
             in
-                ( { model | results = newResults }, fetchReceipt index id )
+                ( { model | results = newResults }, loadReceipt index id )
 
         ReceiptSuccess index url ->
             let
@@ -317,6 +357,31 @@ update msg model =
             in
                 ( { model | results = results, error = Just error }, Cmd.none )
 
+        SupplierMsg index supplierMsg ->
+            let
+                results =
+                    model.results
+
+                documents =
+                    results.documents
+
+                indexedDocuments =
+                    List.indexedMap (,) documents
+
+                newDocumentsAndCommands =
+                    List.map (updateSupplier index supplierMsg) indexedDocuments
+
+                newDocuments =
+                    List.map (\( doc, cmd ) -> doc) newDocumentsAndCommands
+
+                newCommands =
+                    List.map (\( doc, cmd ) -> cmd) newDocumentsAndCommands
+
+                newResults =
+                    { results | documents = newDocuments }
+            in
+                ( { model | results = newResults }, Cmd.batch newCommands )
+
 
 loadDocuments : List ( String, String ) -> Cmd Msg
 loadDocuments query =
@@ -330,8 +395,8 @@ loadDocuments query =
             (Http.get decoder url)
 
 
-fetchReceipt : Int -> Int -> Cmd Msg
-fetchReceipt index id =
+loadReceipt : Int -> Int -> Cmd Msg
+loadReceipt index id =
     let
         url =
             "/api/receipt/" ++ (toString id) ++ "/"
@@ -409,6 +474,7 @@ singleDecoder =
         |> required "receipt_url" (Json.Decode.Pipeline.nullable Json.Decode.string)
         |> required "receipt_fetched" Json.Decode.bool
         |> hardcoded False
+        |> hardcoded Supplier.initialModel
 
 
 receiptDecoder : Json.Decode.Decoder (Maybe String)
@@ -550,6 +616,7 @@ viewDocument index document =
             []
             [ h3 [] [ text title ]
             , table [] rows
+            , Supplier.view document.supplier_info
             ]
 
 
@@ -561,6 +628,7 @@ viewDocuments results =
         let
             documents =
                 List.indexedMap (\idx doc -> (viewDocument idx doc)) results.documents
+                    |> List.intersperse (hr [] [])
 
             total =
                 Maybe.withDefault 0 results.total |> toString

@@ -1,13 +1,12 @@
 module Main exposing (..)
 
+import Document
 import Html exposing (a, div, h1, li, text, ul)
 import Html.App
 import Html.Attributes exposing (class, href)
 import Navigation
 import String
-import Document
 import Template
-import Document
 
 
 --
