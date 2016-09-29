@@ -1,9 +1,14 @@
-module Receipt exposing (Model, Msg, update, view)
+module Receipt exposing (Model, Msg, decoder, update, view)
 
 import Html exposing (a, button, div, text)
-import Html.Attributes exposing (disabled, href)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (href)
 import Http
+import Json.Decode
+import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
+import Material
+import Material.Button as Button
+import Material.Icon as Icon
+import Material.Spinner as Spinner
 import Json.Decode exposing (at, maybe, string)
 import Task
 
@@ -18,6 +23,7 @@ type alias Model =
     , fetched : Bool
     , loading : Bool
     , error : Maybe Http.Error
+    , mdl : Material.Model
     }
 
 
@@ -27,6 +33,7 @@ initialModel =
     , fetched = False
     , loading = False
     , error = Nothing
+    , mdl = Material.model
     }
 
 
@@ -40,6 +47,7 @@ type Msg
     = LoadUrl Int
     | ApiSuccess (Maybe String)
     | ApiFail Http.Error
+    | Mdl (Material.Msg Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -54,6 +62,9 @@ update msg model =
         ApiFail error ->
             ( { model | loading = False, fetched = True, error = Just error }, Cmd.none )
 
+        Mdl mdlMsg ->
+            Material.update mdlMsg model
+
 
 loadUrl : Int -> Cmd Msg
 loadUrl id =
@@ -64,12 +75,28 @@ loadUrl id =
         Task.perform
             ApiFail
             ApiSuccess
-            (Http.get decoder url)
+            (Http.get urlDecoder url)
 
 
-decoder : Json.Decode.Decoder (Maybe String)
-decoder =
+
+--
+-- Decoders
+--
+
+
+urlDecoder : Json.Decode.Decoder (Maybe String)
+urlDecoder =
     at [ "url" ] (maybe string)
+
+
+decoder : Json.Decode.Decoder Model
+decoder =
+    decode Model
+        |> required "url" (nullable Json.Decode.string)
+        |> required "fetched" Json.Decode.bool
+        |> hardcoded False
+        |> hardcoded Nothing
+        |> hardcoded Material.model
 
 
 
@@ -79,24 +106,29 @@ decoder =
 
 
 view : Int -> Model -> Html.Html Msg
-view id receipt =
-    case receipt.url of
+view id model =
+    case model.url of
         Just url ->
-            a [ href url ] [ text url ]
+            a
+                [ href url ]
+                [ Button.render
+                    Mdl
+                    [ 1 ]
+                    model.mdl
+                    [ Button.fab ]
+                    [ Icon.i "receipt" ]
+                ]
 
         Nothing ->
-            if receipt.fetched then
+            if model.fetched then
                 div [] [ text "Not available" ]
+            else if model.loading then
+                div [] [ Spinner.spinner [ Spinner.active True ] ]
             else
-                let
-                    label =
-                        if receipt.loading then
-                            "Loading…"
-                        else
-                            "Fetch receipt URL"
-                in
-                    button
-                        [ onClick (LoadUrl id)
-                        , disabled receipt.loading
-                        ]
-                        [ text label ]
+                Button.render Mdl
+                    [ 0 ]
+                    model.mdl
+                    [ Button.raised
+                    , Button.onClick (LoadUrl id)
+                    ]
+                    [ text "Fetch receipt" ]
