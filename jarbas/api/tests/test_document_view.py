@@ -30,6 +30,9 @@ class TestGetDocuments(TestApi):
         self.assertEqual(1, content['count'])
         self.assertEqual('Roger That', first_row['congressperson_name'])
         self.assertEqual(4.56, float(first_row['net_value']))
+        self.assertIn('receipt', first_row)
+        self.assertEqual(None, first_row['receipt']['url'])
+        self.assertEqual(False, first_row['receipt']['fetched'])
 
 
 class TestGetNonExistentDocument(TestApi):

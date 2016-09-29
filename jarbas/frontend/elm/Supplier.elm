@@ -174,7 +174,7 @@ decodeActivities =
 --
 
 
-viewGeoCoord : Maybe String -> Maybe String -> Html.Html a
+viewGeoCoord : Maybe String -> Maybe String -> Html.Html Msg
 viewGeoCoord latitude longitude =
     case latitude of
         Just lat ->
@@ -196,7 +196,7 @@ viewGeoCoord latitude longitude =
             text ""
 
 
-viewSupplier : Supplier -> Html.Html a
+viewSupplier : Supplier -> Html.Html Msg
 viewSupplier supplier =
     let
         labels =
@@ -260,12 +260,12 @@ viewSupplier supplier =
             ]
 
 
-viewActivity : Activity -> Html.Html a
+viewActivity : Activity -> Html.Html Msg
 viewActivity activity =
     activity.code ++ " " ++ activity.description |> text
 
 
-viewActivities : ( String, List Activity ) -> Html.Html a
+viewActivities : ( String, List Activity ) -> Html.Html Msg
 viewActivities ( label, activities ) =
     let
         texts =
@@ -281,7 +281,7 @@ viewActivities ( label, activities ) =
             ]
 
 
-viewRow : ( String, String ) -> Html.Html a
+viewRow : ( String, String ) -> Html.Html Msg
 viewRow ( header, content ) =
     tr
         []
@@ -290,7 +290,7 @@ viewRow ( header, content ) =
         ]
 
 
-view : Model -> Html.Html a
+view : Model -> Html.Html Msg
 view model =
     if model.loaded then
         case model.supplier of
