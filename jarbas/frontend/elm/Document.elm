@@ -520,7 +520,7 @@ viewDocument index document =
             ]
 
         receiptContent =
-            Html.App.map (ReceiptMsg index) (Receipt.view index document.receipt)
+            Html.App.map (ReceiptMsg index) (Receipt.view document.id document.receipt)
 
         rows =
             List.append
