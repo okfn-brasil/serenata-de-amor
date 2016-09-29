@@ -1,6 +1,13 @@
 from rest_framework import serializers
 
-from jarbas.core.models import Activity, Document, Supplier
+from jarbas.core.models import Activity, Document, Receipt, Supplier
+
+
+class ReceiptSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Receipt
+        fields = ('url', 'fetched')
 
 
 class DocumentSerializer(serializers.ModelSerializer):
@@ -8,11 +15,14 @@ class DocumentSerializer(serializers.ModelSerializer):
     receipt = serializers.SerializerMethodField()
 
     def get_receipt(self, obj):
-        return dict(url=obj.receipt_url, fetched=obj.receipt_fetched)
+        receipt, created = Receipt.objects.get_or_create(
+            document=obj,
+            defaults=dict(document=obj)
+        )
+        return ReceiptSerializer(receipt).data
 
     class Meta:
         model = Document
-        exclude = ('source', 'line', 'receipt_url', 'receipt_fetched')
 
 
 class ActivitySerializer(serializers.ModelSerializer):

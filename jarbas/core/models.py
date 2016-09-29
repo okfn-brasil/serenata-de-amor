@@ -33,30 +33,33 @@ class Document(models.Model):
     reimbursement_number = models.IntegerField('Reimbursement number', db_index=True)
     reimbursement_value = models.DecimalField('Reimbusrsement value', max_digits=10, decimal_places=3)
     applicant_id = models.IntegerField('Applicant ID', db_index=True)
-    source = models.CharField('CSV file source', db_index=True, null=True, blank=True, max_length=16)
-    line = models.IntegerField('Line # in the source', db_index=True, null=True, blank=True)
-    receipt_url = models.URLField('Receipt URL', null=True, blank=True, default=None, max_length=128)
-    receipt_fetched = models.BooleanField('Was receipt fetched?', default=False)
 
-    def get_receipt_url(self):
+
+class Receipt(models.Model):
+
+    url = models.URLField('URL', null=True, blank=True, default=None, max_length=128)
+    fetched = models.BooleanField('Was fetched?', default=False)
+    document = models.OneToOneField(Document, on_delete=models.CASCADE)
+
+    def get_url(self):
         server = 'www.camara.gov.br'
         path = 'cota-parlamentar/documentos/publ/{}/{}/{}.pdf'.format(
-            self.applicant_id,
-            self.year,
-            self.document_id
+            self.document.applicant_id,
+            self.document.year,
+            self.document.document_id
         )
         return 'http://{}/{}'.format(server, path)
 
-    def fetch_receipt(self):
-        if self.receipt_url:
-            return self.receipt_url
+    def fetch_url(self):
+        if self.url:
+            return self.url
 
-        probable_url = self.get_receipt_url()
+        probable_url = self.get_url()
         status = head(probable_url).status_code
         url = probable_url if 200 <= status < 400 else None
 
-        self.receipt_url = url
-        self.receipt_fetched = True
+        self.url = url
+        self.fetched = True
         self.save()
 
         return url

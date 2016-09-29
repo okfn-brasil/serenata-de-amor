@@ -37,8 +37,6 @@ class Command(LoadCommand):
         for dataset in datasets:
             with lzma.open(dataset, mode='rt') as file_handler:
                 for index, row in enumerate(csv.DictReader(file_handler)):
-                    row['source'] = self.get_suffix(dataset)
-                    row['line'] = index + 1
                     yield Document(**self.serialize(row))
 
     def load_local(self, source):
