@@ -380,15 +380,6 @@ decoder =
         (Json.Decode.at [ "count" ] <| Json.Decode.Pipeline.nullable Json.Decode.int)
 
 
-receiptDecoder : Json.Decode.Decoder Receipt.Model
-receiptDecoder =
-    decode Receipt.Model
-        |> required "url" (Json.Decode.Pipeline.nullable Json.Decode.string)
-        |> required "fetched" Json.Decode.bool
-        |> hardcoded False
-        |> hardcoded Nothing
-
-
 singleDecoder : Json.Decode.Decoder SingleModel
 singleDecoder =
     decode SingleModel
@@ -422,7 +413,7 @@ singleDecoder =
         |> required "reimbursement_number" Json.Decode.int
         |> required "reimbursement_value" Json.Decode.string
         |> required "applicant_id" Json.Decode.int
-        |> required "receipt" receiptDecoder
+        |> required "receipt" Receipt.decoder
         |> hardcoded Supplier.initialModel
 
 
@@ -527,7 +518,7 @@ viewDocument index document =
                 (List.map viewDocumentRow labels)
                 [ tr
                     []
-                    [ th [] [ text "Receipt URL" ]
+                    [ th [] [ text "Digitalized receipt" ]
                     , td [] [ receiptContent ]
                     ]
                 ]
