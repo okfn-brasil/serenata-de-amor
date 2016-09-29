@@ -75,6 +75,10 @@ class Command(LoadCommand):
         for key in dates:
             row[key] = self.to_date(row[key])
 
+        decimals = ('latitude', 'longitude')
+        for key in decimals:
+            row[key] = self.to_float(row[key])
+
         return row
 
     @staticmethod
@@ -105,4 +109,11 @@ class Command(LoadCommand):
             return email
 
         except ValidationError:
+            return None
+
+    @staticmethod
+    def to_float(number):
+        try:
+            return float(number)
+        except ValueError:
             return None

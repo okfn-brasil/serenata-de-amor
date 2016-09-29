@@ -1,10 +1,11 @@
 module Supplier exposing (Model, Msg, initialModel, load, update, view)
 
 import Char
-import Html exposing (br, div, h3, table, td, text, th, tr)
-import Http
+import Html exposing (a, br, div, h3, table, td, text, th, tr)
+import Html.Attributes exposing (href)
+import Http exposing (url)
 import Json.Decode exposing ((:=))
-import Json.Decode.Pipeline exposing (decode, hardcoded, required)
+import Json.Decode.Pipeline exposing (decode, nullable, required)
 import String
 import Task
 
@@ -24,28 +25,30 @@ type alias Supplier =
     { main_activity : List Activity
     , secondary_activity : List Activity
     , cnpj : String
-    , opening : String
-    , legal_entity : String
-    , trade_name : String
-    , name : String
-    , supplier_type : String
-    , status : String
-    , situation : String
-    , situation_reason : String
-    , situation_date : String
-    , special_situation : String
+    , opening : Maybe String
+    , legal_entity : Maybe String
+    , trade_name : Maybe String
+    , name : Maybe String
+    , supplier_type : Maybe String
+    , status : Maybe String
+    , situation : Maybe String
+    , situation_reason : Maybe String
+    , situation_date : Maybe String
+    , special_situation : Maybe String
     , special_situation_date : Maybe String
-    , responsible_federative_entity : String
-    , address : String
-    , address_number : String
-    , additional_address_details : String
-    , neighborhood : String
-    , zip_code : String
-    , city : String
-    , state : String
-    , email : String
-    , phone : String
-    , last_updated : String
+    , responsible_federative_entity : Maybe String
+    , address : Maybe String
+    , address_number : Maybe String
+    , additional_address_details : Maybe String
+    , neighborhood : Maybe String
+    , zip_code : Maybe String
+    , city : Maybe String
+    , state : Maybe String
+    , email : Maybe String
+    , phone : Maybe String
+    , latitude : Maybe String
+    , longitude : Maybe String
+    , last_updated : Maybe String
     }
 
 
@@ -131,28 +134,30 @@ decoder =
         |> required "main_activity" decodeActivities
         |> required "secondary_activity" decodeActivities
         |> required "cnpj" Json.Decode.string
-        |> required "opening" Json.Decode.string
-        |> required "legal_entity" Json.Decode.string
-        |> required "trade_name" Json.Decode.string
-        |> required "name" Json.Decode.string
-        |> required "type" Json.Decode.string
-        |> required "status" Json.Decode.string
-        |> required "situation" Json.Decode.string
-        |> required "situation_reason" Json.Decode.string
-        |> required "situation_date" Json.Decode.string
-        |> required "special_situation" Json.Decode.string
-        |> required "special_situation_date" (Json.Decode.Pipeline.nullable Json.Decode.string)
-        |> required "responsible_federative_entity" Json.Decode.string
-        |> required "address" Json.Decode.string
-        |> required "number" Json.Decode.string
-        |> required "additional_address_details" Json.Decode.string
-        |> required "neighborhood" Json.Decode.string
-        |> required "zip_code" Json.Decode.string
-        |> required "city" Json.Decode.string
-        |> required "state" Json.Decode.string
-        |> required "email" Json.Decode.string
-        |> required "phone" Json.Decode.string
-        |> required "last_updated" Json.Decode.string
+        |> required "opening" (nullable Json.Decode.string)
+        |> required "legal_entity" (nullable Json.Decode.string)
+        |> required "trade_name" (nullable Json.Decode.string)
+        |> required "name" (nullable Json.Decode.string)
+        |> required "type" (nullable Json.Decode.string)
+        |> required "status" (nullable Json.Decode.string)
+        |> required "situation" (nullable Json.Decode.string)
+        |> required "situation_reason" (nullable Json.Decode.string)
+        |> required "situation_date" (nullable Json.Decode.string)
+        |> required "special_situation" (nullable Json.Decode.string)
+        |> required "special_situation_date" (nullable Json.Decode.string)
+        |> required "responsible_federative_entity" (nullable Json.Decode.string)
+        |> required "address" (nullable Json.Decode.string)
+        |> required "number" (nullable Json.Decode.string)
+        |> required "additional_address_details" (nullable Json.Decode.string)
+        |> required "neighborhood" (nullable Json.Decode.string)
+        |> required "zip_code" (nullable Json.Decode.string)
+        |> required "city" (nullable Json.Decode.string)
+        |> required "state" (nullable Json.Decode.string)
+        |> required "email" (nullable Json.Decode.string)
+        |> required "phone" (nullable Json.Decode.string)
+        |> required "latitude" (nullable Json.Decode.string)
+        |> required "longitude" (nullable Json.Decode.string)
+        |> required "last_updated" (nullable Json.Decode.string)
 
 
 decodeActivities : Json.Decode.Decoder (List Activity)
@@ -169,33 +174,55 @@ decodeActivities =
 --
 
 
+viewGeoCoord : Maybe String -> Maybe String -> Html.Html a
+viewGeoCoord latitude longitude =
+    case latitude of
+        Just lat ->
+            case longitude of
+                Just long ->
+                    let
+                        coords =
+                            lat ++ "," ++ long
+
+                        url =
+                            "https://ddg.gg/?q=!gm+" ++ coords
+                    in
+                        a [ href url ] [ text coords ]
+
+                Nothing ->
+                    text ""
+
+        Nothing ->
+            text ""
+
+
 viewSupplier : Supplier -> Html.Html a
 viewSupplier supplier =
     let
         labels =
             [ ( "CNPJ", supplier.cnpj )
-            , ( "Trade name", supplier.trade_name )
-            , ( "Name", supplier.name )
-            , ( "Opening date", supplier.opening )
-            , ( "Legal entity", supplier.legal_entity )
-            , ( "Type", supplier.supplier_type )
-            , ( "Status", supplier.status )
-            , ( "Situation", supplier.situation )
-            , ( "Situation reason", supplier.situation_reason )
-            , ( "Situation date", supplier.situation_date )
-            , ( "Special situation", supplier.special_situation )
+            , ( "Trade name", Maybe.withDefault "" supplier.trade_name )
+            , ( "Name", Maybe.withDefault "" supplier.name )
+            , ( "Opening date", Maybe.withDefault "" supplier.opening )
+            , ( "Legal entity", Maybe.withDefault "" supplier.legal_entity )
+            , ( "Type", Maybe.withDefault "" supplier.supplier_type )
+            , ( "Status", Maybe.withDefault "" supplier.status )
+            , ( "Situation", Maybe.withDefault "" supplier.situation )
+            , ( "Situation reason", Maybe.withDefault "" supplier.situation_reason )
+            , ( "Situation date", Maybe.withDefault "" supplier.situation_date )
+            , ( "Special situation", Maybe.withDefault "" supplier.special_situation )
             , ( "Special situation date", Maybe.withDefault "" supplier.special_situation_date )
-            , ( "Responsible federative entity", supplier.responsible_federative_entity )
-            , ( "Address", supplier.address )
-            , ( "Number", supplier.address_number )
-            , ( "Additional address details", supplier.additional_address_details )
-            , ( "Neighborhood", supplier.neighborhood )
-            , ( "Zip code", supplier.zip_code )
-            , ( "City", supplier.city )
-            , ( "State", supplier.state )
-            , ( "Email", supplier.email )
-            , ( "Phone", supplier.phone )
-            , ( "Last updated", supplier.last_updated )
+            , ( "Responsible federative entity", Maybe.withDefault "" supplier.responsible_federative_entity )
+            , ( "Address", Maybe.withDefault "" supplier.address )
+            , ( "Number", Maybe.withDefault "" supplier.address_number )
+            , ( "Additional address details", Maybe.withDefault "" supplier.additional_address_details )
+            , ( "Neighborhood", Maybe.withDefault "" supplier.neighborhood )
+            , ( "Zip code", Maybe.withDefault "" supplier.zip_code )
+            , ( "City", Maybe.withDefault "" supplier.city )
+            , ( "State", Maybe.withDefault "" supplier.state )
+            , ( "Email", Maybe.withDefault "" supplier.email )
+            , ( "Phone", Maybe.withDefault "" supplier.phone )
+            , ( "Last updated", Maybe.withDefault "" supplier.last_updated )
             ]
 
         activities =
@@ -209,6 +236,14 @@ viewSupplier supplier =
         activityRows =
             List.map viewActivities activities
 
+        geoCoordRow =
+            [ tr
+                []
+                [ th [] [ text "Latitude & longitude" ]
+                , td [] [ viewGeoCoord supplier.latitude supplier.longitude ]
+                ]
+            ]
+
         firstRows =
             List.take 3 stringRows
 
@@ -216,11 +251,11 @@ viewSupplier supplier =
             List.drop 3 stringRows
 
         rows =
-            List.concat [ firstRows, activityRows, remainingRows ]
+            List.concat [ firstRows, activityRows, remainingRows, geoCoordRow ]
     in
         div
             []
-            [ h3 [] [ text <| "Supplier: " ++ (supplier.name) ]
+            [ h3 [] [ text <| "Supplier: " ++ (Maybe.withDefault "" supplier.name) ]
             , table [] rows
             ]
 
@@ -263,8 +298,16 @@ view model =
                 viewSupplier info
 
             Nothing ->
-                text "CNPJ invalid or not found"
+                div
+                    []
+                    [ br [] []
+                    , text "(CNPJ invalid or not found.)"
+                    ]
     else if model.loading then
-        text "Fetching supplier info…"
+        div
+            []
+            [ br [] []
+            , text "Fetching supplier info from CNPJ…"
+            ]
     else
         text ""

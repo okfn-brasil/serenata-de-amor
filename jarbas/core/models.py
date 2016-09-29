@@ -99,4 +99,7 @@ class Supplier(models.Model):
     email = models.EmailField('Email', blank=True, null=True, max_length=58)
     phone = models.CharField('Phone', blank=True, null=True, max_length=32)
 
+    latitude = models.DecimalField('Latitude', decimal_places=7, max_digits=10, blank=True, null=True)
+    longitude = models.DecimalField('Longitude', decimal_places=7, max_digits=10, blank=True, null=True)
+
     last_updated = models.DateTimeField('Last updated', blank=True, null=True)

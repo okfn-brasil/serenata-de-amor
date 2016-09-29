@@ -62,4 +62,6 @@ sample_supplier_data = dict(
     email='',
     phone='',
     last_updated=datetime.now(),
+    latitude=None,
+    longitude=None
 )

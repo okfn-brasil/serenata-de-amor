@@ -35,6 +35,8 @@ class TestGet(TestApi):
             response['legal_entity']
         )
         self.assertEqual('42', response['main_activity'][0]['code'])
+        self.assertIn('latitude', response)
+        self.assertIn('longitude', response)
 
 
 class TestGetNonExistentSupplier(TestApi):
