@@ -1,7 +1,9 @@
-module Template exposing (Model, Msg, header, initialModel, footer)
+module Template exposing (Model, drawer, header, initialModel)
 
-import Html exposing (a, div, h1, img, li, text, ul)
-import Html.Attributes exposing (class, href, src, alt)
+import Html exposing (a, text, img)
+import Html.Attributes exposing (alt, src, style)
+import Material
+import Material.Layout as Layout
 
 
 --
@@ -20,6 +22,7 @@ type alias Model =
     , serenata : Link
     , table : Link
     , digitalOcean : Link
+    , mdl : Material.Model
     }
 
 
@@ -30,7 +33,7 @@ jarbas =
 
 serenata : Link
 serenata =
-    Link "About Serenata de Amor" "http://github.com/datasciencebr/serenata-de-Amor"
+    Link "About Serenata de Amor" "http://serenata.datasciencebr.com/"
 
 
 table : Link
@@ -45,17 +48,7 @@ digitalOcean =
 
 initialModel : Model
 initialModel =
-    Model jarbas serenata table digitalOcean
-
-
-
---
---
---
-
-
-type Msg
-    = Nothing
+    Model jarbas serenata table digitalOcean Material.model
 
 
 
@@ -64,30 +57,44 @@ type Msg
 --
 
 
-header : Model -> Html.Html Msg
+header : Model -> Html.Html a
 header model =
-    div [ class "header" ] [ h1 [] [ text model.jarbas.label ] ]
-
-
-footer : Model -> Html.Html Msg
-footer model =
     let
-        digitalocean =
-            a
-                [ href model.digitalOcean.url ]
-                [ img
-                    [ src "/static/digitalocean.png"
-                    , alt model.digitalOcean.label
-                    ]
-                    []
+        digitalOceanLogo =
+            img
+                [ src "/static/digitalocean.png"
+                , alt model.digitalOcean.label
+                , style [ ( "height", "1.5rem" ), ( "opacity", "0.5" ) ]
                 ]
-    in
-        div [ class "footer" ]
-            [ ul
                 []
-                [ li [] [ a [ href model.table.url ] [ model.table.label |> text ] ]
-                , li [] [ a [ href model.serenata.url ] [ model.serenata.label |> text ] ]
-                , li [] [ a [ href model.jarbas.url ] [ "About " ++ model.jarbas.label |> text ] ]
-                , li [] [ digitalocean ]
+    in
+        Layout.row
+            []
+            [ Layout.title
+                []
+                [ text model.jarbas.label ]
+            , Layout.spacer
+            , Layout.navigation []
+                [ Layout.link
+                    [ Layout.href model.digitalOcean.url ]
+                    [ digitalOceanLogo ]
                 ]
             ]
+
+
+drawerLinks : ( String, Html.Html a ) -> Html.Html a
+drawerLinks ( url, content ) =
+    Layout.link [ Layout.href url ] [ content ]
+
+
+drawer : Model -> List (Html.Html a)
+drawer model =
+    [ Layout.title [] [ text "About" ]
+    , Layout.navigation [] <|
+        List.map
+            drawerLinks
+            [ ( model.table.url, text model.table.label )
+            , ( model.jarbas.url, text <| "About " ++ model.jarbas.label )
+            , ( model.serenata.url, text model.serenata.label )
+            ]
+    ]
