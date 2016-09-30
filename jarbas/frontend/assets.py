@@ -17,12 +17,4 @@ elm = Bundle(
 )
 
 
-sass = Bundle(
-    os.path.join(frontend_path, 'sass', 'app.sass'),
-    filters=('libsass'),
-    depends=('**/*.sass'),
-    output='app.css'
-)
-
 register('elm', elm)
-register('sass', sass)
