@@ -1,4 +1,4 @@
-module Receipt exposing (Model, Msg, decoder, update, view)
+module Documents.Receipt exposing (Model, Msg, decoder, update, view)
 
 import Html exposing (a, button, div, text)
 import Html.Attributes exposing (href)
@@ -27,8 +27,8 @@ type alias Model =
     }
 
 
-initialModel : Model
-initialModel =
+model : Model
+model =
     { url = Nothing
     , fetched = False
     , loading = False

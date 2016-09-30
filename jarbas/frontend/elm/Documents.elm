@@ -1,17 +1,18 @@
-module Document exposing (Msg, Model, initialModel, loadDocuments, updateFormFields, update, view)
+module Documents exposing (Msg, Model, model, loadDocuments, update, view)
 
-import Dict exposing (Dict)
+import Documents.Fields as Fields
+import Documents.Inputs as Inputs
+import Documents.Receipt as Receipt
+import Documents.Supplier as Supplier
 import Html exposing (a, button, div, form, input, h2, h3, hr, label, table, td, text, th, tr)
 import Html.App
 import Html.Attributes exposing (class, disabled, for, href, id, type', value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
-import Json.Decode
-import Json.Decode.Pipeline exposing (decode, hardcoded, required)
+import Json.Decode exposing ((:=), Decoder, int, list, maybe, object2, string)
+import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
 import Navigation
-import Receipt
 import String
-import Supplier
 import Task
 
 
@@ -62,89 +63,12 @@ type alias Results =
     }
 
 
-type alias FormField =
-    { label : String
-    , selected : Bool
-    , value : String
-    }
-
-
-type alias Form =
-    Dict String FormField
-
-
 type alias Model =
     { results : Results
-    , form : Form
+    , inputs : Inputs.Model
     , loading : Bool
     , error : Maybe Http.Error
     }
-
-
-fieldsAndLabels : List ( String, String )
-fieldsAndLabels =
-    [ ( "document_id", "Document ID" )
-    , ( "congressperson_name", "Congressperson name" )
-    , ( "congressperson_id", "Congressperson ID" )
-    , ( "congressperson_document", "Congressperson document" )
-    , ( "term", "Term" )
-    , ( "state", "State" )
-    , ( "party", "Party" )
-    , ( "term_id", "Term ID" )
-    , ( "subquota_number", "Subquota number" )
-    , ( "subquota_description", "Subquota description" )
-    , ( "subquota_group_id", "Subquota group ID" )
-    , ( "subquota_group_description", "Subquota group description" )
-    , ( "supplier", "Supplier" )
-    , ( "cnpj_cpf", "CNPJ or CPF" )
-    , ( "document_number", "Document number" )
-    , ( "document_type", "Document type" )
-    , ( "issue_date", "Issue date" )
-    , ( "document_value", "Document value" )
-    , ( "remark_value", "Remark value" )
-    , ( "net_value", "Net value" )
-    , ( "month", "Month" )
-    , ( "year", "Year" )
-    , ( "installment", "Installment" )
-    , ( "passenger", "Passenger" )
-    , ( "leg_of_the_trip", "Leg of the trip" )
-    , ( "batch_number", "Batch number" )
-    , ( "reimbursement_number", "Reimbursement number" )
-    , ( "reimbursement_value", "Reimbursement value" )
-    , ( "applicant_id", "Applicant ID" )
-    ]
-
-
-isSearchable : ( String, String ) -> Bool
-isSearchable fieldAndLabel =
-    let
-        field =
-            fst fieldAndLabel
-
-        searchable =
-            [ "applicant_id"
-            , "cnpj_cpf"
-            , "congressperson_id"
-            , "document_id"
-            , "document_type"
-            , "month"
-            , "party"
-            , "reimbursement_number"
-            , "state"
-            , "subquota_group_id"
-            , "subquota_number"
-            , "term"
-            , "year"
-            ]
-    in
-        List.member field searchable
-
-
-toFormField : ( String, String ) -> ( String, FormField )
-toFormField ( name, label ) =
-    ( name
-    , FormField label False ""
-    )
 
 
 initialResults : Results
@@ -152,24 +76,9 @@ initialResults =
     Results [] Nothing
 
 
-initialForm : Form
-initialForm =
-    List.filter isSearchable fieldsAndLabels
-        |> List.map toFormField
-        |> Dict.fromList
-
-
-initialModel : Model
-initialModel =
-    Model initialResults initialForm False Nothing
-
-
-getQuery : Form -> List ( String, String )
-getQuery form =
-    form
-        |> Dict.filter (\index field -> not (String.isEmpty field.value))
-        |> Dict.map (\index field -> field.value)
-        |> Dict.toList
+model : Model
+model =
+    Model initialResults Inputs.model False Nothing
 
 
 
@@ -179,51 +88,59 @@ getQuery form =
 
 
 type Msg
-    = Change String String
-    | Submit
-    | ApiFail Http.Error
+    = Submit
     | ApiSuccess Results
+    | ApiFail Http.Error
+    | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
     | SupplierMsg Int Supplier.Msg
 
 
-updateFormField : Form -> String -> String -> Form
-updateFormField form name value =
-    let
-        formField =
-            Dict.get name form
-    in
-        case formField of
-            Just field ->
-                Dict.insert name { field | value = value } form
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        Submit ->
+            let
+                url =
+                    Inputs.toQuery model.inputs |> toUrl
+            in
+                ( { model | loading = True }, Navigation.newUrl url )
 
-            Nothing ->
-                form
+        ApiSuccess newResults ->
+            let
+                newModel =
+                    { model | results = newResults, loading = False, error = Nothing }
+
+                indexedDocuments =
+                    getIndexedDocuments newModel
+
+                indexedSupplierCmds =
+                    List.map (\( idx, doc ) -> ( idx, Supplier.load doc.cnpj_cpf )) indexedDocuments
+
+                cmds =
+                    List.map (\( idx, cmd ) -> Cmd.map (SupplierMsg idx) cmd) indexedSupplierCmds
+            in
+                ( newModel, Cmd.batch cmds )
+
+        ApiFail error ->
+            ( { model | results = initialResults, error = Just error, loading = False }, Cmd.none )
+
+        InputsMsg msg ->
+            let
+                inputs =
+                    Inputs.update msg model.inputs |> fst
+            in
+                ( { model | inputs = inputs }, Cmd.none )
+
+        ReceiptMsg index receiptMsg ->
+            getDocumentsAndCmd model index updateReceipts receiptMsg
+
+        SupplierMsg index supplierMsg ->
+            getDocumentsAndCmd model index updateSuppliers supplierMsg
 
 
-updateFormFields : Form -> List ( String, String ) -> Form
-updateFormFields form queryList =
-    let
-        maybeQuery =
-            List.head queryList
-
-        remainingQueries =
-            List.drop 1 queryList
-    in
-        case maybeQuery of
-            Just query ->
-                let
-                    newForm =
-                        updateFormField form (fst query) (snd query)
-                in
-                    updateFormFields newForm remainingQueries
-
-            Nothing ->
-                form
-
-
-updateSupplier : Int -> Supplier.Msg -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )
-updateSupplier target msg ( index, document ) =
+updateSuppliers : Int -> Supplier.Msg -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )
+updateSuppliers target msg ( index, document ) =
     if target == index then
         let
             updated =
@@ -240,8 +157,8 @@ updateSupplier target msg ( index, document ) =
         ( document, Cmd.none )
 
 
-updateReceipt : Int -> Receipt.Msg -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )
-updateReceipt target msg ( index, document ) =
+updateReceipts : Int -> Receipt.Msg -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )
+updateReceipts target msg ( index, document ) =
     if target == index then
         let
             updated =
@@ -270,6 +187,25 @@ getIndexedDocuments model =
         List.indexedMap (,) results.documents
 
 
+
+{-
+   This type signature is terrible, but it is a flexible function to update
+   Suppliers and Receipts.
+
+   It returns a new model with the documents field updated, and the list of
+   commands already mapped to the current module (i.e.  it returns what the
+   general update function is expecting).
+
+   The arguments it expects:
+       * (Model) current model
+       * (Int) index of the object (Supplier or Receipt) being updated
+       * (Int -> a -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )) this is
+         a function such as updateSuppliers or updateReceipts
+       * (a) The kind of message inside the former argument, i.e. Supplier.Msg
+         or Receipt.Msg
+-}
+
+
 getDocumentsAndCmd : Model -> Int -> (Int -> a -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )) -> a -> ( Model, Cmd Msg )
 getDocumentsAndCmd model index targetUpdate targetMsg =
     let
@@ -294,49 +230,6 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
         ( { model | results = newResults }, Cmd.batch newCommands )
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        Change name value ->
-            let
-                form =
-                    updateFormField model.form name value
-            in
-                ( { model | form = form }, Cmd.none )
-
-        Submit ->
-            let
-                url =
-                    getQuery model.form |> toUrl
-            in
-                ( { model | loading = True }, Navigation.newUrl url )
-
-        ApiSuccess newResults ->
-            let
-                newModel =
-                    { model | results = newResults, loading = False, error = Nothing }
-
-                indexedDocuments =
-                    getIndexedDocuments newModel
-
-                indexedSupplierCmds =
-                    List.map (\( idx, doc ) -> ( idx, Supplier.load doc.cnpj_cpf )) indexedDocuments
-
-                cmds =
-                    List.map (\( idx, cmd ) -> Cmd.map (SupplierMsg idx) cmd) indexedSupplierCmds
-            in
-                ( newModel, Cmd.batch cmds )
-
-        ApiFail error ->
-            ( { model | results = initialResults, error = Just error, loading = False }, Cmd.none )
-
-        ReceiptMsg index receiptMsg ->
-            getDocumentsAndCmd model index updateReceipt receiptMsg
-
-        SupplierMsg index supplierMsg ->
-            getDocumentsAndCmd model index updateSupplier supplierMsg
-
-
 loadDocuments : List ( String, String ) -> Cmd Msg
 loadDocuments query =
     let
@@ -353,7 +246,7 @@ toUrl : List ( String, String ) -> String
 toUrl query =
     let
         validQueries =
-            List.filter isSearchable query
+            List.filter Fields.isSearchable query
 
         pairs =
             List.map (\( index, value ) -> index ++ "/" ++ value) validQueries
@@ -373,48 +266,48 @@ toUrl query =
 --
 
 
-decoder : Json.Decode.Decoder Results
+decoder : Decoder Results
 decoder =
-    Json.Decode.object2 Results
-        (Json.Decode.at [ "results" ] <| Json.Decode.list singleDecoder)
-        (Json.Decode.at [ "count" ] <| Json.Decode.Pipeline.nullable Json.Decode.int)
+    object2 Results
+        ("results" := list singleDecoder)
+        (maybe ("count" := int))
 
 
-singleDecoder : Json.Decode.Decoder SingleModel
+singleDecoder : Decoder SingleModel
 singleDecoder =
     decode SingleModel
-        |> required "id" Json.Decode.int
-        |> required "document_id" Json.Decode.int
-        |> required "congressperson_name" Json.Decode.string
-        |> required "congressperson_id" Json.Decode.int
-        |> required "congressperson_document" Json.Decode.int
-        |> required "term" Json.Decode.int
-        |> required "state" Json.Decode.string
-        |> required "party" Json.Decode.string
-        |> required "term_id" Json.Decode.int
-        |> required "subquota_number" Json.Decode.int
-        |> required "subquota_description" Json.Decode.string
-        |> required "subquota_group_id" Json.Decode.int
-        |> required "subquota_group_description" Json.Decode.string
-        |> required "supplier" Json.Decode.string
-        |> required "cnpj_cpf" Json.Decode.string
-        |> required "document_number" Json.Decode.string
-        |> required "document_type" Json.Decode.int
-        |> required "issue_date" (Json.Decode.Pipeline.nullable Json.Decode.string)
-        |> required "document_value" Json.Decode.string
-        |> required "remark_value" Json.Decode.string
-        |> required "net_value" Json.Decode.string
-        |> required "month" Json.Decode.int
-        |> required "year" Json.Decode.int
-        |> required "installment" Json.Decode.int
-        |> required "passenger" Json.Decode.string
-        |> required "leg_of_the_trip" Json.Decode.string
-        |> required "batch_number" Json.Decode.int
-        |> required "reimbursement_number" Json.Decode.int
-        |> required "reimbursement_value" Json.Decode.string
-        |> required "applicant_id" Json.Decode.int
+        |> required "id" int
+        |> required "document_id" int
+        |> required "congressperson_name" string
+        |> required "congressperson_id" int
+        |> required "congressperson_document" int
+        |> required "term" int
+        |> required "state" string
+        |> required "party" string
+        |> required "term_id" int
+        |> required "subquota_number" int
+        |> required "subquota_description" string
+        |> required "subquota_group_id" int
+        |> required "subquota_group_description" string
+        |> required "supplier" string
+        |> required "cnpj_cpf" string
+        |> required "document_number" string
+        |> required "document_type" int
+        |> required "issue_date" (nullable string)
+        |> required "document_value" string
+        |> required "remark_value" string
+        |> required "net_value" string
+        |> required "month" int
+        |> required "year" int
+        |> required "installment" int
+        |> required "passenger" string
+        |> required "leg_of_the_trip" string
+        |> required "batch_number" int
+        |> required "reimbursement_number" int
+        |> required "reimbursement_value" string
+        |> required "applicant_id" int
         |> required "receipt" Receipt.decoder
-        |> hardcoded Supplier.initialModel
+        |> hardcoded Supplier.model
 
 
 
@@ -423,46 +316,26 @@ singleDecoder =
 --
 
 
-viewFormField : Bool -> ( String, FormField ) -> Html.Html Msg
-viewFormField loading ( fieldName, field ) =
-    div
-        [ class "field" ]
-        [ label [ for <| "id_" ++ fieldName ] [ text field.label ]
-        , input
-            [ type' "text"
-            , id <| "id_" ++ fieldName
-            , value field.value
-            , Change fieldName |> onInput
-            , disabled loading
-            ]
-            []
-        ]
-
-
 viewForm : Model -> Html.Html Msg
 viewForm model =
     let
-        buttonLabel =
+        inputs =
+            List.map (Html.App.map InputsMsg) (Inputs.view model.loading model.inputs)
+
+        action =
             if model.loading then
                 "Loading…"
             else
                 "Search"
 
-        fields =
-            Dict.toList model.form
-
-        inputs =
-            List.map (viewFormField model.loading) fields
-
-        sendButton =
-            [ button [ type' "submit", disabled model.loading ] [ text buttonLabel ] ]
-
-        children =
-            [ div [ class "fields" ] inputs
-            , div [ class "fields" ] sendButton
-            ]
+        send =
+            [ button [ type' "submit", disabled model.loading ] [ text action ] ]
     in
-        form [ onSubmit Submit ] children
+        form
+            [ onSubmit Submit ]
+            [ div [ class "fields" ] inputs
+            , div [ class "fields" ] send
+            ]
 
 
 viewError : Maybe Http.Error -> Html.Html Msg
