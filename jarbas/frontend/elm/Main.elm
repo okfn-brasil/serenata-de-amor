@@ -3,11 +3,11 @@ module Main exposing (..)
 import Document
 import Html
 import Html.App
+import Layout
 import Material
-import Material.Layout as Layout
+import Material.Layout
 import Navigation
 import String
-import Template
 
 
 --
@@ -17,7 +17,7 @@ import Template
 
 type alias Model =
     { documents : Document.Model
-    , template : Template.Model
+    , template : Layout.Model
     , mdl : Material.Model
     }
 
@@ -25,7 +25,7 @@ type alias Model =
 initialModel : Model
 initialModel =
     { documents = Document.initialModel
-    , template = Template.initialModel
+    , template = Layout.initialModel
     , mdl = Material.model
     }
 
@@ -38,7 +38,7 @@ initialModel =
 
 type Msg
     = DocumentMsg Document.Msg
-    | TemplateMsg Msg
+    | LayoutMsg Msg
     | Mdl (Material.Msg Msg)
 
 
@@ -58,7 +58,7 @@ update msg model =
             in
                 ( { model | documents = documents }, cmd )
 
-        TemplateMsg _ ->
+        LayoutMsg _ ->
             ( model, Cmd.none )
 
         Mdl mdlMsg ->
@@ -75,18 +75,18 @@ view : Model -> Html.Html Msg
 view model =
     let
         header =
-            Html.App.map TemplateMsg <| Template.header model.template
+            Html.App.map LayoutMsg <| Layout.header model.template
 
         drawer =
-            List.map (\x -> Html.App.map TemplateMsg x) (Template.drawer model.template)
+            List.map (\x -> Html.App.map LayoutMsg x) (Layout.drawer model.template)
 
         documents =
             Html.App.map DocumentMsg <| Document.view model.documents
     in
-        Layout.render
+        Material.Layout.render
             Mdl
             model.mdl
-            [ Layout.fixedHeader ]
+            [ Material.Layout.fixedHeader ]
             { header = [ header ]
             , drawer = drawer
             , tabs = ( [], [] )

@@ -1,4 +1,4 @@
-module Template exposing (Model, drawer, header, initialModel)
+module Layout exposing (Model, drawer, header, initialModel)
 
 import Html exposing (a, text, img)
 import Html.Attributes exposing (alt, src, style)
