@@ -16,12 +16,7 @@ class TestStatic(TestCase):
 class TestCompiledStatic(TestCase):
 
     def setUp(self):
-        [remove(f) for f in paths('app.css', 'app.js')]
-
-    def test_css(self):
-        self.assertEqual(None, finders.find('app.css'))
-        call_command('assets', 'build', 'sass', '--no-cache')
-        self.assertTrue(finders.find('app.css'))
+        [remove(f) for f in paths('app.js')]
 
     def test_js(self):
         self.assertEqual(None, finders.find('app.js'))
