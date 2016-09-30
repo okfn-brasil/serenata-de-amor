@@ -1,6 +1,7 @@
 module Main exposing (..)
 
-import Document
+import Documents
+import Documents.Inputs as Inputs
 import Html
 import Html.App
 import Layout
@@ -16,16 +17,16 @@ import String
 
 
 type alias Model =
-    { documents : Document.Model
+    { documents : Documents.Model
     , template : Layout.Model
     , mdl : Material.Model
     }
 
 
-initialModel : Model
-initialModel =
-    { documents = Document.initialModel
-    , template = Layout.initialModel
+model : Model
+model =
+    { documents = Documents.model
+    , template = Layout.model
     , mdl = Material.model
     }
 
@@ -37,7 +38,7 @@ initialModel =
 
 
 type Msg
-    = DocumentMsg Document.Msg
+    = DocumentsMsg Documents.Msg
     | LayoutMsg Msg
     | Mdl (Material.Msg Msg)
 
@@ -45,16 +46,16 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        DocumentMsg msg ->
+        DocumentsMsg msg ->
             let
                 updated =
-                    Document.update msg model.documents
+                    Documents.update msg model.documents
 
                 documents =
                     fst updated
 
                 cmd =
-                    Cmd.map DocumentMsg <| snd updated
+                    Cmd.map DocumentsMsg <| snd updated
             in
                 ( { model | documents = documents }, cmd )
 
@@ -81,7 +82,7 @@ view model =
             List.map (\x -> Html.App.map LayoutMsg x) (Layout.drawer model.template)
 
         documents =
-            Html.App.map DocumentMsg <| Document.view model.documents
+            Html.App.map DocumentsMsg <| Documents.view model.documents
     in
         Material.Layout.render
             Mdl
@@ -136,7 +137,7 @@ urlParser =
 urlUpdate : List ( String, String ) -> Model -> ( Model, Cmd Msg )
 urlUpdate query model =
     if List.isEmpty query then
-        ( { model | documents = Document.initialModel }
+        ( { model | documents = Documents.model }
         , Cmd.none
         )
     else
@@ -144,14 +145,14 @@ urlUpdate query model =
             documents =
                 model.documents
 
-            form =
-                documents.form
+            inputs =
+                documents.inputs
 
-            newDocuments =
-                { documents | form = Document.updateFormFields form query }
+            newDocumentss =
+                { documents | inputs = Inputs.updateFromQuery inputs query }
         in
-            ( { model | documents = newDocuments }
-            , Cmd.map DocumentMsg <| Document.loadDocuments query
+            ( { model | documents = newDocumentss }
+            , Cmd.map DocumentsMsg <| Documents.loadDocuments query
             )
 
 
@@ -161,7 +162,7 @@ type alias Flags =
 
 init : List ( String, String ) -> ( Model, Cmd Msg )
 init documentId =
-    urlUpdate documentId initialModel
+    urlUpdate documentId model
 
 
 main : Platform.Program Never

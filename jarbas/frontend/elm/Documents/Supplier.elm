@@ -1,4 +1,4 @@
-module Supplier exposing (Model, Msg, initialModel, load, update, view)
+module Documents.Supplier exposing (Model, Msg, model, load, update, view)
 
 import Char
 import Html exposing (a, br, div, h3, table, td, text, th, tr)
@@ -60,8 +60,8 @@ type alias Model =
     }
 
 
-initialModel : Model
-initialModel =
+model : Model
+model =
     { supplier = Nothing
     , loading = False
     , loaded = False
@@ -107,7 +107,7 @@ update msg model =
             ( { model | supplier = Just supplier, loading = False, loaded = True }, Cmd.none )
 
         ApiFail error ->
-            ( { initialModel | loaded = True, error = Just error }, Cmd.none )
+            ( { model | loaded = True, error = Just error }, Cmd.none )
 
 
 load : String -> Cmd Msg

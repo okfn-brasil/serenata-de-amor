@@ -1,4 +1,4 @@
-module Layout exposing (Model, drawer, header, initialModel)
+module Layout exposing (Model, drawer, header, model)
 
 import Html exposing (a, text, img)
 import Html.Attributes exposing (alt, src, style)
@@ -46,8 +46,8 @@ digitalOcean =
     Link "Powered by Digital Ocean" "http://digitalocean.com"
 
 
-initialModel : Model
-initialModel =
+model : Model
+model =
     Model jarbas serenata table digitalOcean Material.model
 
 
