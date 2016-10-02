@@ -5,7 +5,7 @@
 ### 2 - Frequency of cases per congressman for frequent initial digit sequences  
 
 # To do
-# ( ) Parse issue_date and get results per month/trimester (good for detecting pattern changes) 
+# ( ) Use anytime package to parse issue_date and get results per month/trimester (good for detecting pattern changes) 
 
 # We can use "output.size" argument to get more values and "by" 
 # to change stat used for classification (’abs.excess.summation’,’difference’,’squared.diff’
