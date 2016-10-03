@@ -4,16 +4,18 @@ import Documents.Fields as Fields
 import Documents.Inputs as Inputs
 import Documents.Receipt as Receipt
 import Documents.Supplier as Supplier
-import Html exposing (a, button, div, form, input, h2, h3, hr, label, table, td, text, th, tr)
+import Html exposing (a, button, div, form, p, span, text)
 import Html.App
-import Html.Attributes exposing (class, disabled, for, href, id, type', value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
 import Json.Decode exposing ((:=), Decoder, int, list, maybe, object2, string)
 import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
 import Material
 import Material.Button as Button
+import Material.Color as Color
 import Material.Grid exposing (grid, cell, size, Device(..))
+import Material.Icon as Icon
+import Material.List as List
 import Material.Options as Options
 import Material.Typography as Typography
 import Navigation
@@ -71,20 +73,21 @@ type alias Results =
 type alias Model =
     { results : Results
     , inputs : Inputs.Model
+    , showForm : Bool
     , loading : Bool
     , error : Maybe Http.Error
     , mdl : Material.Model
     }
 
 
-initialResults : Results
-initialResults =
+results : Results
+results =
     Results [] Nothing
 
 
 model : Model
 model =
-    Model initialResults Inputs.model False Nothing Material.model
+    Model results Inputs.model True False Nothing Material.model
 
 
 
@@ -95,6 +98,7 @@ model =
 
 type Msg
     = Submit
+    | ToggleForm
     | ApiSuccess Results
     | ApiFail Http.Error
     | InputsMsg Inputs.Msg
@@ -113,10 +117,19 @@ update msg model =
             in
                 ( { model | loading = True }, Navigation.newUrl url )
 
+        ToggleForm ->
+            ( { model | showForm = not model.showForm }, Cmd.none )
+
         ApiSuccess newResults ->
             let
+                showForm =
+                    if (Maybe.withDefault 0 newResults.total) > 0 then
+                        False
+                    else
+                        True
+
                 newModel =
-                    { model | results = newResults, loading = False, error = Nothing }
+                    { model | results = newResults, showForm = showForm, loading = False, error = Nothing }
 
                 indexedDocuments =
                     getIndexedDocuments newModel
@@ -130,7 +143,7 @@ update msg model =
                 ( newModel, Cmd.batch cmds )
 
         ApiFail error ->
-            ( { model | results = initialResults, error = Just error, loading = False }, Cmd.none )
+            ( { model | results = results, error = Just error, loading = False }, Cmd.none )
 
         InputsMsg msg ->
             let
@@ -326,6 +339,26 @@ singleDecoder =
 --
 
 
+centeredButton : Int -> List (Button.Property Msg) -> String -> Html.Html Msg
+centeredButton index attr label =
+    grid
+        []
+        [ cell
+            [ size Desktop 12, size Tablet 8, size Phone 4 ]
+            [ Options.styled
+                div
+                [ Typography.center ]
+                [ Button.render
+                    Mdl
+                    [ index ]
+                    model.mdl
+                    attr
+                    [ text label ]
+                ]
+            ]
+        ]
+
+
 viewForm : Model -> Html.Html Msg
 viewForm model =
     let
@@ -338,7 +371,7 @@ viewForm model =
             else
                 "Search"
 
-        attr =
+        sendAttr =
             let
                 base =
                     [ Button.raised
@@ -351,94 +384,156 @@ viewForm model =
                 else
                     base
 
-        send =
-            grid
-                []
-                [ cell
-                    [ size Desktop 12, size Tablet 8, size Phone 4 ]
-                    [ Options.styled
-                        div
-                        [ Typography.center ]
-                        [ Button.render
-                            Mdl
-                            [ 0 ]
-                            model.mdl
-                            attr
-                            [ text action ]
-                        ]
-                    ]
-                ]
+        sendButton =
+            centeredButton 0 sendAttr action
+
+        showFormButton =
+            centeredButton 1 [ Button.raised, Button.onClick ToggleForm ] "New search"
     in
-        form [ onSubmit Submit ] [ inputs, send ]
+        if model.showForm then
+            form [ onSubmit Submit ] [ inputs, sendButton ]
+        else
+            showFormButton
 
 
 viewError : Maybe Http.Error -> Html.Html Msg
 viewError error =
     case error of
         Just _ ->
-            h2 [ class "error" ] [ text "Document not found" ]
+            Options.styled p [ Typography.title ] [ text "Document not found" ]
 
         Nothing ->
             text ""
 
 
-viewDocument : Int -> SingleModel -> Html.Html Msg
-viewDocument index document =
+viewDocumentBlockLine : ( String, String ) -> Html.Html Msg
+viewDocumentBlockLine ( label, value ) =
     let
-        labels =
-            [ ( "Document ID", toString document.document_id )
-            , ( "Congressperson name", document.congressperson_name )
-            , ( "Congressperson ID", toString document.congressperson_id )
-            , ( "Congressperson document", toString document.congressperson_document )
-            , ( "Term", toString document.term )
-            , ( "State", document.state )
-            , ( "Party", document.party )
-            , ( "Term ID", toString document.term_id )
-            , ( "Subquota number", toString document.subquota_number )
-            , ( "Subquota description", document.subquota_description )
-            , ( "Subquota group ID", toString document.subquota_group_id )
-            , ( "Subquota group description", document.subquota_group_description )
-            , ( "Supplier", document.supplier )
-            , ( "CNPJ/CPF", document.cnpj_cpf )
-            , ( "Document number", document.document_number )
-            , ( "Document type", toString document.document_type )
-            , ( "Issue date", Maybe.withDefault "" document.issue_date )
-            , ( "Document value", toString document.document_value )
-            , ( "Remark value", toString document.remark_value )
-            , ( "Net value", toString document.net_value )
-            , ( "Month", toString document.month )
-            , ( "Year", toString document.year )
-            , ( "Installment", toString document.installment )
-            , ( "Passenger", document.passenger )
-            , ( "Leg of the trip", document.leg_of_the_trip )
-            , ( "Batch number", toString document.batch_number )
-            , ( "Reimbursement number", toString document.reimbursement_number )
-            , ( "Reimbursement value", toString document.reimbursement_value )
-            , ( "Applicant ID", toString document.applicant_id )
+        styles =
+            [ Options.css "display" "flex"
+            , Options.css "justify-content" "space-between"
+            , Options.css "align-items" "center"
             ]
 
-        receiptContent =
-            Html.App.map (ReceiptMsg index) (Receipt.view document.id document.receipt)
+        labelStyles =
+            Options.css "width" "30%" :: styles
+    in
+        Options.styled div
+            [ Options.css "display" "flex"
+            , Options.css "flex-direction" "row"
+            ]
+            [ Options.styled span (Typography.body2 :: labelStyles) [ text label ]
+            , Options.styled span (Typography.body1 :: styles) [ text value ]
+            ]
 
-        rows =
-            List.append
-                (List.map viewDocumentRow labels)
-                [ tr
-                    []
-                    [ th [] [ text "Digitalized receipt" ]
-                    , td [] [ receiptContent ]
-                    ]
-                ]
 
-        title =
-            "Document #" ++ (toString document.document_id)
+viewDocumentBlock : ( String, String, List ( String, String ) ) -> Html.Html Msg
+viewDocumentBlock ( title, icon, fields ) =
+    let
+        iconTag =
+            Icon.view icon [ Options.css "transform" "translateY(0.4rem)" ]
     in
         div
             []
-            [ h3 [] [ text title ]
-            , table [] rows
-            , Html.App.map (SupplierMsg index) (Supplier.view document.supplier_info)
+            [ Options.styled
+                div
+                [ Typography.subhead ]
+                [ iconTag, text (" " ++ title) ]
+            , List.ul [] (List.map viewDocumentBlockLine fields)
             ]
+
+
+viewDocument : Int -> SingleModel -> List (Material.Grid.Cell Msg)
+viewDocument index document =
+    let
+        blocks =
+            [ ( "Congressperson details"
+              , "face"
+              , [ ( "Name", document.congressperson_name )
+                , ( "ID", toString document.congressperson_id )
+                , ( "Document", toString document.congressperson_document )
+                , ( "State", document.state )
+                , ( "Party", document.party )
+                , ( "Term", toString document.term )
+                , ( "Term ID", toString document.term_id )
+                ]
+              )
+            , ( "Subquota details"
+              , "list"
+              , [ ( "Number", toString document.subquota_number )
+                , ( "Description", document.subquota_description )
+                , ( "Group ID", toString document.subquota_group_id )
+                , ( "Group description", document.subquota_group_description )
+                ]
+              )
+            , ( "Supplier info"
+              , "store"
+              , [ ( "Name", document.supplier )
+                , ( "CNPJ/CPF", document.cnpj_cpf )
+                ]
+              )
+            , ( "Document details"
+              , "receipt"
+              , [ ( "ID", toString document.document_id )
+                , ( "Number", document.document_number )
+                , ( "Type", toString document.document_type )
+                , ( "Month", toString document.month )
+                , ( "Year", toString document.year )
+                , ( "Issue date", Maybe.withDefault "" document.issue_date )
+                ]
+              )
+            , ( "Values"
+              , "monetization_on"
+              , [ ( "Document", toString document.document_value )
+                , ( "Remark", toString document.remark_value )
+                , ( "Net", toString document.net_value )
+                , ( "Reimbursement", toString document.reimbursement_value )
+                , ( "Installment", toString document.installment )
+                ]
+              )
+            , ( "Trip details"
+              , "flight"
+              , [ ( "Passenger", document.passenger )
+                , ( "Leg", document.leg_of_the_trip )
+                ]
+              )
+            , ( "Application details"
+              , "folder"
+              , [ ( "Applicant ID", toString document.applicant_id )
+                , ( "Batch number", toString document.batch_number )
+                , ( "Reimbursement number", toString document.reimbursement_number )
+                ]
+              )
+            ]
+
+        receipt =
+            Html.App.map (ReceiptMsg index) (Receipt.view document.id document.receipt)
+
+        title =
+            Options.styled
+                p
+                [ Typography.headline, Color.text Color.primary ]
+                [ "Document #" ++ (toString document.document_id) |> text ]
+
+        supplier =
+            Html.App.map (SupplierMsg index) (Supplier.view document.supplier_info)
+
+        supplierTitle =
+            Options.styled
+                p
+                [ Typography.headline ]
+                [ text "" ]
+    in
+        [ cell
+            [ size Desktop 12, size Tablet 8, size Phone 4 ]
+            [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title ] ]
+        , cell
+            [ size Desktop 6, size Tablet 8, size Phone 4 ]
+            [ Options.styled div [] (List.map viewDocumentBlock blocks) ]
+        , cell
+            [ size Desktop 6, size Tablet 8, size Phone 4 ]
+            [ Options.styled div [] [ receipt, supplierTitle, supplier ] ]
+        ]
 
 
 viewDocuments : Results -> Html.Html Msg
@@ -448,8 +543,10 @@ viewDocuments results =
     else
         let
             documents =
-                List.indexedMap (\idx doc -> (viewDocument idx doc)) results.documents
-                    |> List.intersperse (hr [] [])
+                List.concat <|
+                    List.indexedMap
+                        (\idx doc -> (viewDocument idx doc))
+                        results.documents
 
             total =
                 Maybe.withDefault 0 results.total |> toString
@@ -459,20 +556,20 @@ viewDocuments results =
 
             title =
                 if total == showing then
-                    h2 [] [ text <| total ++ " documents found." ]
+                    total ++ " documents found."
                 else
-                    h2 [] [ text <| total ++ " documents found. Showing " ++ showing ++ "." ]
+                    total ++ " documents found. Showing " ++ showing ++ "."
+
+            titleCell =
+                cell
+                    [ size Desktop 12, size Tablet 8, size Phone 4 ]
+                    [ Options.styled
+                        div
+                        [ Typography.center, Typography.display1 ]
+                        [ text title ]
+                    ]
         in
-            div [] (title :: documents)
-
-
-viewDocumentRow : ( String, String ) -> Html.Html Msg
-viewDocumentRow ( header, content ) =
-    tr
-        []
-        [ th [] [ text header ]
-        , td [] [ text content ]
-        ]
+            grid [] (titleCell :: documents)
 
 
 view : Model -> Html.Html Msg

@@ -115,8 +115,10 @@ view id model =
                     Mdl
                     [ 1 ]
                     model.mdl
-                    [ Button.fab ]
-                    [ Icon.i "receipt" ]
+                    [ Button.minifab ]
+                    [ Icon.i "receipt"
+                    , text " View digitalized receipt"
+                    ]
                 ]
 
         Nothing ->
@@ -128,7 +130,9 @@ view id model =
                 Button.render Mdl
                     [ 0 ]
                     model.mdl
-                    [ Button.raised
+                    [ Button.minifab
                     , Button.onClick (LoadUrl id)
                     ]
-                    [ text "Fetch receipt" ]
+                    [ Icon.i "search"
+                    , text " Fetch digitalized receipt"
+                    ]
