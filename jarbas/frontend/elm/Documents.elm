@@ -432,14 +432,24 @@ viewDocumentBlock ( title, icon, fields ) =
     let
         iconTag =
             Icon.view icon [ Options.css "transform" "translateY(0.4rem)" ]
+        ps =
+            if title == "Supplier info" then
+                Options.styled
+                    p
+                    [ Typography.caption ]
+                    [ text """If we can find the CNPJ of this supplier in our
+                    database more info will be available in the sidebar.""" ]
+            else
+                text ""
     in
         div
             []
             [ Options.styled
-                div
+                p
                 [ Typography.subhead ]
                 [ iconTag, text (" " ++ title) ]
             , List.ul [] (List.map viewDocumentBlockLine fields)
+            , ps
             ]
 
 
@@ -525,14 +535,14 @@ viewDocument index document =
                 [ text "" ]
     in
         [ cell
-            [ size Desktop 12, size Tablet 8, size Phone 4 ]
+            [ size Desktop 6, size Tablet 4, size Phone 2 ]
             [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title ] ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] (List.map viewDocumentBlock blocks) ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
-            [ Options.styled div [] [ receipt, supplierTitle, supplier ] ]
+            [ Options.styled div [] [ supplierTitle, supplier ] ]
         ]
 
 
