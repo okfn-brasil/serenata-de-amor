@@ -1,4 +1,4 @@
-module Documents.Fields exposing (isSearchable, labels, names)
+module Documents.Fields exposing (isSearchable, labels, names, sets)
 
 
 names : List String
@@ -85,4 +85,33 @@ isSearchable ( field, label ) =
         , "subquota_number"
         , "term"
         , "year"
+        ]
+
+
+sets : List ( Int, ( String, List String ) )
+sets =
+    List.indexedMap
+        (,)
+        [ ( "Reimbursement data"
+          , [ "document_id"
+            , "document_type"
+            , "applicant_id"
+            , "reimbursement_number"
+            , "subquota_number"
+            , "subquota_group_id"
+            ]
+          )
+        , ( "Congressperson data"
+          , [ "congressperson_id"
+            , "party"
+            , "state"
+            , "term"
+            ]
+          )
+        , ( "Expense data"
+          , [ "cnpj_cpf"
+            , "year"
+            , "month"
+            ]
+          )
         ]
