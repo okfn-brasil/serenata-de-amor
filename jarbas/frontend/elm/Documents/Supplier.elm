@@ -1,11 +1,16 @@
-module Supplier exposing (Model, Msg, initialModel, load, update, view)
+module Documents.Supplier exposing (Model, Msg, model, load, update, view)
 
 import Char
-import Html exposing (a, br, div, h3, table, td, text, th, tr)
+import Html exposing (a, br, div, p, span, text)
 import Html.Attributes exposing (href)
 import Http exposing (url)
 import Json.Decode exposing ((:=))
 import Json.Decode.Pipeline exposing (decode, nullable, required)
+import Material
+import Material.Button as Button
+import Material.Icon as Icon
+import Material.Options as Options
+import Material.Typography as Typography
 import String
 import Task
 
@@ -57,15 +62,17 @@ type alias Model =
     , loading : Bool
     , loaded : Bool
     , error : Maybe Http.Error
+    , mdl : Material.Model
     }
 
 
-initialModel : Model
-initialModel =
+model : Model
+model =
     { supplier = Nothing
     , loading = False
     , loaded = False
     , error = Nothing
+    , mdl = Material.model
     }
 
 
@@ -79,6 +86,7 @@ type Msg
     = LoadSupplier String
     | ApiSuccess Supplier
     | ApiFail Http.Error
+    | Mdl (Material.Msg Msg)
 
 
 cleanUp : String -> String
@@ -107,7 +115,10 @@ update msg model =
             ( { model | supplier = Just supplier, loading = False, loaded = True }, Cmd.none )
 
         ApiFail error ->
-            ( { initialModel | loaded = True, error = Just error }, Cmd.none )
+            ( { model | loaded = True, error = Just error }, Cmd.none )
+
+        Mdl mdlMsg ->
+            Material.update mdlMsg model
 
 
 load : String -> Cmd Msg
@@ -181,13 +192,23 @@ viewGeoCoord latitude longitude =
             case longitude of
                 Just long ->
                     let
-                        coords =
-                            lat ++ "," ++ long
-
                         url =
-                            "https://ddg.gg/?q=!gm+" ++ coords
+                            "https://ddg.gg/?q=!gm+"
+                                ++ (toString lat)
+                                ++ ","
+                                ++ (toString long)
                     in
-                        a [ href url ] [ text coords ]
+                        a
+                            [ href url ]
+                            [ Button.render
+                                Mdl
+                                [ 0 ]
+                                model.mdl
+                                [ Button.minifab ]
+                                [ Icon.i "receipt"
+                                , text " Supplier on Google Maps"
+                                ]
+                            ]
 
                 Nothing ->
                     text ""
@@ -225,38 +246,50 @@ viewSupplier supplier =
             , ( "Last updated", Maybe.withDefault "" supplier.last_updated )
             ]
 
-        activities =
-            [ ( "Main activity", supplier.main_activity )
-            , ( "Secondary activity", supplier.secondary_activity )
-            ]
-
-        stringRows =
+        rows =
             List.map viewRow labels
 
-        activityRows =
-            List.map viewActivities activities
-
-        geoCoordRow =
-            [ tr
-                []
-                [ th [] [ text "Latitude & longitude" ]
-                , td [] [ viewGeoCoord supplier.latitude supplier.longitude ]
+        activities =
+            List.map
+                viewActivities
+                [ ( "Main activity", supplier.main_activity )
+                , ( "Secondary activity", supplier.secondary_activity )
                 ]
-            ]
 
-        firstRows =
-            List.take 3 stringRows
+        icon =
+            Icon.view "store" [ Options.css "transform" "translateY(0.4rem)" ]
 
-        remainingRows =
-            List.drop 3 stringRows
-
-        rows =
-            List.concat [ firstRows, activityRows, remainingRows, geoCoordRow ]
+        title =
+            " " ++ (Maybe.withDefault "" supplier.name)
     in
         div
             []
-            [ h3 [] [ text <| "Supplier: " ++ (Maybe.withDefault "" supplier.name) ]
-            , table [] rows
+            [ Options.styled
+                p
+                [ Typography.subhead ]
+                [ icon, text title ]
+            , Options.styled div [] (rows ++ activities)
+            ]
+
+
+viewRow : ( String, String ) -> Html.Html Msg
+viewRow ( label, value ) =
+    let
+        styles =
+            [ Options.css "display" "flex"
+            , Options.css "justify-content" "space-between"
+            , Options.css "align-items" "center"
+            ]
+
+        labelStyles =
+            Options.css "width" "30%" :: styles
+    in
+        Options.styled div
+            [ Options.css "display" "flex"
+            , Options.css "flex-direction" "row"
+            ]
+            [ Options.styled span (Typography.body2 :: labelStyles) [ text label ]
+            , Options.styled span (Typography.body1 :: styles) [ text value ]
             ]
 
 
@@ -268,26 +301,16 @@ viewActivity activity =
 viewActivities : ( String, List Activity ) -> Html.Html Msg
 viewActivities ( label, activities ) =
     let
-        texts =
+        value =
             List.map viewActivity activities
-
-        contents =
-            List.intersperse (br [] []) texts
+                |> List.intersperse (br [] [])
     in
-        tr
+        Options.styled div
             []
-            [ th [] [ text label ]
-            , td [] contents
+            [ Options.styled span [ Typography.body2 ] [ text label ]
+            , br [] []
+            , Options.styled span [ Typography.body1 ] value
             ]
-
-
-viewRow : ( String, String ) -> Html.Html Msg
-viewRow ( header, content ) =
-    tr
-        []
-        [ th [] [ text header ]
-        , td [] [ text content ]
-        ]
 
 
 view : Model -> Html.Html Msg
@@ -298,16 +321,12 @@ view model =
                 viewSupplier info
 
             Nothing ->
-                div
-                    []
-                    [ br [] []
-                    , text "(CNPJ invalid or not found.)"
-                    ]
+                Options.styled div
+                    [ Typography.caption ]
+                    [ text "CNPJ invalid or not found." ]
     else if model.loading then
-        div
-            []
-            [ br [] []
-            , text "Fetching supplier info from CNPJ…"
-            ]
+        Options.styled div
+            [ Typography.caption ]
+            [ text "Fetching supplier info from CNPJ…" ]
     else
         text ""

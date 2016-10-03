@@ -1,12 +1,14 @@
 module Main exposing (..)
 
-import Document
-import Html exposing (a, div, h1, li, text, ul)
+import Documents
+import Documents.Inputs as Inputs
+import Html
 import Html.App
-import Html.Attributes exposing (class, href)
+import Layout
+import Material
+import Material.Layout
 import Navigation
 import String
-import Template
 
 
 --
@@ -15,15 +17,17 @@ import Template
 
 
 type alias Model =
-    { documents : Document.Model
-    , template : Template.Model
+    { documents : Documents.Model
+    , template : Layout.Model
+    , mdl : Material.Model
     }
 
 
-initialModel : Model
-initialModel =
-    { documents = Document.initialModel
-    , template = Template.initialModel
+model : Model
+model =
+    { documents = Documents.model
+    , template = Layout.model
+    , mdl = Material.model
     }
 
 
@@ -34,28 +38,32 @@ initialModel =
 
 
 type Msg
-    = DocumentMsg Document.Msg
-    | TemplateMsg Template.Msg
+    = DocumentsMsg Documents.Msg
+    | LayoutMsg Msg
+    | Mdl (Material.Msg Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        DocumentMsg msg ->
+        DocumentsMsg msg ->
             let
                 updated =
-                    Document.update msg model.documents
+                    Documents.update msg model.documents
 
                 documents =
                     fst updated
 
                 cmd =
-                    Cmd.map DocumentMsg <| snd updated
+                    Cmd.map DocumentsMsg <| snd updated
             in
                 ( { model | documents = documents }, cmd )
 
-        TemplateMsg _ ->
+        LayoutMsg _ ->
             ( model, Cmd.none )
+
+        Mdl mdlMsg ->
+            Material.update mdlMsg model
 
 
 
@@ -64,24 +72,27 @@ update msg model =
 --
 
 
-viewWrapper : Html.Html a -> Html.Html a
-viewWrapper html =
-    div [ class "outer" ] [ div [ class "inner" ] [ html ] ]
-
-
 view : Model -> Html.Html Msg
 view model =
     let
-        documents =
-            Html.App.map DocumentMsg <| Document.view model.documents
-
         header =
-            Html.App.map TemplateMsg <| Template.header model.template
+            Html.App.map LayoutMsg <| Layout.header model.template
 
-        footer =
-            Html.App.map TemplateMsg <| Template.footer model.template
+        drawer =
+            List.map (\x -> Html.App.map LayoutMsg x) (Layout.drawer model.template)
+
+        documents =
+            Html.App.map DocumentsMsg <| Documents.view model.documents
     in
-        div [] (List.map viewWrapper [ header, documents, footer ])
+        Material.Layout.render
+            Mdl
+            model.mdl
+            [ Material.Layout.fixedHeader ]
+            { header = [ header ]
+            , drawer = drawer
+            , tabs = ( [], [] )
+            , main = [ documents ]
+            }
 
 
 
@@ -126,7 +137,7 @@ urlParser =
 urlUpdate : List ( String, String ) -> Model -> ( Model, Cmd Msg )
 urlUpdate query model =
     if List.isEmpty query then
-        ( { model | documents = Document.initialModel }
+        ( { model | documents = Documents.model }
         , Cmd.none
         )
     else
@@ -134,14 +145,14 @@ urlUpdate query model =
             documents =
                 model.documents
 
-            form =
-                documents.form
+            inputs =
+                documents.inputs
 
-            newDocuments =
-                { documents | form = Document.updateFormFields form query }
+            newDocumentss =
+                { documents | inputs = Inputs.updateFromQuery inputs query }
         in
-            ( { model | documents = newDocuments }
-            , Cmd.map DocumentMsg <| Document.loadDocuments query
+            ( { model | documents = newDocumentss }
+            , Cmd.map DocumentsMsg <| Documents.loadDocuments query
             )
 
 
@@ -151,7 +162,7 @@ type alias Flags =
 
 init : List ( String, String ) -> ( Model, Cmd Msg )
 init documentId =
-    urlUpdate documentId initialModel
+    urlUpdate documentId model
 
 
 main : Platform.Program Never
