@@ -117,13 +117,13 @@ view id model =
                     model.mdl
                     [ Button.minifab ]
                     [ Icon.i "receipt"
-                    , text " View digitalized receipt"
+                    , text " Digitalized receipt"
                     ]
                 ]
 
         Nothing ->
             if model.fetched then
-                div [] [ text "Not available" ]
+                div [] [ text "Digitalized receipt not available." ]
             else if model.loading then
                 div [] [ Spinner.spinner [ Spinner.active True ] ]
             else
@@ -134,5 +134,5 @@ view id model =
                     , Button.onClick (LoadUrl id)
                     ]
                     [ Icon.i "search"
-                    , text " Fetch digitalized receipt"
+                    , text " Fetch receipt"
                     ]
