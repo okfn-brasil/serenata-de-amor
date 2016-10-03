@@ -2,6 +2,7 @@ module Documents exposing (Msg, Model, model, loadDocuments, update, view)
 
 import Documents.Fields as Fields
 import Documents.Inputs as Inputs
+import Documents.Map as Map
 import Documents.Receipt as Receipt
 import Documents.Supplier as Supplier
 import Html exposing (a, button, div, form, p, span, text)
@@ -104,6 +105,7 @@ type Msg
     | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
     | SupplierMsg Int Supplier.Msg
+    | MapMsg
     | Mdl (Material.Msg Msg)
 
 
@@ -157,6 +159,9 @@ update msg model =
 
         SupplierMsg index supplierMsg ->
             getDocumentsAndCmd model index updateSuppliers supplierMsg
+
+        MapMsg ->
+            ( model, Cmd.none )
 
         Mdl mdlMsg ->
             Material.update mdlMsg model
@@ -432,6 +437,7 @@ viewDocumentBlock ( title, icon, fields ) =
     let
         iconTag =
             Icon.view icon [ Options.css "transform" "translateY(0.4rem)" ]
+
         ps =
             if title == "Supplier info" then
                 Options.styled
@@ -519,6 +525,9 @@ viewDocument index document =
         receipt =
             Html.App.map (ReceiptMsg index) (Receipt.view document.id document.receipt)
 
+        map =
+            Html.App.map (\_ -> MapMsg) <| Map.viewFrom document.supplier_info
+
         title =
             Options.styled
                 p
@@ -537,6 +546,13 @@ viewDocument index document =
         [ cell
             [ size Desktop 6, size Tablet 4, size Phone 2 ]
             [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title ] ]
+        , cell
+            [ size Desktop 6, size Tablet 4, size Phone 2 ]
+            [ Options.styled
+                div
+                [ Options.css "margin-top" "3rem", Typography.right ]
+                [ receipt, map ]
+            ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] (List.map viewDocumentBlock blocks) ]
