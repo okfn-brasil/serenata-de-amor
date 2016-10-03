@@ -11,6 +11,11 @@ import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
 import Json.Decode exposing ((:=), Decoder, int, list, maybe, object2, string)
 import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
+import Material
+import Material.Button as Button
+import Material.Grid exposing (grid, cell, size, Device(..))
+import Material.Options as Options
+import Material.Typography as Typography
 import Navigation
 import String
 import Task
@@ -68,6 +73,7 @@ type alias Model =
     , inputs : Inputs.Model
     , loading : Bool
     , error : Maybe Http.Error
+    , mdl : Material.Model
     }
 
 
@@ -78,7 +84,7 @@ initialResults =
 
 model : Model
 model =
-    Model initialResults Inputs.model False Nothing
+    Model initialResults Inputs.model False Nothing Material.model
 
 
 
@@ -94,6 +100,7 @@ type Msg
     | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
     | SupplierMsg Int Supplier.Msg
+    | Mdl (Material.Msg Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -137,6 +144,9 @@ update msg model =
 
         SupplierMsg index supplierMsg ->
             getDocumentsAndCmd model index updateSuppliers supplierMsg
+
+        Mdl mdlMsg ->
+            Material.update mdlMsg model
 
 
 updateSuppliers : Int -> Supplier.Msg -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )
@@ -320,7 +330,7 @@ viewForm : Model -> Html.Html Msg
 viewForm model =
     let
         inputs =
-            List.map (Html.App.map InputsMsg) (Inputs.view model.loading model.inputs)
+            Inputs.view model.loading model.inputs |> Html.App.map InputsMsg
 
         action =
             if model.loading then
@@ -328,14 +338,38 @@ viewForm model =
             else
                 "Search"
 
+        attr =
+            let
+                base =
+                    [ Button.raised
+                    , Button.colored
+                    , Button.type' "submit"
+                    ]
+            in
+                if model.loading then
+                    base ++ [ Button.disabled ]
+                else
+                    base
+
         send =
-            [ button [ type' "submit", disabled model.loading ] [ text action ] ]
+            grid
+                []
+                [ cell
+                    [ size Desktop 12, size Tablet 8, size Phone 4 ]
+                    [ Options.styled
+                        div
+                        [ Typography.center ]
+                        [ Button.render
+                            Mdl
+                            [ 0 ]
+                            model.mdl
+                            attr
+                            [ text action ]
+                        ]
+                    ]
+                ]
     in
-        form
-            [ onSubmit Submit ]
-            [ div [ class "fields" ] inputs
-            , div [ class "fields" ] send
-            ]
+        form [ onSubmit Submit ] [ inputs, send ]
 
 
 viewError : Maybe Http.Error -> Html.Html Msg

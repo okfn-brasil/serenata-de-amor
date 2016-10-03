@@ -1,10 +1,13 @@
-module Documents.Inputs exposing (Model, Msg, toQuery, model, update, updateFromQuery, view)
+module Documents.Inputs exposing (Model, Msg, model, toQuery, update, updateFromQuery, view)
 
 import Dict
 import Documents.Fields as Fields
-import Html exposing (div, input, label, text)
-import Html.Attributes exposing (class, disabled, for, id, type', value)
-import Html.Events exposing (onInput, onSubmit)
+import Html exposing (br, p, span, text)
+import Material
+import Material.Grid exposing (grid, cell, size, Device(..))
+import Material.Options as Options
+import Material.Textfield as Textfield
+import Material.Typography as Typography
 import String
 
 
@@ -20,7 +23,9 @@ type alias Field =
 
 
 type alias Model =
-    Dict.Dict String Field
+    { inputs : Dict.Dict String Field
+    , mdl : Material.Model
+    }
 
 
 toFormField : ( String, String ) -> ( String, Field )
@@ -33,10 +38,15 @@ model =
     let
         pairs =
             List.map2 (,) Fields.names Fields.labels
+
+        inputs =
+            List.filter Fields.isSearchable pairs
+                |> List.map toFormField
+                |> Dict.fromList
     in
-        List.filter Fields.isSearchable pairs
-            |> List.map toFormField
-            |> Dict.fromList
+        { inputs = inputs
+        , mdl = Material.model
+        }
 
 
 
@@ -47,6 +57,7 @@ model =
 
 type Msg
     = Update String String
+    | Mdl (Material.Msg Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -55,12 +66,19 @@ update msg model =
         Update name value ->
             ( updateField model ( name, value ), Cmd.none )
 
+        Mdl mdlMsg ->
+            Material.update mdlMsg model
+
 
 updateField : Model -> ( String, String ) -> Model
 updateField model ( name, value ) =
-    case (Dict.get name model) of
+    case (Dict.get name model.inputs) of
         Just field ->
-            Dict.insert name { field | value = value } model
+            let
+                inputs =
+                    Dict.insert name { field | value = value } model.inputs
+            in
+                { model | inputs = inputs }
 
         Nothing ->
             model
@@ -84,8 +102,8 @@ updateFromQuery model queryList =
 
 
 toQuery : Model -> List ( String, String )
-toQuery form =
-    form
+toQuery model =
+    model.inputs
         |> Dict.filter (\index field -> not (String.isEmpty field.value))
         |> Dict.map (\index field -> field.value)
         |> Dict.toList
@@ -97,22 +115,64 @@ toQuery form =
 --
 
 
-viewField : Bool -> ( String, Field ) -> Html.Html Msg
-viewField loading ( name, field ) =
-    div
-        [ class "field" ]
-        [ label [ for <| "id_" ++ name ] [ text field.label ]
-        , input
-            [ type' "text"
-            , id <| "id_" ++ name
-            , value field.value
-            , Update name |> onInput
-            , disabled loading
+getField : Model -> String -> Field
+getField model name =
+    Maybe.withDefault
+        (Field "" "")
+        (Dict.get name model.inputs)
+
+
+viewField : Bool -> ( Int, ( String, Field ) ) -> Html.Html Msg
+viewField loading ( index, ( name, field ) ) =
+    let
+        base =
+            [ Textfield.onInput (Update name)
+            , Options.css "padding-top" "0"
+            , Options.css "width" "100%"
             ]
-            []
-        ]
+
+        attrs =
+            if loading then
+                base ++ [ Textfield.disabled ]
+            else
+                base
+    in
+        p []
+            [ Options.styled span [ Typography.caption ] [ text field.label ]
+            , br [] []
+            , Textfield.render Mdl [ index ] model.mdl attrs
+            ]
 
 
-view : Bool -> Model -> List (Html.Html Msg)
+viewFieldset : Bool -> Model -> ( Int, ( String, List String ) ) -> Material.Grid.Cell Msg
+viewFieldset loading model ( index, ( title, names ) ) =
+    let
+        fields =
+            List.map (getField model) names
+
+        namesAndFields =
+            List.map2 (,) names fields
+
+        indexedNamesAndFields =
+            List.indexedMap (,) namesAndFields
+                |> List.map (\( idx, field ) -> ( correctFieldIndex index idx, field ))
+
+        heading =
+            [ Options.styled p [ Typography.title ] [ text title ] ]
+
+        inputs =
+            List.map (viewField loading) indexedNamesAndFields
+    in
+        cell
+            [ size Desktop 4, size Tablet 4, size Phone 4 ]
+            (List.append heading inputs)
+
+
+correctFieldIndex : Int -> Int -> Int
+correctFieldIndex fieldset field =
+    ((fieldset + 1) * 100) + field
+
+
+view : Bool -> Model -> Html.Html Msg
 view loading model =
-    List.map (viewField loading) (Dict.toList model)
+    grid [] <| List.map (viewFieldset loading model) Fields.sets
