@@ -146,12 +146,18 @@ urlUpdate query model =
                 model.documents
 
             inputs =
-                documents.inputs
+                Inputs.updateFromQuery documents.inputs query
 
-            newDocumentss =
-                { documents | inputs = Inputs.updateFromQuery inputs query }
+            results =
+                documents.results
+
+            newResults =
+                { results | loadingPage = Documents.getPage query }
+
+            newDocuments =
+                { documents | inputs = inputs, results = newResults, loading = True }
         in
-            ( { model | documents = newDocumentss }
+            ( { model | documents = newDocuments }
             , Cmd.map DocumentsMsg <| Documents.loadDocuments query
             )
 
