@@ -127,6 +127,7 @@ viewField loading ( index, ( name, field ) ) =
     let
         base =
             [ Textfield.onInput (Update name)
+            , Textfield.value field.value
             , Options.css "padding-top" "0"
             , Options.css "width" "100%"
             ]

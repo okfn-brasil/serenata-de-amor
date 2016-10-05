@@ -50,7 +50,8 @@ class TestPrintCount(TestCase):
 
 class TestDropAll(TestCase):
 
-    def test_drop_all(self):
+    @patch('jarbas.core.management.commands.print')
+    def test_drop_all(self, mock_print):
         self.assertEqual(0, Activity.objects.count())
         Activity.objects.create(**sample_activity_data)
         self.assertEqual(1, Activity.objects.count())

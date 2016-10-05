@@ -156,10 +156,6 @@ urlUpdate query model =
             )
 
 
-type alias Flags =
-    { count : Int }
-
-
 init : List ( String, String ) -> ( Model, Cmd Msg )
 init documentId =
     urlUpdate documentId model
