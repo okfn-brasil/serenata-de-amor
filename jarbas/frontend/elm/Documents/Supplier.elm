@@ -125,12 +125,15 @@ load : String -> Cmd Msg
 load cnpj =
     let
         url =
-            "/api/supplier/" ++ cleanUp cnpj
+            "/api/supplier/" ++ (cleanUp cnpj)
     in
-        Task.perform
-            ApiFail
-            ApiSuccess
-            (Http.get decoder url)
+        if url == "/api/supplier/" then
+            Cmd.none
+        else
+            Task.perform
+                ApiFail
+                ApiSuccess
+                (Http.get decoder url)
 
 
 
