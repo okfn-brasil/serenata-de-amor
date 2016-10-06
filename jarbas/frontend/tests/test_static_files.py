@@ -1,5 +1,6 @@
 from io import StringIO
 from os import path, remove
+from unittest.mock import patch
 
 from django.conf import settings
 from django.contrib.staticfiles import finders
@@ -16,9 +17,12 @@ class TestStatic(TestCase):
 class TestCompiledStatic(TestCase):
 
     def setUp(self):
-        [remove(f) for f in paths('app.js')]
+        file_path = path.join(settings.ASSETS_ROOT, 'app.js')
+        if path.exists(file_path):
+            remove(file_path)
 
-    def test_js(self):
+    @patch('django_assets.management.commands.assets.logging')
+    def test_js(self, mock_log):
         self.assertEqual(None, finders.find('app.js'))
         call_command('assets', 'build', 'elm', '--no-cache')
         self.assertTrue(finders.find('app.js'))
@@ -27,16 +31,11 @@ class TestCompiledStatic(TestCase):
 class TestDownloadedStatic(TestCase):
 
     def setUp(self):
-        [remove(f) for f in paths('ceap-datasets.html')]
+        file_path = path.join(settings.ASSETS_ROOT, 'ceap-datasets.html')
+        if path.exists(file_path):
+            remove(file_path)
 
     def test_ceap_datasets(self):
         self.assertEqual(None, finders.find('ceap-datasets.html'))
         call_command('ceapdatasets', stdout=StringIO())
         self.assertTrue(finders.find('ceap-datasets.html'))
-
-
-def paths(*files):
-    for name in files:
-        filepath = path.join(settings.ASSETS_ROOT, name)
-        if path.exists(filepath):
-            yield filepath
