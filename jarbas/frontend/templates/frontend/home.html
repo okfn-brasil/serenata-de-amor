@@ -16,7 +16,8 @@
   <body>
 
     <script type="text/javascript">
-      Elm.Main.fullscreen();
+      var lang = window.navigator.userLanguage || window.navigator.language;
+      Elm.Main.fullscreen({lang: lang.substring(0, 2)});
     </script>
 
     {% if google_analytics %}

@@ -4,6 +4,7 @@ import Html exposing (a, text, img)
 import Html.Attributes exposing (alt, src, style)
 import Material
 import Material.Layout as Layout
+import Internationalization exposing (Language(..), TranslationId(..), translate)
 
 
 --
@@ -11,44 +12,15 @@ import Material.Layout as Layout
 --
 
 
-type alias Link =
-    { label : String
-    , url : String
-    }
-
-
 type alias Model =
-    { jarbas : Link
-    , serenata : Link
-    , table : Link
-    , digitalOcean : Link
+    { lang : Language
     , mdl : Material.Model
     }
 
 
-jarbas : Link
-jarbas =
-    Link "Jarbas" "http://github.com/datasciencebr/jarbas"
-
-
-serenata : Link
-serenata =
-    Link "About Serenata de Amor" "http://serenata.datasciencebr.com/"
-
-
-table : Link
-table =
-    Link "Dataset description" "/static/ceap-datasets.html"
-
-
-digitalOcean : Link
-digitalOcean =
-    Link "Powered by Digital Ocean" "http://digitalocean.com"
-
-
 model : Model
 model =
-    Model jarbas serenata table digitalOcean Material.model
+    Model English Material.model
 
 
 
@@ -60,41 +32,38 @@ model =
 header : Model -> Html.Html a
 header model =
     let
-        digitalOceanLogo =
-            img
-                [ src "/static/digitalocean.png"
-                , alt model.digitalOcean.label
-                , style [ ( "height", "1.5rem" ), ( "opacity", "0.5" ) ]
+        digitalOcean =
+            Layout.link
+                [ Layout.href "http://digitalocean.com" ]
+                [ img
+                    [ src "/static/digitalocean.png"
+                    , alt "Powered by Digital Ocean"
+                    , style [ ( "height", "1.5rem" ), ( "opacity", "0.5" ) ]
+                    ]
+                    []
                 ]
-                []
     in
         Layout.row
             []
-            [ Layout.title
-                []
-                [ text model.jarbas.label ]
+            [ Layout.title [] [ text "Jarbas" ]
             , Layout.spacer
-            , Layout.navigation []
-                [ Layout.link
-                    [ Layout.href model.digitalOcean.url ]
-                    [ digitalOceanLogo ]
-                ]
+            , Layout.navigation [] [ digitalOcean ]
             ]
 
 
-drawerLinks : ( String, Html.Html a ) -> Html.Html a
+drawerLinks : ( String, String ) -> Html.Html a
 drawerLinks ( url, content ) =
-    Layout.link [ Layout.href url ] [ content ]
+    Layout.link [ Layout.href url ] [ text content ]
 
 
 drawer : Model -> List (Html.Html a)
 drawer model =
-    [ Layout.title [] [ text "About" ]
+    [ Layout.title [] [ text (translate model.lang AboutJarbas) ]
     , Layout.navigation [] <|
         List.map
             drawerLinks
-            [ ( model.table.url, text model.table.label )
-            , ( model.jarbas.url, text <| "About " ++ model.jarbas.label )
-            , ( model.serenata.url, text model.serenata.label )
+            [ ( "/static/ceap-datasets.html", translate model.lang AboutDatasets )
+            , ( "http://github.com/datasciencebr/jarbas", translate model.lang AboutJarbas )
+            , ( "http://serenata.datasciencebr.com/", translate model.lang AboutSerenata )
             ]
     ]

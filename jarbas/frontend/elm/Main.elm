@@ -4,6 +4,7 @@ import Documents
 import Documents.Inputs as Inputs
 import Html
 import Html.App
+import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Layout
 import Material
 import Material.Layout
@@ -18,17 +19,15 @@ import String
 
 type alias Model =
     { documents : Documents.Model
-    , template : Layout.Model
+    , layout : Layout.Model
+    , lang : Language
     , mdl : Material.Model
     }
 
 
 model : Model
 model =
-    { documents = Documents.model
-    , template = Layout.model
-    , mdl = Material.model
-    }
+    Model Documents.model Layout.model English Material.model
 
 
 
@@ -76,10 +75,10 @@ view : Model -> Html.Html Msg
 view model =
     let
         header =
-            Html.App.map LayoutMsg <| Layout.header model.template
+            Html.App.map LayoutMsg <| Layout.header model.layout
 
         drawer =
-            List.map (\x -> Html.App.map LayoutMsg x) (Layout.drawer model.template)
+            List.map (\x -> Html.App.map LayoutMsg x) (Layout.drawer model.layout)
 
         documents =
             Html.App.map DocumentsMsg <| Documents.view model.documents
@@ -162,14 +161,37 @@ urlUpdate query model =
             )
 
 
-init : List ( String, String ) -> ( Model, Cmd Msg )
-init documentId =
-    urlUpdate documentId model
+
+--
+-- Main
+--
 
 
-main : Platform.Program Never
+type alias Flags =
+    { lang : String }
+
+
+init : Flags -> List ( String, String ) -> ( Model, Cmd Msg )
+init flags documentId =
+    let
+        lang =
+            if flags.lang == "pt" then
+                Portuguese
+            else
+                English
+
+        layout =
+            model.layout
+
+        newLayout =
+            { layout | lang = lang }
+    in
+        urlUpdate documentId { model | lang = lang, layout = newLayout }
+
+
+main : Platform.Program Flags
 main =
-    Navigation.program urlParser
+    Navigation.programWithFlags urlParser
         { init = init
         , update = update
         , urlUpdate = urlUpdate
