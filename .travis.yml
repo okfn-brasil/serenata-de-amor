@@ -20,7 +20,7 @@ env:
 
 before_script:
   - python manage.py migrate
-  - travis_wait python manage.py assets build --no-cache
+  - travis_wait 45 python manage.py assets build --no-cache
   - python manage.py collectstatic --no-input
 
 script:
