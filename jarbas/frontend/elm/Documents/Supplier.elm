@@ -2,12 +2,11 @@ module Documents.Supplier exposing (Model, Msg, model, load, update, view)
 
 import Char
 import Html exposing (a, br, div, p, span, text)
-import Html.Attributes exposing (href)
 import Http exposing (url)
 import Json.Decode exposing ((:=))
 import Json.Decode.Pipeline exposing (decode, nullable, required)
+import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
-import Material.Button as Button
 import Material.Icon as Icon
 import Material.Options as Options
 import Material.Typography as Typography
@@ -62,18 +61,14 @@ type alias Model =
     , loading : Bool
     , loaded : Bool
     , error : Maybe Http.Error
+    , lang : Language
     , mdl : Material.Model
     }
 
 
-model : Model
-model =
-    { supplier = Nothing
-    , loading = False
-    , loaded = False
-    , error = Nothing
-    , mdl = Material.model
-    }
+model : Language -> Model
+model lang =
+    Model Nothing False False Nothing lang Material.model
 
 
 
@@ -188,65 +183,33 @@ decodeActivities =
 --
 
 
-viewGeoCoord : Maybe String -> Maybe String -> Html.Html Msg
-viewGeoCoord latitude longitude =
-    case latitude of
-        Just lat ->
-            case longitude of
-                Just long ->
-                    let
-                        url =
-                            "https://ddg.gg/?q=!gm+"
-                                ++ (toString lat)
-                                ++ ","
-                                ++ (toString long)
-                    in
-                        a
-                            [ href url ]
-                            [ Button.render
-                                Mdl
-                                [ 0 ]
-                                model.mdl
-                                [ Button.minifab ]
-                                [ Icon.i "receipt"
-                                , text " Supplier on Google Maps"
-                                ]
-                            ]
-
-                Nothing ->
-                    text ""
-
-        Nothing ->
-            text ""
-
-
-viewSupplier : Supplier -> Html.Html Msg
-viewSupplier supplier =
+viewSupplier : Language -> Supplier -> Html.Html Msg
+viewSupplier lang supplier =
     let
         labels =
-            [ ( "CNPJ", supplier.cnpj )
-            , ( "Trade name", Maybe.withDefault "" supplier.trade_name )
-            , ( "Name", Maybe.withDefault "" supplier.name )
-            , ( "Opening date", Maybe.withDefault "" supplier.opening )
-            , ( "Legal entity", Maybe.withDefault "" supplier.legal_entity )
-            , ( "Type", Maybe.withDefault "" supplier.supplier_type )
-            , ( "Status", Maybe.withDefault "" supplier.status )
-            , ( "Situation", Maybe.withDefault "" supplier.situation )
-            , ( "Situation reason", Maybe.withDefault "" supplier.situation_reason )
-            , ( "Situation date", Maybe.withDefault "" supplier.situation_date )
-            , ( "Special situation", Maybe.withDefault "" supplier.special_situation )
-            , ( "Special situation date", Maybe.withDefault "" supplier.special_situation_date )
-            , ( "Responsible federative entity", Maybe.withDefault "" supplier.responsible_federative_entity )
-            , ( "Address", Maybe.withDefault "" supplier.address )
-            , ( "Number", Maybe.withDefault "" supplier.address_number )
-            , ( "Additional address details", Maybe.withDefault "" supplier.additional_address_details )
-            , ( "Neighborhood", Maybe.withDefault "" supplier.neighborhood )
-            , ( "Zip code", Maybe.withDefault "" supplier.zip_code )
-            , ( "City", Maybe.withDefault "" supplier.city )
-            , ( "State", Maybe.withDefault "" supplier.state )
-            , ( "Email", Maybe.withDefault "" supplier.email )
-            , ( "Phone", Maybe.withDefault "" supplier.phone )
-            , ( "Last updated", Maybe.withDefault "" supplier.last_updated )
+            [ ( (translate lang SupplierCNPJ), supplier.cnpj )
+            , ( (translate lang SupplierTradeName), Maybe.withDefault "" supplier.trade_name )
+            , ( (translate lang SupplierName), Maybe.withDefault "" supplier.name )
+            , ( (translate lang SupplierOpeningDate), Maybe.withDefault "" supplier.opening )
+            , ( (translate lang SupplierLegalEntity), Maybe.withDefault "" supplier.legal_entity )
+            , ( (translate lang SupplierType), Maybe.withDefault "" supplier.supplier_type )
+            , ( (translate lang SupplierStatus), Maybe.withDefault "" supplier.status )
+            , ( (translate lang SupplierSituation), Maybe.withDefault "" supplier.situation )
+            , ( (translate lang SupplierSituationReason), Maybe.withDefault "" supplier.situation_reason )
+            , ( (translate lang SupplierSituationDate), Maybe.withDefault "" supplier.situation_date )
+            , ( (translate lang SupplierSpecialSituation), Maybe.withDefault "" supplier.special_situation )
+            , ( (translate lang SupplierSpecialSituationDate), Maybe.withDefault "" supplier.special_situation_date )
+            , ( (translate lang SupplierResponsibleFederativeEntity), Maybe.withDefault "" supplier.responsible_federative_entity )
+            , ( (translate lang SupplierAddress), Maybe.withDefault "" supplier.address )
+            , ( (translate lang SupplierNumber), Maybe.withDefault "" supplier.address_number )
+            , ( (translate lang SupplierAdditionalAddressDetails), Maybe.withDefault "" supplier.additional_address_details )
+            , ( (translate lang SupplierNeighborhood), Maybe.withDefault "" supplier.neighborhood )
+            , ( (translate lang SupplierZipCode), Maybe.withDefault "" supplier.zip_code )
+            , ( (translate lang SupplierCity), Maybe.withDefault "" supplier.city )
+            , ( (translate lang SupplierState), Maybe.withDefault "" supplier.state )
+            , ( (translate lang SupplierEmail), Maybe.withDefault "" supplier.email )
+            , ( (translate lang SupplierPhone), Maybe.withDefault "" supplier.phone )
+            , ( (translate lang SupplierLastUpdated), Maybe.withDefault "" supplier.last_updated )
             ]
 
         rows =
@@ -255,8 +218,8 @@ viewSupplier supplier =
         activities =
             List.map
                 viewActivities
-                [ ( "Main activity", supplier.main_activity )
-                , ( "Secondary activity", supplier.secondary_activity )
+                [ ( (translate lang SupplierMainActivity), supplier.main_activity )
+                , ( (translate lang SupplierSecondaryActivity), supplier.secondary_activity )
                 ]
 
         icon =
@@ -321,7 +284,7 @@ view model =
     if model.loaded then
         case model.supplier of
             Just info ->
-                viewSupplier info
+                viewSupplier model.lang info
 
             Nothing ->
                 Options.styled div

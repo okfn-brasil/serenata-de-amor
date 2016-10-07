@@ -5,6 +5,7 @@ import Html.Attributes exposing (href)
 import Http
 import Json.Decode
 import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
+import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 import Material.Button as Button
 import Material.Icon as Icon
@@ -23,18 +24,14 @@ type alias Model =
     , fetched : Bool
     , loading : Bool
     , error : Maybe Http.Error
+    , lang : Language
     , mdl : Material.Model
     }
 
 
 model : Model
 model =
-    { url = Nothing
-    , fetched = False
-    , loading = False
-    , error = Nothing
-    , mdl = Material.model
-    }
+    Model Nothing False False Nothing English Material.model
 
 
 
@@ -89,13 +86,14 @@ urlDecoder =
     at [ "url" ] (maybe string)
 
 
-decoder : Json.Decode.Decoder Model
-decoder =
+decoder : Language -> Json.Decode.Decoder Model
+decoder lang =
     decode Model
         |> required "url" (nullable Json.Decode.string)
         |> required "fetched" Json.Decode.bool
         |> hardcoded False
         |> hardcoded Nothing
+        |> hardcoded lang
         |> hardcoded Material.model
 
 
@@ -117,13 +115,13 @@ view id model =
                     model.mdl
                     [ Button.minifab ]
                     [ Icon.i "receipt"
-                    , text " Digitalized receipt"
+                    , text (translate model.lang ReceiptAvailable)
                     ]
                 ]
 
         Nothing ->
             if model.fetched then
-                div [] [ text "Digitalized receipt not available." ]
+                div [] [ text (translate model.lang ReceiptNotAvailable) ]
             else if model.loading then
                 div [] [ Spinner.spinner [ Spinner.active True ] ]
             else
@@ -134,5 +132,5 @@ view id model =
                     , Button.onClick (LoadUrl id)
                     ]
                     [ Icon.i "search"
-                    , text " Fetch receipt"
+                    , text (translate model.lang ReceiptFetch)
                     ]

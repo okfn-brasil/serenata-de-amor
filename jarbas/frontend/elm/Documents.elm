@@ -6,10 +6,11 @@ import Documents.Inputs as Inputs
 import Documents.Map as Map
 import Documents.Receipt as Receipt
 import Documents.Supplier as Supplier
-import Html exposing (a, button, div, form, p, span, text)
+import Html exposing (div, form, p, span, text)
 import Html.App
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
+import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Json.Decode exposing ((:=), Decoder, int, list, maybe, string)
 import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
 import Material
@@ -84,6 +85,7 @@ type alias Model =
     , showForm : Bool
     , loading : Bool
     , error : Maybe Http.Error
+    , lang : Language
     , mdl : Material.Model
     }
 
@@ -93,9 +95,9 @@ results =
     Results [] Nothing Nothing Nothing Nothing 1 "1"
 
 
-model : Model
-model =
-    Model results Inputs.model True False Nothing Material.model
+model : Language -> Model
+model lang =
+    Model results (Inputs.model lang) True False Nothing English Material.model
 
 
 
@@ -318,12 +320,12 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
         ( { model | results = newResults }, Cmd.batch newCommands )
 
 
-loadDocuments : List ( String, String ) -> Cmd Msg
-loadDocuments query =
+loadDocuments : Language -> List ( String, String ) -> Cmd Msg
+loadDocuments lang query =
     let
         request =
             Http.get
-                (decoder query)
+                (decoder lang query)
                 (Http.url "/api/document/" query)
     in
         Task.perform
@@ -383,14 +385,14 @@ getPage query =
 --
 
 
-decoder : List ( String, String ) -> Decoder Results
-decoder query =
+decoder : Language -> List ( String, String ) -> Decoder Results
+decoder lang query =
     let
         current =
             Maybe.withDefault 1 (getPage query)
     in
         decode Results
-            |> required "results" (list singleDecoder)
+            |> required "results" (list <| singleDecoder lang)
             |> required "count" (nullable int)
             |> required "previous" (nullable string)
             |> required "next" (nullable string)
@@ -399,8 +401,8 @@ decoder query =
             |> hardcoded ""
 
 
-singleDecoder : Decoder SingleModel
-singleDecoder =
+singleDecoder : Language -> Decoder SingleModel
+singleDecoder lang =
     decode SingleModel
         |> required "id" int
         |> required "document_id" int
@@ -432,8 +434,8 @@ singleDecoder =
         |> required "reimbursement_number" int
         |> required "reimbursement_value" string
         |> required "applicant_id" int
-        |> required "receipt" Receipt.decoder
-        |> hardcoded Supplier.model
+        |> required "receipt" (Receipt.decoder lang)
+        |> hardcoded (Supplier.model lang)
 
 
 
@@ -443,17 +445,17 @@ singleDecoder =
 -- Form
 
 
-viewButton : Bool -> Int -> List (Button.Property Msg) -> String -> Html.Html Msg
-viewButton loading index defaultAttr defaultLabel =
+viewButton : Model -> Int -> List (Button.Property Msg) -> TranslationId -> Html.Html Msg
+viewButton model index defaultAttr defaultLabel =
     let
         label =
-            if loading then
-                "Loading…"
+            if model.loading then
+                translate model.lang Loading
             else
-                defaultLabel
+                translate model.lang defaultLabel
 
         attr =
-            if loading then
+            if model.loading then
                 Button.disabled :: defaultAttr
             else
                 defaultAttr
@@ -482,14 +484,19 @@ viewForm model =
         inputs =
             Inputs.view model.loading model.inputs |> Html.App.map InputsMsg
 
-        viewButton' =
-            viewButton model.loading
-
         send =
-            viewButton' 0 [ Button.raised, Button.colored, Button.type' "submit" ] "Search"
+            viewButton
+                model
+                0
+                [ Button.raised, Button.colored, Button.type' "submit" ]
+                Search
 
         showForm =
-            viewButton' 1 [ Button.raised, Button.onClick ToggleForm ] "New search"
+            viewButton
+                model
+                1
+                [ Button.raised, Button.onClick ToggleForm ]
+                NewSearch
     in
         if model.showForm then
             form [ onSubmit Submit ] [ inputs, send ]
@@ -541,15 +548,15 @@ viewJumpTo model =
     in
         form
             [ onSubmit (Page page) ]
-            [ text " Page "
+            [ text (translate model.lang PaginationPage)
             , input
-            , text " of "
+            , text (translate model.lang PaginationOf)
             , text (toString total)
             ]
 
 
-viewPaginationButton : Int -> Int -> String -> Html.Html Msg
-viewPaginationButton page index icon =
+viewPaginationButton : Model -> Int -> Int -> String -> Html.Html Msg
+viewPaginationButton model page index icon =
     div
         []
         [ Button.render
@@ -569,10 +576,13 @@ viewPagination model =
         current =
             model.results.pageLoaded
 
+        total =
+            Maybe.withDefault 0 model.results.total |> totalPages
+
         previous =
             case model.results.previous of
                 Just url ->
-                    viewPaginationButton (current - 1) 1 "chevron_left"
+                    viewPaginationButton model (current - 1) 1 "chevron_left"
 
                 Nothing ->
                     text ""
@@ -580,44 +590,50 @@ viewPagination model =
         next =
             case model.results.next of
                 Just url ->
-                    viewPaginationButton (current + 1) 1 "chevron_right"
+                    viewPaginationButton model (current + 1) 2 "chevron_right"
 
                 Nothing ->
                     text ""
     in
-        [ cell
-            [ size Desktop 4, size Tablet 2, size Phone 1 ]
-            [ Options.styled
-                div
-                [ Typography.right ]
-                [ previous ]
+        if current >= total then
+            []
+        else
+            [ cell
+                [ size Desktop 4, size Tablet 2, size Phone 1 ]
+                [ Options.styled
+                    div
+                    [ Typography.right ]
+                    [ previous ]
+                ]
+            , cell
+                [ size Desktop 4, size Tablet 4, size Phone 2 ]
+                [ Options.styled
+                    div
+                    [ Typography.center ]
+                    [ viewJumpTo model ]
+                ]
+            , cell
+                [ size Desktop 4, size Tablet 2, size Phone 1 ]
+                [ Options.styled
+                    div
+                    [ Typography.left ]
+                    [ next ]
+                ]
             ]
-        , cell
-            [ size Desktop 4, size Tablet 4, size Phone 2 ]
-            [ Options.styled
-                div
-                [ Typography.center ]
-                [ viewJumpTo model ]
-            ]
-        , cell
-            [ size Desktop 4, size Tablet 2, size Phone 1 ]
-            [ Options.styled
-                div
-                [ Typography.left ]
-                [ next ]
-            ]
-        ]
 
 
 
 -- Documents
 
 
-viewError : Maybe Http.Error -> Html.Html Msg
-viewError error =
+viewError : Language -> Maybe Http.Error -> Html.Html Msg
+viewError lang error =
     case error of
         Just _ ->
-            Options.styled p [ Typography.title ] [ text "Document not found" ]
+            Options.styled
+                p
+                [ Typography.title ]
+                [ text (translate lang DocumentNotFound) ]
 
         Nothing ->
             text ""
@@ -644,19 +660,18 @@ viewDocumentBlockLine ( label, value ) =
             ]
 
 
-viewDocumentBlock : ( String, String, List ( String, String ) ) -> Html.Html Msg
-viewDocumentBlock ( title, icon, fields ) =
+viewDocumentBlock : Language -> ( String, String, List ( String, String ) ) -> Html.Html Msg
+viewDocumentBlock lang ( title, icon, fields ) =
     let
         iconTag =
             Icon.view icon [ Options.css "transform" "translateY(0.4rem)" ]
 
         ps =
-            if title == "Supplier info" then
+            if title == (translate lang FieldsetSupplier) then
                 Options.styled
                     p
                     [ Typography.caption ]
-                    [ text """If we can find the CNPJ of this supplier in our
-                    database more info will be available in the sidebar.""" ]
+                    [ text (translate lang FieldsetSupplierDetails) ]
             else
                 text ""
     in
@@ -671,65 +686,68 @@ viewDocumentBlock ( title, icon, fields ) =
             ]
 
 
-viewDocument : Int -> SingleModel -> List (Material.Grid.Cell Msg)
-viewDocument index document =
+viewDocument : Language -> Int -> SingleModel -> List (Material.Grid.Cell Msg)
+viewDocument lang index document =
     let
+        getLabel =
+            Fields.getLabel lang
+
         blocks =
-            [ ( "Congressperson details"
+            [ ( translate lang FieldsetCongressperson
               , "face"
-              , [ ( "Name", document.congressperson_name )
-                , ( "ID", toString document.congressperson_id )
-                , ( "Document", toString document.congressperson_document )
-                , ( "State", document.state )
-                , ( "Party", document.party )
-                , ( "Term", toString document.term )
-                , ( "Term ID", toString document.term_id )
+              , [ ( getLabel "congressperson_name", document.congressperson_name )
+                , ( getLabel "congressperson_id", toString document.congressperson_id )
+                , ( getLabel "congressperson_document", toString document.congressperson_document )
+                , ( getLabel "state", document.state )
+                , ( getLabel "party", document.party )
+                , ( getLabel "term", toString document.term )
+                , ( getLabel "term_id", toString document.term_id )
                 ]
               )
-            , ( "Subquota details"
+            , ( translate lang FieldsetSubquota
               , "list"
-              , [ ( "Number", toString document.subquota_number )
-                , ( "Description", document.subquota_description )
-                , ( "Group ID", toString document.subquota_group_id )
-                , ( "Group description", document.subquota_group_description )
+              , [ ( getLabel "subquota_number", toString document.subquota_number )
+                , ( getLabel "subquota_description", document.subquota_description )
+                , ( getLabel "subquota_group_id", toString document.subquota_group_id )
+                , ( getLabel "subquota_group_description", document.subquota_group_description )
                 ]
               )
-            , ( "Supplier info"
+            , ( translate lang FieldsetSupplier
               , "store"
-              , [ ( "Name", document.supplier )
-                , ( "CNPJ/CPF", document.cnpj_cpf )
+              , [ ( getLabel "supplier", document.supplier )
+                , ( getLabel "cnpj_cpf", document.cnpj_cpf )
                 ]
               )
-            , ( "Document details"
+            , ( translate lang FieldsetDocument
               , "receipt"
-              , [ ( "ID", toString document.document_id )
-                , ( "Number", document.document_number )
-                , ( "Type", toString document.document_type )
-                , ( "Month", toString document.month )
-                , ( "Year", toString document.year )
-                , ( "Issue date", Maybe.withDefault "" document.issue_date )
+              , [ ( getLabel "document_id", toString document.document_id )
+                , ( getLabel "document_number", document.document_number )
+                , ( getLabel "document_type", toString document.document_type )
+                , ( getLabel "month", toString document.month )
+                , ( getLabel "year", toString document.year )
+                , ( getLabel "issue_date", Maybe.withDefault "" document.issue_date )
                 ]
               )
-            , ( "Values"
+            , ( translate lang FieldsetValues
               , "monetization_on"
-              , [ ( "Document", toString document.document_value )
-                , ( "Remark", toString document.remark_value )
-                , ( "Net", toString document.net_value )
-                , ( "Reimbursement", toString document.reimbursement_value )
-                , ( "Installment", toString document.installment )
+              , [ ( getLabel "document_value", toString document.document_value )
+                , ( getLabel "remark_value", toString document.remark_value )
+                , ( getLabel "net_value", toString document.net_value )
+                , ( getLabel "reimbursement_value", toString document.reimbursement_value )
+                , ( getLabel "installment", toString document.installment )
                 ]
               )
-            , ( "Trip details"
+            , ( translate lang FieldsetTrip
               , "flight"
-              , [ ( "Passenger", document.passenger )
-                , ( "Leg", document.leg_of_the_trip )
+              , [ ( getLabel "passenger", document.passenger )
+                , ( getLabel "leg_of_the_trip", document.leg_of_the_trip )
                 ]
               )
-            , ( "Application details"
+            , ( translate lang FieldsetApplication
               , "folder"
-              , [ ( "Applicant ID", toString document.applicant_id )
-                , ( "Batch number", toString document.batch_number )
-                , ( "Reimbursement number", toString document.reimbursement_number )
+              , [ ( getLabel "applicant_id", toString document.applicant_id )
+                , ( getLabel "batch_number", toString document.batch_number )
+                , ( getLabel "reimbursement_number", toString document.reimbursement_number )
                 ]
               )
             ]
@@ -738,13 +756,13 @@ viewDocument index document =
             Html.App.map (ReceiptMsg index) (Receipt.view document.id document.receipt)
 
         map =
-            Html.App.map (\_ -> MapMsg) <| Map.viewFrom document.supplier_info
+            Html.App.map (\_ -> MapMsg) <| Map.viewFrom lang document.supplier_info
 
         title =
             Options.styled
                 p
                 [ Typography.headline, Color.text Color.primary ]
-                [ "Document #" ++ (toString document.document_id) |> text ]
+                [ (translate lang DocumentTitle) ++ (toString document.document_id) |> text ]
 
         supplier =
             Html.App.map (SupplierMsg index) (Supplier.view document.supplier_info)
@@ -767,7 +785,7 @@ viewDocument index document =
             ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
-            [ Options.styled div [] (List.map viewDocumentBlock blocks) ]
+            [ Options.styled div [] (List.map (viewDocumentBlock lang) blocks) ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] [ supplierTitle, supplier ] ]
@@ -776,42 +794,46 @@ viewDocument index document =
 
 viewDocuments : Model -> Html.Html Msg
 viewDocuments model =
-    if List.length model.results.documents == 0 then
-        viewError Nothing
-    else
-        let
-            documents =
-                List.concat <|
-                    List.indexedMap
-                        (\idx doc -> (viewDocument idx doc))
-                        model.results.documents
+    let
+        documents =
+            List.concat <|
+                List.indexedMap
+                    (\idx doc -> (viewDocument model.lang idx doc))
+                    model.results.documents
 
-            total =
-                Maybe.withDefault 1 model.results.total
+        total =
+            Maybe.withDefault 0 model.results.total
 
-            title =
-                cell
-                    [ size Desktop 12, size Tablet 8, size Phone 4 ]
-                    [ Options.styled
-                        div
-                        [ Typography.center, Typography.display1 ]
-                        [ (toString total) ++ " documents found." |> text ]
-                    ]
+        searched =
+            Inputs.toQuery model.inputs |> List.isEmpty |> not
 
-            pagination =
-                viewPagination model
-
-            cells =
-                List.concat
-                    [ title :: pagination
-                    , documents
-                    , pagination
-                    ]
-        in
-            if model.loading then
-                text ""
+        results =
+            if total == 1 then
+                (translate model.lang ResultTitleSingular)
             else
-                grid [] cells
+                (translate model.lang ResultTitlePlural)
+
+        title =
+            cell
+                [ size Desktop 12, size Tablet 8, size Phone 4 ]
+                [ Options.styled
+                    div
+                    [ Typography.center, Typography.display1 ]
+                    [ (toString total) ++ results |> text ]
+                ]
+
+        pagination =
+            viewPagination model
+
+        cells =
+            List.concat [ pagination, documents, pagination ]
+    in
+        if model.loading then
+            text ""
+        else if searched then
+            grid [] (title :: cells)
+        else
+            grid [] cells
 
 
 

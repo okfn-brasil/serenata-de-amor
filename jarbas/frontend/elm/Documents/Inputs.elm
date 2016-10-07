@@ -3,6 +3,7 @@ module Documents.Inputs exposing (Model, Msg, model, toQuery, update, updateFrom
 import Dict
 import Documents.Fields as Fields
 import Html exposing (br, p, span, text)
+import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 import Material.Grid exposing (grid, cell, size, Device(..))
 import Material.Options as Options
@@ -24,6 +25,7 @@ type alias Field =
 
 type alias Model =
     { inputs : Dict.Dict String Field
+    , lang : Language
     , mdl : Material.Model
     }
 
@@ -33,20 +35,18 @@ toFormField ( name, label ) =
     ( name, Field label "" )
 
 
-model : Model
-model =
+model : Language -> Model
+model lang =
     let
         pairs =
-            List.map2 (,) Fields.names Fields.labels
+            List.map2 (,) Fields.names (Fields.labels lang)
 
         inputs =
             List.filter Fields.isSearchable pairs
                 |> List.map toFormField
                 |> Dict.fromList
     in
-        { inputs = inputs
-        , mdl = Material.model
-        }
+        Model inputs lang Material.model
 
 
 
@@ -122,8 +122,8 @@ getField model name =
         (Dict.get name model.inputs)
 
 
-viewField : Bool -> ( Int, ( String, Field ) ) -> Html.Html Msg
-viewField loading ( index, ( name, field ) ) =
+viewField : Material.Model -> Bool -> ( Int, ( String, Field ) ) -> Html.Html Msg
+viewField mdl loading ( index, ( name, field ) ) =
     let
         base =
             [ Textfield.onInput (Update name)
@@ -141,7 +141,7 @@ viewField loading ( index, ( name, field ) ) =
         p []
             [ Options.styled span [ Typography.caption ] [ text field.label ]
             , br [] []
-            , Textfield.render Mdl [ index ] model.mdl attrs
+            , Textfield.render Mdl [ index ] mdl attrs
             ]
 
 
@@ -156,24 +156,24 @@ viewFieldset loading model ( index, ( title, names ) ) =
 
         indexedNamesAndFields =
             List.indexedMap (,) namesAndFields
-                |> List.map (\( idx, field ) -> ( correctFieldIndex index idx, field ))
+                |> List.map (\( idx, field ) -> ( correctedFieldIndex index idx, field ))
 
         heading =
             [ Options.styled p [ Typography.title ] [ text title ] ]
 
         inputs =
-            List.map (viewField loading) indexedNamesAndFields
+            List.map (viewField model.mdl loading) indexedNamesAndFields
     in
         cell
             [ size Desktop 4, size Tablet 4, size Phone 4 ]
             (List.append heading inputs)
 
 
-correctFieldIndex : Int -> Int -> Int
-correctFieldIndex fieldset field =
+correctedFieldIndex : Int -> Int -> Int
+correctedFieldIndex fieldset field =
     ((fieldset + 1) * 100) + field
 
 
 view : Bool -> Model -> Html.Html Msg
 view loading model =
-    grid [] <| List.map (viewFieldset loading model) Fields.sets
+    grid [] <| List.map (viewFieldset loading model) (Fields.sets model.lang)

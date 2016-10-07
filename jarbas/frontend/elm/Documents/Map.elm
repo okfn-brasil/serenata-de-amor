@@ -6,6 +6,7 @@ import Material.Button as Button
 import Material.Icon as Icon
 import Html exposing (a, text)
 import Html.Attributes exposing (href)
+import Internationalization exposing (Language(..), TranslationId(..), translate)
 import String
 
 
@@ -22,18 +23,20 @@ type alias GeoCoord =
 
 type alias Model =
     { geoCoord : GeoCoord
+    , lang : Language
     , mdl : Material.Model
     }
 
 
-modelFrom : Supplier.Model -> Model
-modelFrom model =
+modelFrom : Language -> Supplier.Model -> Model
+modelFrom lang model =
     case model.supplier of
         Just supplier ->
             Model
                 { latitude = supplier.latitude
                 , longitude = supplier.longitude
                 }
+                lang
                 Material.model
 
         Nothing ->
@@ -41,6 +44,7 @@ modelFrom model =
                 { latitude = Nothing
                 , longitude = Nothing
                 }
+                lang
                 Material.model
 
 
@@ -85,7 +89,7 @@ view model =
                                 model.mdl
                                 [ Button.minifab ]
                                 [ Icon.i "place"
-                                , text " Supplier on Maps"
+                                , text (translate model.lang Map)
                                 ]
                             ]
 
@@ -96,6 +100,6 @@ view model =
             text ""
 
 
-viewFrom : Supplier.Model -> Html.Html Msg
-viewFrom supplier =
-    modelFrom supplier |> view
+viewFrom : Language -> Supplier.Model -> Html.Html Msg
+viewFrom lang supplier =
+    modelFrom lang supplier |> view

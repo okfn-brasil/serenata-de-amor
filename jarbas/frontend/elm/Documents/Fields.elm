@@ -1,4 +1,7 @@
-module Documents.Fields exposing (isSearchable, labels, names, sets)
+module Documents.Fields exposing (getLabel, isSearchable, labels, names, sets)
+
+import Dict
+import Internationalization exposing (Language(..), TranslationId(..), translate)
 
 
 names : List String
@@ -35,38 +38,48 @@ names =
     ]
 
 
-labels : List String
-labels =
-    [ "Document ID"
-    , "Congressperson name"
-    , "Congressperson ID"
-    , "Congressperson document"
-    , "Term"
-    , "State"
-    , "Party"
-    , "Term ID"
-    , "Subquota number"
-    , "Subquota description"
-    , "Subquota group ID"
-    , "Subquota group description"
-    , "Supplier"
-    , "CNPJ or CPF"
-    , "Document number"
-    , "Document type"
-    , "Issue date"
-    , "Document value"
-    , "Remark value"
-    , "Net value"
-    , "Month"
-    , "Year"
-    , "Installment"
-    , "Passenger"
-    , "Leg of the trip"
-    , "Batch number"
-    , "Reimbursement number"
-    , "Reimbursement value"
-    , "Applicant ID"
-    ]
+labels : Language -> List String
+labels lang =
+    List.map
+        (\f -> translate lang f)
+        [ FieldDocumentId
+        , FieldCongresspersonName
+        , FieldCongresspersonId
+        , FieldCongresspersonDocument
+        , FieldTerm
+        , FieldState
+        , FieldParty
+        , FieldTermId
+        , FieldSubquotaNumber
+        , FieldSubquotaDescription
+        , FieldSubquotaGroupId
+        , FieldSubquotaGroupDescription
+        , FieldSupplier
+        , FieldCNPJOrCPF
+        , FieldDocumentNumber
+        , FieldDocumentType
+        , FieldIssueDate
+        , FieldDocumentValue
+        , FieldRemarkValue
+        , FieldNetValue
+        , FieldMonth
+        , FieldYear
+        , FieldInstallment
+        , FieldPassenger
+        , FieldLegOfTheTrip
+        , FieldBatchNumber
+        , FieldReimbursementNumber
+        , FieldReimbursementValue
+        , FieldApplicantId
+        ]
+
+
+getLabel : Language -> String -> String
+getLabel lang name =
+    List.map2 (,) names (labels lang)
+        |> Dict.fromList
+        |> Dict.get name
+        |> Maybe.withDefault ""
 
 
 isSearchable : ( String, String ) -> Bool
@@ -91,11 +104,11 @@ isSearchable ( field, label ) =
             ]
 
 
-sets : List ( Int, ( String, List String ) )
-sets =
+sets : Language -> List ( Int, ( String, List String ) )
+sets lang =
     List.indexedMap
         (,)
-        [ ( "Reimbursement data"
+        [ ( translate lang SearchFieldsetReimbursement
           , [ "document_id"
             , "document_type"
             , "applicant_id"
@@ -104,14 +117,14 @@ sets =
             , "subquota_group_id"
             ]
           )
-        , ( "Congressperson data"
+        , ( translate lang SearchFieldsetCongressperson
           , [ "congressperson_id"
             , "party"
             , "state"
             , "term"
             ]
           )
-        , ( "Expense data"
+        , ( translate lang SearchFieldsetExpense
           , [ "cnpj_cpf"
             , "year"
             , "month"

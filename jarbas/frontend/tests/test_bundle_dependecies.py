@@ -8,4 +8,4 @@ class TestDependencies(TestCase):
 
     def test_dependencies(self):
         files = set(get_all_bundle_files(elm))
-        self.assertEqual(8, len(files), files)
+        self.assertEqual(9, len(files), files)

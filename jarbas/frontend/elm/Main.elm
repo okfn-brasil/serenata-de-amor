@@ -27,7 +27,7 @@ type alias Model =
 
 model : Model
 model =
-    Model Documents.model Layout.model English Material.model
+    Model (Documents.model English) Layout.model English Material.model
 
 
 
@@ -136,7 +136,7 @@ urlParser =
 urlUpdate : List ( String, String ) -> Model -> ( Model, Cmd Msg )
 urlUpdate query model =
     if List.isEmpty query then
-        ( { model | documents = Documents.model }
+        ( { model | documents = Documents.model model.lang }
         , Cmd.none
         )
     else
@@ -157,7 +157,7 @@ urlUpdate query model =
                 { documents | inputs = inputs, results = newResults, loading = True }
         in
             ( { model | documents = newDocuments }
-            , Cmd.map DocumentsMsg <| Documents.loadDocuments query
+            , Cmd.map DocumentsMsg <| Documents.loadDocuments model.lang query
             )
 
 
@@ -175,7 +175,7 @@ init : Flags -> List ( String, String ) -> ( Model, Cmd Msg )
 init flags documentId =
     let
         lang =
-            if flags.lang == "pt" then
+            if String.toLower flags.lang == "pt" then
                 Portuguese
             else
                 English
@@ -185,8 +185,25 @@ init flags documentId =
 
         newLayout =
             { layout | lang = lang }
+
+        documents =
+            model.documents
+
+        inputs =
+            documents.inputs
+
+        newInputs =
+            Inputs.model lang
+
+        newDocuments =
+            { documents | lang = lang, inputs = newInputs }
     in
-        urlUpdate documentId { model | lang = lang, layout = newLayout }
+        urlUpdate documentId
+            { model
+                | lang = lang
+                , layout = newLayout
+                , documents = newDocuments
+            }
 
 
 main : Platform.Program Flags
