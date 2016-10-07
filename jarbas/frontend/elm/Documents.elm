@@ -1,5 +1,6 @@
-module Documents exposing (Msg, Model, model, loadDocuments, update, view)
+module Documents exposing (Msg, Model, model, loadDocuments, getPage, update, view)
 
+import Char
 import Documents.Fields as Fields
 import Documents.Inputs as Inputs
 import Documents.Map as Map
@@ -9,7 +10,7 @@ import Html exposing (a, button, div, form, p, span, text)
 import Html.App
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
-import Json.Decode exposing ((:=), Decoder, int, list, maybe, object2, string)
+import Json.Decode exposing ((:=), Decoder, int, list, maybe, string)
 import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
 import Material
 import Material.Button as Button
@@ -18,6 +19,7 @@ import Material.Grid exposing (grid, cell, size, Device(..))
 import Material.Icon as Icon
 import Material.List as List
 import Material.Options as Options
+import Material.Textfield as Textfield
 import Material.Typography as Typography
 import Navigation
 import String
@@ -68,6 +70,11 @@ type alias SingleModel =
 type alias Results =
     { documents : List SingleModel
     , total : Maybe Int
+    , previous : Maybe String
+    , next : Maybe String
+    , loadingPage : Maybe Int
+    , pageLoaded : Int
+    , jumpTo : String
     }
 
 
@@ -83,7 +90,7 @@ type alias Model =
 
 results : Results
 results =
-    Results [] Nothing
+    Results [] Nothing Nothing Nothing Nothing 1 "1"
 
 
 model : Model
@@ -97,9 +104,21 @@ model =
 --
 
 
+totalPages : Int -> Int
+totalPages results =
+    toFloat results / 7.0 |> ceiling
+
+
+onlyDigits : String -> String
+onlyDigits value =
+    String.filter (\c -> Char.isDigit c) value
+
+
 type Msg
     = Submit
     | ToggleForm
+    | Update String
+    | Page Int
     | ApiSuccess Results
     | ApiFail Http.Error
     | InputsMsg Inputs.Msg
@@ -122,16 +141,57 @@ update msg model =
         ToggleForm ->
             ( { model | showForm = not model.showForm }, Cmd.none )
 
-        ApiSuccess newResults ->
+        Update value ->
+            let
+                results =
+                    model.results
+
+                newResults =
+                    { results | jumpTo = onlyDigits value }
+            in
+                ( { model | results = newResults }, Cmd.none )
+
+        Page page ->
+            let
+                total =
+                    Maybe.withDefault 0 model.results.total |> totalPages
+
+                query =
+                    ( "page", toString page ) :: Inputs.toQuery model.inputs
+
+                cmd =
+                    if List.member page [1..total] then
+                        Navigation.newUrl (toUrl query)
+                    else
+                        Cmd.none
+            in
+                ( model, cmd )
+
+        ApiSuccess results ->
             let
                 showForm =
-                    if (Maybe.withDefault 0 newResults.total) > 0 then
+                    if (Maybe.withDefault 0 results.total) > 0 then
                         False
                     else
                         True
 
+                current =
+                    Maybe.withDefault 1 model.results.loadingPage
+
+                newResults =
+                    { results
+                        | loadingPage = Nothing
+                        , pageLoaded = current
+                        , jumpTo = toString current
+                    }
+
                 newModel =
-                    { model | results = newResults, showForm = showForm, loading = False, error = Nothing }
+                    { model
+                        | results = newResults
+                        , showForm = showForm
+                        , loading = False
+                        , error = Nothing
+                    }
 
                 indexedDocuments =
                     getIndexedDocuments newModel
@@ -261,13 +321,15 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
 loadDocuments : List ( String, String ) -> Cmd Msg
 loadDocuments query =
     let
-        url =
-            Http.url "/api/document/" query
+        request =
+            Http.get
+                (decoder query)
+                (Http.url "/api/document/" query)
     in
         Task.perform
             ApiFail
             ApiSuccess
-            (Http.get decoder url)
+            request
 
 
 toUrl : List ( String, String ) -> String
@@ -288,17 +350,53 @@ toUrl query =
             "#/" ++ trailing
 
 
+getPage : List ( String, String ) -> Maybe Int
+getPage query =
+    let
+        tuple =
+            List.head <|
+                List.filter
+                    (\( name, value ) ->
+                        if name == "page" then
+                            True
+                        else
+                            False
+                    )
+                    query
+    in
+        case tuple of
+            Just ( name, value ) ->
+                case String.toInt value of
+                    Ok num ->
+                        Just num
+
+                    Err e ->
+                        Nothing
+
+            Nothing ->
+                Nothing
+
+
 
 --
 -- Decoders
 --
 
 
-decoder : Decoder Results
-decoder =
-    object2 Results
-        ("results" := list singleDecoder)
-        (maybe ("count" := int))
+decoder : List ( String, String ) -> Decoder Results
+decoder query =
+    let
+        current =
+            Maybe.withDefault 1 (getPage query)
+    in
+        decode Results
+            |> required "results" (list singleDecoder)
+            |> required "count" (nullable int)
+            |> required "previous" (nullable string)
+            |> required "next" (nullable string)
+            |> hardcoded Nothing
+            |> hardcoded current
+            |> hardcoded ""
 
 
 singleDecoder : Decoder SingleModel
@@ -342,26 +440,40 @@ singleDecoder =
 --
 -- View
 --
+-- Form
 
 
-centeredButton : Int -> List (Button.Property Msg) -> String -> Html.Html Msg
-centeredButton index attr label =
-    grid
-        []
-        [ cell
-            [ size Desktop 12, size Tablet 8, size Phone 4 ]
-            [ Options.styled
-                div
-                [ Typography.center ]
-                [ Button.render
-                    Mdl
-                    [ index ]
-                    model.mdl
-                    attr
-                    [ text label ]
+viewButton : Bool -> Int -> List (Button.Property Msg) -> String -> Html.Html Msg
+viewButton loading index defaultAttr defaultLabel =
+    let
+        label =
+            if loading then
+                "Loading…"
+            else
+                defaultLabel
+
+        attr =
+            if loading then
+                Button.disabled :: defaultAttr
+            else
+                defaultAttr
+    in
+        grid
+            []
+            [ cell
+                [ size Desktop 12, size Tablet 8, size Phone 4 ]
+                [ Options.styled
+                    div
+                    [ Typography.center ]
+                    [ Button.render
+                        Mdl
+                        [ index ]
+                        model.mdl
+                        attr
+                        [ text label ]
+                    ]
                 ]
             ]
-        ]
 
 
 viewForm : Model -> Html.Html Msg
@@ -370,35 +482,135 @@ viewForm model =
         inputs =
             Inputs.view model.loading model.inputs |> Html.App.map InputsMsg
 
-        action =
-            if model.loading then
-                "Loading…"
-            else
-                "Search"
+        viewButton' =
+            viewButton model.loading
 
-        sendAttr =
-            let
-                base =
-                    [ Button.raised
-                    , Button.colored
-                    , Button.type' "submit"
-                    ]
-            in
-                if model.loading then
-                    base ++ [ Button.disabled ]
-                else
-                    base
+        send =
+            viewButton' 0 [ Button.raised, Button.colored, Button.type' "submit" ] "Search"
 
-        sendButton =
-            centeredButton 0 sendAttr action
-
-        showFormButton =
-            centeredButton 1 [ Button.raised, Button.onClick ToggleForm ] "New search"
+        showForm =
+            viewButton' 1 [ Button.raised, Button.onClick ToggleForm ] "New search"
     in
         if model.showForm then
-            form [ onSubmit Submit ] [ inputs, sendButton ]
+            form [ onSubmit Submit ] [ inputs, send ]
         else
-            showFormButton
+            showForm
+
+
+
+-- Pagination
+
+
+jumpToWidth : String -> String
+jumpToWidth value =
+    let
+        actual =
+            String.length value |> toFloat
+
+        width =
+            if actual <= 1.0 then
+                1.618
+            else
+                actual
+    in
+        (toString width) ++ "em"
+
+
+viewJumpTo : Model -> Html.Html Msg
+viewJumpTo model =
+    let
+        cleaned =
+            onlyDigits model.results.jumpTo
+
+        input =
+            Textfield.render
+                Mdl
+                [ 0 ]
+                model.mdl
+                [ Textfield.onInput Update
+                , Textfield.value cleaned
+                , Options.css "width" (jumpToWidth cleaned)
+                , Textfield.style [ (Options.css "text-align" "center") ]
+                ]
+
+        page =
+            Result.withDefault 0 (String.toInt model.results.jumpTo)
+
+        total =
+            Maybe.withDefault 0 model.results.total |> totalPages
+    in
+        form
+            [ onSubmit (Page page) ]
+            [ text " Page "
+            , input
+            , text " of "
+            , text (toString total)
+            ]
+
+
+viewPaginationButton : Int -> Int -> String -> Html.Html Msg
+viewPaginationButton page index icon =
+    div
+        []
+        [ Button.render
+            Mdl
+            [ index ]
+            model.mdl
+            [ Button.minifab
+            , Button.onClick <| Page page
+            ]
+            [ Icon.i icon ]
+        ]
+
+
+viewPagination : Model -> List (Material.Grid.Cell Msg)
+viewPagination model =
+    let
+        current =
+            model.results.pageLoaded
+
+        previous =
+            case model.results.previous of
+                Just url ->
+                    viewPaginationButton (current - 1) 1 "chevron_left"
+
+                Nothing ->
+                    text ""
+
+        next =
+            case model.results.next of
+                Just url ->
+                    viewPaginationButton (current + 1) 1 "chevron_right"
+
+                Nothing ->
+                    text ""
+    in
+        [ cell
+            [ size Desktop 4, size Tablet 2, size Phone 1 ]
+            [ Options.styled
+                div
+                [ Typography.right ]
+                [ previous ]
+            ]
+        , cell
+            [ size Desktop 4, size Tablet 4, size Phone 2 ]
+            [ Options.styled
+                div
+                [ Typography.center ]
+                [ viewJumpTo model ]
+            ]
+        , cell
+            [ size Desktop 4, size Tablet 2, size Phone 1 ]
+            [ Options.styled
+                div
+                [ Typography.left ]
+                [ next ]
+            ]
+        ]
+
+
+
+-- Documents
 
 
 viewError : Maybe Http.Error -> Html.Html Msg
@@ -562,9 +774,9 @@ viewDocument index document =
         ]
 
 
-viewDocuments : Results -> Html.Html Msg
-viewDocuments results =
-    if List.length results.documents == 0 then
+viewDocuments : Model -> Html.Html Msg
+viewDocuments model =
+    if List.length model.results.documents == 0 then
         viewError Nothing
     else
         let
@@ -572,36 +784,43 @@ viewDocuments results =
                 List.concat <|
                     List.indexedMap
                         (\idx doc -> (viewDocument idx doc))
-                        results.documents
+                        model.results.documents
 
             total =
-                Maybe.withDefault 0 results.total |> toString
-
-            showing =
-                List.length results.documents |> toString
+                Maybe.withDefault 1 model.results.total
 
             title =
-                if total == showing then
-                    total ++ " documents found."
-                else
-                    total ++ " documents found. Showing " ++ showing ++ "."
-
-            titleCell =
                 cell
                     [ size Desktop 12, size Tablet 8, size Phone 4 ]
                     [ Options.styled
                         div
                         [ Typography.center, Typography.display1 ]
-                        [ text title ]
+                        [ (toString total) ++ " documents found." |> text ]
+                    ]
+
+            pagination =
+                viewPagination model
+
+            cells =
+                List.concat
+                    [ title :: pagination
+                    , documents
+                    , pagination
                     ]
         in
-            grid [] (titleCell :: documents)
+            if model.loading then
+                text ""
+            else
+                grid [] cells
+
+
+
+--
 
 
 view : Model -> Html.Html Msg
 view model =
-    div
-        []
+    div []
         [ viewForm model
-        , viewDocuments model.results
+        , viewDocuments model
         ]

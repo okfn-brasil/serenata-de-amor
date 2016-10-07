@@ -71,21 +71,24 @@ labels =
 
 isSearchable : ( String, String ) -> Bool
 isSearchable ( field, label ) =
-    List.member field
-        [ "applicant_id"
-        , "cnpj_cpf"
-        , "congressperson_id"
-        , "document_id"
-        , "document_type"
-        , "month"
-        , "party"
-        , "reimbursement_number"
-        , "state"
-        , "subquota_group_id"
-        , "subquota_number"
-        , "term"
-        , "year"
-        ]
+    if field == "page" then
+        True
+    else
+        List.member field
+            [ "applicant_id"
+            , "cnpj_cpf"
+            , "congressperson_id"
+            , "document_id"
+            , "document_type"
+            , "month"
+            , "party"
+            , "reimbursement_number"
+            , "state"
+            , "subquota_group_id"
+            , "subquota_number"
+            , "term"
+            , "year"
+            ]
 
 
 sets : List ( Int, ( String, List String ) )
