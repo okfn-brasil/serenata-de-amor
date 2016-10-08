@@ -1,6 +1,10 @@
 ![Operação Serenata de Amor](logo.png)
 
-The Serenata de Amor Operation arose from a combination of needs, from many people, of many nationalities: of seeing Machine Learning better applied to improve population's lives, of learning whom to vote, of doing something about the corruption problem present in the whole world.
+The Serenata de Amor Operation arose from a combination of needs, from many people, of many nationalities:
+
+- seeing **Machine Learning** being **better applied** to improve population's lives;
+- learning **whom to vote**;
+- **doing something about the corruption** problem present in the whole world.
 
 We are building an intelligence capable of analyzing public spending and saying, with reliability, the possibility of each receipt being unlawful. This information will be used beyond the code, in the world outside of GitHub. Everything is open source from the beginning, allowing others to fork the project when their ideas diverge from the Operation Serenata de Amor.
 
