@@ -15,7 +15,7 @@ In Jarbas context a `Document` refers to a document (a reimbursement claim) from
 
 #### `GET /api/document/`
 
-This endopoins list `Document` objects and it accepts any field (and any combination among them) as a filter. For example:
+This endpoint lists `Document` objects and it accepts any field (and any combination among them) as a filter. For example:
 
 `GET /api/document/?year=2015&state=RS&congressperson_id=42`
 
@@ -37,7 +37,7 @@ These are the fields that can be combined for filtering purposes:
 
 #### `GET /api/receipt/<Document.pk>`
 
-This endpoit gets the URL to the digitalized version of the receipt of a `Document`. It returns `{ url: null }` if the digitalized version is not available. The endpoint expects a `Document.pk` (i.e. the primary key of the `Document` object).
+This endpoint gets the URL to the digitalized version of the receipt of a `Document`. It returns `{ url: null }` if the digitalized version is not available. The endpoint expects a `Document.pk` (i.e. the primary key of the `Document` object).
 
 ### Supplier
 
@@ -78,7 +78,7 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 * `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
 * `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
 * `AMAZON_S3_DATASET_DATE` (_str_) Datasets file name prefix of CEAP datasets from Serenata de Amor (e.g. `2016-08-08` for `2016-08-08-current-year.xz`)
-* `AMAZON_S3_SUPPLIERS_DATE` (_str_) Datasets file name prefix for suppiers dataset (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
+* `AMAZON_S3_SUPPLIERS_DATE` (_str_) Datasets file name prefix for suppliers dataset (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
 
 #### Google Analytics
 
@@ -86,7 +86,7 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 ### Migrations
 
-Once you're done with requirements, dependencies and settings, create the basic structure at the database (and if you like create a super-user for you, so you can use [Django Admin](http://localhost:8000/admin) later):
+Once you're done with requirements, dependencies and settings, create the basic structure at the database (and if you wish, create a super-user for you, so you can use [Django Admin](http://localhost:8000/admin) later):
 
 ```console
 python manage.py migrate
