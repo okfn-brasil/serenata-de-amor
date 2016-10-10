@@ -57,7 +57,11 @@ update msg model =
             ( { model | url = maybeUrl, loading = False, fetched = True }, Cmd.none )
 
         ApiFail error ->
-            ( { model | loading = False, fetched = True, error = Just error }, Cmd.none )
+            let
+                err =
+                    Debug.crash (toString error)
+            in
+                ( { model | loading = False, fetched = True, error = Just error }, Cmd.none )
 
         Mdl mdlMsg ->
             Material.update mdlMsg model

@@ -207,7 +207,11 @@ update msg model =
                 ( newModel, Cmd.batch cmds )
 
         ApiFail error ->
-            ( { model | results = results, error = Just error, loading = False }, Cmd.none )
+            let
+                err =
+                    Debug.crash (toString error)
+            in
+                ( { model | results = results, error = Just error, loading = False }, Cmd.none )
 
         InputsMsg msg ->
             let

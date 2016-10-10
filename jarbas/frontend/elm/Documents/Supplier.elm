@@ -110,7 +110,11 @@ update msg model =
             ( { model | supplier = Just supplier, loading = False, loaded = True }, Cmd.none )
 
         ApiFail error ->
-            ( { model | loaded = True, error = Just error }, Cmd.none )
+            let
+                err =
+                    Debug.crash (toString error)
+            in
+                ( { model | loaded = True, error = Just error }, Cmd.none )
 
         Mdl mdlMsg ->
             Material.update mdlMsg model
