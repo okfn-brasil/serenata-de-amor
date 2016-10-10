@@ -131,9 +131,17 @@ view id model =
 
         Nothing ->
             if model.fetched then
-                div [] [ text (translate model.lang ReceiptNotAvailable) ]
+                Button.render Mdl
+                    [ 2 ]
+                    model.mdl
+                    [ Button.minifab
+                    , Button.disabled
+                    ]
+                    [ Icon.i "receipt"
+                    , text (translate model.lang ReceiptNotAvailable)
+                    ]
             else if model.loading then
-                div [] [ Spinner.spinner [ Spinner.active True ] ]
+                Spinner.spinner [ Spinner.active True ]
             else
                 Button.render Mdl
                     [ 0 ]
