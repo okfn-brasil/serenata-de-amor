@@ -123,10 +123,16 @@ update msg model =
 load : String -> Cmd Msg
 load cnpj =
     let
-        url =
+        query =
+            [ ( "format", "json" ) ]
+
+        path =
             "/api/supplier/" ++ (cleanUp cnpj)
+
+        url =
+            Http.url path query
     in
-        if url == "/api/supplier/" then
+        if path == "/api/supplier/" then
             Cmd.none
         else
             Task.perform

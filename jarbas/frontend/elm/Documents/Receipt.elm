@@ -70,8 +70,14 @@ update msg model =
 loadUrl : Int -> Cmd Msg
 loadUrl id =
     let
-        url =
+        query =
+            [ ( "format", "json" ) ]
+
+        path =
             "/api/receipt/" ++ (toString id)
+
+        url =
+            Http.url path query
     in
         Task.perform
             ApiFail

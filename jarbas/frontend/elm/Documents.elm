@@ -330,10 +330,13 @@ loadDocuments query =
         Cmd.none
     else
         let
+            jsonQuery =
+                ( "format", "json" ) :: query
+
             request =
                 Http.get
-                    (decoder query)
-                    (Http.url "/api/document/" query)
+                    (decoder jsonQuery)
+                    (Http.url "/api/document/" jsonQuery)
         in
             Task.perform
                 ApiFail
