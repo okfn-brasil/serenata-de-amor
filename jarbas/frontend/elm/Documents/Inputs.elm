@@ -1,4 +1,4 @@
-module Documents.Inputs exposing (Model, Msg, model, toQuery, update, updateFromQuery, view)
+module Documents.Inputs exposing (Model, Msg, model, toQuery, update, updateFromQuery, updateLanguage, view)
 
 import Dict
 import Documents.Fields as Fields
@@ -35,18 +35,18 @@ toFormField ( name, label ) =
     ( name, Field label "" )
 
 
-model : Language -> Model
-model lang =
+model : Model
+model =
     let
         pairs =
-            List.map2 (,) Fields.names (Fields.labels lang)
+            List.map2 (,) Fields.names (Fields.labels English)
 
         inputs =
             List.filter Fields.isSearchable pairs
                 |> List.map toFormField
                 |> Dict.fromList
     in
-        Model inputs lang Material.model
+        Model inputs English Material.model
 
 
 
@@ -107,6 +107,20 @@ toQuery model =
         |> Dict.filter (\index field -> not (String.isEmpty field.value))
         |> Dict.map (\index field -> field.value)
         |> Dict.toList
+
+
+updateFieldLanguage : Language -> String -> Field -> Field
+updateFieldLanguage lang key field =
+    { field | label = Fields.getLabel lang key }
+
+
+updateLanguage : Language -> Model -> Model
+updateLanguage lang model =
+    let
+        inputs =
+            Dict.map (updateFieldLanguage lang) model.inputs
+    in
+        { model | inputs = inputs, lang = lang }
 
 
 

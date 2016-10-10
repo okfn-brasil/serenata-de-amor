@@ -1,4 +1,4 @@
-module Documents exposing (Msg, Model, model, loadDocuments, getPage, update, view)
+module Documents exposing (Msg, Model, model, loadDocuments, getPage, update, updateLanguage, view)
 
 import Char
 import Documents.Fields as Fields
@@ -32,7 +32,7 @@ import Task
 --
 
 
-type alias SingleModel =
+type alias Document =
     { id : Int
     , document_id : Int
     , congressperson_name : String
@@ -69,7 +69,7 @@ type alias SingleModel =
 
 
 type alias Results =
-    { documents : List SingleModel
+    { documents : List Document
     , total : Maybe Int
     , previous : Maybe String
     , next : Maybe String
@@ -95,9 +95,9 @@ results =
     Results [] Nothing Nothing Nothing Nothing 1 "1"
 
 
-model : Language -> Model
-model lang =
-    Model results (Inputs.model lang) True False Nothing English Material.model
+model : Model
+model =
+    Model results Inputs.model True False Nothing English Material.model
 
 
 
@@ -233,7 +233,7 @@ update msg model =
             Material.update mdlMsg model
 
 
-updateSuppliers : Int -> Supplier.Msg -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )
+updateSuppliers : Int -> Supplier.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
 updateSuppliers target msg ( index, document ) =
     if target == index then
         let
@@ -251,7 +251,7 @@ updateSuppliers target msg ( index, document ) =
         ( document, Cmd.none )
 
 
-updateReceipts : Int -> Receipt.Msg -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )
+updateReceipts : Int -> Receipt.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
 updateReceipts target msg ( index, document ) =
     if target == index then
         let
@@ -269,7 +269,7 @@ updateReceipts target msg ( index, document ) =
         ( document, Cmd.none )
 
 
-getIndexedDocuments : Model -> List ( Int, SingleModel )
+getIndexedDocuments : Model -> List ( Int, Document )
 getIndexedDocuments model =
     let
         results =
@@ -293,14 +293,14 @@ getIndexedDocuments model =
    The arguments it expects:
        * (Model) current model
        * (Int) index of the object (Supplier or Receipt) being updated
-       * (Int -> a -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )) this is
+       * (Int -> a -> ( Int, Document ) -> ( Document, Cmd Msg )) this is
          a function such as updateSuppliers or updateReceipts
        * (a) The kind of message inside the former argument, i.e. Supplier.Msg
          or Receipt.Msg
 -}
 
 
-getDocumentsAndCmd : Model -> Int -> (Int -> a -> ( Int, SingleModel ) -> ( SingleModel, Cmd Msg )) -> a -> ( Model, Cmd Msg )
+getDocumentsAndCmd : Model -> Int -> (Int -> a -> ( Int, Document ) -> ( Document, Cmd Msg )) -> a -> ( Model, Cmd Msg )
 getDocumentsAndCmd model index targetUpdate targetMsg =
     let
         results =
@@ -324,18 +324,21 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
         ( { model | results = newResults }, Cmd.batch newCommands )
 
 
-loadDocuments : Language -> List ( String, String ) -> Cmd Msg
-loadDocuments lang query =
-    let
-        request =
-            Http.get
-                (decoder lang query)
-                (Http.url "/api/document/" query)
-    in
-        Task.perform
-            ApiFail
-            ApiSuccess
-            request
+loadDocuments : List ( String, String ) -> Cmd Msg
+loadDocuments query =
+    if List.isEmpty query then
+        Cmd.none
+    else
+        let
+            request =
+                Http.get
+                    (decoder query)
+                    (Http.url "/api/document/" query)
+        in
+            Task.perform
+                ApiFail
+                ApiSuccess
+                request
 
 
 toUrl : List ( String, String ) -> String
@@ -389,14 +392,14 @@ getPage query =
 --
 
 
-decoder : Language -> List ( String, String ) -> Decoder Results
-decoder lang query =
+decoder : List ( String, String ) -> Decoder Results
+decoder query =
     let
         current =
             Maybe.withDefault 1 (getPage query)
     in
         decode Results
-            |> required "results" (list <| singleDecoder lang)
+            |> required "results" (list singleDecoder)
             |> required "count" (nullable int)
             |> required "previous" (nullable string)
             |> required "next" (nullable string)
@@ -405,9 +408,9 @@ decoder lang query =
             |> hardcoded ""
 
 
-singleDecoder : Language -> Decoder SingleModel
-singleDecoder lang =
-    decode SingleModel
+singleDecoder : Decoder Document
+singleDecoder =
+    decode Document
         |> required "id" int
         |> required "document_id" int
         |> required "congressperson_name" string
@@ -438,8 +441,44 @@ singleDecoder lang =
         |> required "reimbursement_number" int
         |> required "reimbursement_value" string
         |> required "applicant_id" int
-        |> required "receipt" (Receipt.decoder lang)
-        |> hardcoded (Supplier.model lang)
+        |> required "receipt" Receipt.decoder
+        |> hardcoded Supplier.model
+
+
+updateDocumentLanguage : Language -> Document -> Document
+updateDocumentLanguage lang document =
+    let
+        receipt =
+            document.receipt
+
+        newReceipt =
+            { receipt | lang = lang }
+
+        supplier =
+            document.supplier_info
+
+        newSupplier =
+            { supplier | lang = lang }
+    in
+        { document | receipt = newReceipt, supplier_info = newSupplier }
+
+
+updateLanguage : Language -> Model -> Model
+updateLanguage lang model =
+    let
+        results =
+            model.results
+
+        newDocuments =
+            List.map (updateDocumentLanguage lang) model.results.documents
+
+        newResults =
+            { results | documents = newDocuments }
+
+        newInputs =
+            Inputs.updateLanguage lang model.inputs
+    in
+        { model | lang = lang, inputs = newInputs, results = newResults }
 
 
 
@@ -690,7 +729,7 @@ viewDocumentBlock lang ( title, icon, fields ) =
             ]
 
 
-viewDocument : Language -> Int -> SingleModel -> List (Material.Grid.Cell Msg)
+viewDocument : Language -> Int -> Document -> List (Material.Grid.Cell Msg)
 viewDocument lang index document =
     let
         getLabel =

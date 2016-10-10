@@ -90,14 +90,14 @@ urlDecoder =
     at [ "url" ] (maybe string)
 
 
-decoder : Language -> Json.Decode.Decoder Model
-decoder lang =
+decoder : Json.Decode.Decoder Model
+decoder =
     decode Model
         |> required "url" (nullable Json.Decode.string)
         |> required "fetched" Json.Decode.bool
         |> hardcoded False
         |> hardcoded Nothing
-        |> hardcoded lang
+        |> hardcoded English
         |> hardcoded Material.model
 
 

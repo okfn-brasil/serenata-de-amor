@@ -66,9 +66,9 @@ type alias Model =
     }
 
 
-model : Language -> Model
-model lang =
-    Model Nothing False False Nothing lang Material.model
+model : Model
+model =
+    Model Nothing False False Nothing English Material.model
 
 
 

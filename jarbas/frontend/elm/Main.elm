@@ -27,7 +27,7 @@ type alias Model =
 
 model : Model
 model =
-    Model (Documents.model English) Layout.model English Material.model
+    Model Documents.model Layout.model English Material.model
 
 
 
@@ -63,6 +63,25 @@ update msg model =
 
         Mdl mdlMsg ->
             Material.update mdlMsg model
+
+
+updateLanguage : Language -> Model -> Model
+updateLanguage lang model =
+    let
+        newDocuments =
+            Documents.updateLanguage lang model.documents
+
+        layout =
+            model.layout
+
+        newLayout =
+            { layout | lang = lang }
+    in
+        { model
+            | documents = newDocuments
+            , layout = newLayout
+            , lang = lang
+        }
 
 
 
@@ -135,30 +154,32 @@ urlParser =
 
 urlUpdate : List ( String, String ) -> Model -> ( Model, Cmd Msg )
 urlUpdate query model =
-    if List.isEmpty query then
-        ( { model | documents = Documents.model model.lang }
-        , Cmd.none
-        )
-    else
-        let
-            documents =
-                model.documents
+    let
+        loading =
+            if List.isEmpty query then
+                False
+            else
+                True
 
-            inputs =
-                Inputs.updateFromQuery documents.inputs query
+        documents =
+            model.documents
 
-            results =
-                documents.results
+        inputs =
+            Inputs.updateFromQuery documents.inputs query
 
-            newResults =
-                { results | loadingPage = Documents.getPage query }
+        results =
+            documents.results
 
-            newDocuments =
-                { documents | inputs = inputs, results = newResults, loading = True }
-        in
-            ( { model | documents = newDocuments }
-            , Cmd.map DocumentsMsg <| Documents.loadDocuments model.lang query
-            )
+        newResults =
+            { results | loadingPage = Documents.getPage query }
+
+        newDocuments =
+            { documents | inputs = inputs, results = newResults, loading = loading }
+
+        cmd =
+            Documents.loadDocuments query |> Cmd.map DocumentsMsg
+    in
+        ( { model | documents = newDocuments }, cmd )
 
 
 
@@ -172,38 +193,15 @@ type alias Flags =
 
 
 init : Flags -> List ( String, String ) -> ( Model, Cmd Msg )
-init flags documentId =
+init flags query =
     let
         lang =
             if String.toLower flags.lang == "pt" then
                 Portuguese
             else
                 English
-
-        layout =
-            model.layout
-
-        newLayout =
-            { layout | lang = lang }
-
-        documents =
-            model.documents
-
-        inputs =
-            documents.inputs
-
-        newInputs =
-            Inputs.model lang
-
-        newDocuments =
-            { documents | lang = lang, inputs = newInputs }
     in
-        urlUpdate documentId
-            { model
-                | lang = lang
-                , layout = newLayout
-                , documents = newDocuments
-            }
+        urlUpdate query (updateLanguage lang model)
 
 
 main : Platform.Program Flags
