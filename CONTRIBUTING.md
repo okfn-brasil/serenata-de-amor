@@ -73,7 +73,7 @@ Basically we have four big directories with different purposes:
 | Directory | Purpose | File naming |
 |-----------|---------|-------------|
 | **`develop/`** | This is where we _explore_ data, feel free to create your own notebook for your exploration. | `[ISO 8601 date]-[author-initials]-[2-4 word description].ipynb` (e.g. `2016-05-13-ec-air-tickets.ipynb`) |
-|**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaninful title for the report (e.g. `Transport-allowances.ipybn` |
+|**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
 | **`src/`** | This is where our auxiliary scripts lies, code to scrap data, to convert stuff etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Small caps, no special character, `-` instead of spaces. |
 
@@ -83,13 +83,13 @@ Here we explain what each script from `src/` does for you:
 
 ##### One script to rule them all
 
-1. `src/fetch_datasets.py` dowloads all the available datasets to `data/` is `.xz` compressed CSV format with headers translated to English.
+1. `src/fetch_datasets.py` downloads all the available datasets to `data/` is `.xz` compressed CSV format with headers translated to English.
 
 
 ##### Quota for Exercising Parliamentary Activity (CEAP)
 
-1. `src/fetch_datasets.py --from-source` dowloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
-1. `src/fetch_datasets.py` dowloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
+1. `src/fetch_datasets.py --from-source` downloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
+1. `src/fetch_datasets.py` downloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
 1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
 1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
@@ -126,6 +126,6 @@ The project basically happens in four moments, and contributions are welcomed in
 
 ## Jarbas
 
-As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browse our data and refer to documents we analize. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
+As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browse our data and refer to documents we analyze. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
 
 If you fancy web development, feel free to check Jarbas' source code, to check [Jarbas' own Issues](https://github.com/datasciencebr/jarbas/issues) and to contribute there too.
