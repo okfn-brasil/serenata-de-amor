@@ -17,6 +17,8 @@ A lot of discussions about ideas take place in the [Issues](https://github.com/d
 
 ## Environment
 
+##### Local Installation Environment
+
 The recommended way of setting your environment up is with [Anaconda](https://www.continuum.io/), a Python distribution with useful packages for Data Science. [Download it](https://www.continuum.io/downloads) and create an _environment_ for the project.
 
 ```console
@@ -29,13 +31,38 @@ $ ./setup
 
 The `activate serenata_de_amor` command must be run every time you enter in the project folder to start working.
 
-### Pyenv users
-
-If you installed Anaconda via [pyenv](https://github.com/yyuu/pyenv) probably `source activate serenata_de_amor` will fail _unless_ you explicitly use the path to the Anaconta `activate` script. For example:
+**For Pyenv users:** If you installed Anaconda via [pyenv](https://github.com/yyuu/pyenv) probably `source activate serenata_de_amor` will fail _unless_ you explicitly use the path to the Anaconta `activate` script. For example:
 
 ```console
 $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_amor
 ```
+
+##### Docker Installation Environment
+
+Requirements:
+
+* [Docker](https://docs.docker.com/engine/installation/)
+* [Docker-compose](https://docs.docker.com/compose/install/)
+
+Start the environment (maybe it will take some time, the docker image has 4GB):
+
+```console
+$ docker-compose up -d
+```
+
+Run the script to fetch Quota for Exercising Parliamentary Activity (CEAP) datasets:
+
+```console
+$ docker-compose run --rm jupyter python src/fetch_datasets.py
+```
+
+If you want to access the console:
+
+```console
+$ docker-compose run --rm jupyter bash
+```
+
+And access Jupyter Notebook here: [localhost:8888](localhost:8888)
 
 ## Best practices
 
