@@ -6,9 +6,14 @@
   },
   "scripts": {
     "postinstall": "elm-package install --yes",
-    "assets": "elm-make jarbas/frontend/elm/Main.elm --output jarbas/frontend/static/app.js"
+    "assets": "gulp elm"
   },
   "dependencies": {
-    "elm": "^0.17.1"
+    "elm": "^0.17.1",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^1.2.2",
+    "gulp-elm": "^0.5.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.0.0"
   }
 }
