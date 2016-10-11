@@ -27,6 +27,14 @@ $ ./setup
 
 The `activate serenata_de_amor` command must be run every time you enter in the project folder to start working.
 
+### Pyenv users
+
+If you installed Anaconda via [pyenv](https://github.com/yyuu/pyenv) probably `source activate serenata_de_amor` will fail _unless_ you explicitly use the path to the Anaconta `activate` script. For example:
+
+```console
+$ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_amor
+```
+
 ## Best practices
 
 In order to avoid tons of conflicts when trying to merge [Jupyter Notebooks](http://jupyter.org), there are some [guidelines we follow](http://www.svds.com/jupyter-notebook-best-practices-for-data-science/).
