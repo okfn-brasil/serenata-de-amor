@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,11 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500|Roboto+Mono|Roboto+Condensed:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
     <link rel='stylesheet' href='https://code.getmdl.io/1.2.0/material.purple-deep_purple.min.css'>
-
-    {% load assets %}
-    {% assets "elm" %}
-    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
+    <script type="text/javascript" src="{% static 'app.js' %}"></script>
   </head>
   <body>
 

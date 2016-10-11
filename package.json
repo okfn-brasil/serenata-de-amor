@@ -5,10 +5,10 @@
     "url": "git://github.com/datasciencebr/jarbas.git"
   },
   "scripts": {
-    "postinstall": "elm-package install --yes"
+    "postinstall": "elm-package install --yes",
+    "assets": "elm-make jarbas/frontend/elm/Main.elm --output jarbas/frontend/static/app.js"
   },
   "dependencies": {
-    "elm": "^0.17.1",
-    "github-markdown-css": "^2.4.1"
+    "elm": "^0.17.1"
   }
 }

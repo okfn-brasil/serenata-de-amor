@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'django_assets',
     'jarbas.core',
     'jarbas.api',
     'jarbas.frontend',
@@ -127,11 +126,6 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Django Assets
-
-ASSETS_ROOT = os.path.join(BASE_DIR, 'jarbas', 'frontend', 'static')
-LIBSASS_STYLE = 'compressed'
 
 # Amazon S3 datasets
 

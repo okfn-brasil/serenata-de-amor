@@ -105,11 +105,12 @@ Use `python manage.py loaddatasets --help` to check options on limiting the numb
 
 ### Generate static files
 
-We generate assets through [webassets](http://webassets.readthedocs.io) and we serve static files through [WhiteNoise](http://whitenoise.evans.io), thus you might have to run:
+We generate assets through NodeJS, so run it before Django collecting static files:
 
 ```console
-python manage.py assets build
+npm run assets
 python manage.py collectstatic
+
 ```
 
 ### Ready?
