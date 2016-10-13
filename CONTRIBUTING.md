@@ -50,6 +50,12 @@ Start the environment (maybe it will take some time, the docker image has 4GB):
 $ docker-compose up -d
 ```
 
+Create your config.ini file from the example:
+
+```console
+$ cp config.ini.example config.ini
+```
+
 Run the script to fetch Quota for Exercising Parliamentary Activity (CEAP) datasets:
 
 ```console
