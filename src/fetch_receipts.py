@@ -9,8 +9,17 @@ from humanize import naturalsize
 import numpy as np
 import pandas as pd
 
+from itertools import islice
+from multiprocessing import Pool
+
 
 class Receipts:
+
+    def __init__(self, target):
+        """
+        :param target: (string) path to the directory to save the receipts
+        """
+        self.target = target
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     DATA_DIR = os.path.join(BASE_DIR, 'data')
@@ -41,28 +50,31 @@ class Receipts:
         }
         for dataset in self.datasets():
             data = pd.read_csv(dataset, parse_dates=[16], dtype=dtype)
-            yield from(Receipt(row) for row in data.itertuples())
+            yield from(Receipt(row, self.target) for row in data.itertuples() if not pd.isnull(row.document_id))
 
 
 class Receipt:
 
-    def __init__(self, receipt):
+    def __init__(self, receipt, target):
         """
         :param receipt: a Pandas DataFrame row as a NamedTuple (see
         `itertuples` method)
         """
-        self.receipt = receipt
+        self.applicant_id = receipt.applicant_id
+        self.year = receipt.year
+        self.document_id = receipt.document_id
+        self.target = target
 
-    def path(self, target):
+    def path(self):
         """
         Given a target directory (string), it returns the absolute path to the
         receipt (the path to be used when saving the file).
         """
         return os.path.join(
-            os.path.abspath(target),
-            str(self.receipt.applicant_id),
-            str(self.receipt.year),
-            str(self.receipt.document_id) + '.pdf'
+            os.path.abspath(self.target),
+            str(self.applicant_id),
+            str(self.year),
+            str(self.document_id) + '.pdf'
         )
 
     @property
@@ -74,9 +86,9 @@ class Receipt:
         recipe = '{base}{applicant_id}/{year}/{document_id}.pdf'
         return recipe.format(
             base=base,
-            applicant_id=self.receipt.applicant_id,
-            year=self.receipt.year,
-            document_id=self.receipt.document_id
+            applicant_id=self.applicant_id,
+            year=self.year,
+            document_id=self.document_id
         )
 
 
@@ -105,28 +117,58 @@ def run(target, limit=None):
         sys.exit()
 
     # save receipts
-    for receipt in Receipts().all():
-        path = receipt.path(target)
-        if not limit or progress['count'] < limit:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            if not os.path.exists(path):
-                try:
-                    file_name, header = urlretrieve(receipt.url, path)
+    with Pool(processes=4) as pool:
+        receipts = Receipts(target=target).all()
+        while True:
+            cur_receipts = receipts
+            if limit:
+                cur_receipts = islice(receipts, limit - progress['count'])
+            for result in pool.imap(download_receipt, cur_receipts):
+                status, receipt, args = result
+                if status == 'ok':
                     progress['count'] += 1
-                    progress['size'] += int(header['Content-Length'])
-                    raw_msg = '==> Downloaded {:,} files ({})                 '
-                    msg = raw_msg.format(
-                        progress['count'],
-                        naturalsize(progress['size'])
-                    )
-                    print(msg, end='\r')
-                except HTTPError:
+                    progress['size'] += int(args['Content-Length'])
+                elif status == 'skipped':
+                    progress['skipped'].append(receipt.url)
+                elif status == 'error':
                     progress['errors'].append(receipt.url)
-            else:
-                progress['skipped'].append(receipt.url)
-        else:
-            break
 
+                raw_msg = '==> Downloaded {:,} files ({}). {}/{} skipped/errors                 '
+                msg = raw_msg.format(
+                    progress['count'],
+                    naturalsize(progress['size']),
+                    len(progress['skipped']),
+                    len(progress['errors'])
+                )
+                print(msg, end='\r')
+
+            # exit condition
+            if not limit or progress['count'] >= limit:
+                break
+    return progress
+
+def download_receipt(receipt):
+    """
+    Downloads a receipt and returns a string with a status message, the receipt
+    object and a header containing meta-information associated with the URL.
+    :param receipt: (Receipt) Receipt object
+    """
+    path = receipt.path()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    if not os.path.exists(path):
+        try:
+            file_name, header = urlretrieve(receipt.url, path)
+            return ('ok', receipt, header)
+        except HTTPError as e:
+            return ('error', receipt, repr(e))
+    else:
+        return ('skipped', receipt, receipt.url)
+
+def print_report(progress):
+    """
+    Display status information of the operation
+    :param progress: (Dict) Dictionary returned by the run method
+    """
     # print summary
     msg = '==> Downloaded {:,} files ({})                                     '
     print(msg.format(progress['count'], naturalsize(progress['size'])))
@@ -174,4 +216,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # run
-    run(args.target, args.limit)
+    result = run(args.target, args.limit)
+    print_report(result)
