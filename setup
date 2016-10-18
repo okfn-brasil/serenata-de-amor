@@ -7,6 +7,7 @@ import subprocess
 copyfile('config.ini.example', 'config.ini')
 
 pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
+subprocess.call(['conda', 'config', '--add', 'channels', 'conda-forge'])
 subprocess.call(['conda', 'install', '--yes', '--file', 'conda_requirements.txt'])
 
 if which('unzip') == None:
