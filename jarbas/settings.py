@@ -131,6 +131,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Django Assets
 
 ASSETS_ROOT = os.path.join(BASE_DIR, 'jarbas', 'frontend', 'static')
+ELM_MAKE_BIN = config('ELM_MAKE_BIN', default='elm-make')
 LIBSASS_STYLE = 'compressed'
 
 # Amazon S3 datasets
