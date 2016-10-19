@@ -51,7 +51,7 @@ This endpoit gets the info we have for a specific supplier. The endpoint expects
 
 ### Requirements
 
-The app is based in [Python 3](http://python.org) and [Node.js](http://nodejs.org). Once you have `pip` and `npm` available, install the dependencies:
+The app is based in [Python 3.5](http://python.org) and [Node.js](http://nodejs.org). Once you have `pip` and `npm` available, install the dependencies:
 
 ```console
 npm i
