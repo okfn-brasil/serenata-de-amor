@@ -23,6 +23,7 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
+        exclude = ()
 
 
 class ActivitySerializer(serializers.ModelSerializer):
