@@ -9,16 +9,18 @@ If you work with statistics but not a coder or a developer that are not used to 
 A lot of discussions about ideas take place in the [Issues](https://github.com/datasciencebr/serenata-de-amor/issues) section. There you can catch up with what's going on and also suggest new ideas.
 
 1. _Fork_ this repository
-2. Create your branch: `$ git checkout -b new-stuff`
-3. Commit your changes: `$ git commit -am 'My cool contribution'`
-4. Push to the branch to your fork: `$ git push origin new-stuff`
-5. Create a new _Pull Request_
+2. Clone the repository: `git clone http://github.com/[YOUR_GITHUB_USER]/serenata-de-amor.git`
+3. Create your branch: `$ git checkout -b new-stuff`
+4. Commit your changes: `$ git commit -am 'My cool contribution'`
+5. Push to the branch to your fork: `$ git push origin new-stuff`
+6. Create a new _Pull Request_
 
 ## Environment
 
 The recommended way of setting your environment up is with [Anaconda](https://www.continuum.io/), a Python distribution with useful packages for Data Science. [Download it](https://www.continuum.io/downloads) and create an _environment_ for the project.
 
 ```console
+$ cd serenata-de-amor
 $ conda update conda
 $ conda create --name serenata_de_amor python=3
 $ source activate serenata_de_amor
