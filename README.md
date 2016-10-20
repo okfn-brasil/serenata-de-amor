@@ -51,12 +51,18 @@ This endpoit gets the info we have for a specific supplier. The endpoint expects
 
 ### Requirements
 
-The app is based in [Python 3.5](http://python.org) and [Node.js](http://nodejs.org). Once you have `pip` and `npm` available, install the dependencies:
+The app is based in [Python 3.5](http://python.org) and [Node.js 6](http://nodejs.org). Once you have `pip` and `npm` available, install the dependencies:
 
 ```console
 npm i
 python -m pip install -r requirements-dev.txt
 ```
+
+Minor details on requirements:
+
+* **`lzma`**: In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` but you mihght have to re-compile your Python.
+* **`elm-make`**: If `elm-make` is not available in your path, or if the `elm-make` version differs from [the one required by this project](packages.json), set [`ELM_MAKE_BIN`](https://github.com/cuducos/webassets-elm#requirements) environment variable pointing to where the proper `elm-make` binary is (probably `node_modules/.bin/elm-make`)
+* **`psycopg2`**: The `requirements.txt` file is prepared to use [PostgresSQL](https://www.postgresql.org) and `psycopg2` might fail if you don't have Postgres installed locally.
 
 ### Settings
 
