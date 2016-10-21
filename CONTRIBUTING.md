@@ -59,7 +59,7 @@ $ cp config.ini.example config.ini
 Run the script to fetch Quota for Exercising Parliamentary Activity (CEAP) datasets:
 
 ```console
-$ docker-compose run --rm jupyter python src/fetch_datasets.py
+$ docker-compose run --rm jupyter bash -c "source activate serenata_de_amor && python src/fetch_datasets.py"
 ```
 
 If you want to access the console:
