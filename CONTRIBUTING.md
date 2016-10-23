@@ -101,4 +101,4 @@ The project basically happens in four moments, and contributions are welcomed in
 
 As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browse our data and refer to documents we analize. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
 
-If you fancy web development, feel free to check Jarba's source code, to check [Jarba's own Issues](https://github.com/datasciencebr/jarbas/issues) and to contribute there too.
+If you fancy web development, feel free to check Jarbas' source code, to check [Jarbas' own Issues](https://github.com/datasciencebr/jarbas/issues) and to contribute there too.
