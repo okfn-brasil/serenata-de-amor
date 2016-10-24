@@ -47,9 +47,21 @@ class Receipts:
             'cnpj_cpf': np.str,
             'reimbursement_number': np.str
         }
-            data = pd.read_csv(dataset, parse_dates=[16], dtype=dtype)
-            yield from(Receipt(row, self.target) for row in data.itertuples() if not pd.isnull(row.document_id))
         for dataset in self.datasets:
+            df = pd.read_csv(dataset, parse_dates=[16], dtype=dtype)
+            rows = filter(self.is_valid, df.itertuples())
+            yield from(Receipt(row, self.target) for row in rows)
+
+    @staticmethod
+    def is_valid(row):
+        if str(row.document_id).lower() == 'nan':
+            return False
+
+        required_fields = (row.applicant_id, row.year, row.document_id)
+        if any(map(pd.isnull, required_fields)):
+            return False
+
+        return True
 
 
 class Receipt:
@@ -179,6 +191,7 @@ def download(receipt):
             return ('error', receipt, repr(e))
     else:
         return 'skipped', receipt, receipt.url
+
 
 def print_report(progress):
     """
