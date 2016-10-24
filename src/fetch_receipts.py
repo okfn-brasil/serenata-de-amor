@@ -2,6 +2,8 @@ import os
 import re
 import sys
 from argparse import ArgumentParser, RawTextHelpFormatter
+from itertools import islice
+from multiprocessing import Pool
 from urllib.error import HTTPError
 from urllib.request import urlretrieve
 
@@ -9,34 +11,31 @@ from humanize import naturalsize
 import numpy as np
 import pandas as pd
 
-from itertools import islice
-from multiprocessing import Pool
-
 
 class Receipts:
-
-    def __init__(self, target):
-        """
-        :param target: (string) path to the directory to save the receipts
-        """
-        self.target = target
+    """Abstraction to a list of Receipts read from the datasets"""
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     DATA_DIR = os.path.join(BASE_DIR, 'data')
     REGEX = r'^[\d-]{11}(current-year|last-year|previous-years).xz$'
 
-    def __call__(self):
-        return self.receipts
+    def __init__(self, target):
+        """
+        :param target: (str) path to the directory to save the receipt image
+        """
+        self.target = target
 
+    @property
     def datasets(self):
         """List generator with the full path of each CSV/dataset."""
         for file_name in os.listdir(self.DATA_DIR):
             if re.compile(self.REGEX).match(file_name):
                 yield os.path.join(self.DATA_DIR, file_name)
 
+    @property
     def all(self):
         """
-        List generator with Receipt named tuples containing the path of the
+        List generator with Receipt objects containing the path of the
         receipt image (to be used when saving it, for example) and the URL of
         the receipt at the Lower House servers.
         """
@@ -48,9 +47,9 @@ class Receipts:
             'cnpj_cpf': np.str,
             'reimbursement_number': np.str
         }
-        for dataset in self.datasets():
             data = pd.read_csv(dataset, parse_dates=[16], dtype=dtype)
             yield from(Receipt(row, self.target) for row in data.itertuples() if not pd.isnull(row.document_id))
+        for dataset in self.datasets:
 
 
 class Receipt:
@@ -59,16 +58,18 @@ class Receipt:
         """
         :param receipt: a Pandas DataFrame row as a NamedTuple (see
         `itertuples` method)
+        :param target: (str) path to the directory to save the receipt image
         """
         self.applicant_id = receipt.applicant_id
         self.year = receipt.year
         self.document_id = receipt.document_id
         self.target = target
 
+    @property
     def path(self):
         """
-        Given a target directory (string), it returns the absolute path to the
-        receipt (the path to be used when saving the file).
+        Returns the absolute path to the receipt (the path to be used when
+        saving the file).
         """
         return os.path.join(
             os.path.abspath(self.target),
@@ -94,11 +95,9 @@ class Receipt:
 
 def run(target, limit=None):
     """
-    :param target: (string) path to the directory to save the receipts
-    :param limit: (int) limit the amount of receipts to fecth
+    :param target: (string) path to the directory to save the receipts images
+    :param limit: (int) limit the amount of receipts to fecth (default: None)
     """
-    target = target
-    limit = limit
     progress = {
         'count': 0,
         'size': 0,
@@ -118,59 +117,75 @@ def run(target, limit=None):
 
     # save receipts
     with Pool(processes=4) as pool:
-        receipts = Receipts(target=target).all()
+        receipts = Receipts(target=target).all
         while True:
-            cur_receipts = receipts
+            receipts_slice = receipts
             if limit:
-                cur_receipts = islice(receipts, limit - progress['count'])
-            for result in pool.imap(download_receipt, cur_receipts):
-                status, receipt, args = result
-                if status == 'ok':
-                    progress['count'] += 1
-                    progress['size'] += int(args['Content-Length'])
-                elif status == 'skipped':
-                    progress['skipped'].append(receipt.url)
-                elif status == 'error':
-                    progress['errors'].append(receipt.url)
+                receipts_slice = islice(receipts, limit - progress['count'])
 
-                raw_msg = '==> Downloaded {:,} files ({}). {}/{} skipped/errors                 '
-                msg = raw_msg.format(
-                    progress['count'],
-                    naturalsize(progress['size']),
-                    len(progress['skipped']),
-                    len(progress['errors'])
-                )
-                print(msg, end='\r')
+            for status, receipt, meta in pool.imap(download, receipts_slice):
+                progress = manage_progress(progress, status, receipt, meta)
 
-            # exit condition
             if not limit or progress['count'] >= limit:
                 break
+
+    return print_report(progress)
+
+
+def manage_progress(progress, status, receipt, meta):
+    """
+    Given the current progress (dict) and the status, receipt and meta produced
+    by `download` method, it returns a update version of the progress (dict)
+    and print the current status for the user.
+    """
+    if status == 'ok':
+        progress['count'] += 1
+        progress['size'] += int(meta['Content-Length'])
+
+    elif status == 'skipped':
+        progress['skipped'].append(receipt.url)
+
+    elif status == 'error':
+        progress['errors'].append(receipt.url)
+
+    raw_msg = '==> Downloaded {:,} files ({}). {}/{} skipped/errors           '
+    msg = raw_msg.format(
+        progress['count'],
+        naturalsize(progress['size']),
+        len(progress['skipped']),
+        len(progress['errors'])
+    )
+
+    print(msg, end='\r')
     return progress
 
-def download_receipt(receipt):
+
+def download(receipt):
     """
-    Downloads a receipt and returns a string with a status message, the receipt
-    object and a header containing meta-information associated with the URL.
+    Downloads a receipt and returns a tuple.
     :param receipt: (Receipt) Receipt object
+    :return: (tuple) containing:
+        * a status message (str, 'ok', 'error' or 'skipped')
+        * the Receipt object
+        * meta information (responde header in case of success, error in case
+          of error, or the receipt URL case it was skipped)
     """
-    path = receipt.path()
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    if not os.path.exists(path):
+    os.makedirs(os.path.dirname(receipt.path), exist_ok=True)
+    if not os.path.exists(receipt.path):
         try:
-            file_name, header = urlretrieve(receipt.url, path)
+            file_name, header = urlretrieve(receipt.url, receipt.path)
             return ('ok', receipt, header)
         except HTTPError as e:
             return ('error', receipt, repr(e))
     else:
-        return ('skipped', receipt, receipt.url)
+        return 'skipped', receipt, receipt.url
 
 def print_report(progress):
     """
     Display status information of the operation
-    :param progress: (Dict) Dictionary returned by the run method
+    :param progress: (dict) progress info as created within `run` method
     """
-    # print summary
-    msg = '==> Downloaded {:,} files ({})                                     '
+    msg = '==> {:,} files downloaded ({})                                     '
     print(msg.format(progress['count'], naturalsize(progress['size'])))
 
     # print errors
@@ -195,8 +210,8 @@ if __name__ == '__main__':
 
     Be aware that downloading everything might use more than 1 TB of disk
     space.  Because of that you have to specify one `target` directory (where
-    to save the files) and optionally you can specify with `--limit` the number
-    of images to be downloaded.
+    to save the files) and optionally you can run with `--limit` to limit the
+    number of images to be downloaded.
 
     If the `target` directory exists and already has some saved receipts,
     these receipts will not be downloaded again (and they will not count when
@@ -215,6 +230,4 @@ if __name__ == '__main__':
                         help='Limit the number of receipts to be saved')
     args = parser.parse_args()
 
-    # run
-    result = run(args.target, args.limit)
-    print_report(result)
+    run(args.target, args.limit)
