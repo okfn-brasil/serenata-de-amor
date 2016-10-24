@@ -13,9 +13,12 @@ from itertools import islice
 from multiprocessing import Pool
 
 
-class Receipts(object):
+class Receipts:
 
     def __init__(self, target):
+        """
+        :param target: (string) path to the directory to save the receipts
+        """
         self.target = target
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -145,6 +148,11 @@ def run(target, limit=None):
     return progress
 
 def download_receipt(receipt):
+    """
+    Downloads a receipt and returns a string with a status message, the receipt
+    object and a header containing meta-information associated with the URL.
+    :param receipt: (Receipt) Receipt object
+    """
     path = receipt.path()
     os.makedirs(os.path.dirname(path), exist_ok=True)
     if not os.path.exists(path):
@@ -157,6 +165,10 @@ def download_receipt(receipt):
         return ('skipped', receipt, receipt.url)
 
 def print_report(progress):
+    """
+    Display status information of the operation
+    :param progress: (Dict) Dictionary returned by the run method
+    """
     # print summary
     msg = '==> Downloaded {:,} files ({})                                     '
     print(msg.format(progress['count'], naturalsize(progress['size'])))
