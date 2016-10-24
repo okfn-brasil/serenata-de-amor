@@ -125,7 +125,6 @@ def main():
     total = len(ids)
     for i, id in enumerate(ids):
         id = str(id).replace('\n', '').strip()
-        print('{} - {:.2f}%'.format(id, i / total * 100))
         try:
             data = requests.get(url.format(id)).content.decode('utf8')
             soup = BeautifulSoup(str(data), 'html.parser')
@@ -136,6 +135,7 @@ def main():
             dicts.append(dict_bio_details)
         except IndexError:
             print('Could not parse data')
+        print('Processed {} out of {} ({:.2f}%)'.format(i, total, i / total * 100), end='\r')
 
     df = pd.DataFrame(data=dicts)
     df = df[df['Filiação'].notnull()]
