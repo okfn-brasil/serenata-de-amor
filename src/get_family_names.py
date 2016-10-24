@@ -7,9 +7,9 @@ import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
 
-PROCESSED_DATA_PATH = os.path.join('data', 'congressperson_relatives.xz')
-RAW_DATA_PATH = os.path.join('data', 'congressperson_relatives_raw.xz')
 DATE = datetime.date.today().strftime('%Y-%m-%d')
+PROCESSED_DATA_PATH = os.path.join('data', '{}-congressperson_relatives.xz').format(DATE)
+RAW_DATA_PATH = os.path.join('data', '{}-congressperson_relatives_raw.xz').format(DATE)
 
 write_csv_params = {
     'compression': 'xz',
@@ -99,7 +99,7 @@ def write_formatted_data(df):
         .reset_index(drop=True))
 
     final.rename(inplace=True, columns={'id': 'congressperson_id'})
-    final.to_csv('-'.join(DATE, PROCESSED_DATA_PATH), **write_csv_params)
+    final.to_csv(PROCESSED_DATA_PATH, **write_csv_params)
 
 
 def write_raw_data(df):
@@ -112,8 +112,7 @@ def write_raw_data(df):
         'id': 'congressperson_id',
         'Filiação': 'parents'})
 
-    people_with_more_than_two_parents.to_csv('-'.join(DATE, RAW_DATA_PATH),
-                                             **write_csv_params)
+    people_with_more_than_two_parents.to_csv(RAW_DATA_PATH, **write_csv_params)
 
 
 def main():
