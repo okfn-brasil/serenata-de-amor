@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import os
+import re
 import datetime
 import requests
 import numpy as np
@@ -8,8 +9,9 @@ import pandas as pd
 from bs4 import BeautifulSoup
 
 DATE = datetime.date.today().strftime('%Y-%m-%d')
-PROCESSED_DATA_PATH = os.path.join('data', '{}-congressperson_relatives.xz').format(DATE)
-RAW_DATA_PATH = os.path.join('data', '{}-congressperson_relatives_raw.xz').format(DATE)
+DATA_DIR = 'data'
+PROCESSED_DATA_PATH = os.path.join(DATA_DIR, '{}-congressperson_relatives.xz').format(DATE)
+RAW_DATA_PATH = os.path.join(DATA_DIR, '{}-congressperson_relatives_raw.xz').format(DATE)
 
 write_csv_params = {
     'compression': 'xz',
@@ -59,7 +61,7 @@ def split_names(s):
     return names
 
 
-def flatten_parents(df):
+def create_one_row_per_parent(df):
     result = []
     dict_df = df.to_dict(orient='records')[0]
     for name in dict_df['parents_list']:
@@ -70,13 +72,23 @@ def flatten_parents(df):
 
 
 def get_all_congress_people_ids():
+    print('Fetching all congresspeople ids', end='\r')
     ids_series = [read_csv(name)['congressperson_id']
                   for name in ['current-year', 'last-year', 'previous-years']]
     return list(pd.concat(ids_series).unique())
 
 
+def find_latest_date():
+    date_regex = re.compile('\d{4}-\d{2}-\d{2}')
+
+    matches = (date_regex.findall(f) for f in os.listdir(DATA_DIR))
+    dates = (l[0] for l in matches if l)
+    return max(dates)
+
+
 def read_csv(name):
-    return pd.read_csv('data/2016-08-08-%s.xz' % name,
+    date = find_latest_date()
+    return pd.read_csv('data/{}-{}.xz'.format(date, name),
                        parse_dates=[16],
                        dtype={'document_id': np.str,
                               'congressperson_id': np.str,
@@ -95,7 +107,7 @@ def write_formatted_data(df):
     final = (
         people_with_two_or_less_parents
         .groupby('id')
-        .apply(flatten_parents)
+        .apply(create_one_row_per_parent)
         .reset_index(drop=True))
 
     final.rename(inplace=True, columns={'id': 'congressperson_id'})
@@ -112,16 +124,17 @@ def write_raw_data(df):
         'id': 'congressperson_id',
         'Filiação': 'parents'})
 
-    people_with_more_than_two_parents.to_csv(RAW_DATA_PATH, **write_csv_params)
+    if len(people_with_more_than_two_parents):
+        people_with_more_than_two_parents.to_csv(RAW_DATA_PATH, **write_csv_params)
 
 
-def main():
+def get_congresspeople_parents_names():
     url = 'http://www2.camara.leg.br/deputados/pesquisa/layouts_deputados_' \
           'biografia?pk={}'
 
     ids = get_all_congress_people_ids()
 
-    global dicts
+    dicts = []
     total = len(ids)
     for i, id in enumerate(ids):
         id = str(id).replace('\n', '').strip()
@@ -146,6 +159,5 @@ def main():
     write_raw_data(df)
 
 
-dicts = []
 if __name__ == '__main__':
-    main()
+    get_congresspeople_parents_names()
