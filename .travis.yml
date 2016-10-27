@@ -11,7 +11,10 @@ branches:
 
 install:
   - psql -c 'create database jarbas;' -U postgres
+  - nvm install 6
+  - nvm use 6
   - npm install
+  - npm install -g elm
   - pip install -r requirements.txt
   - pip install coveralls
 
@@ -22,6 +25,7 @@ before_script:
   - python manage.py migrate
   - travis_wait 45 python manage.py assets build --no-cache
   - python manage.py collectstatic --no-input
+  - npm test
 
 script:
   - coverage run manage.py test -v 3
