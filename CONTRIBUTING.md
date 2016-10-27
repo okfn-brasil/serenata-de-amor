@@ -61,8 +61,8 @@ Here we explain what each script from `src/` does for you:
 
 ##### Quota for Exercising Parliamentary Activity (CEAP)
 
-1. `src/fetch_datasets.py --from-source` dowloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
-1. `src/fetch_datasets.py` dowloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
+1. `src/fetch_datasets.py --from-source` downloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
+1. `src/fetch_datasets.py` downloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
 1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
 1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
