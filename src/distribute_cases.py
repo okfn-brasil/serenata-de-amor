@@ -1,11 +1,12 @@
 import configparser
 from df2gspread import gspread2df as g2d
 import numpy as np
+from os.path import expanduser, isfile
 import pandas as pd
 from random import sample
 
 """
-This script requires the existence of 2 files:
+This script requires the existence of 3 files:
     * `data/volunteers.csv`. Private, containing emails of investigators.
         e.g.
 
@@ -23,7 +24,11 @@ This script requires the existence of 2 files:
         1000,1,"john@example.com,michael@example.com,hannah@example.com","john@example.com"
         1001,1,"john@example.com,michael@example.com,hannah@example.com","john@example.com"
         1002,1,"john@example.com,michael@example.com,hannah@example.com","john@example.com"
-        1050,1,"barbara@example.com,susan@example.com",
+        1050,2,"barbara@example.com,susan@example.com",
+
+    * `~/.gdrive_private`. Needed to access your Google Drive documents.
+        Check the following link for further instructions.
+        https://github.com/maybelinot/df2gspread#access-credentials
 """
 
 INVESTIGATOR_EMAIL_COLUMN = 'Email (é por ele que iremos manter contato)'
@@ -41,13 +46,19 @@ def distribute_cases(cases, investigators):
             batch[email] = row['case']
     return batch
 
+def read_cases_document():
+    file_path = expanduser('~') + '/.gdrive_private'
+    if not isfile(file_path):
+        raise FileNotFoundError('{} must exist'.format(file_path))
+    settings = configparser.RawConfigParser()
+    settings.read('config.ini')
+    cases_document = settings.get('Google', 'CasesDocument')
+    return g2d.download(gfile=cases_document, col_names=True)
 
 
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
-cases_document = settings.get('Google', 'CasesDocument')
 
-cases = g2d.download(gfile=cases_document, col_names=True)
+
+cases = read_cases_document()
 investigator_columns = ['investigators', 'investigators_working']
 cases['case'] = cases['case'].astype(np.int)
 cases[investigator_columns] = cases[investigator_columns].astype(np.str)

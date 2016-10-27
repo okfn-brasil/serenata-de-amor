@@ -1,5 +1,4 @@
 *.pyc
-.gdrive_private
 .ipynb_checkpoints
 .python-version
 __pycache__/
