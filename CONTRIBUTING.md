@@ -56,7 +56,7 @@ Here we explain what each script from `src/` does for you:
 
 ##### One script to rule them all
 
-1. `src/fetch_datasets.py` dowloads all the available datasets to `data/` is `.xz` compressed CSV format with headers translated to English.
+1. `src/fetch_datasets.py` downloads all the available datasets to `data/` is `.xz` compressed CSV format with headers translated to English.
 
 
 ##### Quota for Exercising Parliamentary Activity (CEAP)
