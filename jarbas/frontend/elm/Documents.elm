@@ -209,7 +209,7 @@ update msg model =
         ApiFail error ->
             let
                 err =
-                    Debug.crash (toString error)
+                    Debug.log (toString error)
             in
                 ( { model | results = results, error = Just error, loading = False }, Cmd.none )
 
