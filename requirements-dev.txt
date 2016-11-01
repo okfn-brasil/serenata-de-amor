@@ -1,4 +1,4 @@
-Django==1.10.2
+Django==1.10.3
 dj-database-url==0.4.1
 django-assets==0.12
 django-cors-middleware==1.3.1
