@@ -94,8 +94,33 @@ def main():
 
     joined = real_estates_data.join(real_estates_details_data, how='inner', rsuffix='_details')
 
-    cleaned = joined.dropna(axis=1, how='all')
-    cleaned.to_csv(OUTPUT_FILEPATH)
+    cleaned_data = joined\
+                    .dropna(axis=1, how='all')\
+                    .drop(['PrecoVenda_details',
+                           'PrecoLocacao_details',
+                           'TipoOfertaID_details',
+                           'TipoOfertaID',
+                           'indOferta',
+                           'EstagioObra',
+                           'FotoPrincipal',
+                           'IndDistrato',
+                           'SubTipoOferta'],
+                          1)\
+                    .rename(columns={
+                        'Coordenadas': 'coordinates',
+                        'NotaLocacao': 'rent_rate',
+                        'NotaVenda': 'sale_rate',
+                        'PrecoLocacao': 'rental_price',
+                        'PrecoVenda': 'sale_price',
+                        'AreaTotal': 'total_area' ,
+                        'AreaUtil_details': 'useful_area',
+                        'Bairro': 'neighborhood',
+                        'Dormitorios_details': 'dorms',
+                        'SubTipoImovel': 'subtype',
+                        'Suites': 'suite',
+                        'Vagas': 'vacancies',
+                    })
+    cleaned_data.to_csv(OUTPUT_FILEPATH)
 
 if __name__ == '__main__':
     main()
