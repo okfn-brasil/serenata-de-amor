@@ -1,20 +1,18 @@
-## juntar todos os IDs retornados e pegar os detalhes de cada imovel
-
-## import geocoder
-
-## def main():
-##     geo_location = geocoder.google("Distrito Federal, Brasil")
-##     location_boundingbox = geolocation.bbox
-import numpy as np
 import json
+import numpy as np
 import requests
+import os
+import pandas as pd
+from geopy.geocoders import GoogleV3
 
-HEADERS = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"}
+HTTP_HEADERS = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"}
+OUTPUT_FILEPATH = os.path.join('data', 'real_estates_prices.csv')
+LOCATION = 'Distrito Federal, Brasil'
 
 def slice_quadrants(northeast, southwest, size=0.0625):
     quadrants = []
-    for lat in np.arange(southwest[0], northeast[0], size):
-        for long in np.arange(southwest[1], northeast[1], size):
+    for lat in np.arange(southwest['lat'], northeast['lat'], size):
+        for long in np.arange(southwest['lng'], northeast['lng'], size):
             quadrant = ((str(lat), str(long)), (str(lat + size), str(long + size)))
             quadrants.append(quadrant)
     return quadrants
@@ -68,7 +66,7 @@ def get_real_estates_details(real_estates):
 
     return details
 
-def get_results(url, data, headers=HEADERS):
+def get_results(url, data, headers=HTTP_HEADERS):
     request = requests.post(url, headers=headers, data=data)
     estates_data = json.loads(request.text)
     return estates_data.get('Resultado')
@@ -83,21 +81,21 @@ def print_not_fetched_amount(results):
 def log_percent(done, total, msg='Fetched {} out of {} ({:.2f}%)'):
     print(msg.format(done, total, done/total*100), end='\r')
 
+def main():
+    location = GoogleV3().geocode(LOCATION)
+    location_bounds = location.raw['geometry']['bounds']
+
+    quadrants = slice_quadrants(location_bounds['northeast'], location_bounds['southwest'])
+    real_estates = get_real_estates_from_quadrants(quadrants)
+    real_estates_details = get_real_estates_details(real_estates)
+
+    real_estates_data = pd.DataFrame.from_dict(real_estates).set_index('ID')
+    real_estates_details_data = pd.DataFrame.from_dict(real_estates_details).set_index('ID')
+
+    joined = real_estates_data.join(real_estates_details_data, how='inner', rsuffix='_details')
+
+    cleaned = joined.dropna(axis=1, how='all')
+    cleaned.to_csv(OUTPUT_FILEPATH)
+
 if __name__ == '__main__':
-    from unittest import TestCase
-
-    t = TestCase()
-    northeast, southwest = [-15, -47], [-16, -48]
-    size = 0.125
-
-    t.assertEqual(type(slice_quadrants(northeast, southwest)), list)
-    t.assertEqual(type(slice_quadrants(northeast, southwest)[0]), tuple)
-    t.assertEqual(slice_quadrants(northeast, southwest, size)[0], (('-16.0', '-48.0'),('-15.875','-47.875')))
-    t.assertEqual(slice_quadrants(northeast, southwest, size)[1], (('-16.0', '-47.875'),('-15.875','-47.75')))
-    t.assertEqual(slice_quadrants(northeast, southwest, size)[8], (('-15.875', '-48.0'),('-15.75','-47.875')))
-    t.assertEqual(slice_quadrants(northeast, southwest, size)[-1], (('-15.125', '-47.125'),('-15.0','-47.0')))
-
-    bbox = {'northeast': [-15.5001711, -47.3081926],
-           'southwest': [-16.0517623, -48.2870948]}
-
-    get_real_estates_details(get_real_estates_from_quadrants(slice_quadrants(bbox['northeast'], bbox['southwest'])))
+    main()
