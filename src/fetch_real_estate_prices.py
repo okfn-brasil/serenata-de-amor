@@ -41,13 +41,10 @@ def get_real_estates_from_quadrants(quadrants):
         }
 
         results = get_results(url, {'parametrosBusca': str(search_params)})
+        print_not_fetched_amount(results)
+        estates.extend(results.get('Imoveis'))
+        log_percent(i+1, len(quadrants))
 
-        if results:
-            results_not_fetched_amount = results.get('QuantidadeResultados') - 1000
-            if results_not_fetched_amount > 0:
-                print('{} results aren\'t being fetched, decrease the quadrant size to get more results'.format(results_not_fetched_amount))
-            estates.extend(results.get('Imoveis'))
-        print('Fetched {} out of {} ({:.2f}%)'.format(i+1, len(quadrants), (i+1) / len(quadrants) * 100), end='\r')
     print('\nFetched {} real estates.'.format(len(estates)))
 
     return estates
@@ -65,16 +62,26 @@ def get_real_estates_details(real_estates):
         results = get_results(url, {'listIdImovel': str(ids)})
         details.extend(results)
 
-        ids_fetched = i*len(results)+1
-        print('Fetched {} out of {} ({:.2f}%)'.format(ids_fetched, total, ids_fetched/total*100), end='\r')
+        log_percent(i*len(results)+1, total)
+
     print('\nFetched {} real estates details.'.format(len(details)))
 
     return details
 
 def get_results(url, data, headers=HEADERS):
-    request = requests.post(url, headers=HEADERS, data=data)
+    request = requests.post(url, headers=headers, data=data)
     estates_data = json.loads(request.text)
     return estates_data.get('Resultado')
+
+def print_not_fetched_amount(results):
+    if not results:
+        return
+    not_fetched_amount = results.get('QuantidadeResultados') - 1000
+    if not_fetched_amount > 0:
+        print('{} results aren\'t being fetched, decrease the quadrant size to get more results'.format(not_fetched_amount))
+
+def log_percent(done, total, msg='Fetched {} out of {} ({:.2f}%)'):
+    print(msg.format(done, total, done/total*100), end='\r')
 
 if __name__ == '__main__':
     from unittest import TestCase
