@@ -22,7 +22,7 @@ def slice_quadrants(northeast, southwest, size=0.0625):
 def get_real_estates_from_quadrants(quadrants):
     estates = []
     url = 'http://www.zapimoveis.com.br/BuscaMapa/ObterOfertasBuscaMapa/'
-    for quadrant in quadrants:
+    for i, quadrant in enumerate(quadrants):
         search_params = {
             "CoordenadasAtuais": {
                 "Latitude": -15.7217174,
@@ -40,15 +40,41 @@ def get_real_estates_from_quadrants(quadrants):
             "TipoOferta":"Imovel"
         }
 
-        data = {'parametrosBusca': str(search_params)}
-        req = requests.post(url, headers=HEADERS, data=data)
-        estates_data = json.loads(req.text)
-        results = estates_data.get('Resultado')
+        results = get_results(url, {'parametrosBusca': str(search_params)})
+
         if results:
             results_not_fetched_amount = results.get('QuantidadeResultados') - 1000
             if results_not_fetched_amount > 0:
                 print('{} results aren\'t being fetched, decrease the quadrant size to get more results'.format(results_not_fetched_amount))
-            estates.extend(tuple(results.get('Imoveis')))
+            estates.extend(results.get('Imoveis'))
+        print('Fetched {} out of {} ({:.2f}%)'.format(i+1, len(quadrants), (i+1) / len(quadrants) * 100), end='\r')
+    print('\nFetched {} real estates.'.format(len(estates)))
+
+    return estates
+
+def get_real_estates_details(real_estates):
+    details = []
+    all_ids = [e['ID'] for e in real_estates]
+    url = 'http://www.zapimoveis.com.br/BuscaMapa/ObterDetalheImoveisMapa/'
+    ids_per_request = 10
+    total = len(all_ids)
+
+    splitted_ids = [all_ids[x:x+ids_per_request] for x in range(0, total, ids_per_request)]
+
+    for i, ids in enumerate(splitted_ids):
+        results = get_results(url, {'listIdImovel': str(ids)})
+        details.extend(results)
+
+        ids_fetched = i*len(results)+1
+        print('Fetched {} out of {} ({:.2f}%)'.format(ids_fetched, total, ids_fetched/total*100), end='\r')
+    print('\nFetched {} real estates details.'.format(len(details)))
+
+    return details
+
+def get_results(url, data, headers=HEADERS):
+    request = requests.post(url, headers=HEADERS, data=data)
+    estates_data = json.loads(request.text)
+    return estates_data.get('Resultado')
 
 if __name__ == '__main__':
     from unittest import TestCase
@@ -67,4 +93,4 @@ if __name__ == '__main__':
     bbox = {'northeast': [-15.5001711, -47.3081926],
            'southwest': [-16.0517623, -48.2870948]}
 
-    get_real_estates_from_quadrants(slice_quadrants(bbox['northeast'], bbox['southwest']))
+    get_real_estates_details(get_real_estates_from_quadrants(slice_quadrants(bbox['northeast'], bbox['southwest'])))
