@@ -1,8 +1,9 @@
 import json
-import numpy as np
-import requests
 import os
+
+import numpy as np
 import pandas as pd
+import requests
 from geopy.geocoders import GoogleV3
 
 HTTP_HEADERS = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"}
