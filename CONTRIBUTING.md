@@ -17,7 +17,11 @@ A lot of discussions about ideas take place in the [Issues](https://github.com/d
 
 ## Environment
 
-The recommended way of setting your environment up is with [Anaconda](https://www.continuum.io/), a Python distribution with useful packages for Data Science. [Download it](https://www.continuum.io/downloads) and create an _environment_ for the project.
+The recommended way of setting your environment up is with [Anaconda](https://www.continuum.io/), a Python distribution with useful packages for Data Science.
+
+The project uses Python 3 (specified in the `python=3` bit of the commands below). [Download Anaconda](https://www.continuum.io/downloads) and create an _environment_ for the project.
+
+The version of Anaconda doesn't have to be 3 as `conda` environments manage Python version as well. But if you're going to a fresh install we recommend Anaconda 3 — it's newer and it makes no sense to have Python 2 as your default Anaconda Python.
 
 ```console
 $ cd serenata-de-amor
