@@ -1,3 +1,4 @@
+import itertools
 import json
 import os
 
@@ -8,9 +9,12 @@ from geopy.geocoders import GoogleV3
 
 HTTP_HEADERS = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"}
 OUTPUT_FILEPATH = os.path.join('data', 'real_estates_prices.csv')
-LOCATION = 'Distrito Federal, Brasil'
+locations = ['Distrito Federal, Brasil', ]
 
-def slice_quadrants(northeast, southwest, size=0.05):
+def slice_quadrants(location_bounds, size=0.05):
+    northeast = location_bounds['northeast']
+    southwest = location_bounds['southwest']
+
     for lat in np.arange(southwest['lat'], northeast['lat'], size):
         for long in np.arange(southwest['lng'], northeast['lng'], size):
             yield ((str(lat), str(long)), (str(lat + size), str(long + size)))
@@ -83,11 +87,17 @@ def log_percent(done, total=None, msg='Fetched {} out of {} ({:.2f}%)'):
         msg = 'Fetched {}'
         print(msg.format(done), end='\r')
 
-def main():
-    location = GoogleV3().geocode(LOCATION)
-    location_bounds = location.raw['geometry']['bounds']
+def get_quadrants():
+    geolocator = GoogleV3()
+    quadrant_generators = []
+    for location in locations:
+        location_bounds = geolocator.geocode(location).raw['geometry']['bounds']
+        quadrant_generators.append(slice_quadrants(location_bounds))
 
-    quadrants = slice_quadrants(location_bounds['northeast'], location_bounds['southwest'])
+    return itertools.chain(*quadrant_generators)
+
+def main():
+    quadrants = get_quadrants()
     real_estates = get_real_estates_from_quadrants(quadrants)
     real_estates_details = get_real_estates_details(real_estates)
 
