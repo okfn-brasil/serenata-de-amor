@@ -1,6 +1,7 @@
 import itertools
 import json
 import os
+from datetime import date
 
 import numpy as np
 import pandas as pd
@@ -8,7 +9,8 @@ import requests
 from geopy.geocoders import GoogleV3
 
 HTTP_HEADERS = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"}
-OUTPUT_FILEPATH = os.path.join('data', 'real_estates_prices.csv')
+FILENAME = '{}-real-estates-prices.xz'.format(date.today())
+OUTPUT_FILEPATH = os.path.join('data', FILENAME)
 locations = ['Distrito Federal, Brasil', ]
 
 def slice_quadrants(location_bounds, size=0.05):
@@ -132,7 +134,7 @@ def main():
                         'Suites': 'suite',
                         'Vagas': 'vacancies',
                     })
-    cleaned_data.to_csv(OUTPUT_FILEPATH)
+    cleaned_data.to_csv(OUTPUT_FILEPATH, compression='xz')
 
 if __name__ == '__main__':
     main()
