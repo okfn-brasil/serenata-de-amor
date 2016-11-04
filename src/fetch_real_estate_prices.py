@@ -10,13 +10,10 @@ HTTP_HEADERS = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) App
 OUTPUT_FILEPATH = os.path.join('data', 'real_estates_prices.csv')
 LOCATION = 'Distrito Federal, Brasil'
 
-def slice_quadrants(northeast, southwest, size=0.0625):
-    quadrants = []
+def slice_quadrants(northeast, southwest, size=0.05):
     for lat in np.arange(southwest['lat'], northeast['lat'], size):
         for long in np.arange(southwest['lng'], northeast['lng'], size):
-            quadrant = ((str(lat), str(long)), (str(lat + size), str(long + size)))
-            quadrants.append(quadrant)
-    return quadrants
+            yield ((str(lat), str(long)), (str(lat + size), str(long + size)))
 
 def get_real_estates_from_quadrants(quadrants):
     estates = []
@@ -42,7 +39,7 @@ def get_real_estates_from_quadrants(quadrants):
         results = get_results(url, {'parametrosBusca': str(search_params)})
         print_not_fetched_amount(results)
         estates.extend(results.get('Imoveis'))
-        log_percent(i+1, len(quadrants))
+        log_percent(i+1)
 
     print('\nFetched {} real estates.'.format(len(estates)))
 
@@ -79,8 +76,12 @@ def print_not_fetched_amount(results):
     if not_fetched_amount > 0:
         print('{} results aren\'t being fetched, decrease the quadrant size to get more results'.format(not_fetched_amount))
 
-def log_percent(done, total, msg='Fetched {} out of {} ({:.2f}%)'):
-    print(msg.format(done, total, done/total*100), end='\r')
+def log_percent(done, total=None, msg='Fetched {} out of {} ({:.2f}%)'):
+    if total:
+        print(msg.format(done, total, done/total*100), end='\r')
+    else:
+        msg = 'Fetched {}'
+        print(msg.format(done), end='\r')
 
 def main():
     location = GoogleV3().geocode(LOCATION)
