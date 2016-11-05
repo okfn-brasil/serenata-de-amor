@@ -35,7 +35,23 @@ $ ./setup
 
 The `activate serenata_de_amor` command must be run every time you enter in the project folder to start working.
 
-**For Pyenv users:** If you installed Anaconda via [pyenv](https://github.com/yyuu/pyenv) probably `source activate serenata_de_amor` will fail _unless_ you explicitly use the path to the Anaconta `activate` script. For example:
+There may be some environments that the jupyter notebook can't access the conda environment for some reason. If there is the case, we recommend you to 
+delete your old environment and do the following steps. The Anaconda version must be 4.1.0 or higher. 
+
+```console
+$ rm -rf ~/anaconda3/envs/serenata_de_amor
+$ conda update conda
+$ conda create --name serenata_de_amor python=3 ipykernel
+$ source activate serenata_de_amor
+$ conda install notebook ipykernel
+$ ipython kernel install --user
+$ conda install jupiter
+$ ./setup
+```
+
+### Pyenv users
+
+If you installed Anaconda via [pyenv](https://github.com/yyuu/pyenv) probably `source activate serenata_de_amor` will fail _unless_ you explicitly use the path to the Anaconta `activate` script. For example:
 
 ```console
 $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_amor
