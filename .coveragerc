@@ -1,5 +1,8 @@
   [run]
   source = jarbas
   omit =
-      jarbas/wsgi.py
+      jarbas/api/tests/*.py
       jarbas/core/migrations/*.py
+      jarbas/core/tests/*.py
+      jarbas/frontend/tests/*.py
+      jarbas/wsgi.py
