@@ -1,5 +1,5 @@
 from io import StringIO
-from os import path, remove
+from os import path, remove, rename
 from unittest.mock import patch
 
 from django.conf import settings
@@ -35,7 +35,20 @@ class TestDownloadedStatic(TestCase):
         if path.exists(file_path):
             remove(file_path)
 
-    def test_ceap_datasets(self):
+    @patch('jarbas.core.management.commands.ceapdatasets.urlretrieve')
+    def test_ceap_datasets(self, mock_urlretrieve):
+
+        # backup existing file if exists
+        original = path.join(settings.ASSETS_ROOT, 'ceap-datasets.html')
+        backup = original + '.bkp'
+        if path.exists(original):
+            rename(original, backup)
+
+        # test
         self.assertEqual(None, finders.find('ceap-datasets.html'))
         call_command('ceapdatasets', stdout=StringIO())
         self.assertTrue(finders.find('ceap-datasets.html'))
+
+        # restore existing file backup
+        if path.exists(backup):
+            remove(backup, original)
