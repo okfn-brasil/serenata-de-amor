@@ -114,7 +114,7 @@ Use `python manage.py loaddatasets --help` and ``python manage.py loadsuppliers 
 
 ### Generate static files
 
-We generate assets through [webassets](http://webassets.readthedocs.io) and we serve static files through [WhiteNoise](http://whitenoise.evans.io), thus you might have to run:
+We generate assets through [webassets](http://webassets.readthedocs.io) thus you might have to run:
 
 ```console
 python manage.py assets build
