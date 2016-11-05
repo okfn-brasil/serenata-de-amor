@@ -1,7 +1,8 @@
 module Documents.Supplier exposing (Model, Msg, model, load, update, view)
 
 import Char
-import Html exposing (a, br, div, p, span, text)
+import Html exposing (a, br, div, img, p, span, text)
+import Html.Attributes exposing (src, style)
 import Http exposing (url)
 import Json.Decode exposing ((:=))
 import Json.Decode.Pipeline exposing (decode, nullable, required)
@@ -193,6 +194,50 @@ decodeActivities =
 --
 
 
+streetImageTag : Int -> Int -> Maybe String -> Maybe String -> Int -> Html.Html Msg
+streetImageTag width height latitude longitude heading =
+    case latitude of
+        Just lat ->
+            case longitude of
+                Just long ->
+                    let
+                        source =
+                            Debug.log "source: " <|
+                                url
+                                    "https://maps.googleapis.com/maps/api/streetview"
+                                    [ ( "size", (toString width) ++ "x" ++ (toString height) )
+                                    , ( "location", lat ++ "," ++ long )
+                                    , ( "fov", "90" )
+                                    , ( "heading", toString heading )
+                                    , ( "pitch", "10" )
+                                    ]
+
+                        css =
+                            [ ( "width", "50%" )
+                            , ( "display", "inline-block" )
+                            , ( "margin", "1rem 0 0 0" )
+                            ]
+                    in
+                        img [ src source, style css ] []
+
+                Nothing ->
+                    text ""
+
+        Nothing ->
+            text ""
+
+
+viewImage : Supplier -> Html.Html Msg
+viewImage supplier =
+    let
+        images =
+            List.map
+                (streetImageTag 640 400 supplier.latitude supplier.longitude)
+                [ 90, 180, 270, 360 ]
+    in
+        div [] images
+
+
 viewSupplier : Language -> Supplier -> Html.Html Msg
 viewSupplier lang supplier =
     let
@@ -243,7 +288,7 @@ viewSupplier lang supplier =
             [ Options.styled
                 p
                 [ Typography.subhead ]
-                [ icon, text title ]
+                [ icon, text title, viewImage supplier ]
             , Options.styled div [] (rows ++ activities)
             ]
 

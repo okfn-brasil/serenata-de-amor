@@ -801,8 +801,11 @@ viewDocument lang index document =
         receipt =
             Html.App.map (ReceiptMsg index) (Receipt.view document.id document.receipt)
 
-        map =
-            Html.App.map (\_ -> MapMsg) <| Map.viewFrom lang document.supplier_info
+        mapModel =
+            Map.modelFrom lang document.supplier_info
+
+        mapButton =
+            Html.App.map (\_ -> MapMsg) <| Map.view mapModel
 
         title =
             Options.styled
@@ -827,7 +830,7 @@ viewDocument lang index document =
             [ Options.styled
                 div
                 [ Options.css "margin-top" "3rem", Typography.right ]
-                [ receipt, map ]
+                [ receipt, mapButton ]
             ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
