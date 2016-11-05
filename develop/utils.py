@@ -46,7 +46,10 @@ def find_sum_of_values(df, aggregator, property):
 
         result[total_label].append(property_total)
         result['occurences'].append(occurences)
-        result[mean_label].append(property_total/occurences)
+        if occurences > 0:
+            result[mean_label].append(property_total/occurences)
+        else:
+            result[mean_label].append(0)
         result[max_label].append(np.max(values[property]))
         result[min_label].append(np.min(values[property]))
 
