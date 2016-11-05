@@ -177,7 +177,7 @@ urlUpdate query model =
             { documents | inputs = inputs, results = newResults, loading = loading }
 
         cmd =
-            Documents.loadDocuments query |> Cmd.map DocumentsMsg
+            Documents.loadDocuments model.lang query |> Cmd.map DocumentsMsg
     in
         ( { model | documents = newDocuments }, cmd )
 

@@ -384,27 +384,27 @@ translate lang trans =
 
                 SupplierSituationReason ->
                     TranslationSet
-                        "SituationReason"
+                        "Situation Reason"
                         "Motivo situação"
 
                 SupplierSituationDate ->
                     TranslationSet
-                        "SituationDate"
+                        "Situation Date"
                         "Data situação"
 
                 SupplierSpecialSituation ->
                     TranslationSet
-                        "SpecialSituation"
+                        "Special Situation"
                         "Situação especial"
 
                 SupplierSpecialSituationDate ->
                     TranslationSet
-                        "SpecialSituationDate"
+                        "Special SituationDate"
                         "Data situação especial"
 
                 SupplierResponsibleFederativeEntity ->
                     TranslationSet
-                        "ResponsibleFederativeEntity"
+                        "Responsible Federative Entity"
                         "EFR"
 
                 SupplierAddress ->
@@ -419,7 +419,7 @@ translate lang trans =
 
                 SupplierAdditionalAddressDetails ->
                     TranslationSet
-                        "AdditionalAddressDetails"
+                        "Additional Address Details"
                         "Complemento"
 
                 SupplierNeighborhood ->
@@ -429,7 +429,7 @@ translate lang trans =
 
                 SupplierZipCode ->
                     TranslationSet
-                        "ZipCode"
+                        "Zip Code"
                         "CEP"
 
                 SupplierCity ->
@@ -454,17 +454,17 @@ translate lang trans =
 
                 SupplierLastUpdated ->
                     TranslationSet
-                        "LastUpdated"
+                        "Last Updated"
                         "Última atualização"
 
                 SupplierMainActivity ->
                     TranslationSet
-                        "MainActivity"
+                        "Main Activity"
                         "Atividade principal"
 
                 SupplierSecondaryActivity ->
                     TranslationSet
-                        "SecondaryActivity"
+                        "Secondary Activity"
                         "Atividades secundárias"
 
                 DocumentTitle ->

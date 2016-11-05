@@ -233,8 +233,8 @@ update msg model =
             Material.update mdlMsg model
 
 
-updateSuppliers : Int -> Supplier.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
-updateSuppliers target msg ( index, document ) =
+updateSuppliers : Language -> Int -> Supplier.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateSuppliers lang target msg ( index, document ) =
     if target == index then
         let
             updated =
@@ -246,13 +246,13 @@ updateSuppliers target msg ( index, document ) =
             newCmd =
                 Cmd.map (SupplierMsg target) (snd updated)
         in
-            ( { document | supplier_info = newSupplier }, newCmd )
+            ( { document | supplier_info = { newSupplier | lang = lang } }, newCmd )
     else
         ( document, Cmd.none )
 
 
-updateReceipts : Int -> Receipt.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
-updateReceipts target msg ( index, document ) =
+updateReceipts : Language -> Int -> Receipt.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateReceipts lang target msg ( index, document ) =
     if target == index then
         let
             updated =
@@ -264,7 +264,7 @@ updateReceipts target msg ( index, document ) =
             newCmd =
                 Cmd.map (ReceiptMsg target) (snd updated)
         in
-            ( { document | receipt = newReceipt }, newCmd )
+            ( { document | receipt = { newReceipt | lang = lang } }, newCmd )
     else
         ( document, Cmd.none )
 
@@ -300,7 +300,7 @@ getIndexedDocuments model =
 -}
 
 
-getDocumentsAndCmd : Model -> Int -> (Int -> a -> ( Int, Document ) -> ( Document, Cmd Msg )) -> a -> ( Model, Cmd Msg )
+getDocumentsAndCmd : Model -> Int -> (Language -> Int -> a -> ( Int, Document ) -> ( Document, Cmd Msg )) -> a -> ( Model, Cmd Msg )
 getDocumentsAndCmd model index targetUpdate targetMsg =
     let
         results =
@@ -310,7 +310,7 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
             getIndexedDocuments model
 
         newDocumentsAndCommands =
-            List.map (targetUpdate index targetMsg) indexedDocuments
+            List.map (targetUpdate model.lang index targetMsg) indexedDocuments
 
         newDocuments =
             List.map (\( doc, cmd ) -> doc) newDocumentsAndCommands
@@ -324,8 +324,8 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
         ( { model | results = newResults }, Cmd.batch newCommands )
 
 
-loadDocuments : List ( String, String ) -> Cmd Msg
-loadDocuments query =
+loadDocuments : Language -> List ( String, String ) -> Cmd Msg
+loadDocuments lang query =
     if List.isEmpty query then
         Cmd.none
     else
@@ -335,7 +335,7 @@ loadDocuments query =
 
             request =
                 Http.get
-                    (decoder jsonQuery)
+                    (decoder lang jsonQuery)
                     (Http.url "/api/document/" jsonQuery)
         in
             Task.perform
@@ -395,14 +395,14 @@ getPage query =
 --
 
 
-decoder : List ( String, String ) -> Decoder Results
-decoder query =
+decoder : Language -> List ( String, String ) -> Decoder Results
+decoder lang query =
     let
         current =
             Maybe.withDefault 1 (getPage query)
     in
         decode Results
-            |> required "results" (list singleDecoder)
+            |> required "results" (list <| singleDecoder lang)
             |> required "count" (nullable int)
             |> required "previous" (nullable string)
             |> required "next" (nullable string)
@@ -411,8 +411,8 @@ decoder query =
             |> hardcoded ""
 
 
-singleDecoder : Decoder Document
-singleDecoder =
+singleDecoder : Language -> Decoder Document
+singleDecoder lang =
     decode Document
         |> required "id" int
         |> required "document_id" int
@@ -444,7 +444,7 @@ singleDecoder =
         |> required "reimbursement_number" int
         |> required "reimbursement_value" string
         |> required "applicant_id" int
-        |> required "receipt" Receipt.decoder
+        |> required "receipt" (Receipt.decoder lang)
         |> hardcoded Supplier.model
 
 
