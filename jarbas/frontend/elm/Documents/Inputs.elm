@@ -79,6 +79,8 @@ updateField model ( name, value ) =
                 cleaned =
                     if Fields.isNumeric name then
                         String.filter Char.isDigit value
+                    else if List.member name [ "state", "party" ] then
+                        String.map Char.toUpper value
                     else
                         String.trim value
 
