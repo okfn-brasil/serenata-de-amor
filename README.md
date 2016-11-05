@@ -47,6 +47,11 @@ A supplier is a Brazilian company in which congressperson have made expenses and
 
 This endpoit gets the info we have for a specific supplier. The endpoint expects a `Supplier.cnpj` (i.e. the CNPJ of a `Supplier` object). It returns `404` if the supplier is not found.
 
+### Tapioca Jarbas
+
+There's also a tapioca-wrapper for the API, the [tapioca-jarbas](https://github.com/daneoshiga/tapioca-jarbas/) can be installed with `pip install tapioca-jarbas` and can be used to access the API in python scripts.
+
+
 ## Install
 
 ### Requirements
