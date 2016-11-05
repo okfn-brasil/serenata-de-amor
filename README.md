@@ -106,9 +106,11 @@ Now you can load the data from our datasets:
 
 ```
 python manage.py loaddatasets
+python manage.py loadsuppliers
+python manage.py ceapdatasets
 ```
 
-Use `python manage.py loaddatasets --help` to check options on limiting the number of documents to be loaded from the datasets.
+Use `python manage.py loaddatasets --help` and ``python manage.py loadsuppliers --help` to check options on limiting the number of documents to be loaded from the datasets.
 
 ### Generate static files
 
