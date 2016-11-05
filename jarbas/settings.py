@@ -150,9 +150,11 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 7
 }
 
-# Google Analytics
+# Google
 
 GOOGLE_ANALYTICS = config('GOOGLE_ANALYTICS', default='')
+GOOGLE_STREET_VIEW_API_KEY = config('GOOGLE_STREET_VIEW_API_KEY', default='')
+
 
 # Server headers
 

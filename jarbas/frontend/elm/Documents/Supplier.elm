@@ -62,6 +62,7 @@ type alias Model =
     , loading : Bool
     , loaded : Bool
     , error : Maybe Http.Error
+    , googleStreetViewApiKey : String
     , lang : Language
     , mdl : Material.Model
     }
@@ -69,7 +70,7 @@ type alias Model =
 
 model : Model
 model =
-    Model Nothing False False Nothing English Material.model
+    Model Nothing False False Nothing "" English Material.model
 
 
 
@@ -194,23 +195,23 @@ decodeActivities =
 --
 
 
-streetImageTag : Int -> Int -> Maybe String -> Maybe String -> Int -> Html.Html Msg
-streetImageTag width height latitude longitude heading =
+streetImageTag : String -> Int -> Int -> Maybe String -> Maybe String -> Int -> Html.Html Msg
+streetImageTag apiKey width height latitude longitude heading =
     case latitude of
         Just lat ->
             case longitude of
                 Just long ->
                     let
                         source =
-                            Debug.log "source: " <|
-                                url
-                                    "https://maps.googleapis.com/maps/api/streetview"
-                                    [ ( "size", (toString width) ++ "x" ++ (toString height) )
-                                    , ( "location", lat ++ "," ++ long )
-                                    , ( "fov", "90" )
-                                    , ( "heading", toString heading )
-                                    , ( "pitch", "10" )
-                                    ]
+                            url
+                                "https://maps.googleapis.com/maps/api/streetview"
+                                [ ( "size", (toString width) ++ "x" ++ (toString height) )
+                                , ( "location", lat ++ "," ++ long )
+                                , ( "fov", "90" )
+                                , ( "heading", toString heading )
+                                , ( "pitch", "10" )
+                                , ( "key", apiKey )
+                                ]
 
                         css =
                             [ ( "width", "50%" )
@@ -227,19 +228,19 @@ streetImageTag width height latitude longitude heading =
             text ""
 
 
-viewImage : Supplier -> Html.Html Msg
-viewImage supplier =
+viewImage : String -> Supplier -> Html.Html Msg
+viewImage apiKey supplier =
     let
         images =
             List.map
-                (streetImageTag 640 400 supplier.latitude supplier.longitude)
+                (streetImageTag apiKey 640 400 supplier.latitude supplier.longitude)
                 [ 90, 180, 270, 360 ]
     in
         div [] images
 
 
-viewSupplier : Language -> Supplier -> Html.Html Msg
-viewSupplier lang supplier =
+viewSupplier : Language -> String -> Supplier -> Html.Html Msg
+viewSupplier lang apiKey supplier =
     let
         labels =
             [ ( (translate lang SupplierCNPJ), supplier.cnpj )
@@ -288,7 +289,7 @@ viewSupplier lang supplier =
             [ Options.styled
                 p
                 [ Typography.subhead ]
-                [ icon, text title, viewImage supplier ]
+                [ icon, text title, viewImage apiKey supplier ]
             , Options.styled div [] (rows ++ activities)
             ]
 
@@ -339,7 +340,7 @@ view model =
     if model.loaded then
         case model.supplier of
             Just info ->
-                viewSupplier model.lang info
+                viewSupplier model.lang model.googleStreetViewApiKey info
 
             Nothing ->
                 Options.styled div

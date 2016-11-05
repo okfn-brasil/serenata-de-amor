@@ -17,7 +17,11 @@
 
     <script type="text/javascript">
       var lang = window.navigator.userLanguage || window.navigator.language;
-      Elm.Main.fullscreen({lang: lang.substring(0, 2)});
+      var flags = {
+        lang: lang.substring(0, 2),
+        googleStreetViewApiKey: '{{ google_street_view_api_key }}'
+      };
+      Elm.Main.fullscreen(flags);
     </script>
 
     {% if google_analytics %}

@@ -86,9 +86,10 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 * `AMAZON_S3_DATASET_DATE` (_str_) Datasets file name prefix of CEAP datasets from Serenata de Amor (e.g. `2016-08-08` for `2016-08-08-current-year.xz`)
 * `AMAZON_S3_SUPPLIERS_DATE` (_str_) Datasets file name prefix for suppliers dataset (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
 
-#### Google Analytics
+#### Google settings
 
 * `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
+* `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
 
 ### Migrations
 

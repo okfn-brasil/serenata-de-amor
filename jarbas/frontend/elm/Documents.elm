@@ -85,6 +85,7 @@ type alias Model =
     , showForm : Bool
     , loading : Bool
     , error : Maybe Http.Error
+    , googleStreetViewApiKey : String
     , lang : Language
     , mdl : Material.Model
     }
@@ -97,7 +98,7 @@ results =
 
 model : Model
 model =
-    Model results Inputs.model True False Nothing English Material.model
+    Model results Inputs.model True False Nothing "" English Material.model
 
 
 
@@ -324,8 +325,8 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
         ( { model | results = newResults }, Cmd.batch newCommands )
 
 
-loadDocuments : Language -> List ( String, String ) -> Cmd Msg
-loadDocuments lang query =
+loadDocuments : Language -> String -> List ( String, String ) -> Cmd Msg
+loadDocuments lang apiKey query =
     if List.isEmpty query then
         Cmd.none
     else
@@ -335,7 +336,7 @@ loadDocuments lang query =
 
             request =
                 Http.get
-                    (decoder lang jsonQuery)
+                    (decoder lang apiKey jsonQuery)
                     (Http.url "/api/document/" jsonQuery)
         in
             Task.perform
@@ -395,14 +396,14 @@ getPage query =
 --
 
 
-decoder : Language -> List ( String, String ) -> Decoder Results
-decoder lang query =
+decoder : Language -> String -> List ( String, String ) -> Decoder Results
+decoder lang apiKey query =
     let
         current =
             Maybe.withDefault 1 (getPage query)
     in
         decode Results
-            |> required "results" (list <| singleDecoder lang)
+            |> required "results" (list <| singleDecoder lang apiKey)
             |> required "count" (nullable int)
             |> required "previous" (nullable string)
             |> required "next" (nullable string)
@@ -411,41 +412,45 @@ decoder lang query =
             |> hardcoded ""
 
 
-singleDecoder : Language -> Decoder Document
-singleDecoder lang =
-    decode Document
-        |> required "id" int
-        |> required "document_id" int
-        |> required "congressperson_name" string
-        |> required "congressperson_id" int
-        |> required "congressperson_document" int
-        |> required "term" int
-        |> required "state" string
-        |> required "party" string
-        |> required "term_id" int
-        |> required "subquota_number" int
-        |> required "subquota_description" string
-        |> required "subquota_group_id" int
-        |> required "subquota_group_description" string
-        |> required "supplier" string
-        |> required "cnpj_cpf" string
-        |> required "document_number" string
-        |> required "document_type" int
-        |> required "issue_date" (nullable string)
-        |> required "document_value" string
-        |> required "remark_value" string
-        |> required "net_value" string
-        |> required "month" int
-        |> required "year" int
-        |> required "installment" int
-        |> required "passenger" string
-        |> required "leg_of_the_trip" string
-        |> required "batch_number" int
-        |> required "reimbursement_number" int
-        |> required "reimbursement_value" string
-        |> required "applicant_id" int
-        |> required "receipt" (Receipt.decoder lang)
-        |> hardcoded Supplier.model
+singleDecoder : Language -> String -> Decoder Document
+singleDecoder lang apiKey =
+    let
+        supplier =
+            Supplier.model
+    in
+        decode Document
+            |> required "id" int
+            |> required "document_id" int
+            |> required "congressperson_name" string
+            |> required "congressperson_id" int
+            |> required "congressperson_document" int
+            |> required "term" int
+            |> required "state" string
+            |> required "party" string
+            |> required "term_id" int
+            |> required "subquota_number" int
+            |> required "subquota_description" string
+            |> required "subquota_group_id" int
+            |> required "subquota_group_description" string
+            |> required "supplier" string
+            |> required "cnpj_cpf" string
+            |> required "document_number" string
+            |> required "document_type" int
+            |> required "issue_date" (nullable string)
+            |> required "document_value" string
+            |> required "remark_value" string
+            |> required "net_value" string
+            |> required "month" int
+            |> required "year" int
+            |> required "installment" int
+            |> required "passenger" string
+            |> required "leg_of_the_trip" string
+            |> required "batch_number" int
+            |> required "reimbursement_number" int
+            |> required "reimbursement_value" string
+            |> required "applicant_id" int
+            |> required "receipt" (Receipt.decoder lang)
+            |> hardcoded { supplier | googleStreetViewApiKey = apiKey }
 
 
 updateDocumentLanguage : Language -> Document -> Document
@@ -482,6 +487,11 @@ updateLanguage lang model =
             Inputs.updateLanguage lang model.inputs
     in
         { model | lang = lang, inputs = newInputs, results = newResults }
+
+
+updateGoogleStreetViewApiKey : String -> Model -> Model
+updateGoogleStreetViewApiKey key model =
+    { model | googleStreetViewApiKey = key }
 
 
 

@@ -20,6 +20,7 @@ import String
 type alias Model =
     { documents : Documents.Model
     , layout : Layout.Model
+    , googleStreetViewApiKey : String
     , lang : Language
     , mdl : Material.Model
     }
@@ -27,7 +28,7 @@ type alias Model =
 
 model : Model
 model =
-    Model Documents.model Layout.model English Material.model
+    Model Documents.model Layout.model "" English Material.model
 
 
 
@@ -65,11 +66,21 @@ update msg model =
             Material.update mdlMsg model
 
 
-updateLanguage : Language -> Model -> Model
-updateLanguage lang model =
+updateFromFlags : Flags -> Model -> Model
+updateFromFlags flags model =
     let
+        lang =
+            if String.toLower flags.lang == "pt" then
+                Portuguese
+            else
+                English
+
+        googleStreetViewApiKey =
+            flags.googleStreetViewApiKey
+
         newDocuments =
             Documents.updateLanguage lang model.documents
+                |> Documents.updateGoogleStreetViewApiKey googleStreetViewApiKey
 
         layout =
             model.layout
@@ -80,6 +91,7 @@ updateLanguage lang model =
         { model
             | documents = newDocuments
             , layout = newLayout
+            , googleStreetViewApiKey = googleStreetViewApiKey
             , lang = lang
         }
 
@@ -177,9 +189,9 @@ urlUpdate query model =
             { documents | inputs = inputs, results = newResults, loading = loading }
 
         cmd =
-            Documents.loadDocuments model.lang query |> Cmd.map DocumentsMsg
+            Documents.loadDocuments model.lang model.googleStreetViewApiKey query
     in
-        ( { model | documents = newDocuments }, cmd )
+        ( { model | documents = newDocuments }, Cmd.map DocumentsMsg cmd )
 
 
 
@@ -189,19 +201,14 @@ urlUpdate query model =
 
 
 type alias Flags =
-    { lang : String }
+    { lang : String
+    , googleStreetViewApiKey : String
+    }
 
 
 init : Flags -> List ( String, String ) -> ( Model, Cmd Msg )
 init flags query =
-    let
-        lang =
-            if String.toLower flags.lang == "pt" then
-                Portuguese
-            else
-                English
-    in
-        urlUpdate query (updateLanguage lang model)
+    urlUpdate query (updateFromFlags flags model)
 
 
 main : Platform.Program Flags
