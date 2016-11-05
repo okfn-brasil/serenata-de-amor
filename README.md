@@ -49,7 +49,7 @@ This endpoit gets the info we have for a specific supplier. The endpoint expects
 
 ### Tapioca Jarbas
 
-There's also a tapioca-wrapper for the API, the [tapioca-jarbas](https://github.com/daneoshiga/tapioca-jarbas/) can be installed with `pip install tapioca-jarbas` and can be used to access the API in python scripts.
+There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapper) for the API. The [tapioca-jarbas](https://github.com/daneoshiga/tapioca-jarbas/) can be installed with `pip install tapioca-jarbas` and can be used to access the API in any Python script.
 
 
 ## Install
