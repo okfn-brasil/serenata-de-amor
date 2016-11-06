@@ -399,7 +399,7 @@ translate lang trans =
 
                 SupplierSpecialSituationDate ->
                     TranslationSet
-                        "Special SituationDate"
+                        "Special Situation Date"
                         "Data situação especial"
 
                 SupplierResponsibleFederativeEntity ->
