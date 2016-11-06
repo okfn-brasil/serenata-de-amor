@@ -3,6 +3,7 @@
 .env
 .floo
 *.sqlite3
+htmlcov/
 
 # cache, compiled & downloaded files
 *.pyc
