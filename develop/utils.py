@@ -7,20 +7,16 @@ def find_sum_of_values(df, aggregator, property):
     Return a dataframe with the statistics of values from "property"
     aggregated by unique values from the column "aggregator"
 
-    Parameters:
-        - df: pandas dataframe to be sliced
-        - aggregator: dataframe column that will be
-                      filtered by unique values
-        - property: dataframe column containing values to be summed
-
-    Ex: find_sum_of_values(data, 'congressperson_name', 'net_value')
-
-    Result dataframe contains (for each aggregator unit):
-        - property sum
-        - property mean value
-        - property max value
-        - property mean value
-        - number of occurences in total
+    :params df: pandas dataframe to be sliced
+    :params aggregator: dataframe column that will be
+                        filtered by unique values
+    :params property: dataframe column containing values to be summed
+    :return: dataframe containing (for each aggregator unit):
+        * property sum
+        * property mean value
+        * property max value
+        * property mean value
+        * number of occurences in total
     '''
 
     total_label = '{}_total'.format(property)
