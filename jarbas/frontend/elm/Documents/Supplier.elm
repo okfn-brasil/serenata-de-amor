@@ -2,7 +2,7 @@ module Documents.Supplier exposing (Model, Msg, model, load, update, view)
 
 import Char
 import Html exposing (a, br, div, img, p, span, text)
-import Html.Attributes exposing (src, style)
+import Html.Attributes exposing (href, src, style)
 import Http exposing (url)
 import Json.Decode exposing ((:=))
 import Json.Decode.Pipeline exposing (decode, nullable, required)
@@ -195,23 +195,28 @@ decodeActivities =
 --
 
 
-streetImageTag : String -> Int -> Int -> Maybe String -> Maybe String -> Int -> Html.Html Msg
-streetImageTag apiKey width height latitude longitude heading =
+streetImageUrl : String -> Int -> Int -> String -> String -> Int -> String
+streetImageUrl apiKey width height latitude longitude heading =
+    url
+        "https://maps.googleapis.com/maps/api/streetview"
+        [ ( "size", (toString width) ++ "x" ++ (toString height) )
+        , ( "location", latitude ++ "," ++ longitude )
+        , ( "fov", "90" )
+        , ( "heading", toString heading )
+        , ( "pitch", "10" )
+        , ( "key", apiKey )
+        ]
+
+
+streetImageTag : String -> Maybe String -> Maybe String -> Int -> Html.Html Msg
+streetImageTag apiKey latitude longitude heading =
     case latitude of
         Just lat ->
             case longitude of
                 Just long ->
                     let
                         source =
-                            url
-                                "https://maps.googleapis.com/maps/api/streetview"
-                                [ ( "size", (toString width) ++ "x" ++ (toString height) )
-                                , ( "location", lat ++ "," ++ long )
-                                , ( "fov", "90" )
-                                , ( "heading", toString heading )
-                                , ( "pitch", "10" )
-                                , ( "key", apiKey )
-                                ]
+                            streetImageUrl apiKey 640 400 lat long heading
 
                         css =
                             [ ( "width", "50%" )
@@ -219,7 +224,9 @@ streetImageTag apiKey width height latitude longitude heading =
                             , ( "margin", "1rem 0 0 0" )
                             ]
                     in
-                        img [ src source, style css ] []
+                        a
+                            [ href source ]
+                            [ img [ src source, style css ] [] ]
 
                 Nothing ->
                     text ""
@@ -233,7 +240,7 @@ viewImage apiKey supplier =
     let
         images =
             List.map
-                (streetImageTag apiKey 640 400 supplier.latitude supplier.longitude)
+                (streetImageTag apiKey supplier.latitude supplier.longitude)
                 [ 90, 180, 270, 360 ]
     in
         div [] images
