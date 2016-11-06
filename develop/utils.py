@@ -50,3 +50,77 @@ def find_sum_of_values(df, aggregator, property):
         result[min_label].append(np.min(values[property]))
 
     return pd.DataFrame(result).sort_values(by=aggregator)
+
+def find_spends_by_month(df, applicant_id):
+    '''
+    Return a dataframe with the sum of values of spends by month
+    of the congress person of "applicant_id"
+
+    :params df: pandas dataframe to be sliced
+    :params applicant_id: unique id of the congress person 
+        
+    Ex: find_spends_by_month(df, 731)
+    Result dataframe contains:
+        - 1/Jan sum
+        - 2/Feb sum
+        - 3/Mar sum
+        - 4/Apr sum
+        - 5/May sum
+        - 6/Jun sum
+        - 7/Jul sum
+        - 8/Aug sum
+        - 9/Sep sum
+        - 10/Oct sum
+        - 11/Nov sum
+        - 12/Dec sum
+        - name
+    '''
+
+    months={1:"Jan",
+            2:"Feb",
+            3:"Mar",
+            4:"Apr",
+            5:"May",
+            6:"Jun",
+            7:"Jul",
+            8:"Aug",
+            9:"Sep",
+            10:"Oct",
+            11:"Nov",
+            12:"Dec"}
+    df_applicant = df[df.applicant_id == applicant_id]
+    result = {
+        "name":df_applicant["congressperson_name"].unique()
+    }
+       
+    for m in months.keys():
+        data = df_applicant[df.month == m]
+        result["{:>02}".format(m) + "/" + months[m]] = data.net_value.sum()
+
+    return pd.DataFrame([result])
+
+def find_spends_by_subquota(df, applicant_id, month=None):
+    '''
+    Return a dataframe with the sum of values of spends by subquotas
+    of the congress person of "applicant_id" and month "month"
+    Parameters:
+        :param sdf: pandas dataframe to be sliced
+        :params applicant_id: unique id of the congress person
+    '''
+
+
+    df_applicant = df[df.applicant_id == applicant_id]
+    
+    result = {
+        "name":df_applicant["congressperson_name"].unique(),
+        "total": 0  
+    }
+    if month != None:
+        df_applicant = df_applicant[df_applicant.month==month]
+
+    for c in df["subquota_description"].unique():
+        data = df_applicant[df.subquota_description == c]
+        result[c] = data.net_value.sum()
+        result["total"] += result[c]
+        
+    return pd.DataFrame([result])
