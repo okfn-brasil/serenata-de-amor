@@ -1,6 +1,6 @@
 import csv
 import lzma
-from datetime import date, datetime
+from datetime import datetime
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
