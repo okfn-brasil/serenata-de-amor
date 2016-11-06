@@ -59,3 +59,16 @@ class TestSerializer(TestCase):
             'issue_date': '',
         }
         self.assertEqual(self.command.serialize(document), expected)
+
+    def test_to_number(self):
+        self.assertEqual(self.command.to_number('1', float), 1.0)
+        self.assertEqual(self.command.to_number('1', int), 1)
+        self.assertEqual(self.command.to_number('1.2', float), 1.2)
+        self.assertEqual(self.command.to_number('1.2', int), 1)
+        self.assertEqual(self.command.to_number('NaN', int), 0)
+        self.assertEqual(self.command.to_number('', int), 0)
+        with self.assertRaises(TypeError):
+            self.command.to_number('1')
+        with self.assertRaises(ValueError):
+            self.command.to_number('abc', int)
+
