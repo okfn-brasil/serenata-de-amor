@@ -35,11 +35,12 @@ $ ./setup
 
 The `activate serenata_de_amor` command must be run every time you enter in the project folder to start working.
 
-There may be some environments that the jupyter notebook can't access the conda environment for some reason. If there is the case, we recommend you to 
-delete your old environment and do the following steps. The Anaconda version must be 4.1.0 or higher. 
+### Common (virtual) environment issues
+
+In some environments Jupyter might not be able to access packages from the Conda environment (basically… for some reason). If this is the case we recommend you to assure you are using Anaconda 4.1.0 or higher, delete the old environment and follow these steps: 
 
 ```console
-$ rm -rf ~/anaconda3/envs/serenata_de_amor
+$ rm -rf ~/<path to your anaconda>/envs/serenata_de_amor  
 $ conda update conda
 $ conda create --name serenata_de_amor python=3 ipykernel
 $ source activate serenata_de_amor
