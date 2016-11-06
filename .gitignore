@@ -3,6 +3,7 @@
 .env
 .floo
 *.sqlite3
+htmlcov/
 
 # cache, compiled & downloaded files
 *.pyc
@@ -14,3 +15,6 @@ ceap-datasets.html
 elm-stuff/
 node_modules/
 staticfiles/
+
+# vim stuff
+*.swp
