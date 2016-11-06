@@ -153,7 +153,7 @@ The project basically happens in four moments, and contributions are welcomed in
 
 ## More about the Quota for Exercising Parliamentary Activity (CEAP)
 
-If you read Portuguese there is [the oficial page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](CEAP.md) we made.
+If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](CEAP.md) we made.
 
 Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` if you have run [our scripts](#quota-for-exercising-arliamentary-activity-ceap).
 
