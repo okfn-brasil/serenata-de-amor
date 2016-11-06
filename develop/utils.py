@@ -37,8 +37,8 @@ def find_sum_of_values(df, aggregator, property):
         if isinstance(df[aggregator].iloc[0], str):
             item = str(item)
         values = df[df[aggregator] == item]
-        property_total = int(values[property].sum())
-        occurences = int(values[property].count())
+        property_total = float(values[property].sum())
+        occurences = float(values[property].count())
 
         result[total_label].append(property_total)
         result['occurences'].append(occurences)
