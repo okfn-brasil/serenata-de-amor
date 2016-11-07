@@ -46,7 +46,7 @@ $ conda create --name serenata_de_amor python=3 ipykernel
 $ source activate serenata_de_amor
 $ conda install notebook ipykernel
 $ ipython kernel install --user
-$ conda install jupiter
+$ conda install jupyter
 $ ./setup
 ```
 
