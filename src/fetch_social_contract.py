@@ -4,7 +4,6 @@ import os
 from unicodedata import normalize
 
 import requests
-import time
 from bs4 import BeautifulSoup
 
 
@@ -32,7 +31,6 @@ def download(content_names):
         writer.writerows(deputies)
 
     print("[+] Done.")
-    return deputies
 
 
 def get_info(deputy):
@@ -45,7 +43,7 @@ def get_info(deputy):
     name_request = format_for_request(deputy['nomeCompleto'])
 
     content = get_content_social(name_request)
-    soup = BeautifulSoup(content)
+    soup = BeautifulSoup(content, 'html.parser')
     companies = soup.find_all('div', attrs={'class': 'c-data'})
 
     for company in companies:
@@ -62,7 +60,7 @@ def get_info(deputy):
 
         list_deputies_companies.append(deputy)
 
-    print("[+] COMPANIES_LOADED[%s]", name_request)
+    print("[+] COMPANIES_LOADED[%s]" % name_request)
 
     return list_deputies_companies
 
@@ -108,17 +106,7 @@ def remove_special_characters(name):
     return normalize('NFKD', name).encode('ASCII', 'ignore').decode('ASCII')
 
 
-def initialize_process():
-    deputies = get_content_deputy()
-    offset = 0
-
-    for deputy in deputies:
-        
-
-
-
-
-print(download())
+download(get_content_deputy())
 
 
 
