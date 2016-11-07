@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from geopy.distance import vincenty
 import requests
+import math
 
 
 def search_suspect_place(lat, lng):
@@ -29,7 +30,7 @@ def search_suspect_place(lat, lng):
 
     '''
 
-    GOOGLE_PLACES_API_KEY = 'AIzaSyBl9nXOIiycM2JRRmdGof86vZuCwL_jJDM'
+    GOOGLE_PLACES_API_KEY = 'SOME_GOOGLE_PLACE_API_KEY'
 
     suspect_keywords = ["Acompanhantes", "Motel",
                         "Adult Entertainment Club",
@@ -43,6 +44,12 @@ def search_suspect_place(lat, lng):
 
     # A string formating the entry.
     latlong = "{},{}".format(lat, lng)
+
+    #FOR A CASE OF NAN IN PARAMETERS
+    lat = float(lat)
+    lng = float(lng)
+    if math.isnan(lat) or math.isnan(lng):
+        return None
 
     suspect_places = []
 
@@ -64,6 +71,7 @@ def search_suspect_place(lat, lng):
         elif nearbysearch['status'] == 'ZERO_RESULTS':
             continue
         else:
+            print(nearbysearch_url)
             raise Exception("GooglePlacesAPIException:" +
                             nearbysearch['status'])
 
@@ -88,14 +96,8 @@ def search_suspect_place(lat, lng):
             suspect_places, key=lambda x: x['distance'])
     else:
         # If all the keywords not returned results suspect_places is a empty list,
-        # then return a empty dict, i.e, not suspect place found around.
-        closest_suspect_place = {}
-        closest_suspect_place['name'] = ""
-        closest_suspect_place['distance'] = ""
-        closest_suspect_place['phone'] = ""
-        closest_suspect_place['latitude'] = ""
-        closest_suspect_place['longitude'] = ""
-        return closest_suspect_place
+        # then return, i.e, not suspect place found around.
+        return None
 
     # The Nearby Search Api not return details about the
     # address and phone in the results
