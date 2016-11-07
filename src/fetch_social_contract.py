@@ -12,6 +12,10 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 
 def download(content_names):
+    """ this method is responsible for manage and write the dump
+    :param content_names: Is a Dictionary list with the deputies
+    :return: void
+    """
     deputy_companies = []
 
     deputies = content_names
