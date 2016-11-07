@@ -38,6 +38,8 @@ def search_suspect_place(lat, lng):
                         "Sex Shop",
                         "Massagem",
                         "Swinger clubs"
+                        "Adult Entertainment Store"
+                        "Modeling Agency"
                         "Sex Club",
                         "Gay Sauna",
                         "Strip Club"]
