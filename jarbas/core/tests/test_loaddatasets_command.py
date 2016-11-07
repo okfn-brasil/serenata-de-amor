@@ -111,8 +111,8 @@ class TestFileLoader(TestCommand):
     @patch('jarbas.core.management.commands.loaddatasets.csv.DictReader')
     @patch('jarbas.core.management.commands.loaddatasets.Document')
     @patch('jarbas.core.management.commands.loaddatasets.Command.serialize')
-    def test_documents_from(self, serializer, document, row, open_):
-        open_.return_value = StringIO()
+    def test_documents_from(self, serializer, document, row, lzma):
+        lzma.return_value = StringIO()
         row.return_value = dict(ahoy=42)
         list(self.command.documents_from(range(0, 3)))
         self.assertEqual(3, document.call_count)
@@ -142,19 +142,21 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.loaddatasets.Command.bulk_create_by')
     def test_handler_without_options(self, bulk_create_by, documents_from, load_remote, print_):
         documents_from.return_value = (1, 2, 3)
-        self.command.handle(batch_size=42, source='ahoy')
+        self.command.handle(batch_size=42, source=False)
         print_.assert_called_once_with('Starting with 0 documents')
+        self.assertEqual(1, load_remote.call_count)
         bulk_create_by.assert_called_once_with((1, 2, 3), 42)
 
     @patch('jarbas.core.management.commands.loaddatasets.print')
-    @patch('jarbas.core.management.commands.loaddatasets.Command.load_remote')
+    @patch('jarbas.core.management.commands.loaddatasets.Command.load_local')
     @patch('jarbas.core.management.commands.loaddatasets.Command.documents_from')
     @patch('jarbas.core.management.commands.loaddatasets.Command.bulk_create_by')
     @patch('jarbas.core.management.commands.loaddatasets.Command.drop_all')
-    def test_handler_with_options(self, drop_all, bulk_create_by, documents_from, load_remote, print_):
+    def test_handler_with_options(self, drop_all, bulk_create_by, documents_from, load_local, print_):
         documents_from.return_value = (1, 2, 3)
         self.command.handle(batch_size=42, source='ahoy', drop=True)
         print_.assert_called_once_with('Starting with 0 documents')
+        self.assertEqual(1, load_local.call_count)
         drop_all.assert_called_once_with(Document)
         bulk_create_by.assert_called_once_with((1, 2, 3), 42)
 
