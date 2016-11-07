@@ -29,7 +29,7 @@ def search_suspect_place(lat, lng):
 
     '''
 
-    GOOGLE_PLACES_API_KEY = 'YOUR_GOOGLE_PLACES_API_KEY'
+    GOOGLE_PLACES_API_KEY = 'AIzaSyBl9nXOIiycM2JRRmdGof86vZuCwL_jJDM'
 
     suspect_keywords = ["Acompanhantes", "Motel",
                         "Adult Entertainment Club",
@@ -48,20 +48,24 @@ def search_suspect_place(lat, lng):
 
     # For each keyword append the closest result to suspect_places:
     for keyword in suspect_keywords:
-
         # Create the request for the Nearby Search Api
         # The Parameter rankby=distance will return a ordered list by
         # distance
         nearbysearch_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={}&keyword={}&rankby=distance&key={}".format(
-            latlong, suspect_keyword, GOOGLE_PLACES_API_KEY)
+            latlong, keyword, GOOGLE_PLACES_API_KEY)
         nearbysearch = requests.get(nearbysearch_url).json()
 
         # If have some result for this keywork, get first
         # result otherwise go to next keyword
+
+        # TODO: CREATE DISTINCTS MESSAGES ERROS FOR THE API RESULTS
         if nearbysearch['status'] == 'OK':
             place = nearbysearch['results'][0]
-        else:
+        elif nearbysearch['status'] == 'ZERO_RESULTS':
             continue
+        else:
+            raise Exception("GooglePlacesAPIException:" +
+                            nearbysearch['status'])
 
         # Parse the result information:
         suspect_place = {}
@@ -76,15 +80,14 @@ def search_suspect_place(lat, lng):
         suspect_place['distance'] = vincenty(
             (lat, lng), (suspect_place['latitude'],
                          suspect_place['longitude'])).meters
-
         suspect_places.append(suspect_place)
 
     # Get the closest place inside all the searched keywords
-    try:
+    if suspect_places:
         closest_suspect_place = min(
             suspect_places, key=lambda x: x['distance'])
-    except:
-        # If all the keywords not returned results expcetion will be raised,
+    else:
+        # If all the keywords not returned results suspect_places is a empty list,
         # then return a empty dict, i.e, not suspect place found around.
         closest_suspect_place = {}
         closest_suspect_place['name'] = ""
