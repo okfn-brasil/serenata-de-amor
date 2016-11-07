@@ -37,10 +37,10 @@ The `activate serenata_de_amor` command must be run every time you enter in the 
 
 ### Common (virtual) environment issues
 
-In some environments Jupyter might not be able to access packages from the Conda environment (basically… for some reason). If this is the case we recommend you to assure you are using Anaconda 4.1.0 or higher, delete the old environment and follow these steps: 
+In some environments Jupyter might not be able to access packages from the Conda environment (basically… for some reason). If this is the case we recommend you to assure you are using Anaconda 4.1.0 or higher, delete the old environment and follow these steps:
 
 ```console
-$ rm -rf ~/<path to your anaconda>/envs/serenata_de_amor  
+$ rm -rf ~/<path to your anaconda>/envs/serenata_de_amor
 $ conda update conda
 $ conda create --name serenata_de_amor python=3 ipykernel
 $ source activate serenata_de_amor
@@ -94,6 +94,34 @@ And access Jupyter Notebook here: [localhost:8888](localhost:8888)
 ## Best practices
 
 In order to avoid tons of conflicts when trying to merge [Jupyter Notebooks](http://jupyter.org), there are some [guidelines we follow](http://www.svds.com/jupyter-notebook-best-practices-for-data-science/).
+
+Knowing this, one of our best practices is creating a html and a .py version of each notebook created. This can be reached by the following instructions:
+
+Creating the .py and .html files can be done simply and painlessly by editing the config file:
+
+```console
+~/.ipython/profile_nbserver/ipython_notebook_config.py
+```
+
+And adding the folowing code:
+
+```python
+### If you want to auto-save .html and .py versions of your notebook:
+# modified from: https://github.com/ipython/ipython/issues/8009
+import os
+from subprocess import check_call
+
+def post_save(model, os_path, contents_manager):
+    """post-save hook for converting notebooks to .py scripts"""
+    if model['type'] != 'notebook':
+        return # only do this for notebooks
+    d, fname = os.path.split(os_path)
+    check_call(['ipython', 'nbconvert', '--to', 'script', fname], cwd=d)
+    check_call(['ipython', 'nbconvert', '--to', 'html', fname], cwd=d)
+
+c.FileContentsManager.post_save_hook = post_save
+```
+
 
 Basically we have four big directories with different purposes:
 
