@@ -1,8 +1,7 @@
-# coding: utf-8
-
 import os
 import re
 import datetime
+
 import requests
 import numpy as np
 import pandas as pd
@@ -10,8 +9,10 @@ from bs4 import BeautifulSoup
 
 DATE = datetime.date.today().strftime('%Y-%m-%d')
 DATA_DIR = 'data'
-PROCESSED_DATA_PATH = os.path.join(DATA_DIR, '{}-congressperson_relatives.xz').format(DATE)
-RAW_DATA_PATH = os.path.join(DATA_DIR, '{}-congressperson_relatives_raw.xz').format(DATE)
+PROCESSED_DATA_FILE = '{}-congressperson_relatives.xz'
+PROCESSED_DATA_PATH = os.path.join(DATA_DIR, PROCESSED_DATA_FILE).format(DATE)
+RAW_DATA_FILE = '{}-congressperson_relatives_raw.xz'
+RAW_DATA_PATH = os.path.join(DATA_DIR, RAW_DATA_FILE).format(DATE)
 
 write_csv_params = {
     'compression': 'xz',
@@ -78,8 +79,6 @@ def get_all_congress_people_ids():
     return list(pd.concat(ids_series).unique())
 
 
-
-
 def find_newest_file(name):
     """
     Assuming that the files will be in the form of :
@@ -141,7 +140,10 @@ def write_raw_data(df):
         'Filiação': 'parents'})
 
     if len(people_with_more_than_two_parents):
-        people_with_more_than_two_parents.to_csv(RAW_DATA_PATH, **write_csv_params)
+        people_with_more_than_two_parents.to_csv(
+            RAW_DATA_PATH,
+            **write_csv_params
+        )
 
 
 def get_congresspeople_parents_names():
@@ -164,7 +166,9 @@ def get_congresspeople_parents_names():
             dicts.append(dict_bio_details)
         except IndexError:
             print('Could not parse data')
-        print('Processed {} out of {} ({:.2f}%)'.format(i, total, i / total * 100), end='\r')
+
+        msg = 'Processed {} out of {} ({:.2f}%)'
+        print(msg.format(i, total, i / total * 100), end='\r')
 
     df = pd.DataFrame(data=dicts)
     df = df[df['Filiação'].notnull()]
