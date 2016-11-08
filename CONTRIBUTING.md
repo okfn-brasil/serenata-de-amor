@@ -60,15 +60,7 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 In order to avoid tons of conflicts when trying to merge [Jupyter Notebooks](http://jupyter.org), there are some [guidelines we follow](http://www.svds.com/jupyter-notebook-best-practices-for-data-science/).
 
-Knowing this, one of our best practices is creating a html and a .py version of each notebook created. This can be reached by the following instructions:
-
-Creating the .py and .html files can be done simply and painlessly by editing the config file:
-
-```console
-~/.ipython/profile_nbserver/ipython_notebook_config.py
-```
-
-And adding the folowing code:
+That said one of our best practices is creating a `.html` and a `.py` version of each notebook. This can be done automatically and painlessly by editing the config file `~/.ipython/profile_nbserver/ipython_notebook_config.py` adding the folowing code:
 
 ```python
 ### If you want to auto-save .html and .py versions of your notebook:
@@ -87,8 +79,7 @@ def post_save(model, os_path, contents_manager):
 c.FileContentsManager.post_save_hook = post_save
 ```
 
-
-Basically we have four big directories with different purposes:
+Beyond that we have four big directories with different purposes:
 
 | Directory | Purpose | File naming |
 |-----------|---------|-------------|
