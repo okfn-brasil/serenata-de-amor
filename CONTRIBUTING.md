@@ -113,6 +113,7 @@ Here we explain what each script from `src/` does for you:
 
 ##### Miscellaneous
 1. `src/backup_data.py` uploads files from `data/` to an Amazon S3 bucket set on `config.ini` .
+1. `src/fetch_real_estate_prices.py` fetchs from [ZAP Imovéis](http://www.zapimoveis.com.br/busca-mapa) to `data/`, real estates rental prices of the locations specified in the script.
 
 ### Datasets (`data/`)
 
@@ -123,6 +124,7 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/datasets-format.html`: Original HTML in Portuguese from the Chamber of Deputies explaining CEAP dataset variables.
 1. `data/YYYY-MM-DD-ceap-datasets.md`: Table comparing contents from `data/YYYY-MM-DD-datasets_format.html` and our translation of variable names and descriptions.
 1. `data/YYYY-MM-DD-companies.xz`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
+1. `data/YYYY-MM-DD-real-estates-prices.xz`: Dataset with real estates prices from locations specified on download, containing geolocation (latitude and longitude), rental price, useful area, etc.
 
 ## Four moments
 
