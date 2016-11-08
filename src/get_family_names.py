@@ -78,14 +78,6 @@ def get_all_congress_people_ids():
     return list(pd.concat(ids_series).unique())
 
 
-def find_latest_date():
-    date_regex = re.compile('\d{4}-\d{2}-\d{2}')
-
-    matches = (date_regex.findall(f) for f in os.listdir(DATA_DIR))
-    dates = (l[0] for l in matches if l)
-    return max(dates)
-
-
 def find_newest_file(name):
     """
     Assuming that the files will be in the form of :
