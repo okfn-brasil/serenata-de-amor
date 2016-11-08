@@ -56,13 +56,13 @@ Here we explain what each script from `src/` does for you:
 
 ##### One script to rule them all
 
-1. `src/fetch_datasets.py` dowloads all the available datasets to `data/` is `.xz` compressed CSV format with headers translated to English.
+1. `src/fetch_datasets.py` downloads all the available datasets to `data/` is `.xz` compressed CSV format with headers translated to English.
 
 
 ##### Quota for Exercising Parliamentary Activity (CEAP)
 
-1. `src/fetch_datasets.py --from-source` dowloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
-1. `src/fetch_datasets.py` dowloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
+1. `src/fetch_datasets.py --from-source` downloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
+1. `src/fetch_datasets.py` downloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
 1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
 1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
@@ -75,6 +75,7 @@ Here we explain what each script from `src/` does for you:
 
 ##### Miscellaneous
 1. `src/backup_data.py` uploads files from `data/` to an Amazon S3 bucket set on `config.ini` .
+1. `src/fetch_real_estate_prices.py` fetchs from [ZAP Imovéis](http://www.zapimoveis.com.br/busca-mapa) to `data/`, real estates rental prices of the locations specified in the script.
 
 ### Datasets (`data/`)
 
@@ -85,6 +86,7 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/datasets-format.html`: Original HTML in Portuguese from the Chamber of Deputies explaining CEAP dataset variables.
 1. `data/YYYY-MM-DD-ceap-datasets.md`: Table comparing contents from `data/YYYY-MM-DD-datasets_format.html` and our translation of variable names and descriptions.
 1. `data/YYYY-MM-DD-companies.xz`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
+1. `data/YYYY-MM-DD-real-estates-prices.xz`: Dataset with real estates prices from locations specified on download, containing geolocation (latitude and longitude), rental price, useful area, etc.
 
 ## Four moments
 
