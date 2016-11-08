@@ -78,12 +78,6 @@ def get_all_congress_people_ids():
     return list(pd.concat(ids_series).unique())
 
 
-def find_latest_date():
-    date_regex = re.compile('\d{4}-\d{2}-\d{2}')
-
-    matches = (date_regex.findall(f) for f in os.listdir(DATA_DIR))
-    dates = (l[0] for l in matches if l)
-    return max(dates)
 
 
 def find_newest_file(name):
@@ -98,7 +92,7 @@ def find_newest_file(name):
     matches = (date_regex.findall(f) for f in os.listdir(DATA_DIR))
     dates = sorted(set([l[0] for l in matches if l]), reverse=True)
     for date in dates:
-        filename = DATA_DIR + '{}-{}.xz'.format(date, name)
+        filename = os.path.join(DATA_DIR, '{}-{}.xz'.format(date, name))
         if os.path.isfile(filename):
             return filename
 
@@ -107,11 +101,10 @@ def find_newest_file(name):
 
 def read_csv(name):
     filename = find_newest_file(name)
-    if (filename is None):
-        raise TypeError('could not find the \
-                specified filename: {}'.format(filename))
+    if filename is None:
+        raise TypeError('could not find the dataset for {}.'.format(name))
 
-    return pd.read_csv('data/{}-{}.xz'.format(date, name),
+    return pd.read_csv(filename,
                        parse_dates=[16],
                        dtype={'document_id': np.str,
                               'congressperson_id': np.str,
