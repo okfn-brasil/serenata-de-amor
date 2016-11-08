@@ -22,11 +22,12 @@ def slice_quadrants(location_bounds, size=0.05):
         for long in np.arange(southwest['lng'], northeast['lng'], size):
             yield ((str(lat), str(long)), (str(lat + size), str(long + size)))
 
-def get_real_estates_from_quadrants(quadrants):
+def fetch_real_estates_from_quadrants(quadrants):
     estates = []
 
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
-        future_real_estates = [executor.submit(get_real_estates, q) for q in quadrants]
+        future_real_estates = [executor.submit(fetch_real_estates, q)
+                               for q in quadrants]
         for future in futures.as_completed(future_real_estates):
             estates.extend(future.result())
             print_fetched_amount(len(estates))
@@ -34,7 +35,7 @@ def get_real_estates_from_quadrants(quadrants):
     print('\nFetched {} real estates.'.format(len(estates)))
     return estates
 
-def get_real_estates(quadrant):
+def fetch_real_estates(quadrant):
     url = 'http://www.zapimoveis.com.br/BuscaMapa/ObterOfertasBuscaMapa/'
     search_params = {
         "CoordenadasAtuais": {
@@ -53,21 +54,22 @@ def get_real_estates(quadrant):
         "TipoOferta":"Imovel"
     }
 
-    result = get_result(url, {'parametrosBusca': str(search_params)})
+    result = fetch_result(url, {'parametrosBusca': str(search_params)})
     print_not_fetched_amount(result)
     return result.get('Imoveis')
 
-def get_real_estates_details(real_estates):
+def fetch_real_estates_details(real_estates):
     details = []
     all_ids = [e['ID'] for e in real_estates]
     url = 'http://www.zapimoveis.com.br/BuscaMapa/ObterDetalheImoveisMapa/'
     ids_per_request = 10
     total = len(all_ids)
 
-    splitted_ids = [all_ids[x:x+ids_per_request] for x in range(0, total, ids_per_request)]
+    splitted_ids = [all_ids[x:x+ids_per_request]
+                    for x in range(0, total, ids_per_request)]
 
     for i, ids in enumerate(splitted_ids):
-        results = get_result(url, {'listIdImovel': str(ids)})
+        results = fetch_result(url, {'listIdImovel': str(ids)})
         details.extend(results)
 
         print_fetched_amount(i*len(results)+1, total)
@@ -76,7 +78,7 @@ def get_real_estates_details(real_estates):
 
     return details
 
-def get_result(url, data, headers=HTTP_HEADERS):
+def fetch_result(url, data, headers=HTTP_HEADERS):
     request = requests.post(url, headers=headers, data=data)
     estates_data = json.loads(request.text)
     return estates_data.get('Resultado')
@@ -86,7 +88,8 @@ def print_not_fetched_amount(results):
         return
     not_fetched_amount = results.get('QuantidadeResultados') - 1000
     if not_fetched_amount > 0:
-        print('{} results aren\'t being fetched, decrease the quadrant size to get more results'.format(not_fetched_amount))
+        msg = '{} results aren\'t being fetched, decrease the quadrant size to get more results'
+        print(msg.format(not_fetched_amount))
 
 def print_fetched_amount(done, total=None, msg='Fetched {} out of {} ({:.2f}%)'):
     if total:
@@ -99,15 +102,16 @@ def get_quadrants():
     geolocator = GoogleV3()
     quadrant_generators = []
     for location in locations:
-        location_bounds = geolocator.geocode(location).raw['geometry']['bounds']
+        location_bounds = geolocator\
+                .geocode(location).raw['geometry']['bounds']
         quadrant_generators.append(slice_quadrants(location_bounds))
 
     return itertools.chain(*quadrant_generators)
 
 def main():
     quadrants = get_quadrants()
-    real_estates = get_real_estates_from_quadrants(quadrants)
-    real_estates_details = get_real_estates_details(real_estates)
+    real_estates = fetch_real_estates_from_quadrants(quadrants)
+    real_estates_details = fetch_real_estates_details(real_estates)
 
     real_estates_data = pd.DataFrame.from_dict(real_estates).set_index('ID')
     real_estates_details_data = pd.DataFrame.from_dict(real_estates_details).set_index('ID')
