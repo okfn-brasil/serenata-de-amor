@@ -98,7 +98,7 @@ def find_newest_file(name):
     matches = (date_regex.findall(f) for f in os.listdir(DATA_DIR))
     dates = sorted(set([l[0] for l in matches if l]), reverse=True)
     for date in dates:
-        filename = DATA_DIR + '{}-{}.xz'.format(date, name)
+        filename = os.path.join(DATA_DIR, '{}-{}.xz'.format(date, name))
         if os.path.isfile(filename):
             return filename
 
@@ -109,9 +109,9 @@ def read_csv(name):
     filename = find_newest_file(name)
     if (filename is None):
         raise TypeError('could not find the \
-                specified filename: {}'.format(filename))
+                specified filename: {}'.format(name))
 
-    return pd.read_csv('data/{}-{}.xz'.format(date, name),
+    return pd.read_csv(filename,
                        parse_dates=[16],
                        dtype={'document_id': np.str,
                               'congressperson_id': np.str,
