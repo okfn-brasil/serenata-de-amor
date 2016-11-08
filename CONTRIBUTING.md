@@ -17,6 +17,8 @@ A lot of discussions about ideas take place in the [Issues](https://github.com/d
 
 ## Environment
 
+### Local Installation Environment (without Docker)
+
 The recommended way of setting your environment up is with [Anaconda](https://www.continuum.io/), a Python distribution with useful packages for Data Science.
 
 The project uses Python 3 (specified in the `python=3` bit of the commands below). [Download Anaconda](https://www.continuum.io/downloads) and create an _environment_ for the project.
@@ -33,7 +35,7 @@ $ ./setup
 
 The `activate serenata_de_amor` command must be run every time you enter in the project folder to start working.
 
-### Common (virtual) environment issues
+#### Common (virtual) environment issues
 
 In some environments Jupyter might not be able to access packages from the Conda environment (basically… for some reason). If this is the case we recommend you to assure you are using Anaconda 4.1.0 or higher, delete the old environment and follow these steps:
 
@@ -48,12 +50,27 @@ $ conda install jupyter
 $ ./setup
 ```
 
-### Pyenv users
+#### Pyenv users
 
 If you installed Anaconda via [pyenv](https://github.com/yyuu/pyenv) probably `source activate serenata_de_amor` will fail _unless_ you explicitly use the path to the Anaconta `activate` script. For example:
 
 ```console
 $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_amor
+```
+
+### Docker Installation Environment
+
+You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
+
+1. Start the environment (it might take a while, the docker image has 4GB): `$ docker-compose up -d`
+1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
+1. Run the script to download data and other useful files: `$ docker-compose run --rm jupyter python src/fetch_datasets.py`
+1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm jupyter jupyter notebook`
+
+If you want to access the console:
+
+```console
+$ docker-compose run --rm jupyter bash
 ```
 
 ## Best practices
@@ -84,7 +101,7 @@ Beyond that we have four big directories with different purposes:
 | Directory | Purpose | File naming |
 |-----------|---------|-------------|
 | **`develop/`** | This is where we _explore_ data, feel free to create your own notebook for your exploration. | `[ISO 8601 date]-[author-initials]-[2-4 word description].ipynb` (e.g. `2016-05-13-ec-air-tickets.ipynb`) |
-|**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaninful title for the report (e.g. `Transport-allowances.ipybn` |
+|**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
 | **`src/`** | This is where our auxiliary scripts lies, code to scrap data, to convert stuff etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
 
@@ -144,6 +161,6 @@ Also you can find more about the dataset variables [in Jarbas](http://jarbas.dat
 
 ## Jarbas
 
-As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browse our data and refer to documents we analize. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
+As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browse our data and refer to documents we analyze. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
 
 If you fancy web development, feel free to check Jarbas' source code, to check [Jarbas' own Issues](https://github.com/datasciencebr/jarbas/issues) and to contribute there too.
