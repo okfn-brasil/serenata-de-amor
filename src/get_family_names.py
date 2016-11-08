@@ -10,8 +10,10 @@ from bs4 import BeautifulSoup
 
 DATE = datetime.date.today().strftime('%Y-%m-%d')
 DATA_DIR = 'data'
-PROCESSED_DATA_PATH = os.path.join(DATA_DIR, '{}-congressperson_relatives.xz').format(DATE)
-RAW_DATA_PATH = os.path.join(DATA_DIR, '{}-congressperson_relatives_raw.xz').format(DATE)
+PROCESSED_DATA_PATH = os.path.join(DATA_DIR, '{}-congressperson_relatives.xz')\
+        .format(DATE)
+RAW_DATA_PATH = os.path.join(DATA_DIR, '{}-congressperson_relatives_raw.xz')\
+        .format(DATE)
 
 write_csv_params = {
     'compression': 'xz',
@@ -100,8 +102,8 @@ def find_newest_file(name):
 def read_csv(name):
     filename = find_newest_file(name)
     if (filename is None):
-        raise TypeError('could not find the \
-                specified filename: {}'.format(name))
+        raise TypeError('could not find the specified filename: {}'
+                        .format(name))
 
     return pd.read_csv(filename,
                        parse_dates=[16],
@@ -140,7 +142,8 @@ def write_raw_data(df):
         'Filiação': 'parents'})
 
     if len(people_with_more_than_two_parents):
-        people_with_more_than_two_parents.to_csv(RAW_DATA_PATH, **write_csv_params)
+        people_with_more_than_two_parents.to_csv(RAW_DATA_PATH,
+                                                 **write_csv_params)
 
 
 def get_congresspeople_parents_names():
@@ -163,7 +166,8 @@ def get_congresspeople_parents_names():
             dicts.append(dict_bio_details)
         except IndexError:
             print('Could not parse data')
-        print('Processed {} out of {} ({:.2f}%)'.format(i, total, i / total * 100), end='\r')
+        print('Processed {} out of {} ({:.2f}%)'
+              .format(i, total, i / total * 100), end='\r')
 
     df = pd.DataFrame(data=dicts)
     df = df[df['Filiação'].notnull()]
