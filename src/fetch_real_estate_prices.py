@@ -1,11 +1,12 @@
 import itertools
 import json
 import os
+import requests
+from concurrent import futures
 from datetime import date
 
 import numpy as np
 import pandas as pd
-import requests
 from geopy.geocoders import GoogleV3
 
 HTTP_HEADERS = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"}
@@ -23,33 +24,38 @@ def slice_quadrants(location_bounds, size=0.05):
 
 def get_real_estates_from_quadrants(quadrants):
     estates = []
-    url = 'http://www.zapimoveis.com.br/BuscaMapa/ObterOfertasBuscaMapa/'
-    for i, quadrant in enumerate(quadrants):
-        search_params = {
-            "CoordenadasAtuais": {
-                "Latitude": -15.7217174,
-                "Longitude": -48.0783226
-            },
-            "CoordenadasMinimas": {
-                "Latitude": quadrant[0][0],
-                "Longitude": quadrant[0][1]
-            },
-            "CoordenadasMaximas": {
-                "Latitude": quadrant[1][0],
-                "Longitude": quadrant[1][1]
-            },
-            "Transacao": "Locacao",
-            "TipoOferta":"Imovel"
-        }
 
-        results = get_results(url, {'parametrosBusca': str(search_params)})
-        print_not_fetched_amount(results)
-        estates.extend(results.get('Imoveis'))
-        log_percent(i+1)
+    with futures.ThreadPoolExecutor(max_workers=20) as executor:
+        future_real_estates = [executor.submit(get_real_estates, q) for q in quadrants]
+        for future in futures.as_completed(future_real_estates):
+            estates.extend(future.result())
+            print_fetched_amount(len(estates))
 
     print('\nFetched {} real estates.'.format(len(estates)))
-
     return estates
+
+def get_real_estates(quadrant):
+    url = 'http://www.zapimoveis.com.br/BuscaMapa/ObterOfertasBuscaMapa/'
+    search_params = {
+        "CoordenadasAtuais": {
+            "Latitude": -15.7217174,
+            "Longitude": -48.0783226
+        },
+        "CoordenadasMinimas": {
+            "Latitude": quadrant[0][0],
+            "Longitude": quadrant[0][1]
+        },
+        "CoordenadasMaximas": {
+            "Latitude": quadrant[1][0],
+            "Longitude": quadrant[1][1]
+        },
+        "Transacao": "Locacao",
+        "TipoOferta":"Imovel"
+    }
+
+    result = get_result(url, {'parametrosBusca': str(search_params)})
+    print_not_fetched_amount(result)
+    return result.get('Imoveis')
 
 def get_real_estates_details(real_estates):
     details = []
@@ -61,16 +67,16 @@ def get_real_estates_details(real_estates):
     splitted_ids = [all_ids[x:x+ids_per_request] for x in range(0, total, ids_per_request)]
 
     for i, ids in enumerate(splitted_ids):
-        results = get_results(url, {'listIdImovel': str(ids)})
+        results = get_result(url, {'listIdImovel': str(ids)})
         details.extend(results)
 
-        log_percent(i*len(results)+1, total)
+        print_fetched_amount(i*len(results)+1, total)
 
     print('\nFetched {} real estates details.'.format(len(details)))
 
     return details
 
-def get_results(url, data, headers=HTTP_HEADERS):
+def get_result(url, data, headers=HTTP_HEADERS):
     request = requests.post(url, headers=headers, data=data)
     estates_data = json.loads(request.text)
     return estates_data.get('Resultado')
@@ -82,7 +88,7 @@ def print_not_fetched_amount(results):
     if not_fetched_amount > 0:
         print('{} results aren\'t being fetched, decrease the quadrant size to get more results'.format(not_fetched_amount))
 
-def log_percent(done, total=None, msg='Fetched {} out of {} ({:.2f}%)'):
+def print_fetched_amount(done, total=None, msg='Fetched {} out of {} ({:.2f}%)'):
     if total:
         print(msg.format(done, total, done/total*100), end='\r')
     else:
