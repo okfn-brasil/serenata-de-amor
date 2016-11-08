@@ -12,6 +12,10 @@ from geopy.geocoders import GoogleV3
 HTTP_HEADERS = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"}
 FILENAME = '{}-real-estates-prices.xz'.format(date.today())
 OUTPUT_FILEPATH = os.path.join('data', FILENAME)
+URLS = {
+    'QUADRANTS': 'http://www.zapimoveis.com.br/BuscaMapa/ObterOfertasBuscaMapa/',
+    'DETAILS': 'http://www.zapimoveis.com.br/BuscaMapa/ObterDetalheImoveisMapa/'
+}
 locations = ['Distrito Federal, Brasil', ]
 
 def slice_quadrants(location_bounds, size=0.05):
@@ -36,7 +40,6 @@ def fetch_real_estates_from_quadrants(quadrants):
     return estates
 
 def fetch_real_estates(quadrant):
-    url = 'http://www.zapimoveis.com.br/BuscaMapa/ObterOfertasBuscaMapa/'
     search_params = {
         "CoordenadasAtuais": {
             "Latitude": -15.7217174,
@@ -54,28 +57,29 @@ def fetch_real_estates(quadrant):
         "TipoOferta":"Imovel"
     }
 
-    result = fetch_result(url, {'parametrosBusca': str(search_params)})
+    result = fetch_result(URLS['QUADRANTS'],
+                          {'parametrosBusca': str(search_params)})
     print_not_fetched_amount(result)
     return result.get('Imoveis')
 
 def fetch_real_estates_details(real_estates):
     details = []
-    all_ids = [e['ID'] for e in real_estates]
-    url = 'http://www.zapimoveis.com.br/BuscaMapa/ObterDetalheImoveisMapa/'
+    all_ids = [re['ID'] for re in real_estates]
     ids_per_request = 10
     total = len(all_ids)
-
     splitted_ids = [all_ids[x:x+ids_per_request]
                     for x in range(0, total, ids_per_request)]
 
-    for i, ids in enumerate(splitted_ids):
-        results = fetch_result(url, {'listIdImovel': str(ids)})
-        details.extend(results)
-
-        print_fetched_amount(i*len(results)+1, total)
+    with futures.ThreadPoolExecutor(max_workers=15) as executor:
+        future_details = [executor.submit(fetch_result,
+                                          URLS['DETAILS'],
+                                          {'listIdImovel': str(ids)})
+                          for ids in splitted_ids]
+        for future in futures.as_completed(future_details):
+            details.extend(future.result())
+            print_fetched_amount(len(details), total)
 
     print('\nFetched {} real estates details.'.format(len(details)))
-
     return details
 
 def fetch_result(url, data, headers=HTTP_HEADERS):
@@ -145,6 +149,7 @@ def main():
                         'Vagas': 'vacancies',
                     })
     cleaned_data.to_csv(OUTPUT_FILEPATH, compression='xz')
+    print('Saved at: ', OUTPUT_FILEPATH)
 
 if __name__ == '__main__':
     main()
