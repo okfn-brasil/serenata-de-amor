@@ -121,11 +121,7 @@ Use `python manage.py loaddatasets --help` and ``python manage.py loadsuppliers 
 
 ### Generate static files
 
-<<<<<<< HEAD
 We generate assets through NodeJS, so run it before Django collecting static files:
-=======
-We generate assets through [webassets](http://webassets.readthedocs.io) thus you might have to run:
->>>>>>> d50075546bba41c26ba1d8aaf7709ebd933ab2a4
 
 ```console
 npm run assets
