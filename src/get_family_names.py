@@ -45,7 +45,7 @@ def fix_when_theres_a_single_surname_after_the_split(names):
         i, name = pairs.pop(0)
         if i == 0:
             continue
-        names_to_join = names[i-1:i+1]
+        names_to_join = names[i - 1:i + 1]
         name = ' e '.join(names_to_join)
         for n in names_to_join:
             names.remove(n)
@@ -86,8 +86,31 @@ def find_latest_date():
     return max(dates)
 
 
+def find_newest_file(name):
+    """
+    Assuming that the files will be in the form of :
+    yyyy-mm-dd-type_of_file.xz we can try to find the newest file
+    based on the date, but if the file doesn't exist fallback to another
+    date until all dates are exhausted
+    """
+    date_regex = re.compile('\d{4}-\d{2}-\d{2}')
+
+    matches = (date_regex.findall(f) for f in os.listdir(DATA_DIR))
+    dates = sorted(set([l[0] for l in matches if l]), reverse=True)
+    for date in dates:
+        filename = DATA_DIR + '{}-{}.xz'.format(date, name)
+        if os.path.isfile(filename):
+            return filename
+
+    return None
+
+
 def read_csv(name):
-    date = find_latest_date()
+    filename = find_newest_file(name)
+    if (filename is None):
+        raise TypeError('could not find the \
+                specified filename: {}'.format(filename))
+
     return pd.read_csv('data/{}-{}.xz'.format(date, name),
                        parse_dates=[16],
                        dtype={'document_id': np.str,
