@@ -1,7 +1,8 @@
 module Documents.Supplier exposing (Model, Msg, model, load, update, view)
 
 import Char
-import Html exposing (a, br, div, p, span, text)
+import Html exposing (a, br, div, img, p, span, text)
+import Html.Attributes exposing (href, src, style)
 import Http exposing (url)
 import Json.Decode exposing ((:=))
 import Json.Decode.Pipeline exposing (decode, nullable, required)
@@ -61,6 +62,7 @@ type alias Model =
     , loading : Bool
     , loaded : Bool
     , error : Maybe Http.Error
+    , googleStreetViewApiKey : String
     , lang : Language
     , mdl : Material.Model
     }
@@ -68,7 +70,7 @@ type alias Model =
 
 model : Model
 model =
-    Model Nothing False False Nothing English Material.model
+    Model Nothing False False Nothing "" English Material.model
 
 
 
@@ -112,7 +114,7 @@ update msg model =
         ApiFail error ->
             let
                 err =
-                    Debug.crash (toString error)
+                    Debug.log (toString error)
             in
                 ( { model | loaded = True, error = Just error }, Cmd.none )
 
@@ -193,8 +195,59 @@ decodeActivities =
 --
 
 
-viewSupplier : Language -> Supplier -> Html.Html Msg
-viewSupplier lang supplier =
+streetImageUrl : String -> Int -> Int -> String -> String -> Int -> String
+streetImageUrl apiKey width height latitude longitude heading =
+    url
+        "https://maps.googleapis.com/maps/api/streetview"
+        [ ( "size", (toString width) ++ "x" ++ (toString height) )
+        , ( "location", latitude ++ "," ++ longitude )
+        , ( "fov", "90" )
+        , ( "heading", toString heading )
+        , ( "pitch", "10" )
+        , ( "key", apiKey )
+        ]
+
+
+streetImageTag : String -> Maybe String -> Maybe String -> Int -> Html.Html Msg
+streetImageTag apiKey latitude longitude heading =
+    case latitude of
+        Just lat ->
+            case longitude of
+                Just long ->
+                    let
+                        source =
+                            streetImageUrl apiKey 640 400 lat long heading
+
+                        css =
+                            [ ( "width", "50%" )
+                            , ( "display", "inline-block" )
+                            , ( "margin", "1rem 0 0 0" )
+                            ]
+                    in
+                        a
+                            [ href source ]
+                            [ img [ src source, style css ] [] ]
+
+                Nothing ->
+                    text ""
+
+        Nothing ->
+            text ""
+
+
+viewImage : String -> Supplier -> Html.Html Msg
+viewImage apiKey supplier =
+    let
+        images =
+            List.map
+                (streetImageTag apiKey supplier.latitude supplier.longitude)
+                [ 90, 180, 270, 360 ]
+    in
+        div [] images
+
+
+viewSupplier : Language -> String -> Supplier -> Html.Html Msg
+viewSupplier lang apiKey supplier =
     let
         labels =
             [ ( (translate lang SupplierCNPJ), supplier.cnpj )
@@ -243,7 +296,7 @@ viewSupplier lang supplier =
             [ Options.styled
                 p
                 [ Typography.subhead ]
-                [ icon, text title ]
+                [ icon, text title, viewImage apiKey supplier ]
             , Options.styled div [] (rows ++ activities)
             ]
 
@@ -294,7 +347,7 @@ view model =
     if model.loaded then
         case model.supplier of
             Just info ->
-                viewSupplier model.lang info
+                viewSupplier model.lang model.googleStreetViewApiKey info
 
             Nothing ->
                 Options.styled div

@@ -47,16 +47,29 @@ A supplier is a Brazilian company in which congressperson have made expenses and
 
 This endpoit gets the info we have for a specific supplier. The endpoint expects a `Supplier.cnpj` (i.e. the CNPJ of a `Supplier` object). It returns `404` if the supplier is not found.
 
+### Tapioca Jarbas
+
+There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapper) for the API. The [tapioca-jarbas](https://github.com/daneoshiga/tapioca-jarbas/) can be installed with `pip install tapioca-jarbas` and can be used to access the API in any Python script.
+
+
 ## Install
 
 ### Requirements
 
-The app is based in [Python 3](http://python.org) and [Node.js](http://nodejs.org). Once you have `pip` and `npm` available, install the dependencies:
+The app is based in [Python 3.5](http://python.org) and [Node.js 6](http://nodejs.org). Once you have `pip` and `npm` available, install the dependencies:
 
 ```console
 npm i
 python -m pip install -r requirements-dev.txt
 ```
+
+Minor details on requirements:
+
+* **`lzma`**: In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` but you mihght have to re-compile your Python. Some macOS Users might have the same problem. To check if you have `lzma` you can use `$ python -m lmza`. To fix it you need to install `lzma` using `$ brew install xz` and after that you need to recompile Python, and an way to do it is through `$ brew upgrade --cleanup python`.
+
+
+* **`elm-make`**: If `elm-make` is not available in your path, or if the `elm-make` version differs from [the one required by this project](packages.json), set [`ELM_MAKE_BIN`](https://github.com/cuducos/webassets-elm#requirements) environment variable pointing to where the proper `elm-make` binary is (probably `node_modules/.bin/elm-make`)
+* **`psycopg2`**: The `requirements.txt` file is prepared to use [PostgresSQL](https://www.postgresql.org) and `psycopg2` might fail if you don't have Postgres installed locally.
 
 ### Settings
 
@@ -80,9 +93,10 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 * `AMAZON_S3_DATASET_DATE` (_str_) Datasets file name prefix of CEAP datasets from Serenata de Amor (e.g. `2016-08-08` for `2016-08-08-current-year.xz`)
 * `AMAZON_S3_SUPPLIERS_DATE` (_str_) Datasets file name prefix for suppliers dataset (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
 
-#### Google Analytics
+#### Google settings
 
 * `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
+* `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
 
 ### Migrations
 
@@ -99,13 +113,19 @@ Now you can load the data from our datasets:
 
 ```
 python manage.py loaddatasets
+python manage.py loadsuppliers
+python manage.py ceapdatasets
 ```
 
-Use `python manage.py loaddatasets --help` to check options on limiting the number of documents to be loaded from the datasets.
+Use `python manage.py loaddatasets --help` and ``python manage.py loadsuppliers --help` to check options on limiting the number of documents to be loaded from the datasets.
 
 ### Generate static files
 
+<<<<<<< HEAD
 We generate assets through NodeJS, so run it before Django collecting static files:
+=======
+We generate assets through [webassets](http://webassets.readthedocs.io) thus you might have to run:
+>>>>>>> d50075546bba41c26ba1d8aaf7709ebd933ab2a4
 
 ```console
 npm run assets

@@ -1,4 +1,4 @@
-module Documents exposing (Msg, Model, model, loadDocuments, getPage, update, updateLanguage, view)
+module Documents exposing (..)
 
 import Char
 import Documents.Fields as Fields
@@ -85,6 +85,7 @@ type alias Model =
     , showForm : Bool
     , loading : Bool
     , error : Maybe Http.Error
+    , googleStreetViewApiKey : String
     , lang : Language
     , mdl : Material.Model
     }
@@ -97,7 +98,7 @@ results =
 
 model : Model
 model =
-    Model results Inputs.model True False Nothing English Material.model
+    Model results Inputs.model True False Nothing "" English Material.model
 
 
 
@@ -209,7 +210,7 @@ update msg model =
         ApiFail error ->
             let
                 err =
-                    Debug.crash (toString error)
+                    Debug.log (toString error)
             in
                 ( { model | results = results, error = Just error, loading = False }, Cmd.none )
 
@@ -233,8 +234,8 @@ update msg model =
             Material.update mdlMsg model
 
 
-updateSuppliers : Int -> Supplier.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
-updateSuppliers target msg ( index, document ) =
+updateSuppliers : Language -> Int -> Supplier.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateSuppliers lang target msg ( index, document ) =
     if target == index then
         let
             updated =
@@ -246,13 +247,13 @@ updateSuppliers target msg ( index, document ) =
             newCmd =
                 Cmd.map (SupplierMsg target) (snd updated)
         in
-            ( { document | supplier_info = newSupplier }, newCmd )
+            ( { document | supplier_info = { newSupplier | lang = lang } }, newCmd )
     else
         ( document, Cmd.none )
 
 
-updateReceipts : Int -> Receipt.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
-updateReceipts target msg ( index, document ) =
+updateReceipts : Language -> Int -> Receipt.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateReceipts lang target msg ( index, document ) =
     if target == index then
         let
             updated =
@@ -264,7 +265,7 @@ updateReceipts target msg ( index, document ) =
             newCmd =
                 Cmd.map (ReceiptMsg target) (snd updated)
         in
-            ( { document | receipt = newReceipt }, newCmd )
+            ( { document | receipt = { newReceipt | lang = lang } }, newCmd )
     else
         ( document, Cmd.none )
 
@@ -300,7 +301,7 @@ getIndexedDocuments model =
 -}
 
 
-getDocumentsAndCmd : Model -> Int -> (Int -> a -> ( Int, Document ) -> ( Document, Cmd Msg )) -> a -> ( Model, Cmd Msg )
+getDocumentsAndCmd : Model -> Int -> (Language -> Int -> a -> ( Int, Document ) -> ( Document, Cmd Msg )) -> a -> ( Model, Cmd Msg )
 getDocumentsAndCmd model index targetUpdate targetMsg =
     let
         results =
@@ -310,7 +311,7 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
             getIndexedDocuments model
 
         newDocumentsAndCommands =
-            List.map (targetUpdate index targetMsg) indexedDocuments
+            List.map (targetUpdate model.lang index targetMsg) indexedDocuments
 
         newDocuments =
             List.map (\( doc, cmd ) -> doc) newDocumentsAndCommands
@@ -324,8 +325,8 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
         ( { model | results = newResults }, Cmd.batch newCommands )
 
 
-loadDocuments : List ( String, String ) -> Cmd Msg
-loadDocuments query =
+loadDocuments : Language -> String -> List ( String, String ) -> Cmd Msg
+loadDocuments lang apiKey query =
     if List.isEmpty query then
         Cmd.none
     else
@@ -335,7 +336,7 @@ loadDocuments query =
 
             request =
                 Http.get
-                    (decoder jsonQuery)
+                    (decoder lang apiKey jsonQuery)
                     (Http.url "/api/document/" jsonQuery)
         in
             Task.perform
@@ -395,14 +396,14 @@ getPage query =
 --
 
 
-decoder : List ( String, String ) -> Decoder Results
-decoder query =
+decoder : Language -> String -> List ( String, String ) -> Decoder Results
+decoder lang apiKey query =
     let
         current =
             Maybe.withDefault 1 (getPage query)
     in
         decode Results
-            |> required "results" (list singleDecoder)
+            |> required "results" (list <| singleDecoder lang apiKey)
             |> required "count" (nullable int)
             |> required "previous" (nullable string)
             |> required "next" (nullable string)
@@ -411,41 +412,45 @@ decoder query =
             |> hardcoded ""
 
 
-singleDecoder : Decoder Document
-singleDecoder =
-    decode Document
-        |> required "id" int
-        |> required "document_id" int
-        |> required "congressperson_name" string
-        |> required "congressperson_id" int
-        |> required "congressperson_document" int
-        |> required "term" int
-        |> required "state" string
-        |> required "party" string
-        |> required "term_id" int
-        |> required "subquota_number" int
-        |> required "subquota_description" string
-        |> required "subquota_group_id" int
-        |> required "subquota_group_description" string
-        |> required "supplier" string
-        |> required "cnpj_cpf" string
-        |> required "document_number" string
-        |> required "document_type" int
-        |> required "issue_date" (nullable string)
-        |> required "document_value" string
-        |> required "remark_value" string
-        |> required "net_value" string
-        |> required "month" int
-        |> required "year" int
-        |> required "installment" int
-        |> required "passenger" string
-        |> required "leg_of_the_trip" string
-        |> required "batch_number" int
-        |> required "reimbursement_number" int
-        |> required "reimbursement_value" string
-        |> required "applicant_id" int
-        |> required "receipt" Receipt.decoder
-        |> hardcoded Supplier.model
+singleDecoder : Language -> String -> Decoder Document
+singleDecoder lang apiKey =
+    let
+        supplier =
+            Supplier.model
+    in
+        decode Document
+            |> required "id" int
+            |> required "document_id" int
+            |> required "congressperson_name" string
+            |> required "congressperson_id" int
+            |> required "congressperson_document" int
+            |> required "term" int
+            |> required "state" string
+            |> required "party" string
+            |> required "term_id" int
+            |> required "subquota_number" int
+            |> required "subquota_description" string
+            |> required "subquota_group_id" int
+            |> required "subquota_group_description" string
+            |> required "supplier" string
+            |> required "cnpj_cpf" string
+            |> required "document_number" string
+            |> required "document_type" int
+            |> required "issue_date" (nullable string)
+            |> required "document_value" string
+            |> required "remark_value" string
+            |> required "net_value" string
+            |> required "month" int
+            |> required "year" int
+            |> required "installment" int
+            |> required "passenger" string
+            |> required "leg_of_the_trip" string
+            |> required "batch_number" int
+            |> required "reimbursement_number" int
+            |> required "reimbursement_value" string
+            |> required "applicant_id" int
+            |> required "receipt" (Receipt.decoder lang)
+            |> hardcoded { supplier | googleStreetViewApiKey = apiKey }
 
 
 updateDocumentLanguage : Language -> Document -> Document
@@ -482,6 +487,11 @@ updateLanguage lang model =
             Inputs.updateLanguage lang model.inputs
     in
         { model | lang = lang, inputs = newInputs, results = newResults }
+
+
+updateGoogleStreetViewApiKey : String -> Model -> Model
+updateGoogleStreetViewApiKey key model =
+    { model | googleStreetViewApiKey = key }
 
 
 
@@ -801,8 +811,11 @@ viewDocument lang index document =
         receipt =
             Html.App.map (ReceiptMsg index) (Receipt.view document.id document.receipt)
 
-        map =
-            Html.App.map (\_ -> MapMsg) <| Map.viewFrom lang document.supplier_info
+        mapModel =
+            Map.modelFrom lang document.supplier_info
+
+        mapButton =
+            Html.App.map (\_ -> MapMsg) <| Map.view mapModel
 
         title =
             Options.styled
@@ -827,7 +840,7 @@ viewDocument lang index document =
             [ Options.styled
                 div
                 [ Options.css "margin-top" "3rem", Typography.right ]
-                [ receipt, map ]
+                [ receipt, mapButton ]
             ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]

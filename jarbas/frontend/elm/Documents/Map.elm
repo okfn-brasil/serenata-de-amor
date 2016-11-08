@@ -1,4 +1,4 @@
-module Documents.Map exposing (view, viewFrom)
+module Documents.Map exposing (modelFrom, view)
 
 import Documents.Supplier as Supplier
 import Material
@@ -78,11 +78,11 @@ view model =
             case model.geoCoord.longitude of
                 Just long ->
                     let
-                        url =
+                        mapUrl =
                             String.concat [ "https://ddg.gg/?q=!gm+", lat, ",", long ]
                     in
                         a
-                            [ href url ]
+                            [ href mapUrl ]
                             [ Button.render
                                 Mdl
                                 [ 0 ]
@@ -98,8 +98,3 @@ view model =
 
         Nothing ->
             text ""
-
-
-viewFrom : Language -> Supplier.Model -> Html.Html Msg
-viewFrom lang supplier =
-    modelFrom lang supplier |> view

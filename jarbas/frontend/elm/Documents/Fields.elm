@@ -1,4 +1,4 @@
-module Documents.Fields exposing (getLabel, isSearchable, labels, names, sets)
+module Documents.Fields exposing (..)
 
 import Dict
 import Internationalization exposing (Language(..), TranslationId(..), translate)
@@ -130,4 +130,21 @@ sets lang =
             , "month"
             ]
           )
+        ]
+
+
+isNumeric : String -> Bool
+isNumeric field =
+    List.member field
+        [ "applicant_id"
+        , "cnpj_cpf"
+        , "congressperson_id"
+        , "document_id"
+        , "document_type"
+        , "month"
+        , "reimbursement_number"
+        , "subquota_group_id"
+        , "subquota_number"
+        , "term"
+        , "year"
         ]

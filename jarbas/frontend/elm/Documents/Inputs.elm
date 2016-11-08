@@ -1,5 +1,6 @@
 module Documents.Inputs exposing (Model, Msg, model, toQuery, update, updateFromQuery, updateLanguage, view)
 
+import Char
 import Dict
 import Documents.Fields as Fields
 import Html exposing (br, p, span, text)
@@ -75,8 +76,16 @@ updateField model ( name, value ) =
     case (Dict.get name model.inputs) of
         Just field ->
             let
+                cleaned =
+                    if Fields.isNumeric name then
+                        String.filter Char.isDigit value
+                    else if List.member name [ "state", "party" ] then
+                        String.map Char.toUpper value
+                    else
+                        String.trim value
+
                 inputs =
-                    Dict.insert name { field | value = value } model.inputs
+                    Dict.insert name { field | value = cleaned } model.inputs
             in
                 { model | inputs = inputs }
 
@@ -104,8 +113,8 @@ updateFromQuery model queryList =
 toQuery : Model -> List ( String, String )
 toQuery model =
     model.inputs
-        |> Dict.filter (\index field -> not (String.isEmpty field.value))
-        |> Dict.map (\index field -> field.value)
+        |> Dict.filter (\index field -> field.value |> String.trim |> String.isEmpty |> not)
+        |> Dict.map (\index field -> String.trim field.value)
         |> Dict.toList
 
 
