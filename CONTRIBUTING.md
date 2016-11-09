@@ -128,8 +128,10 @@ Here we explain what each script from `src/` does for you:
 1. `src/clean_cnpj_info_dataset.py` clean up and translate the supplier info dataset.
 1. `src/geocode_addresses.py` iterate over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
 
+
 ##### Miscellaneous
 1. `src/backup_data.py` uploads files from `data/` to an Amazon S3 bucket set on `config.ini` .
+1. `src/search_suspect_places.py` iterate over the supplier info dataset and add the closest suspect place data to it (it uses the Google Maps API set in `config.ini`). (A "suspect place" is a suspect company nearby: Motels, Massage Houses, Nigh Clubs, Adult Entertainment Houses, etc..)
 
 ##### Politician's relatives
 
