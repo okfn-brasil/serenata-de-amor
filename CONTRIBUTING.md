@@ -117,25 +117,31 @@ Here we explain what each script from `src/` does for you:
 ##### Quota for Exercising Parliamentary Activity (CEAP)
 
 1. `src/fetch_datasets.py --from-source` downloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
+
 1. `src/fetch_datasets.py` downloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
+
 1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
+
 1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
+
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
 
 ##### Suppliers information (CNPJ)
 
 1. `src/fetch_cnpj_info.py` iterate over the CEAP datasets looking for supplier unique documents (CNPJ) and create a local dataset with each supplier info.
+
 1. `src/clean_cnpj_info_dataset.py` clean up and translate the supplier info dataset.
+
 1. `src/geocode_addresses.py` iterate over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
 
+##### Other datasets
+
+1. `src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
+
+1. `src/search_suspect_places.py` iterates over the supplier info dataset and adds the closest _suspicious_ place data to it. A _suspicious place_ is a company nearby that are classified as night club, massage house, and other adult entertainment venues (it uses the Google Maps API set in `config.ini`).
 
 ##### Miscellaneous
 1. `src/backup_data.py` uploads files from `data/` to an Amazon S3 bucket set on `config.ini` .
-1. `src/search_suspect_places.py` iterate over the supplier info dataset and add the closest suspect place data to it (it uses the Google Maps API set in `config.ini`). (A "suspect place" is a suspect company nearby: Motels, Massage Houses, Nigh Clubs, Adult Entertainment Houses, etc..)
-
-##### Politician's relatives
-
-1. `src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
 
 ### Datasets (`data/`)
 
