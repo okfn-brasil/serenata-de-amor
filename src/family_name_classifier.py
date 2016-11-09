@@ -1,16 +1,17 @@
-import builtins
-
-import pandas as pd
-import numpy as np
 import itertools
 import unicodedata
 import re
 import collections
 import random
+
+import pandas as pd
+import numpy as np
 import sklearn.feature_extraction
 import sklearn.linear_model
 import sklearn.cross_validation
 import sklearn.externals.joblib
+
+
 random.seed(0)
 
 
@@ -69,8 +70,8 @@ class FamilyNameClassifier:
         :param name: string
         :return: is_first_name: boolean
         """
-        prob_firstname = 1.0 * self.first_name_counter[name] / self.total_first_names
-        prob_surname = 1.0 * self.surname_counter[name] / self.total_surnames
+        prob_firstname = self.first_name_counter[name] / self.total_first_names
+        prob_surname = self.surname_counter[name] / self.total_surnames
         return prob_firstname >= prob_surname
 
     def tokenize_surnames(self, name):
@@ -114,7 +115,7 @@ class FamilyNameClassifier:
 
         size_longest_name = max(len(tokens1), len(tokens2))
         if size_longest_name > 0:
-            features['match_proportion'] = 1.0 * len(common_names) / size_longest_name
+            features['match_proportion'] = len(common_names) / size_longest_name
 
         return features
 
@@ -208,16 +209,16 @@ class FamilyNameClassifier:
         """
         sklearn.externals.joblib.dump(self, file_name, compress=9)
 
-    @builtins.staticmethod
-    def load(file_name):
-        """
-        Loads a saved classifier.
 
-        :param file_name: string
-        :return: classifier
-        """
-        self = sklearn.externals.joblib.load(file_name)
-        return self
+def load_classifier(file_name):
+    """
+    Loads a saved classifier.
+
+    :param file_name: string
+    :return: classifier
+    """
+    self = sklearn.externals.joblib.load(file_name)
+    return self
 
 
 def _positive_data_iterator(relatives_dict):
