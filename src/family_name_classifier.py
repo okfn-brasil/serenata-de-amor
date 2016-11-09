@@ -9,8 +9,8 @@ import numpy as np
 import sklearn.feature_extraction
 import sklearn.linear_model
 import sklearn.cross_validation
+import sklearn.metrics
 import sklearn.externals.joblib
-random.seed(0)
 
 
 class FamilyNameClassifier:
@@ -18,11 +18,17 @@ class FamilyNameClassifier:
     NOT_ACCEPTABLE_CHARACTERS = re.compile(r'[^a-z ]')
 
     def __init__(self):
+        """
+        A algorithm used to decide if two persons are from the same family given only their full names.
+        It takes into account surnames in common and its frequencies. Machine learning is used to make the decision.
+        """
         self.vectorizer = None
         self.surname_counter = None
-        self.total_surnames = None
-        self.total_first_names = None
         self.model = None
+        self.total_surnames = 0
+        self.total_first_names = 0
+        self.surname_counter = collections.Counter()
+        self.first_name_counter = collections.Counter()
 
     def tokenize(self, name):
         """"
@@ -37,28 +43,20 @@ class FamilyNameClassifier:
         name = self.NOT_ACCEPTABLE_CHARACTERS.sub("", name)
         return [n for n in name.split(' ') if n not in self.IGNORE_LIST and len(n) > 1]
 
-    def __count_names(self, relatives_dict):
+    def __update_names_statistics(self, names_list):
         """
-        Calculate some names statistics used internally.
+        Updates some names statistics used internally.
 
-        :param relatives_dict: dict
-        :return:
+        :param names_list: list
         """
-        self.surname_counter = collections.Counter()
-        self.first_name_counter = collections.Counter()
-
-        for son, parents in relatives_dict.items():
-            tokens = self.tokenize(son)
-            self.first_name_counter.update([tokens[0]])
-            self.surname_counter.update(tokens[1:])
-
-            for parent in parents:
-                tokens = self.tokenize(parent)
-                self.first_name_counter.update([tokens[0]])
-                self.surname_counter.update(tokens[1:])
-
-        self.total_surnames = sum([v for k, v in self.surname_counter.items()])
-        self.total_first_names = sum([v for k, v in self.first_name_counter.items()])
+        for name in names_list:
+            tokens = self.tokenize(name)
+            first_name = tokens[0]
+            surnames = tokens[1:]
+            self.first_name_counter.update([first_name])
+            self.surname_counter.update(surnames)
+            self.total_first_names += 1
+            self.total_surnames += len(surnames)
 
     def is_first_name(self, name):
         """
@@ -68,9 +66,9 @@ class FamilyNameClassifier:
         :param name: string
         :return: is_first_name: boolean
         """
-        prob_firstname = self.first_name_counter[name] / self.total_first_names
+        prob_first_name = self.first_name_counter[name] / self.total_first_names
         prob_surname = self.surname_counter[name] / self.total_surnames
-        return prob_firstname >= prob_surname
+        return prob_first_name > prob_surname
 
     def tokenize_surnames(self, name):
         """
@@ -99,8 +97,6 @@ class FamilyNameClassifier:
         tokens2 = self.tokenize_surnames(name2)
 
         common_names = set(tokens1).intersection(tokens2)
-        surname_frequencies = [self.surname_counter[name] for name in common_names]
-
         if len(common_names) >= 1:
             features['n_common_surname>=1'] = True
         if len(common_names) >= 2:
@@ -108,49 +104,101 @@ class FamilyNameClassifier:
         if len(common_names) > 2:
             features['n_common_surname>2'] = True
 
+        surname_frequencies = np.array([self.surname_counter[name] for name in common_names])
         if len(surname_frequencies) > 0:
-            features['least_frequent_common_surname'] = np.log(min(surname_frequencies) + 1)
+            features['min_log_frequency_in_common_surname'] = np.log(np.min(surname_frequencies) + 1)
+            features['average_log_frequency_in_common_surnames'] = np.average(np.log(surname_frequencies + 1))
 
         size_longest_name = max(len(tokens1), len(tokens2))
         if size_longest_name > 0:
             features['match_proportion'] = len(common_names) / size_longest_name
-
         return features
 
-    def train(self, relatives_dict, n_negative_samples=100000, file_name_save=None):
+    def __to_feature_list(self, relatives_tuples):
+        """
+        Internal utility function, gets a list of pairs of names and applies the feature_dict() function on it.
+
+        :param relatives_tuples: [(name1, name2), (name1, name2), ...]
+        :return features_list: list of dict features
+        """
+        features_list = [self.feature_dict(person1, person2) for person1, person2 in relatives_tuples]
+        return features_list
+
+    def __sklearn_fit(self, dataset, target, scoring):
+        """
+        Trains the scikit-learn part using a provided dataset matrix, a target vector and a scoring method,
+        used to select parameters.
+
+        :param dataset: numpy vector
+        :param target: numpy vector
+        :param scoring: scoring method compatible with scikit-learn
+        """
+        self.model = sklearn.linear_model.LogisticRegressionCV(Cs=[0.1, 1, 10, 100], n_jobs=-1, scoring=scoring)
+        self.model.fit(dataset, target)
+
+    def train(self, relatives_dict, full_names_list, n_negative_samples=100000, file_name_save=None,
+              kfolds_eval=5, scoring="precision"):
         """
         Trains the algorithm using a provided dictionary of relatives names,
         where the values are a parent list and the keys are their son/doughter.
         The algorithm is trained using a random combination of the names as negatives
-        examples.
+        examples. As an complement, a list of full names of persons (without relatives information)
+        need to be provided to generate some statistics to be use with the algorithm.
+        The relatives_dict names in are not used to collect those statistics to avoid biasing the evaluation.
 
-        :param relatives_dict: dict
+        The kfolds_eval parameter is the number of evaluations performed using the kFold methodology
+        (a zero value can be used to skip this step).
+        The scoring parameter is given to scikit-learn to select some parameters.
+
+        :param relatives_dict: {"son_daughter_fullname": ["parent1_fullname", "parent2_fullname", ...]}
+        :param full_names_list: list (or any iterable)
         :param n_negative_samples: int
         :param file_name_save: string
-        :return:
+        :param kfolds_eval: int
+        :param scoring: scoring method compatible with scikit-learn
         """
-        print("Calculating name statistics.")
-        self.__count_names(relatives_dict)
-
+        # Preparing data for training
         positive_iterator = _positive_data_iterator(relatives_dict)
         negative_iterator = _random_negative_data_iterator(relatives_dict, n_negative_samples)
-        names_iterator = itertools.chain(negative_iterator, positive_iterator)
+        dataset_names_list = list(negative_iterator) + list(positive_iterator)
 
-        print("Generating dataset matrix.")
-        # Iterates over the pairs of names to generate the features dictionaries
-        self.vectorizer = sklearn.feature_extraction.DictVectorizer()
-        dataset = self.vectorizer.fit_transform(map(lambda tup: self.feature_dict(tup[0], tup[1]),
-                                                    names_iterator))
-        n_positives = dataset.shape[0] - n_negative_samples
+        # Preparing target set
+        n_positives = len(dataset_names_list) - n_negative_samples
         target = [0] * n_negative_samples + [1] * n_positives
+        target = np.array(target)
 
-        print("Training")
-        scoring = 'precision'
-        self.model = sklearn.linear_model.LogisticRegressionCV(n_jobs=-1, scoring=scoring)
-        self.model.fit(dataset, target)
+        self.__update_names_statistics(full_names_list)
+
+        # Preparing dataset matrix to the training
+        features_list = self.__to_feature_list(dataset_names_list)
+        self.vectorizer = sklearn.feature_extraction.DictVectorizer()
+        dataset = self.vectorizer.fit_transform(features_list)
+
+        if kfolds_eval > 1:
+            kfolds = sklearn.cross_validation.StratifiedKFold(target, kfolds_eval)
+            print("Evaluating...")
+            for k, (ids_train, ids_test) in enumerate(kfolds):
+                train = dataset[ids_train, :]
+                train_target = target[ids_train]
+
+                test = dataset[ids_test, :]
+                test_target = target[ids_test]
+
+                self.__sklearn_fit(train, train_target, scoring)
+
+                print("Train report #", k + 1)
+                train_predicted = self.model.predict(train)
+                print(sklearn.metrics.classification_report(train_target, train_predicted, digits=4))
+
+                print("Test report #", k+1)
+                test_predicted = self.model.predict(test)
+                print(sklearn.metrics.classification_report(test_target, test_predicted, digits=4))
+                print("=====================")
+
+        print("Final training...")
+        self.__sklearn_fit(dataset, target, scoring)
 
         # Debug part:
-        print("\nBest", scoring, "score:", np.max(np.average(self.model.scores_[1], axis=0)))
         importance_order = np.argsort(self.model.coef_[0, :])
         feat_names = self.vectorizer.get_feature_names()
         print("Trained bias weight:", self.model.intercept_[0])
@@ -176,8 +224,8 @@ class FamilyNameClassifier:
 
     def same_family(self, group1, group2, threshold=0.5, return_match=False):
         """
-        Given two family groups, it says if there is any combination of persons that
-        may be relatives, using the trained algorithm and a probability threshold to decide.
+        Given two family groups, it says if there is any combination of persons could be from the same family,
+        using the trained algorithm and a probability threshold to decide.
 
         If return_match is true, this returns a tuple of the first pair of probable relatives found.
 
@@ -192,28 +240,29 @@ class FamilyNameClassifier:
             if prob_relatives >= threshold:
                 if return_match:
                     return person1, person2
-                return True
+                else:
+                    return True
 
         if return_match:
             return None
-        return False
+        else:
+            return False
 
     def save(self, file_name):
         """
         Saves the current (trained) object with scikit-learn Joblib method.
 
         :param file_name: string
-        :return:
         """
         sklearn.externals.joblib.dump(self, file_name, compress=9)
 
 
-def load(file_name):
+def load_classifier(file_name):
     """
-    Loads a saved classifier.
+    Utility function, used to load a saved FamilyNameClassifier object.
 
     :param file_name: string
-    :return: classifier
+    :return: FamilyNameClassifier object
     """
     self = sklearn.externals.joblib.load(file_name)
     return self
@@ -221,8 +270,9 @@ def load(file_name):
 
 def _positive_data_iterator(relatives_dict):
     """
-    Just iterates over the parents data on the dictionary
-    :param relatives_dict: dict
+    Just iterates over the parents data on the dictionary.
+
+    :param relatives_dict: {"son_daughter_fullname": ["parent1_fullname", "parent2_fullname", ...]}
     :return: generator
     """
     for person, parents in relatives_dict.items():
@@ -265,9 +315,8 @@ def _get_relatives():
         This should be replaced as soon as possible.
     """
     print("Loading data.")
-    relatives_pd = pd.read_csv('~/PycharmProjects/serenata-de-amor/data/2016-08-08-congressperson_relatives.xz',
+    relatives_pd = pd.read_csv('~/PycharmProjects/serenata-de-amor/data/2016-11-09-congressperson_relatives.xz',
                                dtype={'congressperson_id': np.str})
-    relatives_pd.head()
     relatives_data = relatives_pd.to_dict(orient='records')
     current_year = pd.read_csv('~/PycharmProjects/serenata-de-amor/data/2016-08-08-current-year.xz',
                                dtype={'congressperson_id': np.str},
@@ -285,30 +334,83 @@ def _get_relatives():
     return relatives
 
 
+def _get_full_names_list(file_full_names):
+    """
+    Opens a given file with one name per line and loads it in a list.
+
+    :return: full_names_list: list
+    """
+    with open(file_full_names) as f:
+        full_names_list = f.readlines()
+    return full_names_list
+
+
 def _family_to_list(person, parents_list):
     return [person] + parents_list
 
 
-def _demo(classifier, relatives, threshold=0.7):
-    """ A simple test that tries to find whole families using the parents data. """
+def _relatives_dict_to_list(relatives_dict):
+    """
+    Utility internal function that takes a dictionary of relatives and returns an iterable of names.
+
+    :param relatives_dict: {"son_daughter_fullname": ["parent1_fullname", "parent2_fullname", ...]}
+    """
+    return itertools.chain.from_iterable([_family_to_list(person, parents)
+                                         for person, parents in relatives_dict.items()])
+
+
+def _family_finder_demo(classifier, relatives_dict, threshold=0.7):
+    """
+    A simple test that tries to find whole families using the parents data, using a trained classifier
+    and probability threshold.
+
+    :param classifier: FamilyNameClassifier object
+    :param relatives_dict: {"son_daughter_fullname": ["parent1_fullname", "parent2_fullname", ...]}
+    :param threshold: float
+    """
     print("\nTrying to find families...")
+    families_items = list(relatives_dict.items())
+    n_pairs = len(families_items)
+    for family1_id in range(n_pairs):
+        for family2_id in range(family1_id + 1, n_pairs):
+            person1, parents1 = families_items[family1_id]
+            person2, parents2 = families_items[family2_id]
 
-    for ((person1, parents1), (person2, parents2)) in itertools.product(relatives.items(), relatives.items()):
-        if person1 == person2:
-            continue
+            family1 = _family_to_list(person1, parents1)
+            family2 = _family_to_list(person2, parents2)
 
-        family1 = _family_to_list(person1, parents1)
-        family2 = _family_to_list(person2, parents2)
+            match = classifier.same_family(family1, family2, threshold, return_match=True)
+            if match is not None:
+                print("Same Family:", person1, "+", person2)
+                print("\tReason:", match[0], "-", match[1])
 
-        match = classifier.same_family(family1, family2, threshold, return_match=True)
-        if match is not None:
-            print("Same Family:", person1, "+", person2)
-            print("\tReason:", match[0], "-", match[1])
+
+def _iterative_demo(classifier):
+    """
+    Simple utility function to play with a trained classifier.
+
+    :param classifier: FamilyNameClassifier object
+    """
+    try:
+        while True:
+            print("")
+            name1 = input("Type name 1: ")
+            name2 = input("Type name 2: ")
+            print("Family Probability:", classifier.family_probability(name1, name2))
+            print("Person 1 Surname:", classifier.tokenize_surnames(name1))
+            print("Person 2 Surname:", classifier.tokenize_surnames(name2))
+            print("Features:", classifier.feature_dict(name1, name2))
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == '__main__':
+    random.seed(0)
+    np.random.seed(0)
     relatives = _get_relatives()
-    classifier = FamilyNameClassifier()
-    classifier.train(relatives, file_name_save="../data/family_classifier.bin")
-    _demo(classifier, relatives)
-
+    full_names = _get_full_names_list("../data/full_names_list.txt")
+    family_classifier = FamilyNameClassifier()
+    family_classifier.train(relatives, full_names, file_name_save="../data/family_classifier.bin")
+    family_classifier = load_classifier("../data/family_classifier.bin")
+    _family_finder_demo(family_classifier, relatives, threshold=0.8)
+    _iterative_demo(family_classifier)
