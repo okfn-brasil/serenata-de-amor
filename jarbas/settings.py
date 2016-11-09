@@ -126,6 +126,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+CORE_STATIC_DIR = os.path.join(BASE_DIR, 'jarbas', 'core', 'static')
 
 # Amazon S3 datasets
 

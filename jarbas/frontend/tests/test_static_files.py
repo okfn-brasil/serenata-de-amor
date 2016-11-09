@@ -31,7 +31,7 @@ class TestDownloadedStatic(TestCase):
     def test_ceap_datasets(self, mock_urlretrieve):
 
         # backup existing file if exists
-        original = path.join(settings.ASSETS_ROOT, 'ceap-datasets.html')
+        original = path.join(settings.CORE_STATIC_DIR, 'ceap-datasets.html')
         backup = original + '.bkp'
         if path.exists(original):
             rename(original, backup)
