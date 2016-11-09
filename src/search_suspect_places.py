@@ -19,7 +19,7 @@ settings = configparser.RawConfigParser()
 settings.read('config.ini')
 
 
-class SuspectPlaceSearch:
+class SuspiciousPlaceSearch:
 
     BASE_URL = 'https://maps.googleapis.com/maps/api/place/'
     DETAILS_URL = BASE_URL + 'details/json?placeid={}&key={}'
@@ -125,49 +125,50 @@ class SuspectPlaceSearch:
 
         return self.place_details(closest_place)
 
-def search_suspect_around_companies(companies):
+def search_suspicious_around_companies(companies):
+    """
+    :param companies: pandas dataframe.
+    """
     with futures.ThreadPoolExecutor(max_workers=40) as executor:
-        future_to_search_suspects = dict()
+        future_to_search_suspicious = dict()
         for index, company in companies.iterrows():
-            future = executor.submit(search_suspect_around_company, company)
-            future_to_search_suspects[future] = company
+            future = executor.submit(search_suspicious_around_company, company)
+            future_to_search_suspicious[future] = company
         for future in futures.as_completed(future_to_search_suspects):
-            company = future_to_search_suspects[future]
+            company = future_to_search_suspicious[future]
             if future.exception() is not None:
-                print('%r raised an exception: %s' % (company['cnpj'],
+                warn('{} raised an exception: {}'.format(company['cnpj'],
                                                       future.exception()))
             elif future.result() is not None:
-                write_suspects_info(future.result(), company['cnpj'])
+                write_suspicious_info(future.result(), company['cnpj'])
 
 
-def search_suspect_around_company(company):
-
+def search_suspicious_around_company(company):
+    """
+    :param company: panda series.
+    :return: suspect
+    """
     latitude = company["latitude"]
     longitude = company['longitude']
     geolocation = "{},{}".format(latitude, longitude)
-    if geolocation == '':
-        print('No geolocation information for ', company[
-              'name'], company['cnpj'],
-              ' is impossible to search suspects around')
+    if not geolocation:
+        warn('No geolocation information for company: {} ({})'
+            .format(company['name'], company['cnpj']))
         return None
-    else:
-        try:
-            sp = SuspectPlaceSearch(settings.get('Google', 'APIKey'))
-            suspect = sp.search(lat=latitude, lng=longitude)
-        except ValueError as e:
-            print(e)
-            return None
-        return suspect
+
+    sp = SuspiciousPlaceSearch(settings.get('Google', 'APIKey'))
+    suspicious = sp.search(lat=latitude, lng=longitude)
+    return suspicious
 
 
-def write_suspects_info(suspect_around, cnpj):
+def write_suspicious_info(suspect_around, cnpj):
     cnpj = re.sub(CNPJ_REGEX, '', cnpj)
     print('Writing %s' % cnpj)
     with open('%s/%s.pkl' % (TEMP_PATH, cnpj), 'wb') as f:
         pickle.dump(suspect_around, f, pickle.HIGHEST_PROTOCOL)
 
 
-def read_suspect_info(company):
+def read_suspicious_info(company):
     cnpj = re.sub(CNPJ_REGEX, '', company['cnpj'])
     filename = '%s/%s.pkl' % (TEMP_PATH, cnpj)
     if os.path.isfile(filename):
@@ -203,20 +204,20 @@ if __name__ == '__main__':
 
     data = pd.read_csv(get_companies_path(), low_memory=False)
 
-    searched_for_suspects_cnpjs = [filename[:14]
+    searched_for_suspicious_cnpjs = [filename[:14]
                                 for filename in os.listdir(TEMP_PATH)
                                 if filename.endswith('.pkl')]
 
-    is_not_searched_for_suspects = ~data['cnpj'].str.replace(
-        CNPJ_REGEX, '').isin(searched_for_suspects_cnpjs)
+    is_not_searched_for_suspicious = ~data['cnpj'].str.replace(
+        CNPJ_REGEX, '').isin(searched_for_suspicious_cnpjs)
 
-    remaining_companies = data[is_not_searched_for_suspects]
+    remaining_companies = data[is_not_searched_for_suspicious]
 
     print('%i companies, %i to go' % (len(data), len(remaining_companies)))
 
-    search_suspect_around_companies(remaining_companies)
+    search_suspicious_around_companies(remaining_companies)
 
-    data = pd.concat([data, data.apply(read_suspect_info, axis=1)], axis=1)
+    data = pd.concat([data, data.apply(read_suspicious_info, axis=1)], axis=1)
 
     data.to_csv(OUTPUT, compression='xz', encoding='utf-8', index=False)
 
