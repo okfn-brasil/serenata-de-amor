@@ -1,6 +1,6 @@
 import csv
 import lzma
-from datetime import datetime
+from datetime import date
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -91,13 +91,12 @@ class Command(LoadCommand):
     @staticmethod
     def to_date(text):
         try:
-            day, month, year = text.split('/')
-            day, month, year = day.strip(), month.strip(), year.strip()
-
-            year_code = '%Y' if len(year) == 4 else '%y'
-            formatted = '{}/{}/{}'.format(day.zfill(2), month.zfill(2), year)
-            dt = datetime.strptime(formatted, '%d/%m/' + year_code)
-            return datetime.strftime(dt, '%Y-%m-%d')
+            day, month, year = map(int, text.split('/'))
+            if 0 <= year <= 50:
+                year += 2000
+            elif 50 < year <= 99:
+                year += 1900
+            return date(year, month, day)
 
         except ValueError:
             return None

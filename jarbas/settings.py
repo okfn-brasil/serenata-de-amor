@@ -118,7 +118,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -126,6 +126,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+CORE_STATIC_DIR = os.path.join(BASE_DIR, 'jarbas', 'core', 'static')
 
 # Amazon S3 datasets
 
