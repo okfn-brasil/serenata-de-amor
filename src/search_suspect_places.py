@@ -66,6 +66,18 @@ class SuspectPlaceSearch:
                 }
                 yield suspicious_place
 
+    def place_details(self, place):
+        """
+        :param place: dictonary with id key.
+        :return: dictionary updated with name, address and phone.
+        """
+        url = self.DETAILS_URL.format(place['id'], self.GOOGLE_API_KEY)
+        details = requests.get(url).json()
+        place['name'] = details['result']['name']
+        place['address'] = details['result'].get('formatted_address', '')
+        place['phone'] = details['result'].get('formatted_phone_number', '')
+        return place
+
     def search(self, lat, lng):
         """
         Return a dictonary containt information of a
@@ -111,32 +123,7 @@ class SuspectPlaceSearch:
         except ValueError:
             return None  # i.e, not suspect place found around
 
-        # The Nearby Search Api not return details about the
-        # address and phone in the result
-        # For this we need to make another call for
-        # Place Details API using the suspect closest_suspect_place[id].
-
-        details_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format(
-            closest_place['id'], self.GOOGLE_API_KEY)
-
-        details = requests.get(details_url).json()
-
-        # Parse the results of the Place Details API .
-        closest_place['name'] = details['result']['name']
-        if 'formatted_phone_number' in details['result']:
-            closest_place['address'] = details[
-                'result']['formatted_address']
-        else:
-            closest_place['address'] = ""
-
-        if "formatted_phone_number" in details['result']:
-            closest_place['phone'] = details[
-                'result']['formatted_phone_number']
-        else:
-            closest_place['phone'] = ""
-
-        return closest_place
-
+        return self.place_details(closest_place)
 
 def search_suspect_around_companies(companies):
     with futures.ThreadPoolExecutor(max_workers=40) as executor:
