@@ -1,20 +1,141 @@
-from concurrent import futures
 import configparser
-import pickle
+import math
 import os
-import os.path
-import pandas as pd
+import pickle
 import re
 import shutil
-from suspectplacesearcher import SuspectPlaceSearch
+from concurrent import futures
+from warnings import warn
 
-DATASET_PATH = os.path.join('data', 'companies.xz')
+import pandas as pd
+import requests
+from geopy.distance import vincenty
+
+OUTPUT = os.path.join('data', 'suspicious_distances.xz')
 TEMP_PATH = os.path.join('data', 'tmp_suspect_search')
 CNPJ_REGEX = r'[./-]'
 
 settings = configparser.RawConfigParser()
 settings.read('config.ini')
-sp = SuspectPlaceSearch(settings.get('Google', 'APIKey'))
+
+
+class SuspectPlaceSearch:
+
+    BASE_URL = 'https://maps.googleapis.com/maps/api/place/'
+    DETAILS_URL = BASE_URL + 'details/json?placeid={}&key={}'
+    NEARBY_URL = BASE_URL + 'nearbysearch/json?location={}&keyword={}&rankby=distance&key={}'
+
+    def __init__(self, key):
+        self.GOOGLE_API_KEY = key
+
+    def find_places(self, lat, lng, keywords):
+        """
+        :param lat: (float) latitude
+        :param lng: (float) longitude
+        :param keyworks: (iterable) list of keywords
+        """
+        for keyword in keywords:
+
+            # Create the request for the Nearby Search Api. The Parameter
+            # rankby=distance will return a ordered list by distance
+            latlong = '{},{}'.format(lat, lng)
+            url = self.NEARBY_URL.format(latlong, keyword, self.GOOGLE_API_KEY)
+            nearby = requests.get(url).json()
+
+            # TODO: create distincts messages erros for the api results
+            if nearby['status'] != 'OK':
+                if 'error_message' in nearby:
+                    msg = 'GooglePlacesAPIException: {}: {}'
+                    warn(msg.format(nearby['status'], nearby['error_message']))
+                else:
+                    msg = 'GooglePlacesAPIException: {}'
+                    warn(msg.format(nearby['status']))
+
+            # If have some result for this keywork, get first
+            else:
+                place = nearby['results'][0]
+                latitude = float(place.get('geometry').get('location').get('lat'))
+                longitude = float(place.get('geometry').get('location').get('lng'))
+                distance = vincenty((lat, lng), (latitude, longitude)).meters
+                suspicious_place = {
+                    'id': place.get('place_id'),
+                    'keyword': keyword,
+                    'latitude': latitude,
+                    'longitude': longitude,
+                    'distance': distance
+                }
+                yield suspicious_place
+
+    def search(self, lat, lng):
+        """
+        Return a dictonary containt information of a
+        suspect place arround a given position.
+        A suspect place is some company that match a suspect keyword
+        in a Google Places search.
+
+        :param lat: latitude
+        :param lng: longitude
+        :return: closest_suspect_place, a dict with the keys:
+            - name : The name of suspect place
+            - latitude : The latitude of suspect place
+            - longitude : The longitude of suspect place
+            - distance : The distance in meters between suspect place and the given lat, lng
+            - address : The address  of suspect place
+            - phone : The phone of suspect place
+            - id : The Google Place ID of suspect place
+            - keyword : The Keyword that generate the place
+                        in Google Place Search
+        """
+        keywords = ('Acompanhantes',
+                    'Adult Entertainment Club',
+                    'Adult Entertainment Store',
+                    'Gay Sauna',
+                    'Massagem',
+                    'Modeling Agency',
+                    'Motel',
+                    'Night Club',
+                    'Sex Club',
+                    'Sex Shop',
+                    'Strip Club',
+                    'Swinger clubs')
+
+        # for a case of nan in parameters
+        lat, lng = float(lat), float(lng)
+        if math.isnan(lat) or math.isnan(lng):
+            return None
+
+        # Get the closest place inside all the searched keywords
+        suspicious_places = self.find_places(lat, lng, keywords)
+        try:
+            closest_place = min(suspicious_places, key=lambda x: x['distance'])
+        except ValueError:
+            return None  # i.e, not suspect place found around
+
+        # The Nearby Search Api not return details about the
+        # address and phone in the result
+        # For this we need to make another call for
+        # Place Details API using the suspect closest_suspect_place[id].
+
+        details_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format(
+            closest_place['id'], self.GOOGLE_API_KEY)
+
+        details = requests.get(details_url).json()
+
+        # Parse the results of the Place Details API .
+        closest_place['name'] = details['result']['name']
+        if 'formatted_phone_number' in details['result']:
+            closest_place['address'] = details[
+                'result']['formatted_address']
+        else:
+            closest_place['address'] = ""
+
+        if "formatted_phone_number" in details['result']:
+            closest_place['phone'] = details[
+                'result']['formatted_phone_number']
+        else:
+            closest_place['phone'] = ""
+
+        return closest_place
 
 
 def search_suspect_around_companies(companies):
@@ -44,6 +165,7 @@ def search_suspect_around_company(company):
         return None
     else:
         try:
+            sp = SuspectPlaceSearch(settings.get('Google', 'APIKey'))
             suspect = sp.search(lat=latitude, lng=longitude)
         except ValueError as e:
             print(e)
@@ -80,30 +202,35 @@ def read_suspect_info(company):
         return pd.Series()
 
 
-if not os.path.exists(TEMP_PATH):
-    os.makedirs(TEMP_PATH)
+def get_companies_path():
+    regex = r'^[\d-]{11}companies.xz$'
+    for file_name in os.listdir('data'):
+        if re.compile(regex).match(file_name):
+            return os.path.join('data', file_name)
 
-data = pd.read_csv(DATASET_PATH, low_memory=False)
 
-searched_for_suspects_cnpjs = [filename[:14]
-                               for filename in os.listdir(TEMP_PATH)
-                               if filename.endswith('.pkl')]
+if __name__ == '__main__':
 
-is_not_searched_for_suspects = ~data['cnpj'].str.replace(
-    CNPJ_REGEX, '').isin(searched_for_suspects_cnpjs)
+    if not os.path.exists(TEMP_PATH):
+        os.makedirs(TEMP_PATH)
 
-remaining_companies = data[is_not_searched_for_suspects]
+    data = pd.read_csv(get_companies_path(), low_memory=False)
 
-print('%i companies, %i to go' % (len(data), len(remaining_companies)))
+    searched_for_suspects_cnpjs = [filename[:14]
+                                for filename in os.listdir(TEMP_PATH)
+                                if filename.endswith('.pkl')]
 
-search_suspect_around_companies(remaining_companies)
+    is_not_searched_for_suspects = ~data['cnpj'].str.replace(
+        CNPJ_REGEX, '').isin(searched_for_suspects_cnpjs)
 
-data = pd.concat([data,
-                  data.apply(read_suspect_info, axis=1)], axis=1)
+    remaining_companies = data[is_not_searched_for_suspects]
 
-data.to_csv(DATASET_PATH,
-            compression='xz',
-            encoding='utf-8',
-            index=False)
+    print('%i companies, %i to go' % (len(data), len(remaining_companies)))
 
-shutil.rmtree(TEMP_PATH)
+    search_suspect_around_companies(remaining_companies)
+
+    data = pd.concat([data, data.apply(read_suspect_info, axis=1)], axis=1)
+
+    data.to_csv(OUTPUT, compression='xz', encoding='utf-8', index=False)
+
+    shutil.rmtree(TEMP_PATH)
