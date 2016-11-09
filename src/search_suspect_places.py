@@ -1,19 +1,21 @@
 import configparser
 import math
 import os
-import pickle
 import re
-import shutil
+import lzma
+import csv
+import datetime
 from concurrent import futures
 from warnings import warn
+from io import StringIO
 
 import pandas as pd
 import requests
 from geopy.distance import vincenty
 
-OUTPUT = os.path.join('data', 'suspicious_distances.xz')
+DATE = datetime.date.today().strftime('%Y-%m-%d')
+OUTPUT = os.path.join('data', '{}-suspicious_distances.xz'.format(DATE))
 TEMP_PATH = os.path.join('data', 'tmp_suspect_search')
-CNPJ_REGEX = r'[./-]'
 
 settings = configparser.RawConfigParser()
 settings.read('config.ini')
@@ -162,33 +164,23 @@ def search_suspicious_around_company(company):
 
 
 def write_suspicious_info(suspect_around, cnpj):
-    cnpj = re.sub(CNPJ_REGEX, '', cnpj)
-    print('Writing %s' % cnpj)
-    with open('%s/%s.pkl' % (TEMP_PATH, cnpj), 'wb') as f:
-        pickle.dump(suspect_around, f, pickle.HIGHEST_PROTOCOL)
+    cnpj = ''.join(re.findall(r'[\d]', cnpj))
+    print('Writing {}'.format(cnpj))
+    write_csv(suspect_around.update({'cnpj': cnpj}))
 
 
-def read_suspicious_info(company):
-    cnpj = re.sub(CNPJ_REGEX, '', company['cnpj'])
-    filename = '%s/%s.pkl' % (TEMP_PATH, cnpj)
-    if os.path.isfile(filename):
-        with open(filename, 'rb') as f:
-            try:
-                suspect_place = pickle.load(f)
-            except (ValueError, EOFError) as e:
-                return pd.Series()
-        if suspect_place is None:
-            return pd.Series()
-        else:
-            return pd.Series({'suspect_place_around': suspect_place['name'],
-                              'distance_to_suspect': suspect_place['distance'],
-                              'suspect_phone': suspect_place['phone'],
-                              'suspect_latitude': suspect_place['latitude'],
-                              'suspect_longitude': suspect_place['longitude'],
-                              })
+def write_csv(company=None):
+    csv_io = StringIO()
+    fieldnames = ['id', 'keyword', 'latitude', 'longitude', 'distance', 'name',
+            'address', 'phone', 'cnpj']
+    writer = csv.DictWriter(csv_io, fieldnames=fieldnames)
+    if company:
+        writer.writerow(company)
     else:
-        return pd.Series()
-
+        writer.writeheader()
+    with lzma.open(OUTPUT, 'at') as output:
+        print(csv_io.getvalue(), file=output)
+    csv_io.close()
 
 def get_companies_path():
     regex = r'^[\d-]{11}companies.xz$'
@@ -199,26 +191,10 @@ def get_companies_path():
 
 if __name__ == '__main__':
 
-    if not os.path.exists(TEMP_PATH):
-        os.makedirs(TEMP_PATH)
+    write_csv()
 
     data = pd.read_csv(get_companies_path(), low_memory=False)
 
-    searched_for_suspicious_cnpjs = [filename[:14]
-                                for filename in os.listdir(TEMP_PATH)
-                                if filename.endswith('.pkl')]
+    print('{} companies'.format(len(data)))
 
-    is_not_searched_for_suspicious = ~data['cnpj'].str.replace(
-        CNPJ_REGEX, '').isin(searched_for_suspicious_cnpjs)
-
-    remaining_companies = data[is_not_searched_for_suspicious]
-
-    print('%i companies, %i to go' % (len(data), len(remaining_companies)))
-
-    search_suspicious_around_companies(remaining_companies)
-
-    data = pd.concat([data, data.apply(read_suspicious_info, axis=1)], axis=1)
-
-    data.to_csv(OUTPUT, compression='xz', encoding='utf-8', index=False)
-
-    shutil.rmtree(TEMP_PATH)
+    search_suspicious_around_companies(data)
