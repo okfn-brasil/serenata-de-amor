@@ -18,7 +18,7 @@ class SuspectPlaceSearch(object):
                 - name : The name of suspect place
                 - latitude : The latitude of suspect place
                 - longitude : The longitude of suspect place
-                - distance : The distance of suspect place and the given lat, lng
+                - distance : The distance in meters between suspect place and the given lat, lng 
                 - address : The address  of suspect place
                 - phone : The phone of suspect place
                 - id : The Google Place ID of suspect place
@@ -73,9 +73,12 @@ class SuspectPlaceSearch(object):
             elif nearbysearch['status'] == 'ZERO_RESULTS':
                 continue
             else:
-                print(nearbysearch_url)
-                raise ValueError("GooglePlacesAPIException:" +
-                                 nearbysearch['status'])
+                if "error_message" in nearbysearch:
+                    raise ValueError("GooglePlacesAPIException:{}: {}".format(nearbysearch['status'],
+                                                                              nearbysearch['error_message']))
+                else:
+                    raise ValueError("GooglePlacesAPIException:{}".format(
+                        nearbysearch['status']))
 
             # Parse the result information:
             suspect_place = {}

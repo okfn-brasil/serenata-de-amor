@@ -40,7 +40,7 @@ def search_suspect_around_company(company):
     if geolocation == '':
         print('No geolocation information for ', company[
               'name'], company['cnpj'],
-              ' is not possible to search suspects around')
+              ' is impossible to search suspects around')
         return None
     else:
         try:
@@ -56,8 +56,6 @@ def write_suspects_info(suspect_around, cnpj):
     print('Writing %s' % cnpj)
     with open('%s/%s.pkl' % (TEMP_PATH, cnpj), 'wb') as f:
         pickle.dump(suspect_around, f, pickle.HIGHEST_PROTOCOL)
-
-# TODO: ADAPT THIS FUNCTION.
 
 
 def read_suspect_info(company):
