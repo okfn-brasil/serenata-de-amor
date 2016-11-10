@@ -130,7 +130,12 @@ class SuspiciousPlaceSearch:
         except ValueError:
             return None  # i.e, not suspect place found around
 
-        return self.place_details(closest_place)
+        # skip "hotel" when category is "motel"
+        place = self.place_details(closest_place)
+        if 'hotel' in place['name'].lower() and keyword == 'Motel':
+            return None
+
+        return place
 
 
 def search_suspicious_around_companies(companies):
