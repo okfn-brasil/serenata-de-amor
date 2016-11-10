@@ -6,7 +6,7 @@ import math
 import os
 import re
 from io import StringIO
-from multiprocessing import Pool
+from multiprocessing import Process, Queue
 from shutil import copyfile
 
 import pandas as pd
@@ -36,6 +36,8 @@ class SuspiciousPlaceSearch:
         :param keyworks: (iterable) list of keywords
         """
         for keyword in keywords:
+            msg = '\nLooking for a suspicious {} close to {} ({})…'
+            print(msg.format(keyword, company['name'], company['cnpj']))
 
             # Create the request for the Nearby Search Api. The Parameter
             # rankby=distance will return a ordered list by distance
@@ -60,13 +62,14 @@ class SuspiciousPlaceSearch:
                     latitude = float(location.get('lat'))
                     longitude = float(location.get('lng'))
                     distance = vincenty((lat, lng), (latitude, longitude))
+                    cnpj = ''.join(re.findall(r'[/d]', company['cnpj']))
                     yield {
                         'id': place.get('place_id'),
                         'keyword': keyword,
                         'latitude': latitude,
                         'longitude': longitude,
                         'distance': distance.meters,
-                        'cnpj': company.get('cnpj')
+                        'cnpj': cnpj
                     }
                 except TypeError:
                     pass
@@ -124,7 +127,7 @@ class SuspiciousPlaceSearch:
             return None
 
         # Get the closest place inside all the searched keywords
-        suspicious_places = self.find_places(company, keywords)
+        suspicious_places = list(self.find_places(company, keywords))
         try:
             closest_place = min(suspicious_places, key=lambda x: x['distance'])
         except ValueError:
@@ -132,7 +135,7 @@ class SuspiciousPlaceSearch:
 
         # skip "hotel" when category is "motel"
         place = self.place_details(closest_place)
-        if 'hotel' in place['name'].lower() and keyword == 'Motel':
+        if 'hotel' in place['name'].lower() and place['keyword'] == 'Motel':
             return None
 
         return place
@@ -142,15 +145,26 @@ def search_suspicious_around_companies(companies):
     """
     :param companies: pandas dataframe.
     """
-    rows = companies.to_dict('records')
-    total = len(rows)
-    count = 0
-    with Pool(processes=4) as pool:
-        for company in pool.imap(search_suspicious_around_company, rows):
-            count += 1
-            print_status(total, count)
-            if company:
-                write_csv(company)
+
+    def make_queue(q, companies):
+        for company in companies.itertuples(index=False):
+            company = dict(company._asdict())  # _asdict() gives OrderedDict
+            q.put(csv_line(search_suspicious_around_company(company)))
+
+    write_queue = Queue()
+    place_search = Process(target=make_queue, args=(write_queue, companies))
+    place_search.start()
+
+    with lzma.open(OUTPUT, 'at') as output:
+        while place_search.is_alive() or not write_queue.empty():
+            try:
+                contents = write_queue.get(timeout=1)
+                if contents:
+                    print(contents, file=output)
+            except:
+                pass
+
+    place_search.join()
 
 
 def search_suspicious_around_company(company):
@@ -168,7 +182,7 @@ def search_suspicious_around_company(company):
     return sp.search(company)
 
 
-def write_csv(company=None):
+def csv_line(company=None, **kwargs):
     if company or not os.path.exists(OUTPUT):
         csv_io = StringIO()
         fieldnames = ('id', 'keyword', 'latitude', 'longitude', 'distance',
@@ -176,14 +190,14 @@ def write_csv(company=None):
 
         writer = csv.DictWriter(csv_io, fieldnames=fieldnames)
         if company:
-            writer.writerow(company)
-        else:
+            contents = {k: v for k, v in company.items() if k in fieldnames}
+            writer.writerow(contents)
+        elif kwargs.get('headers'):
             writer.writeheader()
 
-        with lzma.open(OUTPUT, 'at') as output:
-            print(csv_io.getvalue(), file=output)
-
+        contents = csv_io.getvalue()
         csv_io.close()
+        return contents
 
 
 def get_companies_path():
@@ -200,11 +214,6 @@ def get_path(regex):
             return os.path.join('data', file_name)
 
 
-def print_status(total, count):
-    status = '[ {0:.1f}% ]'.format((count * 100) / total)
-    return print(status, end='\r')
-
-
 if __name__ == '__main__':
 
     # get companies dataset
@@ -217,12 +226,16 @@ if __name__ == '__main__':
         suspicious = pd.read_csv(suspicious_path, low_memory=False)
         if suspicious_path != OUTPUT:
             copyfile(suspicious_path, OUTPUT)
-        remaining = companies[~companies.cnpj.isin(suspicious.cnpj)]
+        try:
+            remaining = companies[~companies.cnpj.isin(suspicious.cnpj)]
+        except AttributeError:  # if file exists but is empty
+            remaining = companies
 
     # start a suspicious places dataset if it doesn't exist
     else:
         remaining = companies
-        write_csv()
+        with lzma.open(OUTPUT, 'at') as output:
+            print(csv_line(headers=True), file=output)
 
     # run
     print('{} companies'.format(len(companies)))
