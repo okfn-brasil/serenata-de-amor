@@ -58,7 +58,7 @@ class SuspiciousPlaceSearch:
             else:
                 try:
                     place = nearby.get('results')[0]
-                    location = place.get('geometry').get('location')
+                    location = deep_get(place, ['geometry', 'location'])
                     latitude = float(location.get('lat'))
                     longitude = float(location.get('lng'))
                     distance = vincenty((lat, lng), (latitude, longitude))
@@ -82,9 +82,9 @@ class SuspiciousPlaceSearch:
         url = self.DETAILS_URL.format(place.get('id'), self.GOOGLE_API_KEY)
         details = requests.get(url).json()
         place.update({
-            'name': details.get('result').get('name'),
-            'address': details.get('result').get('formatted_address', ''),
-            'phone': details.get('result').get('formatted_phone_number', '')
+            'name': deep_get(details, ['result', 'name']),
+            'address': deep_get(details, ['result', 'formatted_address'], ''),
+            'phone': deep_get(details, ['result', 'formatted_phone_number'], '')
         })
         return place
 
@@ -135,8 +135,10 @@ class SuspiciousPlaceSearch:
 
         # skip "hotel" when category is "motel"
         place = self.place_details(closest_place)
-        if 'hotel' in place['name'].lower() and place['keyword'] == 'Motel':
-            return None
+        name = place['name']
+        if name:
+            if 'hotel' in name.lower() and place['keyword'] == 'Motel':
+                return None
 
         return place
 
@@ -212,6 +214,26 @@ def get_path(regex):
     for file_name in os.listdir('data'):
         if re.compile(regex).match(file_name):
             return os.path.join('data', file_name)
+
+
+def deep_get(dictionary, keys, default=None):
+    """
+    :param: (dict) usually a nested dict
+    :param: (list) keys as strings
+    :return: value or None
+
+    Example:
+    >>> d = {'ahoy': {'capn': 42}}
+    >>> deep_get(['ahoy', 'capn'], d)
+    42
+    """
+    if not keys:
+        return None
+
+    if len(keys) == 1:
+        return dictionary.get(keys[0], default)
+
+    return deep_get(dictionary.get(keys[0], {}), keys[1:])
 
 
 if __name__ == '__main__':
