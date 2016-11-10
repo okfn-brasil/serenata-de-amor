@@ -1,13 +1,13 @@
 import configparser
+import csv
+import datetime
+import lzma
 import math
 import os
 import re
-import lzma
-import csv
-import datetime
-from concurrent import futures
-from warnings import warn
 from io import StringIO
+from multiprocessing import Pool
+from shutil import copyfile
 
 import pandas as pd
 import requests
@@ -30,74 +30,79 @@ class SuspiciousPlaceSearch:
     def __init__(self, key):
         self.GOOGLE_API_KEY = key
 
-    def find_places(self, lat, lng, keywords):
+    def find_places(self, company, keywords):
         """
-        :param lat: (float) latitude
-        :param lng: (float) longitude
+        :param company: (dict) with latitude and longitude keys (as floats)
         :param keyworks: (iterable) list of keywords
         """
         for keyword in keywords:
 
             # Create the request for the Nearby Search Api. The Parameter
             # rankby=distance will return a ordered list by distance
+            lat, lng = company['latitude'], company['longitude']
             latlong = '{},{}'.format(lat, lng)
             url = self.NEARBY_URL.format(latlong, keyword, self.GOOGLE_API_KEY)
             nearby = requests.get(url).json()
 
-            # TODO: create distincts messages erros for the api results
             if nearby['status'] != 'OK':
                 if 'error_message' in nearby:
-                    msg = 'GooglePlacesAPIException: {}: {}'
-                    warn(msg.format(nearby['status'], nearby['error_message']))
-                else:
-                    msg = 'GooglePlacesAPIException: {}'
-                    warn(msg.format(nearby['status']))
+                    print('{}: {}'.format(nearby.get('status'),
+                                          nearby.get('error_message')))
+                elif nearby.get('status') != 'ZERO_RESULTS':
+                    msg = 'Google Places API Status: {}'
+                    print(msg.format(nearby.get('status')))
 
             # If have some result for this keywork, get first
             else:
-                place = nearby['results'][0]
-                latitude = float(place.get('geometry').get('location').get('lat'))
-                longitude = float(place.get('geometry').get('location').get('lng'))
-                distance = vincenty((lat, lng), (latitude, longitude)).meters
-                suspicious_place = {
-                    'id': place.get('place_id'),
-                    'keyword': keyword,
-                    'latitude': latitude,
-                    'longitude': longitude,
-                    'distance': distance
-                }
-                yield suspicious_place
+                try:
+                    place = nearby.get('results')[0]
+                    location = place.get('geometry').get('location')
+                    latitude = float(location.get('lat'))
+                    longitude = float(location.get('lng'))
+                    distance = vincenty((lat, lng), (latitude, longitude))
+                    yield {
+                        'id': place.get('place_id'),
+                        'keyword': keyword,
+                        'latitude': latitude,
+                        'longitude': longitude,
+                        'distance': distance.meters,
+                        'cnpj': company.get('cnpj')
+                    }
+                except TypeError:
+                    pass
 
     def place_details(self, place):
         """
         :param place: dictonary with id key.
         :return: dictionary updated with name, address and phone.
         """
-        url = self.DETAILS_URL.format(place['id'], self.GOOGLE_API_KEY)
+        url = self.DETAILS_URL.format(place.get('id'), self.GOOGLE_API_KEY)
         details = requests.get(url).json()
-        place['name'] = details['result']['name']
-        place['address'] = details['result'].get('formatted_address', '')
-        place['phone'] = details['result'].get('formatted_phone_number', '')
+        place.update({
+            'name': details.get('result').get('name'),
+            'address': details.get('result').get('formatted_address', ''),
+            'phone': details.get('result').get('formatted_phone_number', '')
+        })
         return place
 
-    def search(self, lat, lng):
+    def search(self, company):
         """
         Return a dictonary containt information of a
         suspect place arround a given position.
         A suspect place is some company that match a suspect keyword
         in a Google Places search.
 
-        :param lat: latitude
-        :param lng: longitude
+        :param company: (dict) with latitude and longitude keys (as floats)
         :return: closest_suspect_place, a dict with the keys:
-            - name : The name of suspect place
-            - latitude : The latitude of suspect place
-            - longitude : The longitude of suspect place
-            - distance : The distance in meters between suspect place and the given lat, lng
-            - address : The address  of suspect place
-            - phone : The phone of suspect place
-            - id : The Google Place ID of suspect place
-            - keyword : The Keyword that generate the place
+            * name : The name of suspect place
+            * latitude : The latitude of suspect place
+            * longitude : The longitude of suspect place
+            * distance : The distance in meters between suspect place and the
+              given lat, lng
+            * address : The address  of suspect place
+            * phone : The phone of suspect place
+            * id : The Google Place ID of suspect place
+            * keyword : The Keyword that generate the place
                         in Google Place Search
         """
         keywords = ('Acompanhantes',
@@ -114,12 +119,12 @@ class SuspiciousPlaceSearch:
                     'Swinger clubs')
 
         # for a case of nan in parameters
-        lat, lng = float(lat), float(lng)
+        lat, lng = float(company['latitude']), float(company['longitude'])
         if math.isnan(lat) or math.isnan(lng):
             return None
 
         # Get the closest place inside all the searched keywords
-        suspicious_places = self.find_places(lat, lng, keywords)
+        suspicious_places = self.find_places(company, keywords)
         try:
             closest_place = min(suspicious_places, key=lambda x: x['distance'])
         except ValueError:
@@ -127,74 +132,94 @@ class SuspiciousPlaceSearch:
 
         return self.place_details(closest_place)
 
+
 def search_suspicious_around_companies(companies):
     """
     :param companies: pandas dataframe.
     """
-    with futures.ThreadPoolExecutor(max_workers=40) as executor:
-        future_to_search_suspicious = dict()
-        for index, company in companies.iterrows():
-            future = executor.submit(search_suspicious_around_company, company)
-            future_to_search_suspicious[future] = company
-        for future in futures.as_completed(future_to_search_suspects):
-            company = future_to_search_suspicious[future]
-            if future.exception() is not None:
-                warn('{} raised an exception: {}'.format(company['cnpj'],
-                                                      future.exception()))
-            elif future.result() is not None:
-                write_suspicious_info(future.result(), company['cnpj'])
+    rows = companies.to_dict('records')
+    total = len(rows)
+    count = 0
+    with Pool(processes=4) as pool:
+        for company in pool.imap(search_suspicious_around_company, rows):
+            count += 1
+            print_status(total, count)
+            if company:
+                write_csv(company)
 
 
 def search_suspicious_around_company(company):
     """
-    :param company: panda series.
+    :param company: (dict)
     :return: suspect
     """
-    latitude = company["latitude"]
-    longitude = company['longitude']
-    geolocation = "{},{}".format(latitude, longitude)
-    if not geolocation:
-        warn('No geolocation information for company: {} ({})'
-            .format(company['name'], company['cnpj']))
+    latitude, longitude = company.get('latitude'), company.get('longitude')
+    if not latitude or not longitude:
+        msg = 'No geolocation information for company: {} ({})'
+        print(msg.format(company['name'], company['cnpj']))
         return None
 
     sp = SuspiciousPlaceSearch(settings.get('Google', 'APIKey'))
-    suspicious = sp.search(lat=latitude, lng=longitude)
-    return suspicious
-
-
-def write_suspicious_info(suspect_around, cnpj):
-    cnpj = ''.join(re.findall(r'[\d]', cnpj))
-    print('Writing {}'.format(cnpj))
-    write_csv(suspect_around.update({'cnpj': cnpj}))
+    return sp.search(company)
 
 
 def write_csv(company=None):
-    csv_io = StringIO()
-    fieldnames = ['id', 'keyword', 'latitude', 'longitude', 'distance', 'name',
-            'address', 'phone', 'cnpj']
-    writer = csv.DictWriter(csv_io, fieldnames=fieldnames)
-    if company:
-        writer.writerow(company)
-    else:
-        writer.writeheader()
-    with lzma.open(OUTPUT, 'at') as output:
-        print(csv_io.getvalue(), file=output)
-    csv_io.close()
+    if company or not os.path.exists(OUTPUT):
+        csv_io = StringIO()
+        fieldnames = ('id', 'keyword', 'latitude', 'longitude', 'distance',
+                      'name', 'address', 'phone', 'cnpj')
+
+        writer = csv.DictWriter(csv_io, fieldnames=fieldnames)
+        if company:
+            writer.writerow(company)
+        else:
+            writer.writeheader()
+
+        with lzma.open(OUTPUT, 'at') as output:
+            print(csv_io.getvalue(), file=output)
+
+        csv_io.close()
+
 
 def get_companies_path():
-    regex = r'^[\d-]{11}companies.xz$'
+    return get_path(r'^[\d-]{11}companies.xz$')
+
+
+def get_suspicious_path():
+    return get_path(r'^[\d-]{11}suspicious_distances.xz$')
+
+
+def get_path(regex):
     for file_name in os.listdir('data'):
         if re.compile(regex).match(file_name):
             return os.path.join('data', file_name)
 
 
+def print_status(total, count):
+    status = '[ {0:.1f}% ]'.format((count * 100) / total)
+    return print(status, end='\r')
+
+
 if __name__ == '__main__':
 
-    write_csv()
+    # get companies dataset
+    companies_path = get_companies_path()
+    companies = pd.read_csv(companies_path, low_memory=False)
 
-    data = pd.read_csv(get_companies_path(), low_memory=False)
+    # check for existing suspicious places dataset
+    suspicious_path = get_suspicious_path()
+    if suspicious_path:
+        suspicious = pd.read_csv(suspicious_path, low_memory=False)
+        if suspicious_path != OUTPUT:
+            copyfile(suspicious_path, OUTPUT)
+        remaining = companies[~companies.cnpj.isin(suspicious.cnpj)]
 
-    print('{} companies'.format(len(data)))
+    # start a suspicious places dataset if it doesn't exist
+    else:
+        remaining = companies
+        write_csv()
 
-    search_suspicious_around_companies(data)
+    # run
+    print('{} companies'.format(len(companies)))
+    print('{} pending'.format(len(remaining)))
+    search_suspicious_around_companies(remaining)
