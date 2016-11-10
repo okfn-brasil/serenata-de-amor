@@ -138,7 +138,7 @@ Here we explain what each script from `src/` does for you:
 
 1. `src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
 
-1. `src/search_suspect_places.py` iterates over the supplier info dataset and adds the closest _suspicious_ place data to it. A _suspicious place_ is a company nearby that are classified as night club, massage house, and other adult entertainment venues (it uses the Google Maps API set in `config.ini`).
+1. `src/fetch_suspicious_places.py` iterates over the supplier info dataset and adds the closest _suspicious_ place data to it. A _suspicious place_ is a company nearby that are classified as night club, massage house, and other adult entertainment venues (it uses the Google Maps API set in `config.ini`). You can run the script several times and it will only fetch suspicious places for suppliers not fetched yet.
 
 ##### Miscellaneous
 1. `src/backup_data.py` uploads files from `data/` to an Amazon S3 bucket set on `config.ini` .
