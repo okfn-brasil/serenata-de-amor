@@ -1,15 +1,14 @@
 FROM jupyter/datascience-notebook:latest
-MAINTAINER Serenata de Amor "datasciencebr@gmail.com"
 
 USER root
 
-RUN apt-get update && apt-get install -y \
-  unzip
+RUN apt-get update && apt-get install -y unzip
 
 USER jovyan
 
 COPY requirements.txt ./
 COPY conda_requirements.txt ./
+COPY config.ini.example ./config.ini
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
