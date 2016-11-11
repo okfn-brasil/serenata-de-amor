@@ -99,7 +99,7 @@ Beyond that we have four big directories with different purposes:
 
 | Directory | Purpose | File naming |
 |-----------|---------|-------------|
-| **`develop/`** | This is where we _explore_ data, feel free to create your own notebook for your exploration. | `[ISO 8601 date]-[author-initials]-[2-4 word description].ipynb` (e.g. `2016-05-13-ec-air-tickets.ipynb`) |
+| **`develop/`** | This is where we _explore_ data, feel free to create your own notebook for your exploration. | `[ISO 8601 date]-[author-username]-[2-4 word description].ipynb` (e.g. `2016-05-13-anaschwendler-air-tickets.ipynb`) |
 |**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
 | **`src/`** | This is where our auxiliary scripts lies, code to scrap data, to convert stuff etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
