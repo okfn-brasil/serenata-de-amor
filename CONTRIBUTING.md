@@ -63,7 +63,6 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
 1. Start the environment (it might take a while, the docker image has 4GB): `$ docker-compose up -d`
-1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
 1. Run the script to download data and other useful files: `$ docker-compose run --rm jupyter python src/fetch_datasets.py`
 1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm jupyter jupyter notebook`
 
