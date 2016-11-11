@@ -138,7 +138,7 @@ Here we explain what each script from `src/` does for you:
 
 1. `src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
 
-1. `src/fetch_suspicious_places.py` iterates over the supplier info dataset and adds the closest _suspicious_ place data to it. A _suspicious place_ is a company nearby that are classified as night club, massage house, and other adult entertainment venues (it uses the Google Maps API set in `config.ini`). You can run the script several times and it will only fetch suspicious places for suppliers not fetched yet.
+1. `src/fetch_sex_places.py` iterates over the supplier info dataset and adds the closest _suspicious_ sex place data to it. A sex place is a venue nearby that are classified as night club, massage house, and other adult entertainment venues (it uses the Google API set in `config.ini`). You can run the script several times and it will only search for sex places in the surrounding of companies that has no results for sex places yet.
 
 ##### Miscellaneous
 1. `src/backup_data.py` uploads files from `data/` to an Amazon S3 bucket set on `config.ini` .
@@ -149,11 +149,18 @@ Here we explain what are the datasets inside `data/`. They are not part of this 
 All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
 
 1. `data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `data/YYYY-MM-DD-ceap-datasets.md`.
+
 1. `data/datasets-format.html`: Original HTML in Portuguese from the Chamber of Deputies explaining CEAP dataset variables.
+
 1. `data/YYYY-MM-DD-ceap-datasets.md`: Table comparing contents from `data/YYYY-MM-DD-datasets_format.html` and our translation of variable names and descriptions.
+
 1. `data/YYYY-MM-DD-companies.xz`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
+
 1. `data/YYYY-MM-DD-congressperson_relatives.xz` contains data on the relatives of congresspeople and the nature of their relationship
+
 1. `data/YYYY-MM-DD-congressperson_relatives_raw.xz` also contains data on the relatives of congresspeople, but is only created if `src/get_family_names.py` fails to handle some names
+
+1. `data/YYYY-MM-DD-sex-place-distances.xz` contains the CNPJ of companies from `data/YYYY-MM-DD-companies.xz` together with the info and some data about the nearest sex place to it (see `src/fetch_sex_places.py`).
 
 ## Four moments
 
