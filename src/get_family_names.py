@@ -9,9 +9,9 @@ from bs4 import BeautifulSoup
 
 DATE = datetime.date.today().strftime('%Y-%m-%d')
 DATA_DIR = 'data'
-PROCESSED_DATA_FILE = '{}-congressperson_relatives.xz'
+PROCESSED_DATA_FILE = '{}-congressperson-relatives.xz'
 PROCESSED_DATA_PATH = os.path.join(DATA_DIR, PROCESSED_DATA_FILE).format(DATE)
-RAW_DATA_FILE = '{}-congressperson_relatives_raw.xz'
+RAW_DATA_FILE = '{}-congressperson-relatives-raw.xz'
 RAW_DATA_PATH = os.path.join(DATA_DIR, RAW_DATA_FILE).format(DATE)
 
 write_csv_params = {
