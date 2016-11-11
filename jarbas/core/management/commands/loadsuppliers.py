@@ -1,10 +1,11 @@
 import csv
 import lzma
-from datetime import date
+from datetime import datetime
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.utils.timezone import get_default_timezone
 
 from jarbas.core.management.commands import LoadCommand
 from jarbas.core.models import Activity, Supplier
@@ -96,7 +97,8 @@ class Command(LoadCommand):
                 year += 2000
             elif 50 < year <= 99:
                 year += 1900
-            return date(year, month, day)
+            dt = datetime(year, month, day, tzinfo=get_default_timezone())
+            return dt.strftime('%Y-%m-%d')
 
         except ValueError:
             return None
