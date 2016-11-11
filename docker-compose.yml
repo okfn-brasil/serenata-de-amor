@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - 8888:8888
+    volumes:
+      - .:/notebook
+    working_dir: /notebook
