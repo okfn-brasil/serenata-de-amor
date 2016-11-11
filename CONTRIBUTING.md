@@ -76,7 +76,7 @@ $ docker-compose run --rm jupyter bash
 
 In order to avoid tons of conflicts when trying to merge [Jupyter Notebooks](http://jupyter.org), there are some [guidelines we follow](http://www.svds.com/jupyter-notebook-best-practices-for-data-science/).
 
-That said one of our best practices is creating a `.html` and a `.py` version of each notebook. This can be done automatically and painlessly by editing the config file `~/.ipython/profile_nbserver/ipython_notebook_config.py` adding the folowing code:
+That said one of our best practices is creating a `.html` and a `.py` version of each notebook. This can be done automatically and painlessly by editing the config file `~/.jupyter/jupyter_notebook_config.py` adding the folowing code:
 
 ```python
 ### If you want to auto-save .html and .py versions of your notebook:
