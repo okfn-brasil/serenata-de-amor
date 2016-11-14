@@ -51,76 +51,55 @@ def find_sum_of_values(df, aggregator, property):
 
     return pd.DataFrame(result).sort_values(by=aggregator)
 
-def find_spends_by_month(df, applicant_id):
+
+def find_expenses_by_month(df, applicant_id):
     '''
-    Return a dataframe with the sum of values of spends by month
-    of the congress person of "applicant_id"
+    Return a dataframe with the sum of values of expenses by month
+    of the congressperson of "applicant_id"
 
     :params df: pandas dataframe to be sliced
-    :params applicant_id: unique id of the congress person 
-        
-    Ex: find_spends_by_month(df, 731)
-    Result dataframe contains:
-        - 1/Jan sum
-        - 2/Feb sum
-        - 3/Mar sum
-        - 4/Apr sum
-        - 5/May sum
-        - 6/Jun sum
-        - 7/Jul sum
-        - 8/Aug sum
-        - 9/Sep sum
-        - 10/Oct sum
-        - 11/Nov sum
-        - 12/Dec sum
-        - name
+    :params applicant_id: unique id of the congress person
+    :return: DataFrame with year, month (as integer), month (as string), sum,
+        congressperson name, applicant id.
     '''
 
-    months={1:"Jan",
-            2:"Feb",
-            3:"Mar",
-            4:"Apr",
-            5:"May",
-            6:"Jun",
-            7:"Jul",
-            8:"Aug",
-            9:"Sep",
-            10:"Oct",
-            11:"Nov",
-            12:"Dec"}
+    fields = ['congressperson_name', 'year', 'month']
     df_applicant = df[df.applicant_id == applicant_id]
-    result = {
-        "name":df_applicant["congressperson_name"].unique()
-    }
-       
-    for m in months.keys():
-        data = df_applicant[df.month == m]
-        result["{:>02}".format(m) + "/" + months[m]] = data.net_value.sum()
+    results = df_applicant.groupby(fields).agg({'net_value': np.sum})
+    return results.reset_index()
 
-    return pd.DataFrame([result])
 
-def find_spends_by_subquota(df, applicant_id, month=None):
+def find_expenses_by_subquota(df, applicant_id, year=None, month=None):
     '''
-    Return a dataframe with the sum of values of spends by subquotas
-    of the congress person of "applicant_id" and month "month"
+    Return a dataframe with the sum of values of expenses by subquotas
+    of the congressperson of "applicant_id". Month and year arguments are
+    optional. When ommitted this function sums all the expenses for the given
+    congressperson.
     Parameters:
-        :param sdf: pandas dataframe to be sliced
+        :params df: pandas dataframe to be sliced
         :params applicant_id: unique id of the congress person
     '''
 
-
     df_applicant = df[df.applicant_id == applicant_id]
-    
-    result = {
-        "name":df_applicant["congressperson_name"].unique(),
-        "total": 0  
-    }
-    if month != None:
-        df_applicant = df_applicant[df_applicant.month==month]
+    if year:
+        df_applicant = df_applicant[df_applicant.year == year]
+    if month:
+        df_applicant = df_applicant[df_applicant.month == month]
 
-    for c in df["subquota_description"].unique():
-        data = df_applicant[df.subquota_description == c]
-        result[c] = data.net_value.sum()
-        result["total"] += result[c]
-        
-    return pd.DataFrame([result])
+    fields = ['congressperson_name', 'subquota_description']
+    results = df_applicant.groupby(fields).agg({'net_value': np.sum})
+    results = results.reset_index()
+
+    def add_col_to_pos(df, col, value, pos):
+        df[col] = value
+        cols = df.columns.tolist()
+        cols.insert(pos, col)
+        return df[cols[:-1]]
+
+    if year:
+        results = add_col_to_pos(results, 'year', year, 1)
+
+    if month:
+        results = add_col_to_pos(results, 'month', month, 2)
+
+    return results
