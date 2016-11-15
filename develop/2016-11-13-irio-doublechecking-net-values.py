@@ -217,25 +217,25 @@ data_with_id = dataset[(~dataset['document_id'].isnull()) &
                        (~dataset['applicant_id'].isnull())]
 
 
-# In[ ]:
+# In[31]:
 
 keys = ['applicant_id', 'year', 'document_id']
 grouped = data_with_id.groupby(keys)
 len(grouped)
 
 
-# In[ ]:
+# In[32]:
 
 reimbursement_numbers = grouped['reimbursement_number'].agg(lambda x: ','.join(set(x))).reset_index()
 agg_net_values_int = grouped['net_value_int'].agg(np.sum).reset_index()
 
 
-# In[ ]:
+# In[33]:
 
 agg_net_values_int.head()
 
 
-# In[ ]:
+# In[34]:
 
 agg_data = pd.merge(pd.merge(reimbursement_numbers, agg_net_values_int, on=keys),
                     data_with_id,
@@ -246,19 +246,19 @@ agg_data.head()
 
 # There are 2,072,559 documents in the datasets, but when considering just the combination of non-empty values for `applicant_id`, `year` and `document_id`, half of that is found. In other words, the CEAP seem to have paid for about 1MM expenses so far.
 
-# In[ ]:
+# In[35]:
 
 len(agg_data)
 
 
-# In[ ]:
+# In[36]:
 
 agg_data.drop_duplicates(subset=keys, inplace=True)
 
 len(agg_data)
 
 
-# In[ ]:
+# In[37]:
 
 agg_data.drop(['reimbursement_number_from_original',
                'net_value_int_from_original'],
@@ -266,7 +266,7 @@ agg_data.drop(['reimbursement_number_from_original',
               inplace=True)
 
 
-# In[ ]:
+# In[38]:
 
 agg_data['document_value_int'] = (agg_data['document_value'] * 100.).apply(math.ceil).astype(np.int)
 agg_data['remark_value_int'] = (agg_data['remark_value'] * 100.).apply(math.ceil).astype(np.int)
@@ -275,21 +275,21 @@ agg_data['calc_net_value_int'] = agg_data['document_value_int'] - agg_data['rema
 agg_data['diff_net_value'] = agg_data['net_value_int'] - agg_data['calc_net_value_int']
 
 
-# In[ ]:
+# In[39]:
 
 with_significant_difference = agg_data.loc[agg_data['diff_net_value'].abs() > 2]
 
 
 # Disconsidering multiple records with this same combination, just 744 remain with a large difference between our own calculation of `net_value`s and the value directly in the original dataset.
 
-# In[ ]:
+# In[40]:
 
 len(with_significant_difference)
 
 
 # The majority of records were explained by the previous test, having all the flight ticket issues disappeared (though a few "Flight tickets" remain).
 
-# In[ ]:
+# In[41]:
 
 Chart(with_significant_difference).mark_bar().encode(
     x=X('subquota_description:O',
@@ -300,33 +300,33 @@ Chart(with_significant_difference).mark_bar().encode(
 )
 
 
-# In[ ]:
+# In[42]:
 
 agg_data[agg_data['reimbursement_number'].str.contains(',')]
 
 
 # The document with major positive difference in the dataset doesn't seem to have any irregularity. The deputy asked the reimbursement for R\$ 25.000,00, but received just R\$ 6.376,11.
 
-# In[ ]:
+# In[43]:
 
 with_significant_difference.sort_values('diff_net_value').iloc[0]
 
 
 # Deputies receiving less money than they asked is OK. What if they are receiving more than they should (values in the `document_value` column)?
 
-# In[ ]:
+# In[44]:
 
 has_extra_reimbursement = with_significant_difference['diff_net_value'] > 0
 extra_reimbursement = with_significant_difference[has_extra_reimbursement].     sort_values('diff_net_value', ascending=False)
 len(extra_reimbursement)
 
 
-# In[ ]:
+# In[45]:
 
 extra_reimbursement.head()
 
 
-# In[ ]:
+# In[46]:
 
 Chart(extra_reimbursement).mark_bar().encode(
     x=X('subquota_description:O',
@@ -337,29 +337,29 @@ Chart(extra_reimbursement).mark_bar().encode(
 )
 
 
-# In[ ]:
+# In[47]:
 
 extra_reimbursement.sort_values('diff_net_value', ascending=False).iloc[0]
 
 
 # This document says that a deputy received R\$ 3.226,59 more than it should. Let's check all the datasets we have to see if there's any mistake in the calculation.
 
-# In[ ]:
+# In[48]:
 
 dataset[dataset['document_id'] == '5951638']
 
 
-# In[ ]:
+# In[49]:
 
 data_with_id[data_with_id['document_id'] == '5951638']
 
 
-# In[ ]:
+# In[50]:
 
 extra_reimbursement[extra_reimbursement['document_id'] == '5951638']
 
 
-# In[ ]:
+# In[51]:
 
 extra_reimbursement[extra_reimbursement['document_id'] == '5951638'].iloc[0]
 
@@ -368,33 +368,33 @@ extra_reimbursement[extra_reimbursement['document_id'] == '5951638'].iloc[0]
 # 
 # There's a possibility that this extra payment counted towards other requests for reimbursements. Let's check.
 
-# In[ ]:
+# In[52]:
 
 dataset[(dataset['applicant_id'] == 2899) &         (dataset['subquota_number'] == 3) &         (dataset['year'] == 2016) &         (dataset['month'].isin([1, 2, 3]))]
 
 
 # Can't see anything proving that. Going to analize the next reimbursement.
 
-# In[ ]:
+# In[53]:
 
 extra_reimbursement.sort_values('diff_net_value', ascending=False).iloc[1]
 
 
-# In[ ]:
+# In[54]:
 
 (extra_reimbursement['remark_value'] > 0).sum()
 
 
 # Nope. Not a clue.
 
-# In[ ]:
+# In[55]:
 
 extra_reimbursement.sort_values('diff_net_value', ascending=False).iloc[2]
 
 
 # Not yet.
 
-# In[ ]:
+# In[56]:
 
 extra_reimbursement.sort_values('diff_net_value', ascending=False).iloc[3]
 
