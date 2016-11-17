@@ -1,0 +1,26 @@
+version: '2'
+services:
+  jarbas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes_from:
+       - elm
+    depends_on:
+       - elm
+
+  elm:
+    build: 
+      context: .
+      dockerfile: Dockerfile-elm
+    
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    volumes_from:
+      - jarbas
+    depends_on:
+      - jarbas 
+    ports:
+      - "80:80"

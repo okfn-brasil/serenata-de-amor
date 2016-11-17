@@ -1,5 +1,9 @@
+upstream web {
+    server jarbas:8001    max_fails=3;
+}
+
 server {
-    server_name jarbas.datasciencebr.com;
+    server_name localhost;
 
     access_log on;
 
@@ -8,7 +12,7 @@ server {
     }
 
     location / {
-        proxy_pass http://127.0.0.1:8001;
+        proxy_pass http://web;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Host $server_name;
         proxy_set_header X-Real-IP $remote_addr;
