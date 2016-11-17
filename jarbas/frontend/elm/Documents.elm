@@ -6,8 +6,9 @@ import Documents.Inputs as Inputs
 import Documents.Map as Map
 import Documents.Receipt as Receipt
 import Documents.Supplier as Supplier
-import Html exposing (div, form, p, span, text)
+import Html exposing (a, div, form, p, span, text)
 import Html.App
+import Html.Attributes exposing (href)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
@@ -682,6 +683,19 @@ viewPagination model =
 -- Documents
 
 
+sourceUrl : Document -> String
+sourceUrl document =
+    Http.url
+        "http://www.camara.gov.br/cota-parlamentar/documento"
+        [ ( "nuDeputadoId", toString document.applicant_id )
+        , ( "numMes", toString document.month )
+        , ( "numAno", toString document.year )
+        , ( "despesa", toString document.subquota_number )
+        , ( "cnpjFornecedor", document.cnpj_cpf )
+        , ( "idDocumento", document.document_number )
+        ]
+
+
 viewError : Language -> Maybe Http.Error -> Html.Html Msg
 viewError lang error =
     case error of
@@ -844,7 +858,16 @@ viewDocument lang index document =
             ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
-            [ Options.styled div [] (List.map (viewDocumentBlock lang) blocks) ]
+            [ Options.styled div [] (List.map (viewDocumentBlock lang) blocks)
+            , Options.styled
+                p
+                [ Typography.caption, Options.css "margin-top" "1rem" ]
+                [ text (translate lang DocumentSource)
+                , a
+                    [ href (sourceUrl document) ]
+                    [ text (translate lang DocumentChamberOfDeputies) ]
+                ]
+            ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] [ supplierTitle, supplier ] ]

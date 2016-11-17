@@ -57,6 +57,8 @@ type TranslationId
     | FieldReimbursementNumber
     | FieldReimbursementValue
     | FieldApplicantId
+    | DocumentSource
+    | DocumentChamberOfDeputies
     | ReceiptFetch
     | ReceiptAvailable
     | ReceiptNotAvailable
@@ -86,6 +88,8 @@ type TranslationId
     | SupplierLastUpdated
     | SupplierMainActivity
     | SupplierSecondaryActivity
+    | SupplierSource
+    | SupplierFederalRevenue
     | ResultTitleSingular
     | ResultTitlePlural
     | DocumentTitle
@@ -322,6 +326,16 @@ translate lang trans =
                         "Applicant ID"
                         "Identificador do Solicitante"
 
+                DocumentSource ->
+                    TranslationSet
+                        "Source: "
+                        "Fonte: "
+
+                DocumentChamberOfDeputies ->
+                    TranslationSet
+                        "Chamber of Deputies"
+                        "Câmara dos Deputados"
+
                 ReceiptFetch ->
                     TranslationSet
                         " Fetch receipt"
@@ -466,6 +480,16 @@ translate lang trans =
                     TranslationSet
                         "Secondary Activity"
                         "Atividades secundárias"
+
+                SupplierSource ->
+                    TranslationSet
+                        "Source: "
+                        "Fonte: "
+
+                SupplierFederalRevenue ->
+                    TranslationSet
+                        "Federal Revenue of Brazil"
+                        "Receita Federal"
 
                 DocumentTitle ->
                     TranslationSet

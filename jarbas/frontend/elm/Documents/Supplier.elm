@@ -290,6 +290,9 @@ viewSupplier lang apiKey supplier =
 
         title =
             " " ++ (Maybe.withDefault "" supplier.name)
+
+        source =
+            "http://www.receita.fazenda.gov.br/PessoaJuridica/CNPJ/cnpjreva/cnpjreva_solicitacao2.asp"
     in
         div
             []
@@ -298,6 +301,12 @@ viewSupplier lang apiKey supplier =
                 [ Typography.subhead ]
                 [ icon, text title, viewImage apiKey supplier ]
             , Options.styled div [] (rows ++ activities)
+            , Options.styled
+                p
+                [ Typography.caption, Options.css "margin-top" "1rem" ]
+                [ text (translate lang SupplierSource)
+                , a [ href source ] [ text (translate lang SupplierFederalRevenue) ]
+                ]
             ]
 
 
