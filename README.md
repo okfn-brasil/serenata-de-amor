@@ -51,8 +51,22 @@ This endpoit gets the info we have for a specific supplier. The endpoint expects
 
 There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapper) for the API. The [tapioca-jarbas](https://github.com/daneoshiga/tapioca-jarbas/) can be installed with `pip install tapioca-jarbas` and can be used to access the API in any Python script.
 
+## Using Docker
 
-## Install
+### Requirements 
+
+docker
+docker-compose 
+
+### To use
+
+```
+docker-compose up -d
+```
+
+To test access http://localhost on your browser
+
+## Install local
 
 ### Requirements
 
