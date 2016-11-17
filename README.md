@@ -57,11 +57,12 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 
 docker
 docker-compose 
+make
 
 ### To use
 
 ```
-docker-compose up -d
+make run.devel
 ```
 
 To test access http://localhost on your browser
