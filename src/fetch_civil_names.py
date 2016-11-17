@@ -1,5 +1,4 @@
 import datetime
-import html
 import os
 import requests
 import re
@@ -36,10 +35,11 @@ class CivilNames:
         dates = sorted(set([l[0] for l in matches if l]), reverse=True)
 
         for date in dates:
-            filename = os.path.join(self.DATA_PATH, '{}-{}.xz'.format(date, name))
+            filename = '{}-{}.xz'.format(date, name)
+            filepath = os.path.join(self.DATA_PATH, filename)
 
-            if os.path.isfile(filename):
-                return filename
+            if os.path.isfile(filepath):
+                return filepath
 
         return None
 
@@ -47,16 +47,16 @@ class CivilNames:
 
         newest_file = self.find_newest_file(name)
         if newest_file is None:
-            raise TypeError('Could not find the dataset for {%s}.' % newest_file)
+            msg = 'Could not find the dataset for {}.'.format(newest_file)
+            raise TypeError(msg)
 
-        return pd.read_csv(newest_file, dtype={
-                                            'congressperson_id': np.str
-                                        })
+        return pd.read_csv(newest_file, dtype={'congressperson_id': np.str})
 
     def get_all_congresspeople_ids(self):
         print('Fetching all congresspeople ids...')
 
-        ids = (self.read_csv(name)['congressperson_id'] for name in ['current-year', 'last-year', 'previous-years'])
+        datasets = ('current-year', 'last-year', 'previous-years')
+        ids = (self.read_csv(name)['congressperson_id'] for name in datasets)
         distinct_ids = pd.concat(ids).unique()
         self.total = len(distinct_ids)
 
@@ -66,68 +66,76 @@ class CivilNames:
         df = pd.DataFrame(data=congressperson_civil_names)
 
         print('Writing file...')
-        df.to_csv(os.path.join(self.DATA_PATH, self.FILE_BASE_NAME), **self.CSV_PARAMS)
+        filepath = os.path.join(self.DATA_PATH, self.FILE_BASE_NAME)
+        df.to_csv(filepath, **self.CSV_PARAMS)
 
         print('Done.')
 
-    def fetch_primary_repository(self, congress_id):
-        page = requests.get(self.PRIMARY_URL.format(congress_id))
-        data = str(page.content.decode('utf-8'))
+    @staticmethod
+    def parse_primary_repository(data, congress_id):
+        try:
+            soup = BeautifulSoup(data, 'html.parser')
+            attrs = {'class': 'visualNoMarker'}
+            attributes = soup.findAll('ul', attrs=attrs)[0]
+            line_name = attributes.find('li')
+            [x.extract() for x in line_name('strong')]  # extract tag strong
+            civil_name = str(line_name.text.strip()).upper()
 
-        if page.status_code != 200:
-            msg = 'HTTP request to {} failed with status code {}'
-            print(msg.format(self.PRIMARY_URL.format(congress_id), page.status_code))
+            return dict(congressperson_id=congress_id, civil_name=civil_name)
 
-            try:
-                soup = BeautifulSoup(data, 'html.parser')
-                attributes = soup.findAll('ul', attrs={'class': 'visualNoMarker'})[0]
-                line_name = attributes.find('li')
+        except IndexError:
+            print('Could not parse data')
 
-                # extract tag strong from line_name
-                [x.extract() for x in line_name('strong')]
-
-                return dict(congressperson_id=congress_id, civil_name=str(line_name.text.strip()).upper())
-            except IndexError:
-                print('Could not parse data')
-
-        return None
-
-    def fetch_secondary_repository(self, congress_id):
-        page = requests.get(self.SECONDARY_URL.format(congress_id))
-        data = str(page.content.decode('utf-8'))
-
-        if page.status_code != 200:
-            msg = 'HTTP request to {} failed with status code {}'
-            print(msg.format(self.SECONDARY_URL.format(congress_id), page.status_code))
-
+    @staticmethod
+    def parse_secondary_repository(data, congress_id):
         try:
             soup = BeautifulSoup(data, 'html.parser')
             attributes = soup.findAll('div', attrs={'class': 'bioDetalhes'})[0]
             line_name = attributes.find('strong')
+            civil_name = str(line_name.text.strip()).upper()
+            return dict(congressperson_id=congress_id, civil_name=civil_name)
 
-            return dict(congressperson_id=congress_id, civil_name=str(line_name.text.strip()).upper())
         except IndexError:
             print('Could not parse data')
 
+    @staticmethod
+    def fetch_repository(url, congressperson_id, parser):
+        page = requests.get(url)
+
+        if page.status_code != 200:
+            msg = 'HTTP request to {} failed with status code {}'
+            print(msg.format(url, page.status_code))
+            return
+
+        data = str(page.content.decode('utf-8'))
+        return parser(data, congressperson_id)
+
     def fetch_data_repository(self, congress_id):
+        primary_url = self.PRIMARY_URL.format(congress_id)
+        data = self.fetch_repository(
+            primary_url,
+            congress_id,
+            self.parse_primary_repository
+        )
 
-        data = self.fetch_primary_repository(congress_id)
-
-        if data is None:
-            return self.fetch_secondary_repository(congress_id)
-        else:
-            return data
+        if not data:
+            secondary_url = self.SECONDARY_URL.format(congress_id)
+            return self.fetch_repository(
+                secondary_url,
+                congress_id,
+                self.parse_secondary_repository
+            )
+        return data
 
     def get_civil_names(self):
-
         congresspeople_ids = self.get_all_congresspeople_ids()
         for ind, congress_id in enumerate(congresspeople_ids):
-
             if not np.math.isnan(float(congress_id)):
-                print('Processed {} out of {} ({:.2f}%)'.format(ind, self.total, ind / self.total * 100))
+                percentage = (ind / self.total * 100)
+                msg = 'Processed {} out of {} ({:.2f}%)'
+                print(msg.format(ind, self.total, percentage), end='\r')
                 yield dict(self.fetch_data_repository(congress_id))
 
 if __name__ == '__main__':
     civil_names = CivilNames()
     civil_names.write_civil_file(civil_names.get_civil_names())
-
