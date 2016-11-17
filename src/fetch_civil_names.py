@@ -124,7 +124,7 @@ class CivilNames:
         for ind, congress_id in enumerate(congresspeople_ids):
 
             if not np.math.isnan(float(congress_id)):
-                print('Processed {} {} out of {} ({:.2f}%)'.format(congress_id, ind, self.total, ind / self.total * 100))
+                print('Processed {} out of {} ({:.2f}%)'.format(ind, self.total, ind / self.total * 100))
                 yield dict(self.fetch_data_repository(congress_id))
 
 if __name__ == '__main__':
