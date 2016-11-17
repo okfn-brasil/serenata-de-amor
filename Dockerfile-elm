@@ -6,4 +6,4 @@ COPY jarbas jarbas
 RUN npm install
 VOLUME /assets
 RUN npm run assets
-CMD cp -r jarbas /assets
+CMD ["cp", "-r", "jarbas", "/assets"]

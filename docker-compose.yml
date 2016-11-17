@@ -4,23 +4,31 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes_from:
-       - elm
+    volumes:
+       - "staticfiles:/code/staticfiles"
+       - "assets:/code/jarbas/frontend/"
     depends_on:
        - elm
 
   elm:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile-elm
-    
+    volumes:
+      - "assets:/assets/"
+
   nginx:
     build:
       context: .
       dockerfile: Dockerfile-nginx
-    volumes_from:
-      - jarbas
-    depends_on:
-      - jarbas 
+    volumes:
+      - "staticfiles:/opt/jarbas/staticfiles"
     ports:
       - "80:80"
+    depends_on:
+      - "jarbas"
+volumes:
+  assets:
+    external: false
+  staticfiles:
+    external: false

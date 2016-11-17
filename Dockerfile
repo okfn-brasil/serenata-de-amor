@@ -11,6 +11,4 @@ RUN python manage.py migrate
 #RUN python manage.py loadsuppliers
 #RUN python manage.py ceapdatasets
 VOLUME /code/staticfiles
-CMD cp -r /assets/jarbas/* /code/jarbas/ && \
-    python manage.py collectstatic --no-input && \
-    gunicorn jarbas.wsgi:application --reload --bind 0.0.0.0:8001 --workers 4
+CMD ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8001", "--workers", "4"]
