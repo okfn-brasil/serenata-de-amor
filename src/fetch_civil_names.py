@@ -1,4 +1,5 @@
 import datetime
+import html
 import os
 import requests
 import re
@@ -11,9 +12,12 @@ class CivilNames:
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     DATA_PATH = os.path.join(BASE_DIR, 'data')
+
     DATE = datetime.date.today().strftime('%Y-%m-%d')
     FILE_BASE_NAME = '{}-congressperson-civil-names.xz'.format(DATE)
-    URL_SCRAPING = 'http://www.camara.leg.br/Internet/deputado/Dep_Detalhe.asp?id={}'
+
+    PRIMARY_URL = 'http://www.camara.leg.br/Internet/deputado/Dep_Detalhe.asp?id={}'
+    SECONDARY_URL = 'http://www2.camara.leg.br/deputados/pesquisa/layouts_deputados_biografia?pk={}'
 
     CSV_PARAMS = {
         'compression': 'xz',
@@ -66,17 +70,13 @@ class CivilNames:
 
         print('Done.')
 
-    def get_civil_names(self):
+    def fetch_primary_repository(self, congress_id):
+        page = requests.get(self.PRIMARY_URL.format(congress_id))
+        data = str(page.content.decode('utf-8'))
 
-        congresspeople_ids = self.get_all_congresspeople_ids()
-        for ind, congress_id in enumerate(congresspeople_ids):
-
-            page = requests.get(self.URL_SCRAPING.format(congress_id))
-            data = str(page.content.decode('utf-8'))
-
-            if page.status_code != 200:
-                msg = 'HTTP request to {} failed with status code {}'
-                print(msg.format(self.URL_SCRAPING.format(congress_id), page.status_code))
+        if page.status_code != 200:
+            msg = 'HTTP request to {} failed with status code {}'
+            print(msg.format(self.PRIMARY_URL.format(congress_id), page.status_code))
 
             try:
                 soup = BeautifulSoup(data, 'html.parser')
@@ -86,11 +86,46 @@ class CivilNames:
                 # extract tag strong from line_name
                 [x.extract() for x in line_name('strong')]
 
-                print('Processed {} out of {} ({:.2f}%)'.format(ind, self.total, ind / self.total * 100))
-
-                yield dict(congressperson_id=congress_id, civil_name=line_name.text.strip())
+                return dict(congressperson_id=congress_id, civil_name=str(line_name.text.strip()).upper())
             except IndexError:
                 print('Could not parse data')
+
+        return None
+
+    def fetch_secondary_repository(self, congress_id):
+        page = requests.get(self.SECONDARY_URL.format(congress_id))
+        data = str(page.content.decode('utf-8'))
+
+        if page.status_code != 200:
+            msg = 'HTTP request to {} failed with status code {}'
+            print(msg.format(self.SECONDARY_URL.format(congress_id), page.status_code))
+
+        try:
+            soup = BeautifulSoup(data, 'html.parser')
+            attributes = soup.findAll('div', attrs={'class': 'bioDetalhes'})[0]
+            line_name = attributes.find('strong')
+
+            return dict(congressperson_id=congress_id, civil_name=str(line_name.text.strip()).upper())
+        except IndexError:
+            print('Could not parse data')
+
+    def fetch_data_repository(self, congress_id):
+
+        data = self.fetch_primary_repository(congress_id)
+
+        if data is None:
+            return self.fetch_secondary_repository(congress_id)
+        else:
+            return data
+
+    def get_civil_names(self):
+
+        congresspeople_ids = self.get_all_congresspeople_ids()
+        for ind, congress_id in enumerate(congresspeople_ids):
+
+            if not np.math.isnan(float(congress_id)):
+                print('Processed {} {} out of {} ({:.2f}%)'.format(congress_id, ind, self.total, ind / self.total * 100))
+                yield dict(self.fetch_data_repository(congress_id))
 
 if __name__ == '__main__':
     civil_names = CivilNames()
