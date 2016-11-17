@@ -20,7 +20,13 @@ pip install -r requirements.txt
 echo "==> Running migrations…"
 python manage.py migrate
 
-echo "==> Running post compile script…"
-source bin/post_compile
+echo "==> $ python manage.py ceapdatasets"
+python manage.py ceapdatasets
+
+echo "==> $ python manage.py assets build --no-cache"
+python manage.py assets build --no-cache
+
+echo "==> $ python manage.py collectstatic --no-input"
+python manage.py collectstatic --no-input
 
 echo "==> Done!"
