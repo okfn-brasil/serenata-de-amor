@@ -30,7 +30,8 @@ def download_backup():
              '2016-08-08-previous-years.xz',
              '2016-08-08-ceap-datasets.md',
              '2016-08-08-datasets-format.html',
-             '2016-09-03-companies.xz']
+             '2016-09-03-companies.xz',
+             '2016-11-11-congressperson-relatives.xz']
     for filename in files:
         url = 'https://%s.amazonaws.com/%s/%s' % (region, bucket, filename)
         filepath = 'data/%s' % filename
