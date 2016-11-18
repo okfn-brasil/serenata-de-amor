@@ -1,10 +1,10 @@
-upstream web {
-    server jarbas:8001    max_fails=3;
-}
+resolver 127.0.0.11 valid=1s;
+
 
 server {
+    access_log /dev/stdout;
     server_name localhost;
-
+    set $alias "apps";
     access_log on;
 
     location /static/ {
@@ -12,7 +12,7 @@ server {
     }
 
     location / {
-        proxy_pass http://web;
+        proxy_pass http://$alias:8001;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Host $server_name;
         proxy_set_header X-Real-IP $remote_addr;

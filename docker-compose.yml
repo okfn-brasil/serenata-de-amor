@@ -13,6 +13,12 @@ services:
     depends_on:
        - elm
        - db
+    networks:
+      backend:
+      frontend:
+        aliases:
+          - apps
+
 
   elm:
     build:
@@ -31,6 +37,8 @@ services:
       - "80:80"
     depends_on:
       - "jarbas"
+    networks:
+      - frontend
 
   db:
     image: postgres:9.6
@@ -38,8 +46,21 @@ services:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_USER=jarbas
       - POSTGRES_DB=jarbas
+    networks:
+        - backend
+    volumes:
+        - "db:/var/lib/postgresql"
+
 volumes:
   assets:
     external: false
   staticfiles:
     external: false
+  db:
+    external: false
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
