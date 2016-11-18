@@ -53,12 +53,11 @@ class Reimbursements:
     def receipts(self):
         print('Merging all datasets…')
         datasets = ('current-year', 'last-year', 'previous-years')
-        dataset = pd.DataFrame()
         data = (self.read_csv(name) for name in datasets)
-        dataset = pd.concat(data)
-        return dataset
+        return pd.concat(data)
 
-    def group(self, receipts):
+    @staticmethod
+    def group(receipts):
         print('Dropping rows without document_value or reimbursement_number…')
         subset = ('document_value', 'reimbursement_number')
         receipts = receipts.dropna(subset=subset)
@@ -67,9 +66,9 @@ class Reimbursements:
         receipt_with_id = receipts[(~receipts['document_id'].isnull()) &
                                    (~receipts['year'].isnull()) &
                                    (~receipts['applicant_id'].isnull())]
-        keys = ('applicant_id', 'year', 'document_id')
+        keys = ('year', 'applicant_id', 'document_id')
         grouped = receipt_with_id.groupby(keys)
-        return grouped
+        return grouped.aggregate(lambda x: ', '.join(set(x))).reset_index()
 
     def write_reimbursement_file(self, receipts):
         print('Casting changes to a new DataFrame…')
