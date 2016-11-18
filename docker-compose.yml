@@ -7,8 +7,12 @@ services:
     volumes:
        - "staticfiles:/code/staticfiles"
        - "assets:/code/jarbas/frontend/"
+    environment:
+       - SECRET_KEY=lets-rock
+       - DATABASE_URL=postgres://jarbas:mysecretpassword@db/jarbas
     depends_on:
        - elm
+       - db
 
   elm:
     build:
@@ -27,6 +31,13 @@ services:
       - "80:80"
     depends_on:
       - "jarbas"
+
+  db:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=jarbas
+      - POSTGRES_DB=jarbas
 volumes:
   assets:
     external: false
