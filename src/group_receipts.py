@@ -57,18 +57,65 @@ class Reimbursements:
         return pd.concat(data)
 
     @staticmethod
-    def group(receipts):
+    def aggregate(grouped, old, new, func):
+        """
+        Gets a GroupBy object, aggregates it on `old` using `func`, then rename
+        the series name from `old` to `new`, returning a DataFrame.
+        """
+        output = grouped[old].agg(func)
+        output = output.rename(index=new, inplace=True)
+        return output.reset_index()
+
+    def group(self, receipts):
         print('Dropping rows without document_value or reimbursement_number…')
         subset = ('document_value', 'reimbursement_number')
         receipts = receipts.dropna(subset=subset)
 
         print('Grouping dataset by applicant_id, document_id and year…')
-        receipt_with_id = receipts[(~receipts['document_id'].isnull()) &
-                                   (~receipts['year'].isnull()) &
-                                   (~receipts['applicant_id'].isnull())]
         keys = ('year', 'applicant_id', 'document_id')
-        grouped = receipt_with_id.groupby(keys)
-        return grouped.aggregate(lambda x: ', '.join(set(x))).reset_index()
+        valid_receipts = receipts[(~receipts['document_id'].isnull()) &
+                                  (~receipts['year'].isnull()) &
+                                  (~receipts['applicant_id'].isnull())]
+        grouped = valid_receipts.groupby(keys)
+
+        print('Gathering all reimbursement numbers together…')
+        numbers = self.aggregate(
+            grouped,
+            'reimbursement_number',
+            'reimbursement_numbers',
+            lambda x: ', '.join(set(x))
+        )
+
+        print('Summing all net values together…')
+        net_total = self.aggregate(
+            grouped,
+            'net_value',
+            'total_net_value',
+            np.sum
+        )
+
+        print('Summing all reimbursement values together…')
+        total = self.aggregate(
+            grouped,
+            'reimbursement_value',
+            'reimbursement_value_total',
+            np.sum
+        )
+
+        print('Generating the new dataset…')
+        final = pd.merge(
+            pd.merge(pd.merge(total, net_total, on=keys), numbers, on=keys),
+            valid_receipts,
+            on=keys
+        )
+        final = final.drop('net_value', 1)
+        final = final.drop('reimbursement_number', 1)
+        final = final.drop('reimbursement_value', 1)
+        return final
+
+    @staticmethod
+    def unique_str(strings):
+        return ', '.join(set(strings))
 
     def write_reimbursement_file(self, receipts):
         print('Casting changes to a new DataFrame…')
