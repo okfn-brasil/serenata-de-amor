@@ -4,6 +4,7 @@ import re
 import pandas as pd
 import numpy as np
 
+
 class Reimbursements:
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,44 +37,52 @@ class Reimbursements:
         if newest_file is None:
             msg = 'Could not find the dataset for {}.'.format(newest_file)
             raise TypeError(msg)
-        return pd.read_csv(newest_file, dtype={'document_id': np.str,
-                              'congressperson_id': np.str,
-                              'congressperson_document': np.str,
-                              'term_id': np.str,
-                              'cnpj_cpf': np.str,
-                              'reimbursement_number': np.str})
 
-    def get_all_receipts(self):
-        print('Fetching all receipts ids...')
+        print('Loading {}…'.format(newest_file))
+        dtype = {
+            'document_id': np.str,
+            'congressperson_id': np.str,
+            'congressperson_document': np.str,
+            'term_id': np.str,
+            'cnpj_cpf': np.str,
+            'reimbursement_number': np.str
+        }
+        return pd.read_csv(newest_file, dtype=dtype)
+
+    @property
+    def receipts(self):
+        print('Merging all datasets…')
         datasets = ('current-year', 'last-year', 'previous-years')
         dataset = pd.DataFrame()
         data = (self.read_csv(name) for name in datasets)
         dataset = pd.concat(data)
         return dataset
 
-    def group_receipts(self, receipts):
-        receipts = receipts.dropna(
-            subset=['document_value', 'reimbursement_number'])
+    def group(self, receipts):
+        print('Dropping rows without document_value or reimbursement_number…')
+        subset = ('document_value', 'reimbursement_number')
+        receipts = receipts.dropna(subset=subset)
+
+        print('Grouping dataset by applicant_id, document_id and year…')
         receipt_with_id = receipts[(~receipts['document_id'].isnull()) &
-                       (~receipts['year'].isnull()) &
-                       (~receipts['applicant_id'].isnull())]
-        keys = ['applicant_id', 'year', 'document_id']
+                                   (~receipts['year'].isnull()) &
+                                   (~receipts['applicant_id'].isnull())]
+        keys = ('applicant_id', 'year', 'document_id')
         grouped = receipt_with_id.groupby(keys)
         return grouped
 
     def write_reimbursement_file(self, receipts):
+        print('Casting changes to a new DataFrame…')
         df = pd.DataFrame(data=receipts)
 
-        print('Writing file...')
+        print('Writing it to file…')
         filepath = os.path.join(self.DATA_PATH, self.FILE_BASE_NAME)
         df.to_csv(filepath, **self.CSV_PARAMS)
 
         print('Done.')
 
-    def get_receipts(self):
-        receipts = self.get_all_receipts()
-        return self.group_receipts(receipts)
 
 if __name__ == '__main__':
     reimbursements = Reimbursements()
-    reimbursements.write_reimbursement_file(reimbursements.get_receipts())
+    df = reimbursements.group(reimbursements.receipts)
+    reimbursements.write_reimbursement_file(df)
