@@ -1,0 +1,66 @@
+version: '2'
+services:
+  jarbas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+       - "staticfiles:/code/staticfiles"
+       - "assets:/code/jarbas/frontend/"
+    environment:
+       - SECRET_KEY=lets-rock
+       - DATABASE_URL=postgres://jarbas:mysecretpassword@db/jarbas
+    depends_on:
+       - elm
+       - db
+    networks:
+      backend:
+      frontend:
+        aliases:
+          - apps
+
+
+  elm:
+    build:
+      context: .
+      dockerfile: Dockerfile-elm
+    volumes:
+      - "assets:/assets/"
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    volumes:
+      - "staticfiles:/opt/jarbas/staticfiles"
+    ports:
+      - "80:80"
+    depends_on:
+      - "jarbas"
+    networks:
+      - frontend
+
+  db:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=jarbas
+      - POSTGRES_DB=jarbas
+    networks:
+        - backend
+    volumes:
+        - "db:/var/lib/postgresql"
+
+volumes:
+  assets:
+    external: false
+  staticfiles:
+    external: false
+  db:
+    external: false
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge

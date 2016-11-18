@@ -1,6 +1,10 @@
-server {
-    server_name jarbas.datasciencebr.com;
+resolver 127.0.0.11 valid=1s;
 
+
+server {
+    access_log /dev/stdout;
+    server_name localhost;
+    set $alias "apps";
     access_log on;
 
     location /static/ {
@@ -8,7 +12,7 @@ server {
     }
 
     location / {
-        proxy_pass http://127.0.0.1:8001;
+        proxy_pass http://$alias:8001;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Host $server_name;
         proxy_set_header X-Real-IP $remote_addr;
