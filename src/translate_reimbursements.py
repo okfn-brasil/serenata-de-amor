@@ -44,26 +44,26 @@ class Reimbursements:
                               'cnpj_cpf': np.str,
                               'reimbursement_number': np.str})
 
-    def get_all_recipes(self):
-        print('Fetching all recipes ids...')
+    def get_all_receipts(self):
+        print('Fetching all receipts ids...')
         datasets = ('current-year', 'last-year', 'previous-years')
         dataset = pd.DataFrame()
         data = (self.read_csv(name) for name in datasets)
         dataset = pd.concat(data)
         return dataset
 
-    def group_recipes(self, recipes):
-        recipes = recipes.dropna(
+    def group_receipts(self, receipts):
+        receipts = receipts.dropna(
             subset=['document_value', 'reimbursement_number'])
-        recipe_with_id = recipes[(~recipes['document_id'].isnull()) &
-                       (~recipes['year'].isnull()) &
-                       (~recipes['applicant_id'].isnull())]
+        receipt_with_id = receipts[(~receipts['document_id'].isnull()) &
+                       (~receipts['year'].isnull()) &
+                       (~receipts['applicant_id'].isnull())]
         keys = ['applicant_id', 'year', 'document_id']
-        grouped = recipe_with_id.groupby(keys)
+        grouped = receipt_with_id.groupby(keys)
         return grouped
 
-    def write_reimbursement_file(self, recipes):
-        df = pd.DataFrame(data=recipes)
+    def write_reimbursement_file(self, receipts):
+        df = pd.DataFrame(data=receipts)
 
         print('Writing file...')
         filepath = os.path.join(self.DATA_PATH, self.FILE_BASE_NAME)
@@ -71,10 +71,10 @@ class Reimbursements:
 
         print('Done.')
 
-    def get_recipes(self):
-        recipes = self.get_all_recipes()
-        return self.group_recipes(recipes)
+    def get_receipts(self):
+        receipts = self.get_all_receipts()
+        return self.group_receipts(receipts)
 
 if __name__ == '__main__':
     reimbursements = Reimbursements()
-    reimbursements.write_reimbursement_file(reimbursements.get_recipes())
+    reimbursements.write_reimbursement_file(reimbursements.get_receipts())
