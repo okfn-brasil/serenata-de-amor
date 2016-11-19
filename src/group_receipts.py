@@ -108,9 +108,10 @@ class Reimbursements:
             valid_receipts,
             on=keys
         )
-        final = final.drop('net_value', 1)
+        final.rename(columns={'net_value': 'net_values',
+                              'reimbursement_value': 'reimbursement_values'},
+                     inplace=True)
         final = final.drop('reimbursement_number', 1)
-        final = final.drop('reimbursement_value', 1)
         return final
 
     @staticmethod
