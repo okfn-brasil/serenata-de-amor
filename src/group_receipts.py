@@ -40,12 +40,21 @@ class Reimbursements:
 
         print('Loading {}…'.format(newest_file))
         dtype = {
-            'document_id': np.str,
-            'congressperson_id': np.str,
-            'congressperson_document': np.str,
-            'term_id': np.str,
+            'applicant_id': np.str,
+            'batch_number': np.str,
             'cnpj_cpf': np.str,
-            'reimbursement_number': np.str
+            'congressperson_document': np.str,
+            'congressperson_id': np.str,
+            'document_id': np.str,
+            'document_number': np.str,
+            'document_type': np.str,
+            'leg_of_the_trip': np.str,
+            'passenger': np.str,
+            'reimbursement_number': np.str,
+            'subquota_group_description': np.str,
+            'subquota_group_id': np.str,
+            'subquota_number': np.str,
+            'term_id': np.str,
         }
         return pd.read_csv(newest_file, dtype=dtype)
 
