@@ -9,8 +9,9 @@ from io import StringIO
 from itertools import chain
 from multiprocessing import Process, Queue
 from shutil import copyfile
-from urllib.parse import urlencode
+from urllib.parse import parse_qs, urlencode, urlparse
 
+import grequests
 import pandas as pd
 import requests
 from geopy.distance import vincenty
@@ -29,33 +30,51 @@ class SexPlacesSearch:
     def __init__(self, key):
         self.GOOGLE_API_KEY = key
 
+    def requests_by_keywords(self, latitude, longitude, keywords):
+        """
+        Generator of all grequests.get() given a latitude, longitue, and a
+        list of keywords.
+        """
+        for keyword in keywords:
+            latlong = '{},{}'.format(latitude, longitude)
+            yield grequests.get(self.nearby_url(latlong, keyword))
+
+    def keyword_from_url(self, url):
+        """Given a URL it returns the keyword used in the query."""
+        qs = parse_qs(urlparse(url).query)
+        try:
+            keyword = qs.get('keyword')
+            return keyword[0]
+        except TypeError:
+            return None
+
     def by_keyword(self, company, keywords):
         """
+        Given a company and a list of keywords this generator parallelize all
+        the requests.
         :param company: (dict) with latitude and longitude keys (as floats)
         :param keyworks: (iterable) list of keywords
         """
-        for keyword in keywords:
-            msg = 'Looking for a {} nearby {} ({})…'
-            print(msg.format(keyword, company['name'], company['cnpj']))
+        msg = 'Looking for sex related places nearby {} ({})…'
+        print(msg.format(company['name'], company['cnpj']))
 
-            # Create the request for the Nearby Search Api. The Parameter
-            # rankby=distance will return a ordered list by distance
-            lat, lng = company['latitude'], company['longitude']
-            latlong = '{},{}'.format(lat, lng)
-            nearby = requests.get(self.nearby_url(latlong, keyword)).json()
-
-            if nearby['status'] != 'OK':
-                if 'error_message' in nearby:
-                    print('{}: {}'.format(nearby.get('status'),
-                                          nearby.get('error_message')))
-                elif nearby.get('status') != 'ZERO_RESULTS':
+        lat, lng = company['latitude'], company['longitude']
+        queue = grequests.imap(self.requests_by_keywords(lat, lng, keywords))
+        for response in queue:
+            url = response.url
+            response = response.json()
+            if response['status'] != 'OK':
+                if 'error_message' in response:
+                    print('{}: {}'.format(response.get('status'),
+                                          response.get('error_message')))
+                elif response.get('status') != 'ZERO_RESULTS':
                     msg = 'Google Places API Status: {}'
-                    print(msg.format(nearby.get('status')))
+                    print(msg.format(response.get('status')))
 
             # If have some result for this keywork, get first
             else:
                 try:
-                    place = nearby.get('results')[0]
+                    place = response.get('results')[0]
                     location = deep_get(place, ['geometry', 'location'])
                     latitude = float(location.get('lat'))
                     longitude = float(location.get('lng'))
@@ -63,7 +82,7 @@ class SexPlacesSearch:
                     cnpj = ''.join(re.findall(r'[\d]', company['cnpj']))
                     yield {
                         'id': place.get('place_id'),
-                        'keyword': keyword,
+                        'keyword': self.keyword_from_url(url),
                         'latitude': latitude,
                         'longitude': longitude,
                         'distance': distance.meters,
@@ -72,11 +91,13 @@ class SexPlacesSearch:
                 except TypeError:
                     pass
 
-    def with_details(self, place):
+    def with_details(self, place, company):
         """
         :param place: dictonary with id key.
         :return: dictionary updated with name, address and phone.
         """
+        msg = 'Found something interesting {:.2f}m away from {}…'
+        print(msg.format(place['distance'], company['name']))
         place_id = place.get('id')
         if not place_id:
             return place
@@ -136,7 +157,7 @@ class SexPlacesSearch:
             return None  # i.e, not sex place found nearby
 
         # skip "hotel" when category is "motel"
-        place = self.with_details(closest)
+        place = self.with_details(closest, company)
         name = place['name']
         if name:
             if 'hotel' in name.lower() and place['keyword'] == 'Motel':
