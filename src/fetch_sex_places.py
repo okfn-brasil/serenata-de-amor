@@ -320,6 +320,7 @@ if __name__ == '__main__':
         sex_places = pd.read_csv(get_sex_places_dataset_path())
 
     # run
+    total = len(remaining)
     msg = """
     There are {} companies in {}.
     It looks like we already have the nearest sex location for {} of them.
@@ -330,10 +331,13 @@ if __name__ == '__main__':
         len(companies),
         companies_path,
         len(sex_places),
-        len(remaining)
+        total
     )
     print(msg)
 
-    with lzma.open(OUTPUT, 'at') as output:
-        for line in sex_places_neraby(remaining):
+    count = 0
+    for line in sex_places_neraby(remaining):
+        count += 1
+        print('[{:.2f}%]'.format(100 * count/total), end='\r')
+        with lzma.open(OUTPUT, 'at') as output:
             output.write(line)
