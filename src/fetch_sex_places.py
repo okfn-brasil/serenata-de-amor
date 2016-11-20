@@ -7,7 +7,7 @@ import os
 import re
 from io import StringIO
 from itertools import chain
-from multiprocessing import Process, Queue
+from multiprocessing import Pool
 from shutil import copyfile
 from urllib.parse import parse_qs, urlencode, urlparse
 
@@ -204,34 +204,6 @@ class SexPlacesSearch:
         return ''.join(parts)
 
 
-def sex_places_neraby(companies):
-    """
-    :param companies: pandas dataframe.
-    """
-
-    def make_queue(q, companies):
-        for company in companies.itertuples(index=False):
-            company = dict(company._asdict())  # _asdict() gives OrderedDict
-            sex_place = sex_place_nearby(company)
-            if sex_place:
-                q.put(csv_line_as_string(sex_place))
-
-    write_queue = Queue()
-    place_search = Process(target=make_queue, args=(write_queue, companies))
-    place_search.start()
-
-    with lzma.open(OUTPUT, 'at') as output:
-        while place_search.is_alive() or not write_queue.empty():
-            try:
-                contents = write_queue.get(timeout=1)
-                if contents:
-                    print(contents, file=output)
-            except:
-                pass
-
-    place_search.join()
-
-
 def sex_place_nearby(company):
     """
     :param company: (dict)
@@ -245,6 +217,18 @@ def sex_place_nearby(company):
 
     sex_place = SexPlacesSearch(settings.get('Google', 'APIKey'))
     return sex_place.near_to(company)
+
+
+def sex_places_neraby(companies):
+    """
+    Genarator of CSV lines (as strings) to be saved as the results.
+    :param companies: pandas dataframe.
+    """
+    dicts = map(lambda x: dict(x._asdict()), companies.itertuples(index=True))
+    with Pool(processes=4) as pool:
+        for place in pool.imap(sex_place_nearby, tuple(dicts)):
+            if place:
+                yield csv_line_as_string(place)
 
 
 def csv_line_as_string(company=None, **kwargs):
@@ -349,4 +333,7 @@ if __name__ == '__main__':
         len(remaining)
     )
     print(msg)
-    sex_places_neraby(remaining)
+
+    with lzma.open(OUTPUT, 'at') as output:
+        for line in sex_places_neraby(remaining):
+            output.write(line)
