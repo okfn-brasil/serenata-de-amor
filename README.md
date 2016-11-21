@@ -25,3 +25,13 @@ ceap.convert_to_csv()
 ceap.translate()
 ceap.clean()
 ```
+
+## Setup
+
+```console
+$ cd rosie
+$ conda update conda
+$ conda create --name serenata_rosie python=3
+$ source activate serenata_rosie
+$ ./setup
+```
