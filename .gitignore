@@ -1,2 +1,3 @@
 src/serenata-toolbox
 src/pip-delete-this-directory.txt
+__pycache__

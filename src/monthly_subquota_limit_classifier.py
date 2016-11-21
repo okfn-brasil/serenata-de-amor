@@ -12,7 +12,7 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
         self.__create_columns()
         return self
 
-    def transform(self, X):
+    def transform(self, X=None):
         self.limits = [
             {
                 'subquota': 'Automotive vehicle renting or watercraft charter',
@@ -43,7 +43,7 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
         return self
 
 
-    def predict(self, X):
+    def predict(self, X=None):
         self._X['is_over_monthly_subquota_limit'] = False
         for metadata in self.limits:
             data, monthly_limit = metadata['data'], metadata['monthly_limit']
@@ -54,7 +54,7 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
         return np.r_[results]
 
 
-    def predict_proba(self, X):
+    def predict_proba(self, X=None):
         return 1.
 
 
@@ -78,18 +78,3 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
     def __create_cumsum_cols(self, subset):
         subset['cumsum_net_value'] = subset['net_value_int'].cumsum()
         return subset
-
-
-
-
-
-if __name__ == '__main__':
-    dataset = pd.read_csv('/tmp/serenata-data/reimbursements.xz',
-                          dtype={'applicant_id': np.str,
-                                'subquota_number': np.str},
-                          low_memory=False)
-    model = MonthlySubquotaLimitClassifier()
-    model.fit_transform(dataset)
-    y = model.predict(dataset)
-    print(y)
-    print(model.predict_proba(dataset))

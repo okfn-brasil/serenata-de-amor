@@ -5,9 +5,10 @@ A Python application reading receipts from the Quota for Exercising Parliamentar
 - [x] Fetch CEAP dataset from Chamber of Deputies
 - [x] Convert XML to CSV
 - [x] Translate CSVs to English
-- [ ] Read CEAP dataset from CSV into Pandas
+- [x] Read CEAP dataset from CSV into Pandas
 - [ ] Process in the "corruption pipeline"
-    - [ ] Monthly limits (quota and subquota)
+    - [ ] Monthly limits - quota
+    - [x] Monthly limits - subquota
     - [ ] Machine Learning models using scikit-learn
 - [ ] Task to push to Jarbas via API
 
@@ -20,3 +21,11 @@ $ conda create --name serenata_rosie python=3
 $ source activate serenata_rosie
 $ ./setup
 ```
+
+## Running
+
+```console
+$ python src/rosie.py
+```
+
+A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
