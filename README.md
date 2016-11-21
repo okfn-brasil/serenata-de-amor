@@ -11,21 +11,6 @@ A Python application reading receipts from the Quota for Exercising Parliamentar
     - [ ] Machine Learning models using scikit-learn
 - [ ] Task to push to Jarbas via API
 
-
-```python
-import os
-from serenata_toolbox.ceap_dataset import CEAPDataset
-
-path = '/tmp/serenata-data'
-path = 'data'
-os.makedirs(path, exist_ok=True)
-ceap = CEAPDataset(path)
-ceap.fetch()
-ceap.convert_to_csv()
-ceap.translate()
-ceap.clean()
-```
-
 ## Setup
 
 ```console
