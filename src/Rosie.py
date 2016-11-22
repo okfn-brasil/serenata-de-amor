@@ -7,9 +7,10 @@ from monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 DATA_PATH = '/tmp/serenata-data'
 DATASET_KEYS = ['applicant_id', 'year', 'document_id']
 
-def update_datasets(self):
-    os.makedirs(self.DATA_PATH, exist_ok=True)
-    ceap = CEAPDataset(self.DATA_PATH)
+
+def update_datasets():
+    os.makedirs(DATA_PATH, exist_ok=True)
+    ceap = CEAPDataset(DATA_PATH)
     ceap.fetch()
     ceap.convert_to_csv()
     ceap.translate()
@@ -25,7 +26,6 @@ def run_classifiers(data):
                           compression='xz',
                           encoding='utf-8',
                           index=False)
-
 
 
 if __name__ == '__main__':
