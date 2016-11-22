@@ -1,7 +1,7 @@
 module Documents.Decoder exposing (..)
 
-import Documents.Inputs.Update as Inputs
-import Documents.Receipt as Receipt
+import Documents.Inputs.Update as InputsUpdate
+import Documents.Receipt.Decoder as Receipt
 import Documents.Supplier as Supplier
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Json.Decode exposing ((:=), Decoder, int, list, maybe, string)
@@ -125,7 +125,7 @@ updateLanguage lang model =
             { results | documents = newDocuments }
 
         newInputs =
-            Inputs.updateLanguage lang model.inputs
+            InputsUpdate.updateLanguage lang model.inputs
     in
         { model | lang = lang, inputs = newInputs, results = newResults }
 

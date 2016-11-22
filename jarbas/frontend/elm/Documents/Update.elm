@@ -3,7 +3,7 @@ module Documents.Update exposing (..)
 import Char
 import Documents.Fields as Fields
 import Documents.Inputs.Update as Inputs
-import Documents.Receipt as Receipt
+import Documents.Receipt.Update as Receipt
 import Documents.Supplier as Supplier
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)

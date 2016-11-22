@@ -5,7 +5,7 @@ import Documents.Inputs.View as InputsView
 import Documents.Inputs.Update as InputsUpdate
 import Documents.Map.View as MapView
 import Documents.Map.Model as MapModel
-import Documents.Receipt as Receipt
+import Documents.Receipt.View as ReceiptView
 import Documents.Supplier as Supplier
 import Html exposing (a, div, form, p, span, text)
 import Html.App
@@ -353,7 +353,7 @@ viewDocument lang index document =
             ]
 
         receipt =
-            Html.App.map (ReceiptMsg index) (Receipt.view document.id document.receipt)
+            Html.App.map (ReceiptMsg index) (ReceiptView.view document.id document.receipt)
 
         mapModel =
             MapModel.modelFrom lang document.supplier_info
