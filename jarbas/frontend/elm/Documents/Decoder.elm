@@ -1,6 +1,6 @@
 module Documents.Decoder exposing (..)
 
-import Documents.Inputs as Inputs
+import Documents.Inputs.Update as Inputs
 import Documents.Receipt as Receipt
 import Documents.Supplier as Supplier
 import Internationalization exposing (Language(..), TranslationId(..), translate)

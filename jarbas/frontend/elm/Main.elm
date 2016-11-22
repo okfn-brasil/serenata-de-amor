@@ -4,7 +4,7 @@ import Documents.Model
 import Documents.Update
 import Documents.View
 import Documents.Decoder
-import Documents.Inputs as Inputs
+import Documents.Inputs.Update
 import Html
 import Html.App
 import Internationalization exposing (Language(..), TranslationId(..), translate)
@@ -180,7 +180,7 @@ urlUpdate query model =
             model.documents
 
         inputs =
-            Inputs.updateFromQuery documents.inputs query
+            Documents.Inputs.Update.updateFromQuery documents.inputs query
 
         results =
             documents.results

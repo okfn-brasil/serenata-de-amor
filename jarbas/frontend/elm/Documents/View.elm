@@ -1,7 +1,8 @@
 module Documents.View exposing (..)
 
 import Documents.Fields as Fields
-import Documents.Inputs as Inputs
+import Documents.Inputs.View as Inputs
+import Documents.Inputs.Update as InputsUpdate
 import Documents.Map as Map
 import Documents.Receipt as Receipt
 import Documents.Supplier as Supplier
@@ -415,7 +416,7 @@ viewDocuments model =
             Maybe.withDefault 0 model.results.total
 
         searched =
-            Inputs.toQuery model.inputs |> List.isEmpty |> not
+            InputsUpdate.toQuery model.inputs |> List.isEmpty |> not
 
         results =
             if total == 1 then
