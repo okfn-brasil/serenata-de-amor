@@ -2,7 +2,7 @@ module Documents.Model exposing (..)
 
 import Documents.Inputs.Model as Inputs
 import Documents.Receipt.Model as Receipt
-import Documents.Supplier as Supplier
+import Documents.Supplier.Model as Supplier
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material

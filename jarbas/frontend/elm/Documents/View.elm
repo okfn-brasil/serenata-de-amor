@@ -6,7 +6,7 @@ import Documents.Inputs.Update as InputsUpdate
 import Documents.Map.View as MapView
 import Documents.Map.Model as MapModel
 import Documents.Receipt.View as ReceiptView
-import Documents.Supplier as Supplier
+import Documents.Supplier.View as SupplierView
 import Html exposing (a, div, form, p, span, text)
 import Html.App
 import Html.Attributes exposing (href)
@@ -368,7 +368,7 @@ viewDocument lang index document =
                 [ (translate lang DocumentTitle) ++ (toString document.document_id) |> text ]
 
         supplier =
-            Html.App.map (SupplierMsg index) (Supplier.view document.supplier_info)
+            Html.App.map (SupplierMsg index) (SupplierView.view document.supplier_info)
 
         supplierTitle =
             Options.styled

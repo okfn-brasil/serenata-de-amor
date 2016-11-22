@@ -1,6 +1,6 @@
 module Documents.Map.Model exposing (Model, modelFrom)
 
-import Documents.Supplier as Supplier
+import Documents.Supplier.Model as Supplier
 import Material
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 

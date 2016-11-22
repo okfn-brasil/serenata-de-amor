@@ -1,8 +1,8 @@
 module Documents.Decoder exposing (..)
 
 import Documents.Inputs.Update as InputsUpdate
-import Documents.Receipt.Decoder as Receipt
-import Documents.Supplier as Supplier
+import Documents.Receipt.Decoder as ReceiptDecoder
+import Documents.Supplier.Model as SupplierModel
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Json.Decode exposing ((:=), Decoder, int, list, maybe, string)
 import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
@@ -57,7 +57,7 @@ singleDecoder : Language -> String -> Decoder Document
 singleDecoder lang apiKey =
     let
         supplier =
-            Supplier.model
+            SupplierModel.model
     in
         decode Document
             |> required "id" int
@@ -90,7 +90,7 @@ singleDecoder lang apiKey =
             |> required "reimbursement_number" int
             |> required "reimbursement_value" string
             |> required "applicant_id" int
-            |> required "receipt" (Receipt.decoder lang)
+            |> required "receipt" (ReceiptDecoder.decoder lang)
             |> hardcoded { supplier | googleStreetViewApiKey = apiKey }
 
 
