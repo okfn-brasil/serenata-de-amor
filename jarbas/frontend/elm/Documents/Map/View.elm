@@ -1,74 +1,13 @@
-module Documents.Map exposing (modelFrom, view)
+module Documents.Map.View exposing (view)
 
-import Documents.Supplier as Supplier
-import Material
 import Material.Button as Button
 import Material.Icon as Icon
 import Html exposing (a, text)
 import Html.Attributes exposing (href)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import String
-
-
---
--- Model
---
-
-
-type alias GeoCoord =
-    { latitude : Maybe String
-    , longitude : Maybe String
-    }
-
-
-type alias Model =
-    { geoCoord : GeoCoord
-    , lang : Language
-    , mdl : Material.Model
-    }
-
-
-modelFrom : Language -> Supplier.Model -> Model
-modelFrom lang model =
-    case model.supplier of
-        Just supplier ->
-            Model
-                { latitude = supplier.latitude
-                , longitude = supplier.longitude
-                }
-                lang
-                Material.model
-
-        Nothing ->
-            Model
-                { latitude = Nothing
-                , longitude = Nothing
-                }
-                lang
-                Material.model
-
-
-
---
--- Update
---
-
-
-type Msg
-    = Mdl (Material.Msg Msg)
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        Mdl mdlMsg ->
-            Material.update mdlMsg model
-
-
-
---
--- View
---
+import Documents.Map.Model exposing (Model)
+import Documents.Map.Update exposing (Msg(Mdl))
 
 
 view : Model -> Html.Html Msg

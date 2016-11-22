@@ -1,9 +1,10 @@
 module Documents.View exposing (..)
 
 import Documents.Fields as Fields
-import Documents.Inputs.View as Inputs
+import Documents.Inputs.View as InputsView
 import Documents.Inputs.Update as InputsUpdate
-import Documents.Map as Map
+import Documents.Map.View as MapView
+import Documents.Map.Model as MapModel
 import Documents.Receipt as Receipt
 import Documents.Supplier as Supplier
 import Html exposing (a, div, form, p, span, text)
@@ -68,7 +69,7 @@ viewForm : Model -> Html.Html Msg
 viewForm model =
     let
         inputs =
-            Inputs.view model.loading model.inputs |> Html.App.map InputsMsg
+            InputsView.view model.loading model.inputs |> Html.App.map InputsMsg
 
         send =
             viewButton
@@ -355,10 +356,10 @@ viewDocument lang index document =
             Html.App.map (ReceiptMsg index) (Receipt.view document.id document.receipt)
 
         mapModel =
-            Map.modelFrom lang document.supplier_info
+            MapModel.modelFrom lang document.supplier_info
 
         mapButton =
-            Html.App.map (\_ -> MapMsg) <| Map.view mapModel
+            Html.App.map (\_ -> MapMsg) <| MapView.view mapModel
 
         title =
             Options.styled
