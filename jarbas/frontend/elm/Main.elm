@@ -1,6 +1,9 @@
 module Main exposing (..)
 
-import Documents
+import Documents.Model
+import Documents.Update
+import Documents.View
+import Documents.Decoder
 import Documents.Inputs as Inputs
 import Html
 import Html.App
@@ -18,7 +21,7 @@ import String
 
 
 type alias Model =
-    { documents : Documents.Model
+    { documents : Documents.Model.Model
     , layout : Layout.Model
     , googleStreetViewApiKey : String
     , lang : Language
@@ -28,7 +31,7 @@ type alias Model =
 
 model : Model
 model =
-    Model Documents.model Layout.model "" English Material.model
+    Model Documents.Model.model Layout.model "" English Material.model
 
 
 
@@ -38,7 +41,7 @@ model =
 
 
 type Msg
-    = DocumentsMsg Documents.Msg
+    = DocumentsMsg Documents.Update.Msg
     | LayoutMsg Msg
     | Mdl (Material.Msg Msg)
 
@@ -49,7 +52,7 @@ update msg model =
         DocumentsMsg msg ->
             let
                 updated =
-                    Documents.update msg model.documents
+                    Documents.Update.update msg model.documents
 
                 documents =
                     fst updated
@@ -79,8 +82,8 @@ updateFromFlags flags model =
             flags.googleStreetViewApiKey
 
         newDocuments =
-            Documents.updateLanguage lang model.documents
-                |> Documents.updateGoogleStreetViewApiKey googleStreetViewApiKey
+            Documents.Decoder.updateLanguage lang model.documents
+                |> Documents.Decoder.updateGoogleStreetViewApiKey googleStreetViewApiKey
 
         layout =
             model.layout
@@ -112,7 +115,7 @@ view model =
             List.map (\x -> Html.App.map LayoutMsg x) (Layout.drawer model.layout)
 
         documents =
-            Html.App.map DocumentsMsg <| Documents.view model.documents
+            Html.App.map DocumentsMsg <| Documents.View.view model.documents
     in
         Material.Layout.render
             Mdl
@@ -183,13 +186,13 @@ urlUpdate query model =
             documents.results
 
         newResults =
-            { results | loadingPage = Documents.getPage query }
+            { results | loadingPage = Documents.Decoder.getPage query }
 
         newDocuments =
             { documents | inputs = inputs, results = newResults, loading = loading }
 
         cmd =
-            Documents.loadDocuments model.lang model.googleStreetViewApiKey query
+            Documents.Update.loadDocuments model.lang model.googleStreetViewApiKey query
     in
         ( { model | documents = newDocuments }, Cmd.map DocumentsMsg cmd )
 
