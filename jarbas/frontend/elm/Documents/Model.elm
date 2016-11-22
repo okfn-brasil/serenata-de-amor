@@ -8,11 +8,6 @@ import Internationalization exposing (Language(..), TranslationId(..), translate
 import Material
 
 
---
--- Model
---
-
-
 type alias Document =
     { id : Int
     , document_id : Int
