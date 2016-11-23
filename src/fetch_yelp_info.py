@@ -1,10 +1,8 @@
-"""
-- [x] Pegar somente as "companies" que foram alvo de gastos com alimentação.
-- [x] Fazer a busca na api do {Yelp, Foursquare} passando como parâmetros o "trade_mark" e { latitude, longitude, zip_code }.
-- [ ] Criar um dataset a partir dos resultados da busca.
-"""
-
-import json, requests, re, os.path, datetime
+import json
+import requests
+import re
+import os.path
+import datetime
 import configparser
 import pandas as pd
 import numpy as np
@@ -56,10 +54,9 @@ def parse_fetch_info(response):
 # ----------------------------
 # Request to yelp API getting by term and zip code
 # https://www.yelp.com/developers/documentation/v3/business_search
-def fetch_yelp_info(term, location):
+def fetch_yelp_info(**params):
   url = 'https://api.yelp.com/v3/businesses/search'
   headers = {"Authorization":"Bearer {}".format(access_token)}
-  params = {'term': term, 'location': location }
   response = requests.get(url, headers=headers, params=params);
   return parse_fetch_info(response)
 
@@ -69,15 +66,16 @@ access_token = settings.get('Yelp', 'AccessToken')
 
 companies_w_meal_expense = companies()
 
-companies_trade_names = companies_w_meal_expense.trade_name.dropna()
-companies_zip_code = companies_w_meal_expense.zip_code.dropna()
-
 fetched_companies = load_companies_dataset()
-companies_to_fetch = remaining_companies(fetched_companies, companies())[:20]
+companies_to_fetch = remaining_companies(fetched_companies, companies())[:50]
 
+import pdb; pdb.set_trace()
 for _, company in companies_to_fetch.iterrows():
-    print('Fetching %s - CNPJ: %s' % (company['trade_name'], company['zip_code']))
-    fetched_company = fetch_yelp_info(company['trade_name'], company['zip_code'])
+    print('Fetching %s - City: %s' % (company['trade_name'], company['city']))
+
+    address_to_search = "{}, {}, {}".format(company['neighborhood'], company['city'], company['state'])
+    fetched_company = fetch_yelp_info(term=company['trade_name'], location=address_to_search)
+
     if fetched_company:
         print('Successfuly matched %s' % fetched_company['name'])
         fetched_company['scraped_at'] = datetime.datetime.utcnow().isoformat()
