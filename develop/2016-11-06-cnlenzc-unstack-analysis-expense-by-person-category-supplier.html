@@ -11687,6 +11687,18 @@ ul.typeahead-list > li > a {
 .ansi-bold { font-weight: bold; }
 
     </style>
+<style type="text/css">
+    #notebook,
+.output_area pre {
+  font-size: 18px;
+}
+
+.CodeMirror {
+  font-family: Monaco;
+  font-size: 20px;
+}
+
+    </style>
 
 
 <style type="text/css">
@@ -11748,11 +11760,11 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 
 </div>
@@ -11762,17 +11774,19 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-08-08-last-year.xz&#39;</span><span class="p">,</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-11-19-reimbursements.xz&#39;</span><span class="p">,</span>
                    <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span>
                    <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;document_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;congressperson_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;congressperson_document&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;term_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                          <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">})</span>
+                          <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span>
+                   <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2016</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -11791,10 +11805,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span>\
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span>\
 <span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">party</span> <span class="o">==</span> <span class="s1">&#39;PT&#39;</span><span class="p">)</span>\
  <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">party</span> <span class="o">==</span> <span class="s1">&#39;PMDB&#39;</span><span class="p">)</span>\
  <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">party</span> <span class="o">==</span> <span class="s1">&#39;PSDB&#39;</span><span class="p">))</span>\
@@ -11807,7 +11821,7 @@ div#notebook {
 
 <span class="n">tot</span> <span class="o">=</span> \
 <span class="n">data_filtro</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;party&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;applicant_id&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;subquota_description&#39;</span><span class="p">])</span>\
-<span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
+<span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
 
 <span class="n">tot</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
@@ -11820,7 +11834,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[24]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[3]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -11831,7 +11845,7 @@ div#notebook {
       <th></th>
       <th></th>
       <th></th>
-      <th colspan="4" halign="left">net_value</th>
+      <th colspan="3" halign="left">total_net_value</th>
     </tr>
     <tr>
       <th></th>
@@ -11840,7 +11854,6 @@ div#notebook {
       <th>subquota_description</th>
       <th>Automotive vehicle renting or charter</th>
       <th>Congressperson meal</th>
-      <th>Flight ticket issue</th>
       <th>Publicity of parliamentary activity</th>
     </tr>
     <tr>
@@ -11851,510 +11864,349 @@ div#notebook {
       <th></th>
       <th></th>
       <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th rowspan="22" valign="top">PMDB</th>
-      <th rowspan="19" valign="top">RJ</th>
-      <th>950</th>
-      <th>ALEXANDRE SANTOS</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>8624.34</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
+      <th rowspan="16" valign="top">PMDB</th>
+      <th rowspan="14" valign="top">RJ</th>
       <th>1118</th>
       <th>LAURA CARNEIRO</th>
-      <td>7586.00</td>
-      <td>846.58</td>
-      <td>10414.20</td>
-      <td>27490.00</td>
+      <td>NaN</td>
+      <td>1480.98</td>
+      <td>202458.67</td>
     </tr>
     <tr>
       <th>1467</th>
       <th>CELSO JACOB</th>
-      <td>23104.80</td>
-      <td>10523.36</td>
-      <td>55196.40</td>
-      <td>167181.20</td>
+      <td>37061.07</td>
+      <td>6340.32</td>
+      <td>116997.50</td>
     </tr>
     <tr>
       <th>1583</th>
       <th>LEONARDO PICCIANI</th>
       <td>NaN</td>
       <td>NaN</td>
-      <td>258729.21</td>
-      <td>23060.00</td>
-    </tr>
-    <tr>
-      <th>1620</th>
-      <th>EDUARDO CUNHA</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>15684.44</td>
-      <td>90000.00</td>
-    </tr>
-    <tr>
-      <th>2002</th>
-      <th>RODRIGO BETHLEM</th>
-      <td>NaN</td>
-      <td>1441.84</td>
-      <td>10516.23</td>
-      <td>NaN</td>
+      <td>12780.00</td>
     </tr>
     <tr>
       <th>2331</th>
       <th>WASHINGTON REIS</th>
-      <td>80400.00</td>
-      <td>83.53</td>
-      <td>89949.25</td>
+      <td>67000.00</td>
       <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2349</th>
-      <th>SERGIO ZVEITER</th>
-      <td>36125.00</td>
-      <td>NaN</td>
-      <td>104642.36</td>
-      <td>60631.50</td>
-    </tr>
-    <tr>
-      <th>2350</th>
-      <th>ADRIAN</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>4855.30</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>2386</th>
       <th>PEDRO PAULO</th>
+      <td>16007.50</td>
       <td>NaN</td>
-      <td>NaN</td>
-      <td>7959.94</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>2429</th>
       <th>FERNANDO JORDÃO</th>
-      <td>35100.00</td>
-      <td>2989.26</td>
-      <td>135737.23</td>
-      <td>148922.00</td>
+      <td>58500.00</td>
+      <td>1576.12</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>2922</th>
       <th>SORAYA SANTOS</th>
       <td>NaN</td>
       <td>NaN</td>
-      <td>139986.45</td>
-      <td>137950.00</td>
+      <td>67740.00</td>
     </tr>
     <tr>
       <th>2963</th>
       <th>CELSO PANSERA</th>
       <td>NaN</td>
-      <td>2866.64</td>
-      <td>61620.70</td>
-      <td>32550.00</td>
+      <td>5244.26</td>
+      <td>23000.00</td>
     </tr>
     <tr>
       <th>3005</th>
       <th>ALTINEU CÔRTES</th>
       <td>NaN</td>
       <td>NaN</td>
-      <td>NaN</td>
-      <td>243030.00</td>
-    </tr>
-    <tr>
-      <th>3055</th>
-      <th>MARCO ANTÔNIO CABRAL</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1455.27</td>
-      <td>NaN</td>
+      <td>197580.00</td>
     </tr>
     <tr>
       <th>3070</th>
       <th>ALEXANDRE SERFIOTIS</th>
-      <td>7212.92</td>
-      <td>4261.01</td>
-      <td>48837.25</td>
-      <td>18200.00</td>
+      <td>16229.33</td>
+      <td>5826.37</td>
+      <td>148000.00</td>
     </tr>
     <tr>
       <th>3092</th>
       <th>MARQUINHO MENDES</th>
-      <td>50400.00</td>
-      <td>10412.24</td>
-      <td>116790.51</td>
-      <td>42000.00</td>
+      <td>72000.00</td>
+      <td>697.37</td>
+      <td>15000.00</td>
     </tr>
     <tr>
       <th>3135</th>
       <th>ZÉ AUGUSTO NALIN</th>
       <td>NaN</td>
-      <td>920.67</td>
-      <td>30877.90</td>
-      <td>98.00</td>
+      <td>516.01</td>
+      <td>5200.00</td>
     </tr>
     <tr>
       <th>3137</th>
       <th>WILSON BESERRA</th>
-      <td>NaN</td>
-      <td>58.63</td>
-      <td>253.30</td>
+      <td>9032.89</td>
+      <td>1756.68</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th rowspan="3" valign="top">SP</th>
+      <th>3139</th>
+      <th>ÁTILA A. NUNES</th>
+      <td>NaN</td>
+      <td>181.19</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">SP</th>
       <th>1006</th>
       <th>EDINHO ARAÚJO</th>
       <td>NaN</td>
-      <td>2411.96</td>
-      <td>43037.71</td>
-      <td>24687.00</td>
-    </tr>
-    <tr>
-      <th>2885</th>
-      <th>LÉO OLIVEIRA</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>357.95</td>
-      <td>NaN</td>
+      <td>5467.46</td>
+      <td>19282.60</td>
     </tr>
     <tr>
       <th>3021</th>
       <th>BALEIA ROSSI</th>
       <td>NaN</td>
-      <td>466.15</td>
-      <td>78659.91</td>
-      <td>75910.00</td>
+      <td>NaN</td>
+      <td>71275.00</td>
     </tr>
     <tr>
-      <th rowspan="12" valign="top">PSDB</th>
-      <th rowspan="2" valign="top">RJ</th>
-      <th>1779</th>
-      <th>ANDREIA ZITO</th>
-      <td>NaN</td>
-      <td>244.86</td>
-      <td>2605.21</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
+      <th rowspan="16" valign="top">PSDB</th>
+      <th>RJ</th>
       <th>1901</th>
       <th>OTAVIO LEITE</th>
       <td>NaN</td>
-      <td>9754.00</td>
-      <td>105956.78</td>
-      <td>16060.10</td>
+      <td>5857.53</td>
+      <td>17032.30</td>
     </tr>
     <tr>
-      <th rowspan="10" valign="top">SP</th>
-      <th>898</th>
-      <th>JOSÉ ANÍBAL</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>6621.53</td>
-      <td>9720.00</td>
-    </tr>
-    <tr>
+      <th rowspan="15" valign="top">SP</th>
       <th>1175</th>
       <th>SILVIO TORRES</th>
       <td>NaN</td>
-      <td>9057.26</td>
-      <td>82375.54</td>
-      <td>105153.00</td>
-    </tr>
-    <tr>
-      <th>1232</th>
-      <th>EMANUEL FERNANDES</th>
-      <td>2134.54</td>
-      <td>NaN</td>
-      <td>680.29</td>
-      <td>NaN</td>
+      <td>4760.19</td>
+      <td>70785.60</td>
     </tr>
     <tr>
       <th>1552</th>
       <th>CARLOS SAMPAIO</th>
-      <td>32055.00</td>
+      <td>39629.10</td>
       <td>NaN</td>
-      <td>241283.41</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>1586</th>
       <th>LOBBE NETO</th>
-      <td>27160.00</td>
-      <td>3072.53</td>
-      <td>55799.45</td>
-      <td>49761.67</td>
+      <td>38282.67</td>
+      <td>2463.69</td>
+      <td>112375.87</td>
     </tr>
     <tr>
       <th>1816</th>
       <th>DUARTE NOGUEIRA</th>
       <td>NaN</td>
-      <td>50.53</td>
-      <td>-6974.91</td>
+      <td>559.13</td>
+      <td>1150.00</td>
+    </tr>
+    <tr>
+      <th>1923</th>
+      <th>RICARDO TRIPOLI</th>
       <td>NaN</td>
+      <td>1444.27</td>
+      <td>60279.82</td>
     </tr>
     <tr>
-      <th>1816</th>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
+      <th>1947</th>
+      <th>VANDERLEI MACRIS</th>
+      <td>24873.02</td>
+      <td>6513.38</td>
+      <td>39320.00</td>
     </tr>
     <tr>
-      <th>1816</th>
-      <th>...</th>
-      <td>22328.51</td>
-      <td>1711.55</td>
-      <td>75943.59</td>
-      <td>27578.60</td>
+      <th>2266</th>
+      <th>BRUNA FURLAN</th>
+      <td>NaN</td>
+      <td>293.44</td>
+      <td>6350.00</td>
+    </tr>
+    <tr>
+      <th>2399</th>
+      <th>MARA GABRILLI</th>
+      <td>37333.36</td>
+      <td>5652.89</td>
+      <td>41532.14</td>
+    </tr>
+    <tr>
+      <th>2919</th>
+      <th>MIGUEL HADDAD</th>
+      <td>NaN</td>
+      <td>4153.84</td>
+      <td>65000.00</td>
+    </tr>
+    <tr>
+      <th>2954</th>
+      <th>VITOR LIPPI</th>
+      <td>NaN</td>
+      <td>5631.39</td>
+      <td>63528.00</td>
+    </tr>
+    <tr>
+      <th>2965</th>
+      <th>SAMUEL MOREIRA</th>
+      <td>12902.60</td>
+      <td>1989.60</td>
+      <td>35700.00</td>
+    </tr>
+    <tr>
+      <th>2982</th>
+      <th>EDUARDO CURY</th>
+      <td>47700.00</td>
+      <td>7683.03</td>
+      <td>19885.17</td>
     </tr>
     <tr>
       <th>3009</th>
       <th>JOÃO PAULO PAPA</th>
-      <td>484.38</td>
-      <td>350.36</td>
-      <td>2524.33</td>
-      <td>NaN</td>
+      <td>23764.00</td>
+      <td>31.35</td>
+      <td>30819.41</td>
     </tr>
     <tr>
       <th>3042</th>
       <th>FLORIANO PESARO</th>
-      <td>11252.00</td>
-      <td>3880.56</td>
-      <td>97231.24</td>
-      <td>45900.00</td>
+      <td>NaN</td>
+      <td>110.18</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th rowspan="27" valign="top">PSDB</th>
-      <th rowspan="7" valign="top">SP</th>
       <th>3068</th>
       <th>BRUNO COVAS</th>
-      <td>NaN</td>
-      <td>1232.98</td>
-      <td>101849.95</td>
-      <td>114761.60</td>
+      <td>21200.00</td>
+      <td>1471.37</td>
+      <td>58800.00</td>
     </tr>
     <tr>
+      <th rowspan="15" valign="top">PT</th>
+      <th rowspan="5" valign="top">RJ</th>
       <th>188</th>
       <th>BENEDITA DA SILVA</th>
-      <td>1800.00</td>
-      <td>221.62</td>
-      <td>11030.39</td>
       <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1381</th>
-      <th>JORGE BITTAR</th>
-      <td>NaN</td>
-      <td>2580.67</td>
-      <td>126886.31</td>
-      <td>50400.00</td>
+      <td>862.18</td>
+      <td>58505.00</td>
     </tr>
     <tr>
       <th>1383</th>
       <th>LUIZ SÉRGIO</th>
       <td>NaN</td>
-      <td>5141.13</td>
-      <td>79241.11</td>
-      <td>94600.00</td>
+      <td>1248.02</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>1799</th>
       <th>CHICO D'ANGELO</th>
       <td>NaN</td>
-      <td>NaN</td>
-      <td>6158.12</td>
-      <td>24000.00</td>
-    </tr>
-    <tr>
-      <th>1820</th>
-      <th>EDSON SANTOS</th>
-      <td>25560.00</td>
-      <td>1347.05</td>
-      <td>35123.96</td>
-      <td>13480.00</td>
+      <td>3770.49</td>
+      <td>81423.10</td>
     </tr>
     <tr>
       <th>2901</th>
       <th>FABIANO HORTA</th>
-      <td>NaN</td>
-      <td>1340.63</td>
-      <td>110169.71</td>
-      <td>85200.00</td>
+      <td>7191.21</td>
+      <td>604.33</td>
+      <td>27000.00</td>
     </tr>
     <tr>
-      <th rowspan="20" valign="top">RJ</th>
       <th>3123</th>
       <th>WADIH DAMOUS</th>
-      <td>14400.00</td>
-      <td>263.38</td>
-      <td>140945.22</td>
-      <td>182196.00</td>
+      <td>NaN</td>
+      <td>1495.41</td>
+      <td>67851.20</td>
     </tr>
     <tr>
+      <th rowspan="10" valign="top">SP</th>
       <th>974</th>
       <th>ARLINDO CHINAGLIA</th>
+      <td>32400.00</td>
+      <td>2130.97</td>
       <td>NaN</td>
-      <td>NaN</td>
-      <td>2748.79</td>
-      <td>22390.00</td>
-    </tr>
-    <tr>
-      <th>1400</th>
-      <th>IARA BERNARDI</th>
-      <td>NaN</td>
-      <td>9040.64</td>
-      <td>150842.28</td>
-      <td>87330.00</td>
     </tr>
     <tr>
       <th>1567</th>
       <th>JOSÉ MENTOR</th>
       <td>NaN</td>
-      <td>NaN</td>
-      <td>4515.03</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1570</th>
-      <th>DEVANIR RIBEIRO</th>
-      <td>NaN</td>
-      <td>2178.33</td>
-      <td>118930.96</td>
-      <td>9764.57</td>
+      <td>6471.22</td>
+      <td>83431.53</td>
     </tr>
     <tr>
       <th>1699</th>
       <th>VICENTINHO</th>
       <td>NaN</td>
-      <td>NaN</td>
-      <td>5768.95</td>
-      <td>14870.00</td>
-    </tr>
-    <tr>
-      <th>1852</th>
-      <th>JANETE ROCHA PIETÁ</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>116555.36</td>
-      <td>189030.00</td>
+      <td>309.40</td>
+      <td>4289.67</td>
     </tr>
     <tr>
       <th>1910</th>
       <th>PAULO TEIXEIRA</th>
       <td>NaN</td>
-      <td>NaN</td>
-      <td>2056.07</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1944</th>
-      <th>CÂNDIDO VACCAREZZA</th>
-      <td>11988.89</td>
-      <td>NaN</td>
-      <td>74977.68</td>
-      <td>89155.99</td>
+      <td>848.51</td>
+      <td>215141.80</td>
     </tr>
     <tr>
       <th>1963</th>
       <th>CARLOS ZARATTINI</th>
-      <td>38950.00</td>
-      <td>2029.29</td>
-      <td>132674.56</td>
-      <td>42908.00</td>
+      <td>12748.65</td>
+      <td>NaN</td>
+      <td>27136.78</td>
     </tr>
     <tr>
       <th>2246</th>
       <th>VICENTE CANDIDO</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>2308.64</td>
-      <td>17000.00</td>
-    </tr>
-    <tr>
-      <th>2268</th>
-      <th>NEWTON LIMA</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1041.40</td>
-      <td>19500.00</td>
-    </tr>
-    <tr>
-      <th>2469</th>
-      <th>VANDERLEI SIRAQUE</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>6265.25</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2833</th>
-      <th>FRANCISCO CHAGAS</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>10461.48</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2863</th>
-      <th>RENATO SIMÕES</th>
-      <td>NaN</td>
-      <td>10.90</td>
-      <td>NaN</td>
-      <td>31800.00</td>
-    </tr>
-    <tr>
-      <th>2866</th>
-      <th>HELCIO SILVA</th>
-      <td>5095.35</td>
-      <td>83.13</td>
-      <td>NaN</td>
-      <td>19470.00</td>
-    </tr>
-    <tr>
-      <th>2869</th>
-      <th>MARIA LUCIA PRANDI</th>
-      <td>24239.89</td>
-      <td>659.11</td>
-      <td>108407.81</td>
-      <td>55214.00</td>
+      <td>29600.00</td>
+      <td>2815.59</td>
+      <td>80450.00</td>
     </tr>
     <tr>
       <th>2895</th>
       <th>VALMIR PRASCIDELLI</th>
-      <td>35200.00</td>
-      <td>2176.26</td>
-      <td>73463.85</td>
-      <td>4000.00</td>
+      <td>20692.00</td>
+      <td>952.52</td>
+      <td>34421.00</td>
     </tr>
     <tr>
       <th>2966</th>
       <th>ANDRES SANCHEZ</th>
-      <td>40552.60</td>
-      <td>3327.97</td>
-      <td>76188.09</td>
-      <td>125800.00</td>
+      <td>32000.00</td>
+      <td>2201.30</td>
+      <td>21955.90</td>
     </tr>
     <tr>
       <th>3072</th>
       <th>NILTO TATTO</th>
-      <td>62250.00</td>
-      <td>2080.92</td>
-      <td>90582.91</td>
-      <td>88260.11</td>
+      <td>NaN</td>
+      <td>2789.98</td>
+      <td>136845.00</td>
+    </tr>
+    <tr>
+      <th>3085</th>
+      <th>ANA PERUGINI</th>
+      <td>59224.00</td>
+      <td>1397.65</td>
+      <td>109014.90</td>
     </tr>
   </tbody>
 </table>
-<p>70 rows × 4 columns</p>
 </div>
 </div>
 
@@ -12366,14 +12218,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[59]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="o">.</span><span class="n">subquota_number</span> <span class="o">==</span> <span class="mi">999</span><span class="p">)]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="o">.</span><span class="n">subquota_number</span> <span class="o">==</span> <span class="mi">999</span><span class="p">)]</span>
 
 <span class="n">tot</span> <span class="o">=</span> \
    <span class="n">data_filtro</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;party&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;subquota_description&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">])</span>\
-   <span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
+   <span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
 
 <span class="n">tot</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
 </pre></div>
@@ -12386,709 +12238,22 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[59]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[4]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
 <table border="1" class="dataframe">
   <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th colspan="6" halign="left">net_value</th>
-    </tr>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th>month</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-      <th>5</th>
-      <th>6</th>
-    </tr>
     <tr>
       <th>party</th>
       <th>state</th>
       <th>congressperson_name</th>
       <th>subquota_description</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th rowspan="27" valign="top">DEM</th>
-      <th>AM</th>
-      <th>PAUDERNEY AVELINO</th>
-      <th>Flight ticket issue</th>
-      <td>7944.18</td>
-      <td>8363.05</td>
-      <td>8246.92</td>
-      <td>5418.46</td>
-      <td>8741.80</td>
-      <td>9862.27</td>
-    </tr>
-    <tr>
-      <th rowspan="4" valign="top">BA</th>
-      <th>CLAUDIO CAJADO</th>
-      <th>Flight ticket issue</th>
-      <td>4365.34</td>
-      <td>3360.81</td>
-      <td>12043.57</td>
-      <td>10150.48</td>
-      <td>8579.28</td>
-      <td>3418.26</td>
-    </tr>
-    <tr>
-      <th>ELMAR NASCIMENTO</th>
-      <th>Flight ticket issue</th>
-      <td>3629.32</td>
-      <td>4525.25</td>
-      <td>10854.87</td>
-      <td>3478.76</td>
-      <td>13859.91</td>
-      <td>1500.12</td>
-    </tr>
-    <tr>
-      <th>JOSÉ CARLOS ALELUIA</th>
-      <th>Flight ticket issue</th>
-      <td>6754.77</td>
-      <td>1452.17</td>
-      <td>9461.41</td>
-      <td>2371.15</td>
-      <td>4435.52</td>
-      <td>1308.62</td>
-    </tr>
-    <tr>
-      <th>PAULO AZI</th>
-      <th>Flight ticket issue</th>
-      <td>1924.30</td>
-      <td>5017.36</td>
-      <td>5886.33</td>
-      <td>2178.70</td>
-      <td>5515.02</td>
-      <td>3534.72</td>
-    </tr>
-    <tr>
-      <th>CE</th>
-      <th>MORONI TORGAN</th>
-      <th>Flight ticket issue</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>662.58</td>
-      <td>545.63</td>
-      <td>2705.62</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>DF</th>
-      <th>ALBERTO FRAGA</th>
-      <th>Flight ticket issue</th>
-      <td>NaN</td>
-      <td>665.18</td>
-      <td>1724.59</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>MA</th>
-      <th>JUSCELINO FILHO</th>
-      <th>Flight ticket issue</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1478.89</td>
-      <td>NaN</td>
-      <td>3942.11</td>
-      <td>-87.63</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">MG</th>
-      <th>CARLOS MELLES</th>
-      <th>Flight ticket issue</th>
-      <td>-177.27</td>
-      <td>9798.82</td>
-      <td>12217.65</td>
-      <td>9025.94</td>
-      <td>8592.94</td>
-      <td>8960.04</td>
-    </tr>
-    <tr>
-      <th>MISAEL VARELLA</th>
-      <th>Flight ticket issue</th>
-      <td>1135.18</td>
-      <td>4074.66</td>
-      <td>6364.47</td>
-      <td>2672.33</td>
-      <td>4760.29</td>
-      <td>2481.79</td>
-    </tr>
-    <tr>
-      <th>MS</th>
-      <th>MANDETTA</th>
-      <th>Flight ticket issue</th>
-      <td>1367.69</td>
-      <td>22079.47</td>
-      <td>13407.00</td>
-      <td>9440.88</td>
-      <td>21569.83</td>
-      <td>7296.74</td>
-    </tr>
-    <tr>
-      <th>PA</th>
-      <th>HÉLIO LEITE</th>
-      <th>Flight ticket issue</th>
-      <td>5526.25</td>
-      <td>4375.58</td>
-      <td>11901.33</td>
-      <td>1508.51</td>
-      <td>4404.08</td>
-      <td>1500.98</td>
-    </tr>
-    <tr>
-      <th>PB</th>
-      <th>EFRAIM FILHO</th>
-      <th>Flight ticket issue</th>
-      <td>2680.13</td>
-      <td>4948.28</td>
-      <td>6916.65</td>
-      <td>5695.47</td>
-      <td>3907.78</td>
-      <td>2138.15</td>
-    </tr>
-    <tr>
-      <th>PE</th>
-      <th>MENDONÇA FILHO</th>
-      <th>Flight ticket issue</th>
-      <td>1454.89</td>
-      <td>6900.04</td>
-      <td>20045.27</td>
-      <td>5825.02</td>
-      <td>2447.11</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th rowspan="4" valign="top">RJ</th>
-      <th>FRANCISCO FLORIANO</th>
-      <th>Flight ticket issue</th>
-      <td>2117.78</td>
-      <td>3743.01</td>
-      <td>5547.44</td>
-      <td>2492.40</td>
-      <td>12981.10</td>
-      <td>1018.42</td>
-    </tr>
-    <tr>
-      <th>MARCOS SOARES</th>
-      <th>Flight ticket issue</th>
-      <td>2314.98</td>
-      <td>4058.87</td>
-      <td>15208.01</td>
-      <td>7790.97</td>
-      <td>14573.18</td>
-      <td>6426.35</td>
-    </tr>
-    <tr>
-      <th>RODRIGO MAIA</th>
-      <th>Flight ticket issue</th>
-      <td>1944.28</td>
-      <td>10486.63</td>
-      <td>13817.28</td>
-      <td>9615.51</td>
-      <td>15005.13</td>
-      <td>5388.42</td>
-    </tr>
-    <tr>
-      <th>SÓSTENES CAVALCANTE</th>
-      <th>Flight ticket issue</th>
-      <td>1933.20</td>
-      <td>3874.48</td>
-      <td>8096.72</td>
-      <td>6648.49</td>
-      <td>8663.97</td>
-      <td>3739.13</td>
-    </tr>
-    <tr>
-      <th>RN</th>
-      <th>FELIPE MAIA</th>
-      <th>Flight ticket issue</th>
-      <td>7722.83</td>
-      <td>8092.47</td>
-      <td>11224.83</td>
-      <td>2570.67</td>
-      <td>10384.86</td>
-      <td>-814.54</td>
-    </tr>
-    <tr>
-      <th>RR</th>
-      <th>ABEL MESQUITA JR.</th>
-      <th>Flight ticket issue</th>
-      <td>-750.73</td>
-      <td>-212.73</td>
-      <td>14837.21</td>
-      <td>628.61</td>
-      <td>9899.30</td>
-      <td>-89.52</td>
-    </tr>
-    <tr>
-      <th>RS</th>
-      <th>ONYX LORENZONI</th>
-      <th>Flight ticket issue</th>
-      <td>9036.40</td>
-      <td>29651.85</td>
-      <td>34716.20</td>
-      <td>16655.29</td>
-      <td>18344.10</td>
-      <td>9734.63</td>
-    </tr>
-    <tr>
-      <th rowspan="5" valign="top">SP</th>
-      <th>ALEXANDRE LEITE</th>
-      <th>Flight ticket issue</th>
-      <td>1941.08</td>
-      <td>18579.30</td>
-      <td>24021.56</td>
-      <td>16558.60</td>
-      <td>20436.91</td>
-      <td>25079.55</td>
-    </tr>
-    <tr>
-      <th>ELI CORRÊA FILHO</th>
-      <th>Flight ticket issue</th>
-      <td>3495.12</td>
-      <td>16016.12</td>
-      <td>12724.77</td>
-      <td>8281.72</td>
-      <td>15824.64</td>
-      <td>8670.00</td>
-    </tr>
-    <tr>
-      <th>JORGE TADEU MUDALEN</th>
-      <th>Flight ticket issue</th>
-      <td>-1977.00</td>
-      <td>-2148.37</td>
-      <td>-1485.43</td>
-      <td>5570.34</td>
-      <td>2680.14</td>
-      <td>1378.63</td>
-    </tr>
-    <tr>
-      <th>MARCELO AGUIAR</th>
-      <th>Flight ticket issue</th>
-      <td>2060.37</td>
-      <td>2641.97</td>
-      <td>4651.66</td>
-      <td>5267.61</td>
-      <td>3762.33</td>
-      <td>3162.04</td>
-    </tr>
-    <tr>
-      <th>MISSIONÁRIO JOSÉ OLIMPIO</th>
-      <th>Flight ticket issue</th>
-      <td>2644.02</td>
-      <td>6543.36</td>
-      <td>3369.62</td>
-      <td>4531.80</td>
-      <td>4857.50</td>
-      <td>6074.47</td>
-    </tr>
-    <tr>
-      <th>TO</th>
-      <th>PROFESSORA DORINHA SEABRA REZENDE</th>
-      <th>Flight ticket issue</th>
-      <td>3868.93</td>
-      <td>4728.73</td>
-      <td>3698.96</td>
-      <td>1112.27</td>
-      <td>3007.18</td>
-      <td>7230.94</td>
-    </tr>
-    <tr>
-      <th rowspan="3" valign="top">PCdoB</th>
-      <th>AP</th>
-      <th>PROFESSORA MARCIVANIA</th>
-      <th>Flight ticket issue</th>
-      <td>308.35</td>
-      <td>2870.32</td>
-      <td>2363.24</td>
-      <td>1269.99</td>
-      <td>5755.70</td>
-      <td>2746.43</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">BA</th>
-      <th>ALICE PORTUGAL</th>
-      <th>Flight ticket issue</th>
-      <td>3950.18</td>
-      <td>1293.35</td>
-      <td>8274.28</td>
-      <td>3557.92</td>
-      <td>11893.84</td>
-      <td>-1188.91</td>
-    </tr>
-    <tr>
-      <th>DANIEL ALMEIDA</th>
-      <th>Flight ticket issue</th>
-      <td>8696.90</td>
-      <td>6275.00</td>
-      <td>9275.88</td>
-      <td>8644.12</td>
-      <td>7266.46</td>
-      <td>3173.11</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <th>...</th>
-      <th>...</th>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th rowspan="3" valign="top">PTN</th>
-      <th rowspan="2" valign="top">SP</th>
-      <th>DR. SINVAL MALHEIROS</th>
-      <th>Flight ticket issue</th>
-      <td>9729.30</td>
-      <td>14293.37</td>
-      <td>5211.10</td>
-      <td>10974.60</td>
-      <td>5882.93</td>
-      <td>11532.06</td>
-    </tr>
-    <tr>
-      <th>RENATA ABREU</th>
-      <th>Flight ticket issue</th>
-      <td>NaN</td>
-      <td>7018.20</td>
-      <td>18979.77</td>
-      <td>10222.97</td>
-      <td>10767.87</td>
-      <td>7216.06</td>
-    </tr>
-    <tr>
-      <th>TO</th>
-      <th>CARLOS HENRIQUE GAGUIM</th>
-      <th>Flight ticket issue</th>
-      <td>227.27</td>
-      <td>1180.98</td>
-      <td>1464.65</td>
-      <td>751.96</td>
-      <td>4137.93</td>
-      <td>629.00</td>
-    </tr>
-    <tr>
-      <th rowspan="3" valign="top">PTdoB</th>
-      <th>MG</th>
-      <th>LUIS TIBÉ</th>
-      <th>Flight ticket issue</th>
-      <td>809.73</td>
-      <td>7263.76</td>
-      <td>4809.63</td>
-      <td>10996.05</td>
-      <td>7196.61</td>
-      <td>7626.89</td>
-    </tr>
-    <tr>
-      <th>PE</th>
-      <th>SILVIO COSTA</th>
-      <th>Flight ticket issue</th>
-      <td>3716.27</td>
-      <td>6636.82</td>
-      <td>8719.60</td>
-      <td>4142.73</td>
-      <td>6093.33</td>
-      <td>2813.63</td>
-    </tr>
-    <tr>
-      <th>RJ</th>
-      <th>CABO DACIOLO</th>
-      <th>Flight ticket issue</th>
-      <td>2901.25</td>
-      <td>3830.33</td>
-      <td>3568.84</td>
-      <td>9731.74</td>
-      <td>9635.60</td>
-      <td>5872.76</td>
-    </tr>
-    <tr>
-      <th rowspan="7" valign="top">PV</th>
-      <th>BA</th>
-      <th>ULDURICO JUNIOR</th>
-      <th>Flight ticket issue</th>
-      <td>7612.55</td>
-      <td>3788.79</td>
-      <td>7033.96</td>
-      <td>1427.95</td>
-      <td>6891.34</td>
-      <td>786.78</td>
-    </tr>
-    <tr>
-      <th>ES</th>
-      <th>EVAIR VIEIRA DE MELO</th>
-      <th>Flight ticket issue</th>
-      <td>2181.15</td>
-      <td>6715.00</td>
-      <td>12929.05</td>
-      <td>5674.66</td>
-      <td>5550.92</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>MA</th>
-      <th>SARNEY FILHO</th>
-      <th>Flight ticket issue</th>
-      <td>2512.27</td>
-      <td>3890.07</td>
-      <td>7561.09</td>
-      <td>5966.30</td>
-      <td>3797.15</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>PR</th>
-      <th>LEANDRE</th>
-      <th>Flight ticket issue</th>
-      <td>4744.18</td>
-      <td>6872.22</td>
-      <td>5138.77</td>
-      <td>8741.36</td>
-      <td>1282.00</td>
-      <td>5271.76</td>
-    </tr>
-    <tr>
-      <th rowspan="3" valign="top">SP</th>
-      <th>ANTONIO CARLOS MENDES THAME</th>
-      <th>Flight ticket issue</th>
-      <td>3353.97</td>
-      <td>7426.73</td>
-      <td>11652.02</td>
-      <td>8762.47</td>
-      <td>9454.83</td>
-      <td>-1120.94</td>
-    </tr>
-    <tr>
-      <th>EVANDRO GUSSI</th>
-      <th>Flight ticket issue</th>
-      <td>8332.86</td>
-      <td>12166.12</td>
-      <td>13339.36</td>
-      <td>14925.57</td>
-      <td>17113.38</td>
-      <td>9102.42</td>
-    </tr>
-    <tr>
-      <th>ROBERTO DE LUCENA</th>
-      <th>Flight ticket issue</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>4482.64</td>
-      <td>11121.06</td>
-      <td>7084.73</td>
-    </tr>
-    <tr>
-      <th rowspan="4" valign="top">REDE</th>
-      <th>PR</th>
-      <th>ALIEL MACHADO</th>
-      <th>Flight ticket issue</th>
-      <td>NaN</td>
-      <td>9050.79</td>
-      <td>14360.28</td>
-      <td>3210.98</td>
-      <td>7776.79</td>
-      <td>3309.41</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">RJ</th>
-      <th>ALESSANDRO MOLON</th>
-      <th>Flight ticket issue</th>
-      <td>10415.98</td>
-      <td>16474.58</td>
-      <td>19462.33</td>
-      <td>11354.71</td>
-      <td>8350.77</td>
-      <td>7703.48</td>
-    </tr>
-    <tr>
-      <th>MIRO TEIXEIRA</th>
-      <th>Flight ticket issue</th>
-      <td>-251.45</td>
-      <td>11612.11</td>
-      <td>21239.15</td>
-      <td>11791.01</td>
-      <td>15931.90</td>
-      <td>4571.41</td>
-    </tr>
-    <tr>
-      <th>RS</th>
-      <th>JOÃO DERLY</th>
-      <th>Flight ticket issue</th>
-      <td>2503.41</td>
-      <td>8245.58</td>
-      <td>16363.31</td>
-      <td>10102.22</td>
-      <td>19834.70</td>
-      <td>7276.75</td>
-    </tr>
-    <tr>
-      <th rowspan="13" valign="top">SD</th>
-      <th>CE</th>
-      <th>GENECIAS NORONHA</th>
-      <th>Flight ticket issue</th>
-      <td>7103.91</td>
-      <td>5217.03</td>
-      <td>10583.48</td>
-      <td>2167.06</td>
-      <td>8980.66</td>
-      <td>6568.47</td>
-    </tr>
-    <tr>
-      <th>ES</th>
-      <th>CARLOS MANATO</th>
-      <th>Flight ticket issue</th>
-      <td>4227.71</td>
-      <td>10287.98</td>
-      <td>9334.88</td>
-      <td>1477.70</td>
-      <td>5670.12</td>
-      <td>4162.66</td>
-    </tr>
-    <tr>
-      <th>GO</th>
-      <th>LUCAS VERGILIO</th>
-      <th>Flight ticket issue</th>
-      <td>NaN</td>
-      <td>852.37</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1440.21</td>
-      <td>1452.41</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">MG</th>
-      <th>LAUDIVIO CARVALHO</th>
-      <th>Flight ticket issue</th>
-      <td>2778.41</td>
-      <td>4347.85</td>
-      <td>7544.28</td>
-      <td>6047.59</td>
-      <td>7141.25</td>
-      <td>3825.05</td>
-    </tr>
-    <tr>
-      <th>ZÉ SILVA</th>
-      <th>Flight ticket issue</th>
-      <td>2112.71</td>
-      <td>8231.76</td>
-      <td>12207.62</td>
-      <td>6396.43</td>
-      <td>10715.75</td>
-      <td>5537.67</td>
-    </tr>
-    <tr>
-      <th>PA</th>
-      <th>WLADIMIR COSTA</th>
-      <th>Flight ticket issue</th>
-      <td>8557.70</td>
-      <td>12911.47</td>
-      <td>22959.47</td>
-      <td>15759.75</td>
-      <td>18336.67</td>
-      <td>9568.29</td>
-    </tr>
-    <tr>
-      <th>PB</th>
-      <th>BENJAMIN MARANHÃO</th>
-      <th>Flight ticket issue</th>
-      <td>NaN</td>
-      <td>506.54</td>
-      <td>-11.13</td>
-      <td>7215.82</td>
-      <td>3833.41</td>
-      <td>3499.65</td>
-    </tr>
-    <tr>
-      <th>PE</th>
-      <th>AUGUSTO COUTINHO</th>
-      <th>Flight ticket issue</th>
-      <td>7422.55</td>
-      <td>7666.49</td>
-      <td>2355.25</td>
-      <td>7356.78</td>
-      <td>9341.10</td>
-      <td>4887.20</td>
-    </tr>
-    <tr>
-      <th>PR</th>
-      <th>FERNANDO FRANCISCHINI</th>
-      <th>Flight ticket issue</th>
-      <td>2776.55</td>
-      <td>5370.49</td>
-      <td>13178.30</td>
-      <td>4981.72</td>
-      <td>6685.36</td>
-      <td>4455.20</td>
-    </tr>
-    <tr>
-      <th>RJ</th>
-      <th>AUREO</th>
-      <th>Flight ticket issue</th>
-      <td>7867.49</td>
-      <td>3758.11</td>
-      <td>10555.90</td>
-      <td>17856.96</td>
-      <td>5897.28</td>
-      <td>3782.75</td>
-    </tr>
-    <tr>
-      <th>SE</th>
-      <th>LAERCIO OLIVEIRA</th>
-      <th>Flight ticket issue</th>
-      <td>-516.25</td>
-      <td>1363.84</td>
-      <td>7828.63</td>
-      <td>3405.87</td>
-      <td>7097.90</td>
-      <td>1429.25</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">SP</th>
-      <th>MAJOR OLIMPIO</th>
-      <th>Flight ticket issue</th>
-      <td>751.69</td>
-      <td>5458.95</td>
-      <td>6082.71</td>
-      <td>3269.08</td>
-      <td>3992.67</td>
-      <td>4350.70</td>
-    </tr>
-    <tr>
-      <th>PAULO PEREIRA DA SILVA</th>
-      <th>Flight ticket issue</th>
-      <td>16358.52</td>
-      <td>22623.08</td>
-      <td>18015.65</td>
-      <td>21455.33</td>
-      <td>31924.81</td>
-      <td>7252.27</td>
-    </tr>
   </tbody>
 </table>
-<p>524 rows × 6 columns</p>
 </div>
 </div>
 
@@ -13100,14 +12265,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="o">.</span><span class="n">subquota_number</span> <span class="o">==</span> <span class="mi">999</span><span class="p">)]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="o">.</span><span class="n">subquota_number</span> <span class="o">==</span> <span class="mi">999</span><span class="p">)]</span>
 
 <span class="n">tot</span> <span class="o">=</span> \
    <span class="n">data_filtro</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">,</span> <span class="s1">&#39;subquota_description&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">])</span>\
-   <span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
+   <span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
 
 <span class="n">tot</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
 </pre></div>
@@ -13120,97 +12285,19 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[55]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
 <table border="1" class="dataframe">
   <thead>
     <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th colspan="6" halign="left">net_value</th>
-    </tr>
-    <tr>
-      <th></th>
-      <th></th>
-      <th>month</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-      <th>5</th>
-      <th>6</th>
-    </tr>
-    <tr>
       <th>cnpj_cpf</th>
       <th>supplier</th>
       <th>subquota_description</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th>00512777000135</th>
-      <th>Cia Aérea - PASSAREDO</th>
-      <th>Flight ticket issue</th>
-      <td>23230.92</td>
-      <td>46647.64</td>
-      <td>72394.21</td>
-      <td>53626.63</td>
-      <td>66835.59</td>
-      <td>62596.41</td>
-    </tr>
-    <tr>
-      <th>02012862000160</th>
-      <th>Cia Aérea - TAM</th>
-      <th>Flight ticket issue</th>
-      <td>884130.25</td>
-      <td>1695323.76</td>
-      <td>2324633.74</td>
-      <td>1246187.25</td>
-      <td>2008649.33</td>
-      <td>895228.38</td>
-    </tr>
-    <tr>
-      <th>02575829000148</th>
-      <th>Cia Aérea - AVIANCA</th>
-      <th>Flight ticket issue</th>
-      <td>215441.12</td>
-      <td>391571.93</td>
-      <td>541789.70</td>
-      <td>471931.80</td>
-      <td>479045.47</td>
-      <td>358166.06</td>
-    </tr>
-    <tr>
-      <th>07575651000159</th>
-      <th>Cia Aérea - GOL</th>
-      <th>Flight ticket issue</th>
-      <td>574752.59</td>
-      <td>1058189.92</td>
-      <td>1396584.77</td>
-      <td>1051991.39</td>
-      <td>1234925.96</td>
-      <td>711083.60</td>
-    </tr>
-    <tr>
-      <th>09296295000160</th>
-      <th>Cia Aérea - AZUL</th>
-      <th>Flight ticket issue</th>
-      <td>209528.15</td>
-      <td>389645.74</td>
-      <td>535380.46</td>
-      <td>504421.14</td>
-      <td>546363.67</td>
-      <td>432884.96</td>
-    </tr>
   </tbody>
 </table>
 </div>

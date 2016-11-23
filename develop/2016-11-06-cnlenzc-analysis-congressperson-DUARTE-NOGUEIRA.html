@@ -11687,6 +11687,18 @@ ul.typeahead-list > li > a {
 .ansi-bold { font-weight: bold; }
 
     </style>
+<style type="text/css">
+    #notebook,
+.output_area pre {
+  font-size: 18px;
+}
+
+.CodeMirror {
+  font-family: Monaco;
+  font-size: 20px;
+}
+
+    </style>
 
 
 <style type="text/css">
@@ -11748,11 +11760,11 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 
 </div>
@@ -11762,17 +11774,19 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-08-08-current-year.xz&#39;</span><span class="p">,</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-11-19-reimbursements.xz&#39;</span><span class="p">,</span>
                    <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span>
                    <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;document_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;congressperson_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;congressperson_document&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;term_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                          <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">})</span>
+                          <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span>
+                   <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2016</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -11791,16 +11805,16 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[82]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span>\
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span>\
 <span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">applicant_id</span> <span class="o">==</span><span class="mi">1816</span><span class="p">)</span>\
  <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">subquota_number</span> <span class="o">==</span> <span class="mi">999</span><span class="p">))]</span>
 
 <span class="n">tot</span> <span class="o">=</span> \
 <span class="n">data_filtro</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;party&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">,</span> <span class="s1">&#39;passenger&#39;</span><span class="p">,</span> <span class="s1">&#39;leg_of_the_trip&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">])</span>\
-<span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
+<span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
 
 <span class="n">tot</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 </pre></div>
@@ -11813,32 +11827,12 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[82]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[3]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
 <table border="1" class="dataframe">
   <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th colspan="3" halign="left">net_value</th>
-    </tr>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th>month</th>
-      <th>4</th>
-      <th>5</th>
-      <th>6</th>
-    </tr>
     <tr>
       <th>state</th>
       <th>party</th>
@@ -11846,81 +11840,9 @@ div#notebook {
       <th>supplier</th>
       <th>passenger</th>
       <th>leg_of_the_trip</th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th rowspan="10" valign="top">SP</th>
-      <th rowspan="10" valign="top">PSDB</th>
-      <th rowspan="10" valign="top">DUARTE NOGUEIRA</th>
-      <th rowspan="2" valign="top">Cia Aérea - AZUL</th>
-      <th rowspan="2" valign="top">DUARTE NOGUEIRA</th>
-      <th>GYN/VCP</th>
-      <td>905.66</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>RAO/VCP</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>427.66</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">Cia Aérea - PASSAREDO</th>
-      <th rowspan="2" valign="top">DUARTE NOGUEIRA</th>
-      <th>BSB/RAO</th>
-      <td>NaN</td>
-      <td>4003.65</td>
-      <td>1784.19</td>
-    </tr>
-    <tr>
-      <th>RAO/BSB</th>
-      <td>690.76</td>
-      <td>420.76</td>
-      <td>1582.28</td>
-    </tr>
-    <tr>
-      <th rowspan="6" valign="top">Cia Aérea - TAM</th>
-      <th rowspan="6" valign="top">DUARTE NOGUEIRA</th>
-      <th>BSB/CGH</th>
-      <td>NaN</td>
-      <td>4579.12</td>
-      <td>1258.63</td>
-    </tr>
-    <tr>
-      <th>CGH/BSB</th>
-      <td>761.18</td>
-      <td>1639.42</td>
-      <td>1002.58</td>
-    </tr>
-    <tr>
-      <th>CGH/RAO</th>
-      <td>NaN</td>
-      <td>377.48</td>
-      <td>628.58</td>
-    </tr>
-    <tr>
-      <th>CWB/CGH</th>
-      <td>NaN</td>
-      <td>434.68</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>GYN/GRU/RAO</th>
-      <td>250.00</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>RAO/CGH</th>
-      <td>317.90</td>
-      <td>568.82</td>
-      <td>NaN</td>
-    </tr>
   </tbody>
 </table>
 </div>
@@ -11943,16 +11865,16 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[81]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span>\
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_filtro</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span>\
 <span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">applicant_id</span> <span class="o">==</span><span class="mi">1816</span><span class="p">)</span>\
  <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span><span class="o">==</span><span class="mi">1</span><span class="p">))]</span>
 
 <span class="n">tot</span> <span class="o">=</span> \
 <span class="n">data_filtro</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;party&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;subquota_description&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">])</span>\
-<span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
+<span class="o">.</span><span class="n">aggregate</span><span class="p">({</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span>
 
 <span class="n">tot</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 </pre></div>
@@ -11965,7 +11887,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[81]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[4]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -11977,7 +11899,7 @@ div#notebook {
       <th></th>
       <th></th>
       <th></th>
-      <th colspan="5" halign="left">net_value</th>
+      <th colspan="8" halign="left">total_net_value</th>
     </tr>
     <tr>
       <th></th>
@@ -11990,6 +11912,9 @@ div#notebook {
       <th>6</th>
       <th>7</th>
       <th>8</th>
+      <th>9</th>
+      <th>10</th>
+      <th>11</th>
     </tr>
     <tr>
       <th>state</th>
@@ -12002,16 +11927,22 @@ div#notebook {
       <th></th>
       <th></th>
       <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th rowspan="41" valign="top">SP</th>
-      <th rowspan="41" valign="top">PSDB</th>
-      <th rowspan="41" valign="top">DUARTE NOGUEIRA</th>
-      <th rowspan="9" valign="top">Congressperson meal</th>
+      <th rowspan="44" valign="top">SP</th>
+      <th rowspan="44" valign="top">PSDB</th>
+      <th rowspan="44" valign="top">DUARTE NOGUEIRA</th>
+      <th rowspan="10" valign="top">Congressperson meal</th>
       <th>0SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</th>
       <td>33.20</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -12024,6 +11955,9 @@ div#notebook {
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>SENAC</th>
@@ -12032,10 +11966,16 @@ div#notebook {
       <td>NaN</td>
       <td>57.99</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>SENAC - LANCHONETE DO PLENÁRIO</th>
       <td>36.10</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -12048,6 +11988,9 @@ div#notebook {
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>SENAC - RESTAURANTE AN. IV 10º ANDAR</th>
@@ -12056,10 +11999,16 @@ div#notebook {
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>SENAC RESTAURANTE 10º AND. AN. IV CÂMARA DOS DEPUTADOS</th>
       <td>112.48</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -12072,6 +12021,9 @@ div#notebook {
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>SERVIÇO NAC. DE APRENDIZAGEM COMERCIAL - SENAC</th>
@@ -12080,30 +12032,19 @@ div#notebook {
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-    </tr>
-    <tr>
-      <th rowspan="3" valign="top">Flight ticket issue</th>
-      <th>Cia Aérea - AZUL</th>
-      <td>905.66</td>
       <td>NaN</td>
-      <td>427.66</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>Cia Aérea - PASSAREDO</th>
-      <td>690.76</td>
-      <td>4424.41</td>
-      <td>3366.47</td>
+      <th>SERVIÇO NACIONAL DE APRENDIZAGEM COMERCIAL  - SENAC</th>
       <td>NaN</td>
       <td>NaN</td>
-    </tr>
-    <tr>
-      <th>Cia Aérea - TAM</th>
-      <td>1329.08</td>
-      <td>7599.52</td>
-      <td>2889.79</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>110.18</td>
       <td>NaN</td>
     </tr>
     <tr>
@@ -12114,19 +12055,28 @@ div#notebook {
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th rowspan="8" valign="top">Fuels and lubricants</th>
+      <th rowspan="9" valign="top">Fuels and lubricants</th>
       <th>AEROINTER AUTO POSTO LTDA</th>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>80.00</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>CANA VERDE AUTO POSTO LTDA</th>
       <td>110.00</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -12139,6 +12089,9 @@ div#notebook {
       <td>110.00</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>CASCOL COMBUSTIVEIS PARA VEICULOS LTDA</th>
@@ -12146,6 +12099,9 @@ div#notebook {
       <td>110.00</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>110.00</td>
+      <td>110.00</td>
+      <td>110.00</td>
       <td>NaN</td>
     </tr>
     <tr>
@@ -12154,6 +12110,9 @@ div#notebook {
       <td>NaN</td>
       <td>67.41</td>
       <td>85.01</td>
+      <td>147.72</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
@@ -12162,7 +12121,21 @@ div#notebook {
       <td>NaN</td>
       <td>110.00</td>
       <td>110.00</td>
-      <td>110.0</td>
+      <td>110.00</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Cascol Combustíveis para Veículos Ltda.</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>108.30</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>SAVEGNAGO SUPERMERCADOS LTDA</th>
@@ -12170,6 +12143,9 @@ div#notebook {
       <td>NaN</td>
       <td>NaN</td>
       <td>234.60</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
@@ -12179,14 +12155,31 @@ div#notebook {
       <td>110.00</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th rowspan="5" valign="top">Maintenance of office supporting parliamentary activity</th>
+      <th rowspan="9" valign="top">Maintenance of office supporting parliamentary activity</th>
       <th>COMPANHIA PAULISTA DE FORÇA E LUZ</th>
       <td>NaN</td>
       <td>385.79</td>
       <td>328.09</td>
       <td>581.09</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>CONDOMÍNIO GARAGEM AUTOMÁTICA ROOSEVELT</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>135.00</td>
+      <td>270.00</td>
+      <td>135.00</td>
+      <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
@@ -12194,6 +12187,9 @@ div#notebook {
       <td>NaN</td>
       <td>53.11</td>
       <td>53.11</td>
+      <td>58.87</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
@@ -12202,6 +12198,42 @@ div#notebook {
       <td>NaN</td>
       <td>41.58</td>
       <td>36.91</td>
+      <td>39.97</td>
+      <td>34.54</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>GIMBA SUPRIMENTOS ESC. E INF. LTDA.</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>484.38</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>ROSA MARIA MARCHI MACEDO</th>
+      <td>NaN</td>
+      <td>1500.00</td>
+      <td>1500.00</td>
+      <td>1500.00</td>
+      <td>1500.00</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Sanprel Contabilidade E Assessorias Especializadas A Condominios Ltda - Epp</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>686.85</td>
+      <td>1167.67</td>
+      <td>NaN</td>
+      <td>441.72</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
@@ -12212,6 +12244,9 @@ div#notebook {
       <td>156.00</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>73.2</td>
     </tr>
     <tr>
       <th>WMS Comércio de Artigos de Papelaria Ltda</th>
@@ -12220,28 +12255,28 @@ div#notebook {
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">Postal services</th>
-      <th>CORREIOS - SEDEX 10</th>
-      <td>NaN</td>
-      <td>57.00</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>CORREIOS - SEDEX CONVENCIONAL</th>
-      <td>121.05</td>
-      <td>269.71</td>
-      <td>206.91</td>
-      <td>162.93</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th rowspan="4" valign="top">Publication subscriptions</th>
+      <th rowspan="5" valign="top">Publication subscriptions</th>
       <th>EMPRESA FOLHA DA MANHÃ S/A.</th>
       <td>456.90</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Empresa Paulista de Noticias Ltda</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>530.80</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -12253,19 +12288,28 @@ div#notebook {
       <td>NaN</td>
       <td>71.90</td>
       <td>NaN</td>
+      <td>71.90</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>S/A O ESTADO DE S.PAULO</th>
       <td>98.90</td>
       <td>NaN</td>
-      <td>NaN</td>
       <td>98.90</td>
+      <td>98.90</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>VALOR ECONÔMICO S/A</th>
       <td>496.80</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -12279,11 +12323,17 @@ div#notebook {
       <td>600.00</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>PARLABRASIL EIRELI - ME</th>
       <td>NaN</td>
       <td>550.00</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -12296,13 +12346,19 @@ div#notebook {
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th rowspan="6" valign="top">Telecommunication</th>
+      <th rowspan="7" valign="top">Telecommunication</th>
       <th>'TELEFÔNICA BRASIL S.A.</th>
       <td>NaN</td>
       <td>NaN</td>
       <td>1339.31</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
@@ -12311,15 +12367,32 @@ div#notebook {
       <td>NaN</td>
       <td>439.09</td>
       <td>446.59</td>
+      <td>479.44</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>RAMAL</th>
-      <td>178.53</td>
-      <td>128.34</td>
-      <td>60.47</td>
-      <td>66.70</td>
+      <th>TELEFONICA BRASIL S.A.</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1504.85</td>
+      <td>4160.42</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>TELEFONICA BRASIL S.A. - VIVO</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>65.46</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
@@ -12329,11 +12402,17 @@ div#notebook {
       <td>1218.04</td>
       <td>NaN</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>TELEFÔNICA BRASIL S.A. - VIVO</th>
       <td>NaN</td>
       <td>954.05</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -12345,6 +12424,9 @@ div#notebook {
       <td>NaN</td>
       <td>1282.75</td>
       <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
@@ -12353,6 +12435,19 @@ div#notebook {
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
 </div>
 </div>
 
