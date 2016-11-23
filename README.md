@@ -53,21 +53,18 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 
 ## Using Docker
 
-### Requirements 
-
-docker
-docker-compose 
-make
-
-### To use
+If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and make, jusr run:
 
 ```
-make run.devel
+$ docker-compose up -d
+$ docker-compose run --rm jarbas python manage.py collectstatic --no-input
 ```
 
-To test access http://localhost on your browser
+You can access it at [`localhost:80`](http://localhost:80/).
 
-## Install local
+There are some cleaver shortcuts in the `Makefile` if you like it.
+
+## Local install
 
 ### Requirements
 
