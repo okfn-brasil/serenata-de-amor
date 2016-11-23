@@ -10,24 +10,29 @@ import matplotlib.pyplot as plt
 
 # In[2]:
 
-data = pd.read_csv('../data/2016-08-08-last-year.xz',
-                   parse_dates=[16],
-                   dtype={'document_id': np.str,
+dataset = pd.read_csv('../data/2016-11-22-reimbursements.xz',
+                      dtype={'document_id': np.str,
                           'congressperson_id': np.str,
                           'congressperson_document': np.str,
                           'term_id': np.str,
                           'cnpj_cpf': np.str,
-                          'reimbursement_number': np.str})
+                          'reimbursement_number': np.str},
+                      low_memory=False)
 
 
 # In[3]:
 
-data.head()
+dataset = dataset[dataset['year']==2016]
+
+
+# In[4]:
+
+dataset.head()
 
 
 # # Find spends: congress person per month
 
-# In[16]:
+# In[5]:
 
 def find_spends_by_month(df, applicant_id):
     '''
@@ -72,7 +77,7 @@ def find_spends_by_month(df, applicant_id):
        
     for m in months.keys():
         data = df_applicant[df.month == m]
-        result["{:>02}".format(m) + "/" + months[m]] = data.net_value.sum()
+        result["{:>02}".format(m) + "/" + months[m]] = data.total_net_value.sum()
     
     df_final = pd.DataFrame([result])
      
@@ -83,12 +88,12 @@ def find_spends_by_month(df, applicant_id):
     
     return pd.DataFrame([result])
 
-find_spends_by_month(data, 731)
+find_spends_by_month(dataset, 731)
 
 
 # # Find spends: Congress Person per Subquotas
 
-# In[18]:
+# In[6]:
 
 def find_spends_by_subquota(df, applicant_id):
     '''
@@ -105,7 +110,7 @@ def find_spends_by_subquota(df, applicant_id):
     
     for c in df["subquota_description"].unique():
         data = df_applicant[df.subquota_description == c]
-        result[c] = data.net_value.sum()
+        result[c] = data.total_net_value.sum()
     
     df_final = pd.DataFrame([result])
     ax = df_final.plot(kind='bar', title ="Congress Person Spends by Subquotas", figsize=(25, 20), legend=True, fontsize=12)
@@ -114,10 +119,10 @@ def find_spends_by_subquota(df, applicant_id):
     plt.show()
     return pd.DataFrame([result])
 
-find_spends_by_subquota(data, 731)
+find_spends_by_subquota(dataset, 731)
 
 
-# In[21]:
+# In[7]:
 
 def find_spends_by_subquota(df, applicant_id, month=None):
    '''
@@ -140,7 +145,7 @@ def find_spends_by_subquota(df, applicant_id, month=None):
 
    for c in df["subquota_description"].unique():
        data = df_applicant[df.subquota_description == c]
-       result[c] = data.net_value.sum()
+       result[c] = data.total_net_value.sum()
        result["total"] += result[c]
    
    df_final = pd.DataFrame([result])
@@ -150,12 +155,12 @@ def find_spends_by_subquota(df, applicant_id, month=None):
    plt.show()
    return pd.DataFrame([result])
 
-find_spends_by_subquota(data, 731, 3)
+find_spends_by_subquota(dataset, 731, 3)
 
 
 # # Find spends: all congress people 
 
-# In[35]:
+# In[8]:
 
 def find_sum_of_values(df, aggregator, property):
     '''
@@ -205,27 +210,22 @@ def find_sum_of_values(df, aggregator, property):
 
     return pd.DataFrame(result).sort_values(by=aggregator)
 
-df = find_sum_of_values(data, "congressperson_name", "net_value")
+df = find_sum_of_values(dataset, "congressperson_name", "total_net_value")
 df[:10]
 
 
 # # Finding congress people that spent more than 500 thousand per year
 
-# In[38]:
+# In[9]:
 
-df = df[df.net_value_total > 500000]
+df = df[df.total_net_value_total > 500000]
 df
 
 
-# In[39]:
+# In[10]:
 
-ax = df[["net_value_total"]].plot(kind='bar', title ="Congress Person Spends", figsize=(15, 10), legend=True, fontsize=12)
+ax = df[["total_net_value_total"]].plot(kind='bar', title ="Congress Person Spends", figsize=(15, 10), legend=True, fontsize=12)
 ax.set_xlabel("Congress Person", fontsize=12)
 ax.set_ylabel("Value", fontsize=12)
 plt.show()
-
-
-# In[ ]:
-
-
 
