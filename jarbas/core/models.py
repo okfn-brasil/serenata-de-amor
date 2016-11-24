@@ -13,7 +13,7 @@ class Document(models.Model):
     party = models.CharField('Party', db_index=True, max_length=7)
     term_id = models.IntegerField('Term ID')
     subquota_number = models.IntegerField('Subquote ID', db_index=True)
-    subquota_description = models.CharField('Subquota descrition', max_length=56)
+    subquota_description = models.CharField('Subquota descrition', max_length=128)
     subquota_group_id = models.IntegerField('Subquota group ID', db_index=True)
     subquota_group_description = models.CharField('Subquota group description', max_length=20)
     supplier = models.CharField('Supplier', max_length=100)
