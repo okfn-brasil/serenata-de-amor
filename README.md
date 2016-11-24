@@ -111,16 +111,15 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 ### Migrations
 
-Once you're done with requirements, dependencies and settings, create the basic structure at the database (and if you wish, create a super-user for you, so you can use [Django Admin](http://localhost:8000/admin) later):
+Once you're done with requirements, dependencies and settings, create the basic database structure:
 
 ```console
 python manage.py migrate
-python manage.py createsuperuser
 ```
 
 ### Load data
 
-Now you can load the data from our datasets:
+Now you can load the data from our datasets and get some other data as static files:
 
 ```
 python manage.py loaddatasets
@@ -147,8 +146,6 @@ Not sure? Run `python manage.py check` and `python manage.py test` just in case.
 ### Ready!
 
 Run the server with `python manage.py runserver` and load [localhost:8000](http://localhost:8000) in your favorite browser.
-
-If you created a _super-user_ account, you can also use [Django Admin](https://docs.djangoproject.com/en/stable/ref/contrib/admin/) at [`/admin/`](http://localhost:8000/admin/).
 
 ## License
 
