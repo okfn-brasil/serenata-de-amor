@@ -51,8 +51,20 @@ This endpoit gets the info we have for a specific supplier. The endpoint expects
 
 There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapper) for the API. The [tapioca-jarbas](https://github.com/daneoshiga/tapioca-jarbas/) can be installed with `pip install tapioca-jarbas` and can be used to access the API in any Python script.
 
+## Using Docker
 
-## Install
+If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and make, jusr run:
+
+```
+$ docker-compose up -d
+$ docker-compose run --rm jarbas python manage.py collectstatic --no-input
+```
+
+You can access it at [`localhost:80`](http://localhost:80/).
+
+There are some cleaver shortcuts in the `Makefile` if you like it.
+
+## Local install
 
 ### Requirements
 
@@ -60,13 +72,12 @@ The app is based in [Python 3.5](http://python.org) and [Node.js 6](http://nodej
 
 ```console
 npm i
-python -m pip install -r requirements-dev.txt
+python -m pip install -r requirements.txt
 ```
 
 Minor details on requirements:
 
 * **`lzma`**: In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` but you mihght have to re-compile your Python. Some macOS Users might have the same problem. To check if you have `lzma` you can use `$ python -m lmza`. To fix it you need to install `lzma` using `$ brew install xz` and after that you need to recompile Python, and an way to do it is through `$ brew upgrade --cleanup python`.
-
 
 * **`elm-make`**: If `elm-make` is not available in your path, or if the `elm-make` version differs from [the one required by this project](packages.json), set [`ELM_MAKE_BIN`](https://github.com/cuducos/webassets-elm#requirements) environment variable pointing to where the proper `elm-make` binary is (probably `node_modules/.bin/elm-make`)
 * **`psycopg2`**: The `requirements.txt` file is prepared to use [PostgresSQL](https://www.postgresql.org) and `psycopg2` might fail if you don't have Postgres installed locally.
@@ -117,15 +128,16 @@ python manage.py loadsuppliers
 python manage.py ceapdatasets
 ```
 
-Use `python manage.py loaddatasets --help` and ``python manage.py loadsuppliers --help` to check options on limiting the number of documents to be loaded from the datasets.
+Use `python manage.py loaddatasets --help` and `python manage.py loadsuppliers --help` to check options on limiting the number of documents to be loaded from the datasets.
 
 ### Generate static files
 
-We generate assets through [webassets](http://webassets.readthedocs.io) thus you might have to run:
+We generate assets through NodeJS, so run it before Django collecting static files:
 
 ```console
-python manage.py assets build
+npm run assets
 python manage.py collectstatic
+
 ```
 
 ### Ready?

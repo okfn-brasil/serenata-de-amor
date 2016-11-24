@@ -24,7 +24,7 @@ echo "==> $ python manage.py ceapdatasets"
 python manage.py ceapdatasets
 
 echo "==> $ python manage.py assets build --no-cache"
-python manage.py assets build --no-cache
+npm run assets
 
 echo "==> $ python manage.py collectstatic --no-input"
 python manage.py collectstatic --no-input

@@ -24,7 +24,14 @@ class Command(BaseCommand):
             settings.AMAZON_S3_BUCKET,
             settings.AMAZON_S3_DATASET_DATE
         )
-        target = path.join(settings.ASSETS_ROOT, 'ceap-datasets.html')
+
+        target = path.join(
+            settings.BASE_DIR,
+            'jarbas',
+            'frontend',
+            'static',
+            'ceap-datasets.html'
+        )
         tmp = NamedTemporaryFile()
 
         self.stdout.write('Downloading markdown from ' + origin)
@@ -34,18 +41,9 @@ class Command(BaseCommand):
         with open(tmp.name) as md:
             source = markdown(md.read(), extensions=[GitHubMarkdown()])
 
-        self.stdout.write('Applying GitHub CSS styles')
-        css_path = path.join(
-            settings.BASE_DIR,
-            'node_modules',
-            'github-markdown-css',
-            'github-markdown.css'
-        )
-        with open(css_path) as css:
-            style = css.read()
-
         self.stdout.write('Saving HTML to ' + target)
         with open(target, 'w') as html:
+            style = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.4.1/github-markdown.min.css"
             body_styles = ''.join((
                 'box-sizing: border-box;',
                 'min-width: 200px;',
@@ -59,7 +57,7 @@ class Command(BaseCommand):
                 <head>
                     <meta charset="UTF-8">
                     <title>{}</title>
-                    <style>{}</style>
+                    <link type="stylesheet" href="{}">
                 </head>
                 <body class="markdown-body" style="{}">
                   {}
