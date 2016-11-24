@@ -23,34 +23,31 @@ DEFAULT_PARAMS = {'client_id': CLIENT_ID,
                 'client_secret': CLIENT_SECRET,
                 'v': VERSION}
 
-
-def companies():
-    # Loading reimbursements
+def load_cnpjs(subquota_description):
+    u_cols = ['cnpj_cpf', 'subquota_description']
     docs = pd.read_csv(REIMBURSEMENTS_DATASET_PATH,
-                       low_memory=False,
-                       dtype={'cnpj_cpf': np.str})
-    # Filtering only congressperson meals
-    meal_docs = docs[docs.subquota_description == 'Congressperson meal']
-    # Storing only unique CNPJs
-    meal_cnpjs = meal_docs['cnpj_cpf'].unique()
+                        low_memory=False,
+                        usecols=u_cols,
+                        dtype={'cnpj_cpf': np.str})
+    meals = docs[docs.subquota_description == subquota_description]
+    return meals['cnpj_cpf'].unique()
 
-    # Loading companies
+def load_companies():
+    u_cols = ['cnpj', 'trade_name', 'zip_code', 'latitude', 'longitude']
     all_companies = pd.read_csv(COMPANIES_DATASET_PATH,
                                 low_memory=False,
+                                usecols=u_cols,
                                 dtype={'trade_name': np.str})
-    # Cleaning up companies CNPJs
     all_companies['clean_cnpj'] = all_companies['cnpj'].map(cleanup_cnpj)
-    # Filtering only companies that are in meal reimbursements
-    return all_companies[all_companies['clean_cnpj'].isin(meal_cnpjs)]
+    relevant_cnpjs = load_cnpjs('Congressperson meal')
+    return all_companies[all_companies['clean_cnpj'].isin(relevant_cnpjs)]
 
 def cleanup_cnpj(cnpj):
-    regex = r'\d'
-    digits = re.findall(regex, '%s' % cnpj)
-    return ''.join(digits)
+    return re.sub("\D", "", cnpj)
 
 def remaining_companies(companies):
-    df = load_foursquare_companies_dataset()
-    return companies[~companies['cnpj'].isin(df['cnpj'])]
+    fetched_companies = load_foursquare_companies_dataset()
+    return companies[~companies['cnpj'].isin(fetched_companies['cnpj'])]
 
 def load_foursquare_companies_dataset():
     if os.path.exists(FOURSQUARE_DATASET_PATH):
@@ -86,30 +83,47 @@ def parse_search_results(response):
 def fetch_venue_by_id(venue_id):
     url = 'https://api.foursquare.com/v2/venues/%s' % venue_id
     response = requests.get(url, params=DEFAULT_PARAMS)
-
     return parse_venue_info(response)
 
 def parse_venue_info(response):
     json = response.json()
     if json['meta']['code'] == 200:
-        return json['response']['venue']
+        venue = json['response']['venue']
+        current_time = datetime.datetime.utcnow().isoformat()
+        venue['scraped_at'] = current_time
+        return venue
 
-fetched_companies = []
-
-for _, company in remaining_companies(companies()[500]).iterrows():
-    print('Fetching %s - CNPJ: %s' % (company['trade_name'], company['cnpj']))
-    fetched_company = get_venue(company)
-    if fetched_company:
-        print('Successifuly matched %s' % fetched_company['name'])
-        fetched_company['scraped_at'] = datetime.datetime.utcnow().isoformat()
-        fetched_company['cnpj'] = company['cnpj']
-        fetched_companies.append(fetched_company)
-    else:
-        print('Not found')
-
-if fetched_companies:
-    print('Saving it all!')
+def write_fetched_companies(companies):
     with open(FOURSQUARE_DATASET_PATH, 'w') as outfile:
         json.dump(fetched_companies, outfile)
-else:
-    print('Nothing to save.')
+
+if __name__ == '__main__':
+    all_companies = load_companies()
+    remaining_companies = remaining_companies(all_companies)
+    fetched_companies = []
+
+    if not (CLIENT_ID and CLIENT_SECRET):
+        raise 'Missing API credentials'
+
+    for index, company in remaining_companies.iterrows():
+        print('Looking for: %s' % company['trade_name'])
+        fetched_company = get_venue(company)
+        if fetched_company:
+            print('Was found  : %s' % fetched_company['name'])
+            fetched_company['cnpj'] = company['cnpj']
+            fetched_companies.append(fetched_company)
+        else:
+            print('There were no matches')
+
+        print('')
+
+        if (index % 100) == 0:
+            print('###########################################')
+            print("%s requests made. Stopping to save." % index)
+            if fetched_companies:
+                write_fetched_companies(fetched_companies)
+                fetched_companies = []
+            else:
+                print('Nothing to save.')
+            print('###########################################')
+            print('')
