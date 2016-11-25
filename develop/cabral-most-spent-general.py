@@ -82,6 +82,8 @@ spent = pd.merge(spent, names, on='cnpj_cpf')
 spent.head(10)
 
 
+# # Stopying now - starting investigation for each micro-enterprise(ME) listed
+
 # In[ ]:
 
 
