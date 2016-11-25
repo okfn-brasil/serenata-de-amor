@@ -141,7 +141,13 @@ python manage.py collectstatic
 
 ### Ready?
 
-Not sure? Run `python manage.py check` and `python manage.py test` just in case.
+Not sure? Test it!
+
+```
+npm run test
+python manage.py check
+python manage.py test
+```
 
 ### Ready!
 
