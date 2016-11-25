@@ -22,34 +22,25 @@ data = pd.read_csv('../data/2016-08-08-last-year.xz',
                           'reimbursement_number': np.str})
 
 
-# ### Reaching for subquota description
-
-# In[7]:
-
-list(data.columns.values)
-
-
-# In[11]:
+# In[3]:
 
 subquota_list = data['subquota_description'].unique()
-print (subquota_list)
 
 
-# In[13]:
+# In[4]:
 
 len(subquota_list)
+print (subquota_list.item(4))
 
-
-# ### End of subquota listings - WIP
 
 # ### Checking net values from all the receipts
 
-# In[14]:
+# In[5]:
 
 data.net_value.describe()
 
 
-# In[15]:
+# In[6]:
 
 grouped = data.groupby('cnpj_cpf', as_index=False)
 
@@ -59,7 +50,7 @@ print('{} total cnpj/cpfs, {} are unique'.format(len(data), len(grouped)))
 # ### Creating a dataframe with the first supplier name for each cnpj_cpf:
 # 
 
-# In[16]:
+# In[7]:
 
 cnpj_cpfs = []
 names = []
@@ -74,7 +65,7 @@ names.head()
 
 # ### CNPJs/CPFs that received most payments 
 
-# In[20]:
+# In[8]:
 
 spent = grouped.agg({'net_value': np.nansum}).sort_values(by='net_value', ascending=False)
 
@@ -82,7 +73,40 @@ spent = pd.merge(spent, names, on='cnpj_cpf')
 spent.head(10)
 
 
-# # Stopying now - starting investigation for each micro-enterprise(ME) listed
+# #### CNPJ/CPFs that received most payments divided per subquota
+
+# In[9]:
+
+subquota = dict()
+for x in range(0, 18):
+    foo = data[data.subquota_description == subquota_list.item(x) ]
+    grouped = foo.groupby('cnpj_cpf', as_index=False)
+    print(subquota_list.item(x) + ' have ' + '{} total cnpj/cpfs, {} are unique'.format(len(foo), len(grouped)))
+
+    cnpj_cpfs = []
+    names = []
+    for group in grouped:
+        cnpj_cpfs.append(group[0])
+        names.append(group[1].iloc[0].supplier)
+
+    names = pd.DataFrame({'cnpj_cpf': cnpj_cpfs, 'supplier_name': names})
+    subquota[x] = names.head(10)
+
+
+# # Dictionary for subquota
+
+# In[10]:
+
+for x in range(0,18):
+    # print (x + ' = ' + subquota_list.item(x))
+    print ( '{} for : '.format(x) + subquota_list.item(x))
+print ('search using "subquota[your selected number]"')
+
+
+# In[11]:
+
+subquota[1]
+
 
 # In[ ]:
 

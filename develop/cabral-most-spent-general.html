@@ -11798,79 +11798,26 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Reaching-for-subquota-description">Reaching for subquota description<a class="anchor-link" href="#Reaching-for-subquota-description">&#182;</a></h3>
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subquota_list</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[7]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[&#39;document_id&#39;,
- &#39;congressperson_name&#39;,
- &#39;congressperson_id&#39;,
- &#39;congressperson_document&#39;,
- &#39;term&#39;,
- &#39;state&#39;,
- &#39;party&#39;,
- &#39;term_id&#39;,
- &#39;subquota_number&#39;,
- &#39;subquota_description&#39;,
- &#39;subquota_group_id&#39;,
- &#39;subquota_group_description&#39;,
- &#39;supplier&#39;,
- &#39;cnpj_cpf&#39;,
- &#39;document_number&#39;,
- &#39;document_type&#39;,
- &#39;issue_date&#39;,
- &#39;document_value&#39;,
- &#39;remark_value&#39;,
- &#39;net_value&#39;,
- &#39;month&#39;,
- &#39;year&#39;,
- &#39;installment&#39;,
- &#39;passenger&#39;,
- &#39;leg_of_the_trip&#39;,
- &#39;batch_number&#39;,
- &#39;reimbursement_number&#39;,
- &#39;reimbursement_value&#39;,
- &#39;applicant_id&#39;]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subquota_list</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">subquota_list</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">subquota_list</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">subquota_list</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -11883,17 +11830,7 @@ div#notebook {
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[&#39;Maintenance of office supporting parliamentary activity&#39;
- &#39;Fuels and lubricants&#39; &#39;Consultancy, research and technical work&#39;
- &#39;Publicity of parliamentary activity&#39;
- &#39;Security service provided by specialized company&#39; &#39;Flight tickets&#39;
- &#39;Telecommunication&#39; &#39;Postal services&#39; &#39;Congressperson meal&#39;
- &#39;Automotive vehicle renting or charter&#39; &#39;Watercraft renting or charter&#39;
- &#39;Taxi, toll and parking&#39; &#39;Flight ticket issue&#39;
- &#39;Lodging, except for congressperson from Distrito Federal&#39;
- &#39;Aircraft renting or charter of aircraft&#39;
- &#39;Terrestrial, maritime and fluvial tickets&#39; &#39;Publication subscriptions&#39;
- &#39;Participation in course, talk or similar event&#39;]
+<pre>Security service provided by specialized company
 </pre>
 </div>
 </div>
@@ -11901,44 +11838,6 @@ div#notebook {
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">subquota_list</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[13]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>18</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="End-of-subquota-listings---WIP">End of subquota listings - WIP<a class="anchor-link" href="#End-of-subquota-listings---WIP">&#182;</a></h3>
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
@@ -11951,7 +11850,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">net_value</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -11965,7 +11864,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11988,7 +11887,7 @@ Name: net_value, dtype: float64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">grouped</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -12026,7 +11925,7 @@ Name: net_value, dtype: float64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cnpj_cpfs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -12047,7 +11946,7 @@ Name: net_value, dtype: float64</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[7]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12107,7 +12006,7 @@ Name: net_value, dtype: float64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">spent</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;net_value&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -12124,7 +12023,7 @@ Name: net_value, dtype: float64</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12214,9 +12113,213 @@ Name: net_value, dtype: float64</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Stopying-now---starting-investigation-for-each-micro-enterprise(ME)-listed">Stopying now - starting investigation for each micro-enterprise(ME) listed<a class="anchor-link" href="#Stopying-now---starting-investigation-for-each-micro-enterprise(ME)-listed">&#182;</a></h1>
+<h4 id="CNPJ/CPFs-that-received-most-payments-divided-per-subquota">CNPJ/CPFs that received most payments divided per subquota<a class="anchor-link" href="#CNPJ/CPFs-that-received-most-payments-divided-per-subquota">&#182;</a></h4>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subquota</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">18</span><span class="p">):</span>
+    <span class="n">foo</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">subquota_description</span> <span class="o">==</span> <span class="n">subquota_list</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">]</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">subquota_list</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; have &#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> total cnpj/cpfs, </span><span class="si">{}</span><span class="s1"> are unique&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">foo</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">grouped</span><span class="p">)))</span>
+
+    <span class="n">cnpj_cpfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">grouped</span><span class="p">:</span>
+        <span class="n">cnpj_cpfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">supplier</span><span class="p">)</span>
+
+    <span class="n">names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">cnpj_cpfs</span><span class="p">,</span> <span class="s1">&#39;supplier_name&#39;</span><span class="p">:</span> <span class="n">names</span><span class="p">})</span>
+    <span class="n">subquota</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Maintenance of office supporting parliamentary activity have 21519 total cnpj/cpfs, 2239 are unique
+Fuels and lubricants have 74690 total cnpj/cpfs, 9762 are unique
+Consultancy, research and technical work have 3096 total cnpj/cpfs, 711 are unique
+Publicity of parliamentary activity have 10208 total cnpj/cpfs, 2565 are unique
+Security service provided by specialized company have 852 total cnpj/cpfs, 113 are unique
+Flight tickets have 3182 total cnpj/cpfs, 98 are unique
+Telecommunication have 37241 total cnpj/cpfs, 185 are unique
+Postal services have 31919 total cnpj/cpfs, 373 are unique
+Congressperson meal have 33540 total cnpj/cpfs, 5926 are unique
+Automotive vehicle renting or charter have 5850 total cnpj/cpfs, 552 are unique
+Watercraft renting or charter have 41 total cnpj/cpfs, 24 are unique
+Taxi, toll and parking have 28077 total cnpj/cpfs, 1082 are unique
+Flight ticket issue have 116993 total cnpj/cpfs, 5 are unique
+Lodging, except for congressperson from Distrito Federal have 5394 total cnpj/cpfs, 1673 are unique
+Aircraft renting or charter of aircraft have 322 total cnpj/cpfs, 60 are unique
+Terrestrial, maritime and fluvial tickets have 983 total cnpj/cpfs, 165 are unique
+Publication subscriptions have 574 total cnpj/cpfs, 201 are unique
+Participation in course, talk or similar event have 3 total cnpj/cpfs, 3 are unique
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Dictionary-for-subquota">Dictionary for subquota<a class="anchor-link" href="#Dictionary-for-subquota">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">18</span><span class="p">):</span>
+    <span class="c1"># print (x + &#39; = &#39; + subquota_list.item(x))</span>
+    <span class="nb">print</span> <span class="p">(</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> for : &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">subquota_list</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;search using &quot;subquota[your selected number]&quot;&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0 for : Maintenance of office supporting parliamentary activity
+1 for : Fuels and lubricants
+2 for : Consultancy, research and technical work
+3 for : Publicity of parliamentary activity
+4 for : Security service provided by specialized company
+5 for : Flight tickets
+6 for : Telecommunication
+7 for : Postal services
+8 for : Congressperson meal
+9 for : Automotive vehicle renting or charter
+10 for : Watercraft renting or charter
+11 for : Taxi, toll and parking
+12 for : Flight ticket issue
+13 for : Lodging, except for congressperson from Distrito Federal
+14 for : Aircraft renting or charter of aircraft
+15 for : Terrestrial, maritime and fluvial tickets
+16 for : Publication subscriptions
+17 for : Participation in course, talk or similar event
+search using &#34;subquota[your selected number]&#34;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subquota</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cnpj_cpf</th>
+      <th>supplier_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>00001388000226</td>
+      <td>DISTRIBUIDORA BRASILIA DE VEICULOS S/A</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>00001388000307</td>
+      <td>DISTRIBUIDORA BRASÍLIA DE VEICULOS S/A</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>00001388000579</td>
+      <td>DISTRIBUIDORA BRASÍLIA DE VEÍCULOS S/A</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>00001974000190</td>
+      <td>POSTO 81 LTDA</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>00003228000216</td>
+      <td>MOTO AGRICULA SLAVIERO S. A.</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>00004309000150</td>
+      <td>DF VEÍCULOS LTDA.</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>00005892000113</td>
+      <td>Posto Petrolino</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>00012211000225</td>
+      <td>DRIVE CAR - TRANSPORTES E COMBUSTÍVEIS LTDA</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>00012211000306</td>
+      <td>DRIVE CAR TRANSPORTES E COMBUSTIVEIS LTDA</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>00016966000117</td>
+      <td>APLAUSO AUTO POSTO LTDA</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
