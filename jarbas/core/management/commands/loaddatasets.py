@@ -77,8 +77,7 @@ class Command(LoadCommand):
         for key in floats:
             document[key] = self.to_number(document[key], float)
 
-        if document['issue_date'] == '':
-            document['issue_date'] = None
+        document['issue_date'] = self.to_date(document['issue_date'])
 
         return document
 

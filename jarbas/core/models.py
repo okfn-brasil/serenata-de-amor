@@ -20,7 +20,7 @@ class Document(models.Model):
     cnpj_cpf = models.CharField('CNPJ or CPF', db_index=True, max_length=14)
     document_number = models.CharField('Document number', max_length=30)
     document_type = models.IntegerField('Document type', db_index=True)
-    issue_date = models.DateTimeField('Issue date', blank=True, null=True)
+    issue_date = models.DateField('Issue date', blank=True, null=True)
     document_value = models.DecimalField('Document value', max_digits=10, decimal_places=3)
     remark_value = models.DecimalField('Remark value', max_digits=10, decimal_places=3)
     net_value = models.DecimalField('Net value', max_digits=10, decimal_places=3)

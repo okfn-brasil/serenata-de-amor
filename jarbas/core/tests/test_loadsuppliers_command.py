@@ -1,3 +1,4 @@
+from datetime import date
 from io import StringIO
 from unittest.mock import patch
 
@@ -25,12 +26,6 @@ class TestSerializer(TestCommand):
         self.assertEqual(self.command.to_email('abc'), None)
         self.assertEqual(self.command.to_email('jane@example.com'), expected)
 
-    def test_to_date(self):
-        expected = '1991-07-22'
-        self.assertEqual(self.command.to_date('22/7/91'), expected)
-        self.assertEqual(self.command.to_date('22/13/91'), None)
-        self.assertEqual(self.command.to_date('aa/7/91'), None)
-
     def test_serializer(self):
         supplier = {
             'email': 'ahoy',
@@ -42,9 +37,9 @@ class TestSerializer(TestCommand):
         }
         expected = {
             'email': None,
-            'opening': '1969-12-31',
-            'situation_date': '1969-12-31',
-            'special_situation_date': '1969-12-31',
+            'opening': date(1969, 12, 31),
+            'situation_date': date(1969, 12, 31),
+            'special_situation_date': date(1969, 12, 31),
             'latitude': 3.1415,
             'longitude': -42.0
         }

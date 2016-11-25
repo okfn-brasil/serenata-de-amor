@@ -1,4 +1,6 @@
+from datetime import date
 from unittest.mock import Mock, patch
+
 from django.test import TestCase
 
 from jarbas.core.management.commands import LoadCommand
@@ -18,6 +20,13 @@ class TestStaticMethods(TestCase):
 
     def test_get_model_name(self):
         self.assertEqual('Activity', self.cmd.get_model_name(Activity))
+
+    def test_to_date(self):
+        expected = date(1991, 7, 22)
+        self.assertEqual(self.cmd.to_date('22/7/91'), expected)
+        self.assertEqual(self.cmd.to_date('1991-07-22 03:15:00+0300'), expected)
+        self.assertEqual(self.cmd.to_date('22/13/91'), None)
+        self.assertEqual(self.cmd.to_date('aa/7/91'), None)
 
 
 class TestPrintCount(TestCase):

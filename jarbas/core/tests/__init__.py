@@ -1,7 +1,6 @@
-from datetime import datetime
+from datetime import date
 from django.utils import timezone
 
-TZ = timezone.get_default_timezone()
 
 sample_document_data = dict(
     document_id=42,
@@ -20,7 +19,7 @@ sample_document_data = dict(
     cnpj_cpf='11111111111111',
     document_number='6',
     document_type=7,
-    issue_date='1970-01-01 03:00:00-03:00',
+    issue_date=date(1970, 1, 1),
     document_value=8.90,
     remark_value=1.23,
     net_value=4.56,
@@ -42,7 +41,7 @@ sample_activity_data = dict(
 
 sample_supplier_data = dict(
     cnpj='12.345.678/9012-34',
-    opening=datetime(1995, 9, 27, tzinfo=TZ).date(),
+    opening=date(1995, 9, 27),
     legal_entity='42 - The answer to life, the universe, and everything',
     trade_name="Don't panic",
     name='Do not panic, sir',
@@ -50,9 +49,9 @@ sample_supplier_data = dict(
     status='OK',
     situation='EXISTS',
     situation_reason='Douglas Adams wrote it',
-    situation_date=datetime(2016, 9, 25, tzinfo=TZ).date(),
+    situation_date=date(2016, 9, 25),
     special_situation='WE LOVE IT',
-    special_situation_date=datetime(1997, 9, 28, tzinfo=TZ).date(),
+    special_situation_date=date(1997, 9, 28),
     responsible_federative_entity='Vogons',
     address='Earth',
     number='',

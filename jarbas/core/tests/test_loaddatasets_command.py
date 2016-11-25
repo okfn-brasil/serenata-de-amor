@@ -1,3 +1,4 @@
+from datetime import date
 from io import StringIO
 from unittest.mock import MagicMock, call, patch
 
@@ -53,7 +54,7 @@ class TestSerializer(TestCommand):
             'remark_value': 1.1,
             'net_value': 1.1,
             'reimbursement_value': 1.1,
-            'issue_date': None,
+            'issue_date': date(2012, 8, 20),
         }
 
         document = {
@@ -75,7 +76,7 @@ class TestSerializer(TestCommand):
             'remark_value': '1.1',
             'net_value': '1.1',
             'reimbursement_value': '1.1',
-            'issue_date': '',
+            'issue_date': '2012-08-20 00:00:00',
         }
         self.assertEqual(self.command.serialize(document), expected)
 

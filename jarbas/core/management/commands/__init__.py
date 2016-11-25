@@ -1,4 +1,6 @@
 import os
+from datetime import date
+from re import match
 from tempfile import NamedTemporaryFile
 from urllib.request import urlretrieve
 
@@ -46,6 +48,29 @@ class LoadCommand(BaseCommand):
 
     def get_path(self, source, name):
         return os.path.join(source, self.get_file_name(name))
+
+    @staticmethod
+    def to_date(text):
+
+        ddmmyyyy = match(r'^[\d]{1,2}/[\d]{1,2}/[\d]{2,4}$', text)
+        yyyymmdd = match(r'^[\d]{2,4}-[\d]{1,2}-[\d]{2,4}', text)
+
+        if ddmmyyyy:
+            day, month, year = map(int, ddmmyyyy.group().split('/'))
+        elif yyyymmdd:
+            year, month, day = map(int, yyyymmdd.group().split('-'))
+        else:
+            return None
+
+        try:
+            if 0 <= year <= 50:
+                year += 2000
+            elif 50 < year <= 99:
+                year += 1900
+            return date(year, month, day)
+
+        except ValueError:
+            return None
 
     @staticmethod
     def get_file_name(name):
