@@ -8,24 +8,22 @@ import re
 import requests
 from pandas.io.json import json_normalize
 
-# Dataset paths
-REIMBURSEMENTS_DATASET_PATH = os.path.join('data', '2016-11-22-reimbursements.xz')
-COMPANIES_DATASET_PATH = os.path.join('data', '2016-09-03-companies.xz')
-FOURSQUARE_DATASET_PATH = os.path.join('data', 'foursquare-companies.xz')
+def find_newest_file(name):
+    """
+    Assuming that the files will be in the form of :
+    yyyy-mm-dd-type_of_file.xz we can try to find the newest file
+    based on the date, but if the file doesn't exist fallback to another
+    date until all dates are exhausted
+    """
+    date_regex = re.compile('\d{4}-\d{2}-\d{2}')
 
-# API Keys
-# You can create your own through https://pt.foursquare.com/developers/register
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
-CLIENT_ID = settings.get('Foursquare', 'ClientId')
-CLIENT_SECRET = settings.get('Foursquare', 'ClientSecret')
-#Foursquare API Version. This is in YYYYMMDD format.
-VERSION = '20161021'
-
-# Required params to make a request to Foursquare's API
-DEFAULT_PARAMS = {'client_id': CLIENT_ID,
-                'client_secret': CLIENT_SECRET,
-                'v': VERSION}
+    matches = (date_regex.findall(f) for f in os.listdir(DATA_DIR))
+    dates = sorted(set([l[0] for l in matches if l]), reverse=True)
+    for date in dates:
+        filename = os.path.join(DATA_DIR, '{}-{}.xz'.format(date, name))
+        if os.path.isfile(filename):
+            return filename
+    return None
 
 def load_cnpjs(subquota_description):
     """Return a list of CNPJs from the given subquota_description"""
@@ -57,7 +55,7 @@ def remaining_companies(companies, fetched_companies):
 
 def load_foursquare_companies_dataset():
     """Return a DF with the data already collected"""
-    if os.path.exists(FOURSQUARE_DATASET_PATH):
+    if FOURSQUARE_DATASET_PATH:
         return pd.read_csv(FOURSQUARE_DATASET_PATH)
     else:
         return pd.DataFrame(columns=['cnpj'])
@@ -77,13 +75,12 @@ def search(company):
                     'intent': 'match' })
     url = 'https://api.foursquare.com/v2/venues/search'
     response = requests.get(url, params=params)
-    if 200 >= response.status_code < 300:
-        return parse_search_results(response)
+    return parse_search_results(response)
 
 def parse_search_results(response):
     """Return the first venue from the given search response"""
-    json = response.json()
-    venues = json['response']['venues']
+    json_response = response.json()
+    venues = json_response.get('response', {}).get('venues')
     if venues:
         return venues[0]
 
@@ -91,20 +88,42 @@ def fetch_venue(venue_id):
     """Return specific data from Foursquare for the given venue_id"""
     url = 'https://api.foursquare.com/v2/venues/%s' % venue_id
     response = requests.get(url, params=DEFAULT_PARAMS)
-    if 200 >= response.status_code < 300:
-        return parse_venue_info(response)
+    return parse_venue_info(response)
 
 def parse_venue_info(response):
     """Return only venue data from the given fetch_venue response"""
-    json = response.json()
-    venue = json['response']['venue']
+    json_response = response.json()
+    venue = json_response.get('response', {}).get('venue')
     return venue
 
 def write_fetched_companies(companies):
-    """Save a CSV file """
-    companies.to_csv(FOURSQUARE_DATASET_PATH,
+    """Save a compressed CSV file with the given DF"""
+    companies.to_csv(OUTPUT_FILE_PATH,
                      compression='xz',
                      index=False)
+
+# API Keys
+# You can create your own through https://pt.foursquare.com/developers/register
+settings = configparser.RawConfigParser()
+settings.read('config.ini')
+CLIENT_ID = settings.get('Foursquare', 'ClientId')
+CLIENT_SECRET = settings.get('Foursquare', 'ClientSecret')
+#Foursquare API Version. This is in YYYYMMDD format.
+VERSION = '20161021'
+
+# Required params to make a request to Foursquare's API
+DEFAULT_PARAMS = {'client_id': CLIENT_ID,
+                'client_secret': CLIENT_SECRET,
+                'v': VERSION}
+
+# Dataset paths
+DATA_DIR = 'data'
+REIMBURSEMENTS_DATASET_PATH = find_newest_file('reimbursements')
+COMPANIES_DATASET_PATH = find_newest_file('companies')
+FOURSQUARE_DATASET_PATH = find_newest_file('foursquare-companies')
+DATE = datetime.date.today().strftime('%Y-%m-%d')
+OUTPUT_FILE = '{}-foursquare-companies.xz'.format(DATE)
+OUTPUT_FILE_PATH = os.path.join(DATA_DIR, OUTPUT_FILE)
 
 if __name__ == '__main__':
     if not (CLIENT_ID and CLIENT_SECRET):
