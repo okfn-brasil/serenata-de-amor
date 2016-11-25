@@ -6,11 +6,31 @@ import datetime
 import configparser
 import pandas as pd
 import numpy as np
+from pandas.io.json import json_normalize
+
+
 
 REIMBURSEMENTS_DATASET_PATH = os.path.join('data', '2016-11-19-reimbursements.xz')
 COMPANIES_DATASET_PATH = os.path.join('data', '2016-09-03-companies.xz')
 YELP_DATASET_PATH = os.path.join('data', 'yelp-companies.xz')
 
+"""
+Get your access token
+
+1. Create an Yelp account.
+2. Create an app (https://www.yelp.com/developers/v3/manage_app).
+3. Run this command in your terminal to get yout access_token:
+  curl -X POST -F 'client_id=YOUR_CLIENT_ID' -F 'client_secret=YOUT_CLIENT_SECRET' https://api.yelp.com/oauth2/token
+4. Get your 'access_token' from the response and add to the config.ini file.
+"""
+
+settings = configparser.RawConfigParser()
+settings.read('config.ini')
+ACCESS_TOKEN = settings.get('Yelp', 'AccessToken')
+
+
+
+# Functions
 def companies():
   # Loading reimbursements
   docs = pd.read_csv(REIMBURSEMENTS_DATASET_PATH,
@@ -52,24 +72,21 @@ def parse_fetch_info(response):
         return results[0]
 
 # ----------------------------
-# Request to yelp API getting by term and zip code
+# Request to yelp API getting by trade name and address
 # https://www.yelp.com/developers/documentation/v3/business_search
 def fetch_yelp_info(**params):
   url = 'https://api.yelp.com/v3/businesses/search'
-  headers = {"Authorization":"Bearer {}".format(access_token)}
+  headers = {"Authorization":"Bearer {}".format(ACCESS_TOKEN)}
   response = requests.get(url, headers=headers, params=params);
   return parse_fetch_info(response)
 
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
-access_token = settings.get('Yelp', 'AccessToken')
+
 
 companies_w_meal_expense = companies()
 
 fetched_companies = load_companies_dataset()
-companies_to_fetch = remaining_companies(fetched_companies, companies())[:50]
+companies_to_fetch = remaining_companies(fetched_companies, companies())
 
-import pdb; pdb.set_trace()
 for _, company in companies_to_fetch.iterrows():
     print('Fetching %s - City: %s' % (company['trade_name'], company['city']))
 
@@ -78,10 +95,11 @@ for _, company in companies_to_fetch.iterrows():
 
     if fetched_company:
         print('Successfuly matched %s' % fetched_company['name'])
-        fetched_company['scraped_at'] = datetime.datetime.utcnow().isoformat()
-        fetched_company['cnpj'] = company['cnpj']
-        fetched_companies = fetched_companies.append(pd.Series(fetched_company),
-                                                     ignore_index=True)
+        normalized = json_normalize(fetched_company)
+        normalized['scraped_at'] = datetime.datetime.utcnow().isoformat()
+        normalized['trade_name'] = company['trade_name']
+        normalized['cnpj'] = company['cnpj']
+        fetched_companies = pd.concat([fetched_companies, normalized])
     else:
         print('Not found')
 
