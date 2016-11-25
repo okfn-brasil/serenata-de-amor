@@ -393,6 +393,81 @@ len(dataset_with_distances.loc[is_anomaly]) / len(dataset_with_distances)
 dataset_with_distances[is_anomaly]     .groupby('congressperson_name')['expenses'].count().reset_index()     .rename(columns={'expenses': 'abnormal_days'})     .sort_values('abnormal_days', ascending=False)     .head(10)
 
 
+# # Outlier detection using x algorithm
+# If we get similar results to this simple method, we expect to find the same congressperon, but not the same days. If we find the same days, our approach is not good enough compared to the simples method because we already that in the previous section we did not considered the combination of features but just their values compared to the distribuition of each feature (column).
+# We expect the same congrespeople because the previous results shows that those person are travelling a lot more compared to the other congresspeople. For instance, Dr. Adilson Soares appears with 106 abnormal days more then twice than the second in the ranking, Sandra Rosado. Thus, would be expected to see him in the top ranking of congresspeople with abnormal meal expenses.
+
+# ## Histogram of expenses
+
+# In[51]:
+
+get_ipython().magic('matplotlib inline')
+import seaborn as sns
+sns.set(color_codes=True)
+
+sns.distplot(dataset_with_distances['expenses'],
+             bins=14,
+             kde=False)
+
+
+# In[52]:
+
+sns.distplot(dataset_with_distances.query('1 < expenses < 8')['expenses'],
+    bins=6,
+    kde=False
+)
+
+
+# ## Histogram of distance traveled
+
+# In[53]:
+
+query = '(1 < expenses < 8)'
+sns.distplot(dataset_with_distances.query(query)['distance_traveled'],
+             bins=20,
+             kde=False)
+
+
+# In[54]:
+
+query = '(1 < expenses < 8) & (0 < distance_traveled < 5000)'
+sns.distplot(dataset_with_distances.query(query)['distance_traveled'],
+             bins=20,
+             kde=False)
+
+
+# In[55]:
+
+from sklearn.ensemble import IsolationForest
+
+
+# In[56]:
+
+predictor_keys = ['mean', 'expenses', 'sum', 'distance_traveled']
+
+model = IsolationForest()
+model.fit(dataset_with_distances[predictor_keys])
+
+
+# In[57]:
+
+query = '(congressperson_name == "DR. ADILSON SOARES")'
+expected_abnormal_day = dataset_with_distances[is_anomaly]     .query(query)     .sort_values('expenses', ascending=False).iloc[0]
+
+expected_abnormal_day
+
+
+# In[58]:
+
+model.predict([expected_abnormal_day[predictor_keys]])
+
+
+# In[59]:
+
+y = model.predict(dataset_with_distances[predictor_keys])
+len(y[y == -1])
+
+
 # In[ ]:
 
 
