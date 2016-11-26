@@ -22,7 +22,7 @@ class Command(BaseCommand):
         origin = 'https://{}.amazonaws.com/{}/{}-ceap-datasets.md'.format(
             settings.AMAZON_S3_REGION,
             settings.AMAZON_S3_BUCKET,
-            settings.AMAZON_S3_DATASET_DATE
+            settings.AMAZON_S3_CEAPTRANSLATION_DATE
         )
 
         target = path.join(
