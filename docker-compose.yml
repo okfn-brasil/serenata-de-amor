@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     volumes:
        - "staticfiles:/code/staticfiles"
-       - "assets:/code/jarbas/frontend/"
+       - "assets:/code/jarbas/frontend/static"
     environment:
        - SECRET_KEY=lets-rock
        - DATABASE_URL=postgres://jarbas:mysecretpassword@db/jarbas
