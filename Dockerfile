@@ -6,8 +6,6 @@ RUN apt-get update && apt-get install -y postgresql postgresql-contrib
 COPY ./ /code
 WORKDIR /code
 RUN python manage.py migrate
-#RUN python manage.py loaddatasets
-#RUN python manage.py loadsuppliers
 #RUN python manage.py ceapdatasets
 RUN echo "America/Sao_Paulo" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
 VOLUME /code/staticfiles
