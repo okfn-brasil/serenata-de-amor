@@ -14,20 +14,18 @@ install:
   - nvm install 6
   - nvm use 6
   - npm install
-  - npm install -g elm@0.17.1
-  - pip install -r requirements.txt
-  - pip install coveralls
+  - pip install -r requirements.txt coveralls
 
 env:
   - DATABASE_URL="postgres://postgres@localhost/jarbas"
 
 before_script:
   - python manage.py migrate
-  - travis_wait 45 python manage.py assets build --no-cache
+  - travis_wait 60 npm run assets
   - python manage.py collectstatic --no-input
-  - npm test
 
 script:
+  - npm test
   - coverage run manage.py test -v 3
 
 after_success:
