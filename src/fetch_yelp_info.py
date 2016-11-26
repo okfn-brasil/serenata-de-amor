@@ -57,9 +57,9 @@ def remaining_companies(fetched_companies, companies):
 
 def load_companies_dataset():
   if os.path.exists(YELP_DATASET_PATH):
-      return pd.read_csv(YELP_DATASET_PATH)
+    return pd.read_csv(YELP_DATASET_PATH)
   else:
-      return pd.DataFrame(columns=['cnpj'])
+    return pd.DataFrame(columns=['cnpj'])
 
 def parse_fetch_info(response):
   if response.status_code == 200:
@@ -70,6 +70,10 @@ def parse_fetch_info(response):
   else:
     print('Response ==>', response.status_code)
 
+def write_fetched_companies(companies):
+  companies.to_csv(YELP_DATASET_PATH,
+                   compression='xz',
+                   index=False)
 # ----------------------------
 # Request to yelp API getting by trade name and address
 # https://www.yelp.com/developers/documentation/v3/business_search
@@ -81,25 +85,34 @@ def fetch_yelp_info(**params):
 
 
 
-companies_w_meal_expense = companies()
-fetched_companies = load_companies_dataset()
-companies_to_fetch = remaining_companies(fetched_companies, companies_w_meal_expense)
+if __name__ == '__main__':
+  companies_w_meal_expense = companies()
+  fetched_companies = load_companies_dataset()
+  COMPANIES_DATASET_PATH = os.path.join('data', '2016-09-03-companies.xz')
+  companies_to_fetch = remaining_companies(fetched_companies, companies_w_meal_expense).reset_index()
 
-for i, company in companies_to_fetch.iterrows():
-    print('%s: Fetching %s - City: %s' % (i, company['trade_name'], company['city']))
+  for index, company in companies_to_fetch.iterrows():
+    print('%s: Fetching %s - City: %s' % (index, company['trade_name'], company['city']))
 
     full_address = "{}, {}, {}".format(company['neighborhood'], company['city'], company['state'])
     fetched_company = fetch_yelp_info(term=company['trade_name'], latitude=company['latitude'], longitude=company['longitude'], radius=10000)
 
     if fetched_company:
-        print('Successfuly matched %s' % fetched_company['name'])
-        normalized = json_normalize(fetched_company)
-        normalized['scraped_at'] = datetime.datetime.utcnow().isoformat()
-        normalized['trade_name'] = company['trade_name']
-        normalized['cnpj'] = company['cnpj']
-        normalized['clean_cnpj'] = company['clean_cnpj']
-        fetched_companies = pd.concat([fetched_companies, normalized])
+      print('Successfuly matched %s' % fetched_company['name'])
+      normalized = json_normalize(fetched_company)
+      normalized['scraped_at'] = datetime.datetime.utcnow().isoformat()
+      normalized['trade_name'] = company['trade_name']
+      normalized['cnpj'] = company['cnpj']
+      fetched_companies = pd.concat([fetched_companies, normalized])
     else:
-        print('Not found')
+      print('Not found')
 
-fetched_companies.to_csv(YELP_DATASET_PATH, compression='xz', index=False)
+    if (index % 100) == 0 and index > 0:
+      print('###########################################')
+      print("%s requests made. Stopping to save." % index)
+      write_fetched_companies(fetched_companies)
+      print('###########################################')
+
+  write_fetched_companies(fetched_companies)
+
+
