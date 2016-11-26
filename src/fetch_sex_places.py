@@ -210,7 +210,7 @@ class SexPlacesSearch:
 
 
 @asyncio.coroutine
-def sex_place_nearby(path, company):
+def sex_place_nearby(path, executor, company):
     """
     :param path: (string) file path of the dataset to hold the data
     :param total_companies: (int) total companies in the main dataset
@@ -223,11 +223,11 @@ def sex_place_nearby(path, company):
         print(msg.format(get_name(company), company['cnpj']))
         return None
 
-    executor = ProcessPoolExecutor()
     args = (executor, fetch_nearest_sex_place, company)
-    place = yield from loop.run_in_executor(*args)
-    if place:
-        write_to_csv(path, place)
+    places = yield from loop.run_in_executor(*args)
+    for place in places:
+        if place:
+            write_to_csv(path, place)
 
 
 def fetch_nearest_sex_place(company):
@@ -310,24 +310,32 @@ def deep_get(dictionary, keys, default=None):
 
 
 def get_name(company):
-    return company['trade_name'] or company['name']
-
-
-def progress(total_companies, output_path):
-    for count, line in enumerate(lzma.open(output_path)):
-        pass
-    return count / total_companies
+    trade_name = company.get('trade_name')
+    if trade_name:
+        return trade_name
+    return company.get('name')
 
 
 if __name__ == '__main__':
 
     # get companies dataset
+    print('Loading companies dataset…')
     usecols = ('cnpj', 'trade_name', 'name', 'latitude', 'longitude')
     companies_path = find_newest_file('companies')
     companies = pd.read_csv(companies_path, usecols=usecols, low_memory=False)
+
+    # remove companies mistakenly located outside Brasil
+    brazil = (companies['longitude'] < -34.7916667) & \
+             (companies['longitude'] > -73.992222) & \
+             (companies['latitude'] < 5.2722222) & \
+             (companies['latitude'] > -33.742222)
+    companies = companies[brazil]
+
+    # replace NaN with empty string
     companies = companies.fillna(value='')
 
     # check for existing sex places dataset
+    print('Looking for an existing sex releated places dataset…')
     sex_places_path = find_newest_file('sex-place-distances')
     if sex_places_path:
         sex_places = pd.read_csv(
@@ -344,28 +352,30 @@ if __name__ == '__main__':
 
     # start a sex places dataset if it doesn't exist
     else:
+        print('Nothing found, starting a new one at {}…'.format(OUTPUT))
         write_to_csv(OUTPUT, headers=True)
         remaining = companies
         sex_places = pd.read_csv(find_newest_file('sex-place-distances'))
 
     # run
     msg = """
-    There are {} companies in {}
+    There are {:,} companies with valid latitude and longitude in {}
 
-    It looks like we already have the nearest sex location for {} of them in {}
-    Yet {} company surroundings haven't been searched for sex places
+    We already have the nearest sex location for {:,} of them in {}
+    Yet {:,} company surroundings haven't been searched for sex places…
 
     Let's get started!
     """.format(
         len(companies),
         companies_path,
         len(sex_places),
-        sex_places_path,
+        sex_places_path or OUTPUT,
         len(remaining)
     )
     print(msg)
 
-    sex_place_finder = partial(sex_place_nearby, OUTPUT)
+    executor = ProcessPoolExecutor()
+    sex_place_finder = partial(sex_place_nearby, OUTPUT, executor)
     tasks = map(sex_place_finder, iter_dicts(remaining))
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.wait(tasks))
