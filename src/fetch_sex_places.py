@@ -1,28 +1,23 @@
-import asyncio
-import configparser
 import csv
-import datetime
 import lzma
-import math
-import os
 import re
-from concurrent.futures import ProcessPoolExecutor
-from functools import partial
+from configparser import RawConfigParser
+from datetime import date
 from itertools import chain
+from multiprocessing import Process, Queue, cpu_count
+from os import listdir, path
 from shutil import copyfile
 from urllib.parse import parse_qs, urlencode, urlparse
 
 import grequests
+import numpy as np
 import pandas as pd
 import requests
 from geopy.distance import vincenty
 
-DATE = datetime.date.today().strftime('%Y-%m-%d')
+DATE = date.today().strftime('%Y-%m-%d')
 DATA_DIR = 'data'
-OUTPUT = os.path.join(DATA_DIR, '{}-sex-place-distances.xz'.format(DATE))
-
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
+OUTPUT = path.join(DATA_DIR, '{}-sex-place-distances.xz'.format(DATE))
 
 
 class SexPlacesSearch:
@@ -81,7 +76,7 @@ class SexPlacesSearch:
                     latitude = float(location.get('lat'))
                     longitude = float(location.get('lng'))
                     distance = vincenty((lat, lng), (latitude, longitude))
-                    cnpj = ''.join(re.findall(r'[\d]', company['cnpj']))
+                    cnpj = re.sub(r'\D', '', company['cnpj'])
                     yield {
                         'id': place.get('place_id'),
                         'keyword': self.keyword_from_url(url),
@@ -101,8 +96,9 @@ class SexPlacesSearch:
         :return: dictionary updated with name, address and phone.
         """
         prefix = '💋 ' if place['distance'] < 3 else ''
-        msg = '{}Found something interesting {:.2f}m away from {}…'
-        print(msg.format(prefix, place['distance'], get_name(company)))
+        msg = '{}Found something interesting {:.2f}m away from {} ({})…'
+        args = (prefix, place['distance'], get_name(company), company['cnpj'])
+        print(msg.format(*args))
         place_id = place.get('id')
         if not place_id:
             return place
@@ -148,11 +144,6 @@ class SexPlacesSearch:
                     'Sex Shop',
                     'Strip Club',
                     'Swinger clubs')
-
-        # for a case of nan in parameters
-        lat, lng = float(company['latitude']), float(company['longitude'])
-        if math.isnan(lat) or math.isnan(lng):
-            return None
 
         # Get the closest place inside all the searched keywords
         sex_places = list(self.by_keyword(company, keywords))
@@ -209,63 +200,93 @@ class SexPlacesSearch:
         return ''.join(parts)
 
 
-@asyncio.coroutine
-def sex_place_nearby(path, executor, company):
-    """
-    :param path: (string) file path of the dataset to hold the data
-    :param total_companies: (int) total companies in the main dataset
-    :param company: (dict)
-    :return: None (writes to file)
-    """
-    latitude, longitude = company.get('latitude'), company.get('longitude')
-    if not latitude or not longitude:
-        msg = 'No geolocation information for company: {} ({})'
-        print(msg.format(get_name(company), company['cnpj']))
-        return None
+class FindAndWrite:
 
-    args = (executor, fetch_nearest_sex_place, company)
-    places = yield from loop.run_in_executor(*args)
-    for place in places:
-        if place:
-            write_to_csv(path, place)
+    def __init__(self, companies, output=None):
+        """
+        :param companies: pandas dataframe
+        :param output: output path (.xz file)
+        """
 
+        self.output = output
+        self.fieldnames = (
+            'id', 'keyword', 'latitude', 'longitude', 'distance', 'name',
+            'address', 'phone', 'cnpj', 'company_name', 'company_trade_name'
+        )
 
-def fetch_nearest_sex_place(company):
-    sex_place_search = SexPlacesSearch(settings.get('Google', 'APIKey'))
-    return sex_place_search.near_to(company)
+        settings = RawConfigParser()
+        settings.read('config.ini')
+        self.sex_place = SexPlacesSearch(settings.get('Google', 'APIKey'))
 
+        self.find_queue = Queue()
+        self.write_queue = Queue()
 
-def iter_dicts(companies):
-    """
-    Genarator of companies (as dictionaries) from a Pandas DataFrame.
-    :param companies: pandas dataframe.
-    """
-    for company in companies.itertuples(index=True):
-        yield dict(company._asdict())  # _asdict returns an OrderedDict
+        cpus = range(cpu_count())
+        self.feed = Process(target=self.feed_find_queue)
+        self.find = (Process(target=self.feed_write_queue) for c in cpus)
+        self.write = Process(target=self.write)
 
+        if not path.exists(output):
+            self.create_csv()
 
-def write_to_csv(path, place=None, **kwargs):
-    """
-    Receives a given place (dict) and writes it in the CSV format into path.
-    CSV headers are defined in `fieldnames`. The named argument `headers`
-    (bool) determines if thie functions write the CSV header or not.
-    """
-    headers = kwargs.get('headers', False)
-    if not place and not headers:
-        return None
+        self.run()
 
-    fieldnames = (
-        'id', 'keyword', 'latitude', 'longitude', 'distance', 'name',
-        'address', 'phone', 'cnpj', 'company_name', 'company_trade_name'
-    )
+    def run(self):
+        self.feed.start()
+        for process in self.find:
+            process.start()
+        self.write.start()
 
-    with lzma.open(path, 'at') as output:
-        writer = csv.DictWriter(output, fieldnames=fieldnames)
-        if headers:
+        self.feed.join()
+        for process in self.find:
+            process.join()
+        self.write.join()
+
+    def feed_find_queue(self):
+        for company in self.iter_dicts(companies):
+            if company.get('latitude') and company.get('latitude'):
+                self.find_queue.put(company)
+            else:
+                msg = 'No geolocation information for company: {} ({})'
+                print(msg.format(get_name(company), company['cnpj']))
+
+    def feed_write_queue(self):
+        while True:
+            try:
+                company = self.find_queue.get(block=True)
+                self.write_queue.put(self.sex_place.near_to(company))
+            except:
+                break
+
+    def write(self):
+        output = lzma.open(self.output, 'at')
+        writer = csv.DictWriter(output, fieldnames=self.fieldnames)
+        while True:
+            try:
+                place = self.write_queue.get(block=True)
+                if place:
+                    writer.writerow(self.cleanup(place))
+            except:
+                break
+        output.close()
+
+    def create_csv(self):
+        print('Creating {}…'.format(self.output))
+        with lzma.open(self.output, 'at') as output:
+            writer = csv.DictWriter(output, fieldnames=self.fieldnames)
             writer.writeheader()
-        if place:
-            contents = {k: v for k, v in place.items() if k in fieldnames}
-            writer.writerow(contents)
+
+    def cleanup(self, place):
+        return {k: v for k, v in place.items() if k in self.fieldnames}
+
+    @staticmethod
+    def iter_dicts(companies):
+        """
+        Genarator of companies (as dictionaries) from a Pandas DataFrame.
+        :param companies: pandas dataframe.
+        """
+        for company in companies.itertuples(index=True):
+            yield dict(company._asdict())  # _asdict returns an OrderedDict
 
 
 def find_newest_file(name):
@@ -277,11 +298,11 @@ def find_newest_file(name):
     """
     date_regex = re.compile('\d{4}-\d{2}-\d{2}')
 
-    matches = (date_regex.findall(f) for f in os.listdir(DATA_DIR))
+    matches = (date_regex.findall(f) for f in listdir(DATA_DIR))
     dates = sorted(set([l[0] for l in matches if l]), reverse=True)
-    for date in dates:
-        filename = os.path.join(DATA_DIR, '{}-{}.xz'.format(date, name))
-        if os.path.isfile(filename):
+    for dt in dates:
+        filename = path.join(DATA_DIR, '{}-{}.xz'.format(dt, name))
+        if path.isfile(filename):
             return filename
 
     return None
@@ -316,13 +337,11 @@ def get_name(company):
     return company.get('name')
 
 
-if __name__ == '__main__':
-
-    # get companies dataset
+def get_companies():
     print('Loading companies dataset…')
     usecols = ('cnpj', 'trade_name', 'name', 'latitude', 'longitude')
     companies_path = find_newest_file('companies')
-    companies = pd.read_csv(companies_path, usecols=usecols, low_memory=False)
+    companies = pd.read_csv(companies_path, usecols=usecols)
 
     # remove companies mistakenly located outside Brasil
     brazil = (companies['longitude'] < -34.7916667) & \
@@ -334,30 +353,44 @@ if __name__ == '__main__':
     # replace NaN with empty string
     companies = companies.fillna(value='')
 
-    # check for existing sex places dataset
+    return companies, companies_path
+
+
+def get_sex_places_path():
     print('Looking for an existing sex releated places dataset…')
     sex_places_path = find_newest_file('sex-place-distances')
-    if sex_places_path:
-        sex_places = pd.read_csv(
-            sex_places_path,
-            usecols=('cnpj',),
-            low_memory=False
-        )
-        if sex_places_path != OUTPUT:
-            copyfile(sex_places_path, OUTPUT)
-        try:
-            remaining = companies[~companies.cnpj.isin(sex_places.cnpj)]
-        except AttributeError:  # if file exists but is empty
-            remaining = companies
+    if not sex_places_path:
+        return None
 
-    # start a sex places dataset if it doesn't exist
-    else:
-        print('Nothing found, starting a new one at {}…'.format(OUTPUT))
-        write_to_csv(OUTPUT, headers=True)
-        remaining = companies
-        sex_places = pd.read_csv(find_newest_file('sex-place-distances'))
+    if sex_places_path != OUTPUT:
+        copyfile(sex_places_path, OUTPUT)
 
-    # run
+    return OUTPUT
+
+
+def get_sex_places():
+    sex_places_path = get_sex_places_path()
+    if not sex_places_path:
+        return None, sex_places_path
+
+    dtype = dict(cnpj=np.str)
+    df = pd.read_csv(sex_places_path, usecols=('cnpj',), dtype=dtype)
+    return df, sex_places_path
+
+
+def get_remaining(companies, sex_places):
+    if sex_places is None or sex_places.empty:
+        return companies
+
+    return companies[~companies.cnpj.isin(sex_places.cnpj)]
+
+
+if __name__ == '__main__':
+
+    companies, companies_path = get_companies()
+    sex_places, sex_places_path = get_sex_places()
+    remaining = get_remaining(companies, sex_places)
+
     msg = """
     There are {:,} companies with valid latitude and longitude in {}
 
@@ -365,18 +398,13 @@ if __name__ == '__main__':
     Yet {:,} company surroundings haven't been searched for sex places…
 
     Let's get started!
-    """.format(
+    """
+    print(msg.format(
         len(companies),
         companies_path,
         len(sex_places),
-        sex_places_path or OUTPUT,
+        sex_places_path,
         len(remaining)
-    )
-    print(msg)
+    ))
 
-    executor = ProcessPoolExecutor()
-    sex_place_finder = partial(sex_place_nearby, OUTPUT, executor)
-    tasks = map(sex_place_finder, iter_dicts(remaining))
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(asyncio.wait(tasks))
-    loop.close()
+    FindAndWrite(companies, sex_places_path)
