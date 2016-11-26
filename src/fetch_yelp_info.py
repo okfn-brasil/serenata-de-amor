@@ -9,13 +9,13 @@ import numpy as np
 from pandas.io.json import json_normalize
 
 
-
 REIMBURSEMENTS_DATASET_PATH = os.path.join('data', '2016-11-19-reimbursements.xz')
 COMPANIES_DATASET_PATH = os.path.join('data', '2016-09-03-companies.xz')
 YELP_DATASET_PATH = os.path.join('data', 'yelp-companies.xz')
 
+
 """
-Get your access token
+Get your API access token
 
 1. Create an Yelp account.
 2. Create an app (https://www.yelp.com/developers/v3/manage_app).
@@ -28,9 +28,6 @@ settings = configparser.RawConfigParser()
 settings.read('config.ini')
 ACCESS_TOKEN = settings.get('Yelp', 'AccessToken')
 
-
-
-# Functions
 def companies():
   # Loading reimbursements
   docs = pd.read_csv(REIMBURSEMENTS_DATASET_PATH,
@@ -70,6 +67,8 @@ def parse_fetch_info(response):
     results = json['businesses']
     if results:
         return results[0]
+  else:
+    print('Response ==>', response.status_code)
 
 # ----------------------------
 # Request to yelp API getting by trade name and address
@@ -83,15 +82,14 @@ def fetch_yelp_info(**params):
 
 
 companies_w_meal_expense = companies()
-
 fetched_companies = load_companies_dataset()
-companies_to_fetch = remaining_companies(fetched_companies, companies())
+companies_to_fetch = remaining_companies(fetched_companies, companies_w_meal_expense)
 
-for _, company in companies_to_fetch.iterrows():
-    print('Fetching %s - City: %s' % (company['trade_name'], company['city']))
+for i, company in companies_to_fetch.iterrows():
+    print('%s: Fetching %s - City: %s' % (i, company['trade_name'], company['city']))
 
-    address_to_search = "{}, {}, {}".format(company['neighborhood'], company['city'], company['state'])
-    fetched_company = fetch_yelp_info(term=company['trade_name'], location=address_to_search)
+    full_address = "{}, {}, {}".format(company['neighborhood'], company['city'], company['state'])
+    fetched_company = fetch_yelp_info(term=company['trade_name'], latitude=company['latitude'], longitude=company['longitude'], radius=10000)
 
     if fetched_company:
         print('Successfuly matched %s' % fetched_company['name'])
@@ -99,6 +97,7 @@ for _, company in companies_to_fetch.iterrows():
         normalized['scraped_at'] = datetime.datetime.utcnow().isoformat()
         normalized['trade_name'] = company['trade_name']
         normalized['cnpj'] = company['cnpj']
+        normalized['clean_cnpj'] = company['clean_cnpj']
         fetched_companies = pd.concat([fetched_companies, normalized])
     else:
         print('Not found')
