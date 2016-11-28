@@ -35,7 +35,7 @@ def companies():
   all_companies = all_companies[all_companies['trade_name'].notnull()]
   # Cleaning up companies CNPJs
   all_companies['clean_cnpj'] = \
-    all_companies['cnpj'].map(lambda cnpj: cnpj.replace(r'[./-]', ''))
+    all_companies['cnpj'].map(lambda cnpj: cnpj.replace('.', '').replace('/', '').replace('-', ''))
   # Filtering only companies that are in meal reimbursements
   return all_companies[all_companies['clean_cnpj'].isin(meal_cnpjs)]
 
