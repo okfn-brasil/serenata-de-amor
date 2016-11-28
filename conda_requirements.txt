@@ -1,6 +1,7 @@
 beautifulsoup4==4.4.1
 geopy==1.11.0
 humanize==0.5.1
+networkx==1.11
 pandas>=0.18.1
-seaborn==0.7.1
 scikit-learn==0.18.1
+seaborn==0.7.1
