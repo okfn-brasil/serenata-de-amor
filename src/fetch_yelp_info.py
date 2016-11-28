@@ -4,6 +4,7 @@ import re
 import os.path
 import datetime
 import configparser
+from unicodedata import normalize
 import pandas as pd
 import numpy as np
 from pandas.io.json import json_normalize
@@ -83,6 +84,11 @@ def fetch_yelp_info(**params):
   response = requests.get(url, headers=headers, params=params);
   return parse_fetch_info(response)
 
+def standardize_name(name):
+    new_name = normalize('NFKD', name).encode('ASCII', 'ignore').decode('utf-8')
+    return set(new_name.lower().split(' '))
+
+
 
 DATA_DIR = 'data'
 REIMBURSEMENTS_DATASET_PATH = find_newest_file('reimbursements')
@@ -102,10 +108,18 @@ if __name__ == '__main__':
   for index, company in companies_to_fetch.iterrows():
     print('%s: Fetching %s - City: %s' % (index, company['trade_name'], company['city']))
 
-    full_address = "{}, {}, {}".format(company['neighborhood'], company['city'], company['state'])
-    fetched_company = fetch_yelp_info(term=company['trade_name'], location='BR', latitude=company['latitude'], longitude=company['longitude'])
+    fetched_company = fetch_yelp_info(term=company['trade_name'],
+                                      location='BR',
+                                      latitude=company['latitude'],
+                                      longitude=company['longitude'])
 
+    is_good_result = False
     if fetched_company:
+        expected_name = standardize_name(company['trade_name'])
+        result_name = standardize_name(fetched_company['name'])
+        is_good_result = len(expected_name - result_name) / len(expected_name) < .3
+
+    if is_good_result:
       print('Successfuly matched %s' % fetched_company['name'])
       normalized = json_normalize(fetched_company)
       normalized['scraped_at'] = datetime.datetime.utcnow().isoformat()
@@ -122,5 +136,3 @@ if __name__ == '__main__':
       print('###########################################')
 
   write_fetched_companies(fetched_companies)
-
-
