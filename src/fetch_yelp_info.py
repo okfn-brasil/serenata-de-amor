@@ -97,14 +97,13 @@ ACCESS_TOKEN = settings.get('Yelp', 'AccessToken')
 if __name__ == '__main__':
   companies_w_meal_expense = companies()
   fetched_companies = load_companies_dataset()
-  COMPANIES_DATASET_PATH = os.path.join('data', '2016-09-03-companies.xz')
   companies_to_fetch = remaining_companies(fetched_companies, companies_w_meal_expense).reset_index()
 
   for index, company in companies_to_fetch.iterrows():
     print('%s: Fetching %s - City: %s' % (index, company['trade_name'], company['city']))
 
     full_address = "{}, {}, {}".format(company['neighborhood'], company['city'], company['state'])
-    fetched_company = fetch_yelp_info(term=company['trade_name'], latitude=company['latitude'], longitude=company['longitude'])
+    fetched_company = fetch_yelp_info(term=company['trade_name'], location='BR', latitude=company['latitude'], longitude=company['longitude'])
 
     if fetched_company:
       print('Successfuly matched %s' % fetched_company['name'])
