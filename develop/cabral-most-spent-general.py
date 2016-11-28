@@ -63,7 +63,7 @@ names.head()
 
 
 
-# ### CNPJs/CPFs that received most payments 
+# ## CNPJs/CPFs that received most payments 
 
 # In[8]:
 
@@ -75,9 +75,11 @@ spent.head(10)
 
 # #### CNPJ/CPFs that received most payments divided per subquota
 
-# In[9]:
+# In[29]:
 
 subquota = dict()
+sub_spent = dict()
+sub_visit = dict()
 for x in range(0, 18):
     foo = data[data.subquota_description == subquota_list.item(x) ]
     grouped = foo.groupby('cnpj_cpf', as_index=False)
@@ -91,11 +93,22 @@ for x in range(0, 18):
 
     names = pd.DataFrame({'cnpj_cpf': cnpj_cpfs, 'supplier_name': names})
     subquota[x] = names.head(10)
+    #listing the ones with most spent amount of money
+    spent = grouped.agg({'net_value': np.nansum}).sort_values(by='net_value', ascending=False)
+    spent = pd.merge(spent, names, on='cnpj_cpf')
+    sub_spent[x] = spent.head(10)
+    #show the list with enterprises who received most number of visits
+    visits = grouped['cnpj_cpf'].agg({'visits': len}).sort_values(by='visits', ascending=False)
+    visits = pd.merge(visits, names, on='cnpj_cpf')
+    sub_visit[x] = visits.head(10)
+
+
+    
 
 
 # # Dictionary for subquota
 
-# In[10]:
+# In[23]:
 
 for x in range(0,18):
     # print (x + ' = ' + subquota_list.item(x))
@@ -103,9 +116,21 @@ for x in range(0,18):
 print ('search using "subquota[your selected number]"')
 
 
-# In[11]:
+# ### Use the cell below to search and understand each subquota
 
-subquota[1]
+# In[44]:
+
+#function to return all the info
+def subquota_info(x):
+    #return sub_visit[x], sub_spent[x]
+    from IPython.display import display
+    display(sub_visit[x])
+    display(sub_spent[x])
+
+
+# In[49]:
+
+subquota_info(13)
 
 
 # In[ ]:

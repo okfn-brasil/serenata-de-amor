@@ -12000,7 +12000,7 @@ Name: net_value, dtype: float64</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="CNPJs/CPFs-that-received-most-payments">CNPJs/CPFs that received most payments<a class="anchor-link" href="#CNPJs/CPFs-that-received-most-payments">&#182;</a></h3>
+<h2 id="CNPJs/CPFs-that-received-most-payments">CNPJs/CPFs that received most payments<a class="anchor-link" href="#CNPJs/CPFs-that-received-most-payments">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12119,10 +12119,12 @@ Name: net_value, dtype: float64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">subquota</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">sub_spent</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">sub_visit</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">18</span><span class="p">):</span>
     <span class="n">foo</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">subquota_description</span> <span class="o">==</span> <span class="n">subquota_list</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">]</span>
     <span class="n">grouped</span> <span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -12136,6 +12138,17 @@ Name: net_value, dtype: float64</pre>
 
     <span class="n">names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">cnpj_cpfs</span><span class="p">,</span> <span class="s1">&#39;supplier_name&#39;</span><span class="p">:</span> <span class="n">names</span><span class="p">})</span>
     <span class="n">subquota</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="c1">#listing the ones with most spent amount of money</span>
+    <span class="n">spent</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;net_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;net_value&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">spent</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">spent</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">)</span>
+    <span class="n">sub_spent</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">spent</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="c1">#show the list with enterprises who received most number of visits</span>
+    <span class="n">visits</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;visits&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;visits&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">visits</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">visits</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">)</span>
+    <span class="n">sub_visit</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">visits</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+
+    
 </pre></div>
 
 </div>
@@ -12185,7 +12198,7 @@ Participation in course, talk or similar event have 3 total cnpj/cpfs, 3 are uni
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">18</span><span class="p">):</span>
@@ -12231,12 +12244,39 @@ search using &#34;subquota[your selected number]&#34;
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Use-the-cell-below-to-search-and-understand-each-subquota">Use the cell below to search and understand each subquota<a class="anchor-link" href="#Use-the-cell-below-to-search-and-understand-each-subquota">&#182;</a></h3>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subquota</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#function to return all the info</span>
+<span class="k">def</span> <span class="nf">subquota_info</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1">#return sub_visit[x], sub_spent[x]</span>
+    <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">display</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">sub_visit</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">sub_spent</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subquota_info</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12247,68 +12287,160 @@ search using &#34;subquota[your selected number]&#34;
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
+<div class="output_area"><div class="prompt"></div>
 
-<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="output_html rendered_html output_subarea ">
 <div>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
       <th>cnpj_cpf</th>
+      <th>visits</th>
       <th>supplier_name</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>00001388000226</td>
-      <td>DISTRIBUIDORA BRASILIA DE VEICULOS S/A</td>
+      <td>00762199000276</td>
+      <td>77</td>
+      <td>RCD EMPREENDIMENTOS LTDA</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>00001388000307</td>
-      <td>DISTRIBUIDORA BRASÍLIA DE VEICULOS S/A</td>
+      <td>18287639000165</td>
+      <td>76</td>
+      <td>FLOR DO CERRADO HOSPEDAGEM</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>00001388000579</td>
-      <td>DISTRIBUIDORA BRASÍLIA DE VEÍCULOS S/A</td>
+      <td>08928877000159</td>
+      <td>72</td>
+      <td>IBIS FLORIANÓPOLIS FLEX HOTELARIA</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>00001974000190</td>
-      <td>POSTO 81 LTDA</td>
+      <td>26418749000147</td>
+      <td>54</td>
+      <td>PAULO OCTAVIO HOTEIS E TURISMO LTDA</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>00003228000216</td>
-      <td>MOTO AGRICULA SLAVIERO S. A.</td>
+      <td>75817999000165</td>
+      <td>52</td>
+      <td>HOTEL BRÜGGEMANN DE TURISMO LTDA</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>00004309000150</td>
-      <td>DF VEÍCULOS LTDA.</td>
+      <td>76755404000157</td>
+      <td>47</td>
+      <td>PARANOA HOTEIS LTDA</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>00005892000113</td>
-      <td>Posto Petrolino</td>
+      <td>04356463000141</td>
+      <td>35</td>
+      <td>BRISTOL HOTEL LTDA</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>00012211000225</td>
-      <td>DRIVE CAR - TRANSPORTES E COMBUSTÍVEIS LTDA</td>
+      <td>00366518000143</td>
+      <td>33</td>
+      <td>IRFATUR TUR E HOTEL SA ARACOARA</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>00012211000306</td>
-      <td>DRIVE CAR TRANSPORTES E COMBUSTIVEIS LTDA</td>
+      <td>10532251000170</td>
+      <td>32</td>
+      <td>BMF HOTEL E TURISMO LTDA</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>00016966000117</td>
-      <td>APLAUSO AUTO POSTO LTDA</td>
+      <td>02924895000186</td>
+      <td>30</td>
+      <td>ECONOTEL</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<div class="output_area"><div class="prompt"></div>
+
+<div class="output_html rendered_html output_subarea ">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cnpj_cpf</th>
+      <th>net_value</th>
+      <th>supplier_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>76755404000157</td>
+      <td>66114.15</td>
+      <td>PARANOA HOTEIS LTDA</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>07721300000109</td>
+      <td>40529.59</td>
+      <td>LUZEIROS HOTÉIS S/A</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>16978175000108</td>
+      <td>34840.82</td>
+      <td>Adria viagens e turismo LTDA ME</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>26418749000147</td>
+      <td>33612.95</td>
+      <td>PAULO OCTAVIO HOTEIS E TURISMO LTDA</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>01982156000188</td>
+      <td>31582.00</td>
+      <td>PAIAGUAS HOTÉIS S/A</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>00762199000276</td>
+      <td>31494.94</td>
+      <td>RCD EMPREENDIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>04443021000213</td>
+      <td>26650.00</td>
+      <td>EUROPA INVESTIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>18287639000165</td>
+      <td>21985.00</td>
+      <td>FLOR DO CERRADO HOSPEDAGEM</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>08928877000159</td>
+      <td>15941.05</td>
+      <td>IBIS FLORIANÓPOLIS FLEX HOTELARIA</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>04356463000141</td>
+      <td>15642.37</td>
+      <td>BRISTOL HOTEL LTDA</td>
     </tr>
   </tbody>
 </table>
