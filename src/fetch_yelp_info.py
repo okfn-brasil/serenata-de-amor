@@ -95,7 +95,7 @@ if __name__ == '__main__':
     print('%s: Fetching %s - City: %s' % (index, company['trade_name'], company['city']))
 
     full_address = "{}, {}, {}".format(company['neighborhood'], company['city'], company['state'])
-    fetched_company = fetch_yelp_info(term=company['trade_name'], latitude=company['latitude'], longitude=company['longitude'], radius=10000)
+    fetched_company = fetch_yelp_info(term=company['trade_name'], latitude=company['latitude'], longitude=company['longitude'])
 
     if fetched_company:
       print('Successfuly matched %s' % fetched_company['name'])
