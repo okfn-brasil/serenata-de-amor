@@ -34,14 +34,10 @@ def companies():
                               dtype={'trade_name': np.str})
   all_companies = all_companies[all_companies['trade_name'].notnull()]
   # Cleaning up companies CNPJs
-  all_companies['clean_cnpj'] = all_companies['cnpj'].map(cleanup_cnpj)
+  all_companies['clean_cnpj'] = \
+    all_companies['cnpj'].map(lambda cnpj: cnpj.replace(r'[./-]', ''))
   # Filtering only companies that are in meal reimbursements
   return all_companies[all_companies['clean_cnpj'].isin(meal_cnpjs)]
-
-def cleanup_cnpj(cnpj):
-    regex = r'\d'
-    digits = re.findall(regex, '%s' % cnpj)
-    return ''.join(digits)
 
 def find_newest_file(name):
     date_regex = re.compile('\d{4}-\d{2}-\d{2}')
