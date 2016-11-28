@@ -9,11 +9,6 @@ import numpy as np
 from pandas.io.json import json_normalize
 
 
-REIMBURSEMENTS_DATASET_PATH = os.path.join('data', '2016-11-19-reimbursements.xz')
-COMPANIES_DATASET_PATH = os.path.join('data', '2016-09-03-companies.xz')
-YELP_DATASET_PATH = os.path.join('data', 'yelp-companies.xz')
-
-
 """
 Get your API access token
 
@@ -23,10 +18,6 @@ Get your API access token
   curl -X POST -F 'client_id=YOUR_CLIENT_ID' -F 'client_secret=YOUT_CLIENT_SECRET' https://api.yelp.com/oauth2/token
 4. Get your 'access_token' from the response and add to the config.ini file.
 """
-
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
-ACCESS_TOKEN = settings.get('Yelp', 'AccessToken')
 
 def companies():
   # Loading reimbursements
@@ -48,9 +39,22 @@ def companies():
   return all_companies[all_companies['clean_cnpj'].isin(meal_cnpjs)]
 
 def cleanup_cnpj(cnpj):
-  regex = r'\d'
-  digits = re.findall(regex, '%s' % cnpj)
-  return ''.join(digits)
+    regex = r'\d'
+    digits = re.findall(regex, '%s' % cnpj)
+    return ''.join(digits)
+
+def find_newest_file(name):
+    date_regex = re.compile('\d{4}-\d{2}-\d{2}')
+
+    matches = (date_regex.findall(f) for f in os.listdir(DATA_DIR))
+    dates = sorted(set([l[0] for l in matches if l]), reverse=True)
+
+    for date in dates:
+        filename = '{}-{}.xz'.format(date, name)
+        filepath = os.path.join(DATA_DIR, filename)
+
+        if os.path.isfile(filepath):
+            return filepath
 
 def remaining_companies(fetched_companies, companies):
   return companies[~companies['cnpj'].isin(fetched_companies['cnpj'])]
@@ -83,6 +87,15 @@ def fetch_yelp_info(**params):
   response = requests.get(url, headers=headers, params=params);
   return parse_fetch_info(response)
 
+
+DATA_DIR = 'data'
+REIMBURSEMENTS_DATASET_PATH = find_newest_file('reimbursements')
+COMPANIES_DATASET_PATH = find_newest_file('companies')
+YELP_DATASET_PATH = os.path.join('data', 'yelp-companies.xz')
+
+settings = configparser.RawConfigParser()
+settings.read('config.ini')
+ACCESS_TOKEN = settings.get('Yelp', 'AccessToken')
 
 
 if __name__ == '__main__':
