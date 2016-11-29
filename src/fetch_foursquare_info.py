@@ -8,6 +8,9 @@ import re
 import requests
 from pandas.io.json import json_normalize
 
+DATA_DIR = 'data'
+DATE = datetime.date.today().strftime('%Y-%m-%d')
+
 def find_newest_file(name):
     """
     Assuming that the files will be in the form of :
@@ -35,6 +38,10 @@ def load_cnpjs(subquota_description):
     meals = docs[docs.subquota_description == subquota_description]
     return meals['cnpj_cpf'].unique()
 
+def only_numbers(string):
+    """Return a string w only the numbers from the given string"""
+    return re.sub("\D", "", string)
+
 def load_companies_dataset(cnpjs):
     """Return a DataFrame of companies from the given list of cnpjs"""
     u_cols = ['cnpj', 'trade_name', 'zip_code', 'latitude', 'longitude']
@@ -45,20 +52,17 @@ def load_companies_dataset(cnpjs):
     all_companies['clean_cnpj'] = all_companies['cnpj'].map(only_numbers)
     return all_companies[all_companies['clean_cnpj'].isin(cnpjs)]
 
-def only_numbers(string):
-    """Return a string w only the numbers from the given string"""
-    return re.sub("\D", "", string)
-
 def remaining_companies(companies, fetched_companies):
     """Return the first DF but without matching CNPJs from the second DF"""
-    return companies[~companies['cnpj'].isin(fetched_companies['cnpj'])]
+    remaining = companies[~companies['cnpj'].isin(fetched_companies['cnpj'])]
+    return remaining.reset_index()
 
 def load_foursquare_companies_dataset():
-    """Return a DF with the data already collected"""
-    if FOURSQUARE_DATASET_PATH:
+    """Return a DF with the data already collected. Fallback to empty one"""
+
+    if FOURSQUARE_DATASET_PATH is not None:
         return pd.read_csv(FOURSQUARE_DATASET_PATH)
-    else:
-        return pd.DataFrame(columns=['cnpj'])
+    return pd.DataFrame(columns=['cnpj'])
 
 def get_venue(company):
     """Return a matching venue from Foursquare for the given company Series"""
@@ -69,10 +73,14 @@ def get_venue(company):
 def search(company):
     """Search Foursquare's API for a match for a given company Series"""
     params = dict(DEFAULT_PARAMS)
+
     params.update({ 'query': company['trade_name'],
                     'll': '%s,%s' % (company['latitude'], company['longitude']),
-                    'zip_code': company['zip_code'],
-                    'intent': 'match' })
+                    'zip_code': company['zip_code'] })
+
+    if CONFIRMED_MATCHES_ONLY:
+        params.update({ 'intent': 'match' })
+
     url = 'https://api.foursquare.com/v2/venues/search'
     response = requests.get(url, params=params)
     return parse_search_results(response)
@@ -98,9 +106,9 @@ def parse_venue_info(response):
 
 def write_fetched_companies(companies):
     """Save a compressed CSV file with the given DF"""
-    companies.to_csv(OUTPUT_FILE_PATH,
-                     compression='xz',
-                     index=False)
+    companies.to_csv(OUTPUT_DATASET_PATH,
+                         compression='xz',
+                         index=False)
 
 # API Keys
 # You can create your own through https://pt.foursquare.com/developers/register
@@ -110,20 +118,23 @@ CLIENT_ID = settings.get('Foursquare', 'ClientId')
 CLIENT_SECRET = settings.get('Foursquare', 'ClientSecret')
 #Foursquare API Version. This is in YYYYMMDD format.
 VERSION = '20161021'
-
 # Required params to make a request to Foursquare's API
 DEFAULT_PARAMS = {'client_id': CLIENT_ID,
                 'client_secret': CLIENT_SECRET,
                 'v': VERSION}
 
+# This variables defines whether the search method is going to run with the
+# parameter "intent=match" or not. This is also save as "confirmed_match" column
+# for every record being fetched.
+# More info about the param: https://developer.foursquare.com/docs/venues/search
+CONFIRMED_MATCHES_ONLY = True
+
 # Dataset paths
-DATA_DIR = 'data'
 REIMBURSEMENTS_DATASET_PATH = find_newest_file('reimbursements')
 COMPANIES_DATASET_PATH = find_newest_file('companies')
 FOURSQUARE_DATASET_PATH = find_newest_file('foursquare-companies')
-DATE = datetime.date.today().strftime('%Y-%m-%d')
-OUTPUT_FILE = '{}-foursquare-companies.xz'.format(DATE)
-OUTPUT_FILE_PATH = os.path.join(DATA_DIR, OUTPUT_FILE)
+OUTPUT_DATASET = '{}-foursquare-companies.xz'.format(DATE)
+OUTPUT_DATASET_PATH = os.path.join(DATA_DIR, OUTPUT_DATASET)
 
 if __name__ == '__main__':
     if not (CLIENT_ID and CLIENT_SECRET):
@@ -138,17 +149,21 @@ if __name__ == '__main__':
         print('Looking for: %s' % company['trade_name'])
         fetched = get_venue(company)
         if fetched:
-            print('Was found  : %s' % fetched['name'])
+            print('Was found  : %s! <=======<<<' % fetched['name'])
             fetched['trade_name'] = company['trade_name']
             fetched['cnpj'] = company['cnpj']
+            fetched['clean_cnpj'] = company['clean_cnpj']
             fetched['scraped_at'] = datetime.datetime.utcnow().isoformat()
-            normalized = json_normalize(fetched)
-            fetched_companies = pd.concat([fetched_companies, normalized])
-        else:
-            print('There were no matches')
+            fetched['confirmed_match'] = CONFIRMED_MATCHES_ONLY
+            fetched = json_normalize(fetched)
 
-        if (index % 100) == 0:
+            fetched_companies = pd.concat([fetched_companies, fetched])
+        else:
+            print('No results.')
+
+        if (index % 100) == 0 and index > 0:
             print('###########################################')
-            print("%s requests made. Stopping to save." % index)
+            print("%s companies fetched. Stopping to save." % index)
             write_fetched_companies(fetched_companies)
             print('###########################################')
+    write_fetched_companies(fetched_companies)
