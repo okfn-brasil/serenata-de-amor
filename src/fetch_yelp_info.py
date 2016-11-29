@@ -134,13 +134,15 @@ if __name__ == '__main__':
 
         if is_good_result:
             print('Successfuly matched %s' % fetched_company['name'])
-            normalized = json_normalize(fetched_company)
-            normalized['scraped_at'] = datetime.datetime.utcnow().isoformat()
-            normalized['trade_name'] = company['trade_name']
-            normalized['cnpj'] = company['cnpj']
-            fetched_companies = pd.concat([fetched_companies, normalized])
         else:
             print('Not found')
+            fetched_company = {}
+
+        record = json_normalize(fetched_company)
+        record['scraped_at'] = datetime.datetime.utcnow().isoformat()
+        record['trade_name'] = company['trade_name']
+        record['cnpj'] = company['cnpj']
+        fetched_companies = pd.concat([fetched_companies, record])
 
         if (index % 100) == 0 and index > 0:
             print('###########################################')
