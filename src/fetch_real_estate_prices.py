@@ -19,6 +19,10 @@ URLS = {
 locations = ['Distrito Federal, Brasil', ]
 
 def slice_quadrants(location_bounds, size=0.05):
+    """
+    Slice the bounds of a quadrant in smaller quadrants.
+    Because ZAP Imovéis have a limit of 1000 results per query.
+    """
     northeast = location_bounds['northeast']
     southwest = location_bounds['southwest']
 
@@ -27,6 +31,9 @@ def slice_quadrants(location_bounds, size=0.05):
             yield ((str(lat), str(long)), (str(lat + size), str(long + size)))
 
 def fetch_real_estates_from_quadrants(quadrants):
+    """
+    Fetch real estates data of all quadrants received, using Threads
+    """
     estates = []
 
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
@@ -40,6 +47,10 @@ def fetch_real_estates_from_quadrants(quadrants):
     return estates
 
 def fetch_real_estates(quadrant):
+    """
+    Fetch real estates data of one quadrant.
+    CoordenadasAtuais is hard coded because doesn't matter for the query.
+    """
     search_params = {
         "CoordenadasAtuais": {
             "Latitude": -15.7217174,
@@ -63,6 +74,9 @@ def fetch_real_estates(quadrant):
     return result.get('Imoveis')
 
 def fetch_real_estates_details(real_estates):
+    """
+    Fetch details of all real estates received, using Threads
+    """
     details = []
     all_ids = [re['ID'] for re in real_estates]
     ids_per_request = 10
@@ -83,11 +97,17 @@ def fetch_real_estates_details(real_estates):
     return details
 
 def fetch_result(url, data, headers=HTTP_HEADERS):
+    """
+    Helper function to fetch, extract from json and return data
+    """
     request = requests.post(url, headers=headers, data=data)
     estates_data = json.loads(request.text)
     return estates_data.get('Resultado')
 
 def print_not_fetched_amount(results):
+    """
+    Log function to print not fetched results
+    """
     if not results:
         return
     not_fetched_amount = results.get('QuantidadeResultados') - 1000
@@ -96,6 +116,9 @@ def print_not_fetched_amount(results):
         print(msg.format(not_fetched_amount))
 
 def print_fetched_amount(done, total=None, msg='Fetched {} out of {} ({:.2f}%)'):
+    """
+    Log function to print fetched amount
+    """
     if total:
         print(msg.format(done, total, done/total*100), end='\r')
     else:
@@ -103,6 +126,9 @@ def print_fetched_amount(done, total=None, msg='Fetched {} out of {} ({:.2f}%)')
         print(msg.format(done), end='\r')
 
 def get_quadrants():
+    """
+    Get quadrants coordinates of locations
+    """
     geolocator = GoogleV3()
     quadrant_generators = []
     for location in locations:
@@ -117,10 +143,17 @@ def main():
     real_estates = fetch_real_estates_from_quadrants(quadrants)
     real_estates_details = fetch_real_estates_details(real_estates)
 
-    real_estates_data = pd.DataFrame.from_dict(real_estates).set_index('ID')
-    real_estates_details_data = pd.DataFrame.from_dict(real_estates_details).set_index('ID')
+    real_estates_data = pd.DataFrame\
+                        .from_dict(real_estates)\
+                        .set_index('ID')
 
-    joined = real_estates_data.join(real_estates_details_data, how='inner', rsuffix='_details')
+    real_estates_details_data = pd.DataFrame\
+                                .from_dict(real_estates_details)\
+                                .set_index('ID')
+
+    joined = real_estates_data.join(real_estates_details_data,
+                                    how='inner',
+                                    rsuffix='_details')
 
     cleaned_data = joined\
                     .dropna(axis=1, how='all')\
