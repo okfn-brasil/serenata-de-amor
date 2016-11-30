@@ -1,12 +1,13 @@
+import ast
 import itertools
 import json
 import os
-import requests
 from concurrent import futures
 from datetime import date
 
 import numpy as np
 import pandas as pd
+import requests
 from geopy.geocoders import GoogleV3
 
 HTTP_HEADERS = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36"}
@@ -156,6 +157,7 @@ def main():
                                     rsuffix='_details')
 
     cleaned_data = joined\
+                    .join(joined['Coordenadas'].apply(pd.Series))\
                     .dropna(axis=1, how='all')\
                     .drop(['PrecoVenda_details',
                            'PrecoLocacao_details',
@@ -165,10 +167,10 @@ def main():
                            'EstagioObra',
                            'FotoPrincipal',
                            'IndDistrato',
-                           'SubTipoOferta'],
+                           'SubTipoOferta',
+                           'Coordenadas'],
                           1)\
                     .rename(columns={
-                        'Coordenadas': 'coordinates',
                         'NotaLocacao': 'rent_rate',
                         'NotaVenda': 'sale_rate',
                         'PrecoLocacao': 'rental_price',
@@ -180,6 +182,8 @@ def main():
                         'SubTipoImovel': 'subtype',
                         'Suites': 'suite',
                         'Vagas': 'vacancies',
+                        'Latitude': 'latitude',
+                        'Longitude': 'longitude'
                     })
     cleaned_data.to_csv(OUTPUT_FILEPATH, compression='xz')
     print('Saved at: ', OUTPUT_FILEPATH)
