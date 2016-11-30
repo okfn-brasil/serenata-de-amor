@@ -1431,6 +1431,10 @@ dataset_with_distances.query('my_and_polyfit_anomaly')['sum'].sum()
 # 1. Days with too many meal reimbursements/expenses. More than 8 meal reimbursuments in a single day is too suspicious.
 # 2. Days with a large number of meal reimbursements without a travel to explain.
 # 3. Days where the traveled distance is so big that it's suspicious by itself.
+# 
+# ---
+# 
+# [Ana Schwendler](https://github.com/anaschwendler) was my pair during a good portion of the time working on this analysis. [Felipe Cabral](https://github.com/cabral) also gave a nice guidance helping to define anomalous expenses and brainstorming approaches.
 
 # In[ ]:
 
