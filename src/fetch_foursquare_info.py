@@ -52,6 +52,7 @@ def load_companies_dataset(cnpjs):
                                 low_memory=False,
                                 usecols=u_cols,
                                 dtype={'trade_name': np.str})
+    all_companies = all_companies.dropna(subset=['cnpj', 'trade_name'])
     all_companies['clean_cnpj'] = all_companies['cnpj'].map(only_numbers)
     return all_companies[all_companies['clean_cnpj'].isin(cnpjs)]
 
@@ -83,22 +84,29 @@ def search(company):
 
     params.update({'query': company['trade_name'],
                    'll': '%s,%s' % (company['latitude'], company['longitude']),
-                   'zip_code': company['zip_code']})
-
-    if CONFIRMED_MATCHES_ONLY:
-        params.update({'intent': 'match'})
+                   'zip_code': company['zip_code'],
+                   'intent': 'match'})
 
     url = 'https://api.foursquare.com/v2/venues/search'
     response = requests.get(url, params=params)
-    return parse_search_results(response)
+    result = parse_search_results(response, True)
+
+    if not result:
+        params.pop('intent')
+        response = requests.get(url, params=params)
+        result = parse_search_results(response, False)
+
+    return result
 
 
-def parse_search_results(response):
+def parse_search_results(response, confirmed_match):
     """Return the first venue from the given search response"""
     json_response = response.json()
     venues = json_response.get('response', {}).get('venues')
     if venues:
-        return venues[0]
+        venue = venues[0]
+        venue['confirmed_match'] = confirmed_match
+        return venue
 
 
 def fetch_venue(venue_id):
@@ -134,12 +142,6 @@ DEFAULT_PARAMS = {'client_id': CLIENT_ID,
                   'client_secret': CLIENT_SECRET,
                   'v': VERSION}
 
-# This variables defines whether the search method is going to run with the
-# param "intent=match" or not. This is also save as "confirmed_match" column
-# for every record being fetched.
-# More info about it: https://developer.foursquare.com/docs/venues/search
-CONFIRMED_MATCHES_ONLY = True
-
 # Dataset paths
 REIMBURSEMENTS_DATASET_PATH = find_newest_file('reimbursements')
 COMPANIES_DATASET_PATH = find_newest_file('companies')
@@ -165,7 +167,6 @@ if __name__ == '__main__':
             fetched['cnpj'] = company['cnpj']
             fetched['clean_cnpj'] = company['clean_cnpj']
             fetched['scraped_at'] = datetime.datetime.utcnow().isoformat()
-            fetched['confirmed_match'] = CONFIRMED_MATCHES_ONLY
             fetched = json_normalize(fetched)
 
             fetched_companies = pd.concat([fetched_companies, fetched])
