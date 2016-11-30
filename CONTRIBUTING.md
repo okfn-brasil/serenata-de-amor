@@ -52,7 +52,7 @@ $ ./setup
 
 #### Pyenv users
 
-If you installed Anaconda via [pyenv](https://github.com/yyuu/pyenv) probably `source activate serenata_de_amor` will fail _unless_ you explicitly use the path to the Anaconta `activate` script. For example:
+If you installed Anaconda via [pyenv](https://github.com/yyuu/pyenv) probably `source activate serenata_de_amor` will fail _unless_ you explicitly use the path to the Anaconda `activate` script. For example:
 
 ```console
 $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_amor
