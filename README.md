@@ -25,7 +25,14 @@ $ ./setup
 ## Running
 
 ```console
-$ python src/rosie.py
+$ python src/main.py
 ```
 
 A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
+
+
+## Test suite
+
+```console
+$ python -m unittest discover test
+```
