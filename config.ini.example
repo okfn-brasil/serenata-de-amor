@@ -6,3 +6,6 @@ Region: s3-sa-east-1
 
 [Google]
 APIKey: YOUR_API_KEY
+
+[Yelp]
+AccessToken: YOUR_ACCESS_KEY
