@@ -10,7 +10,6 @@ class TestTraveledSpeedsClassifier(TestCase):
 
     def setUp(self):
         self.dataset = pd.read_csv('test/reimbursements_and_companies.csv',
-                                   index_col='id',
                                    dtype={'cnpj_cpf': np.str})
         self.subject = TraveledSpeedsClassifier()
         self.subject.fit(self.dataset)
@@ -39,6 +38,10 @@ class TestTraveledSpeedsClassifier(TestCase):
         prediction = self.subject.predict(self.dataset)
         self.assertEqual(1, prediction[9])
 
+    def test_predict_considers_meal_reibursement_without_congressperson_id_an_inlier_even_when_more_than_8_meal_reimbursements(self):
+        prediction = self.subject.predict(self.dataset)
+        self.assertEqual(1, prediction[10])
+
     def test_predict_uses_learned_thresholds_from_fit_dataset(self):
         subject = TraveledSpeedsClassifier(contamination=.6)
         subject.fit(self.dataset)
@@ -46,9 +49,11 @@ class TestTraveledSpeedsClassifier(TestCase):
             np.repeat(-1, 6), subject.predict(self.dataset[11:17]))
 
     def test_predict_limits_the_number_of_outliers_with_contamination_param(self):
-        subject = TraveledSpeedsClassifier(contamination=.6)
+        subject = TraveledSpeedsClassifier(contamination=.5)
         subject.fit(self.dataset)
-        self.assertEqual(15, (subject.predict(self.dataset) == -1).sum())
+        returned_contamination = \
+            (subject.predict(self.dataset) == -1).sum() / len(self.dataset)
+        self.assertLess(returned_contamination, .5)
 
     def test_predict_contamination_may_go_higher_than_expected_given_expenses_threshold(self):
         subject = TraveledSpeedsClassifier(contamination=.2)
