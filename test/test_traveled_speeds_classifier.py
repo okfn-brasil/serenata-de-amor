@@ -50,6 +50,13 @@ class TestTraveledSpeedsClassifier(TestCase):
         subject.fit(self.dataset)
         self.assertEqual(15, (subject.predict(self.dataset) == -1).sum())
 
+    def test_predict_contamination_may_go_higher_than_expected_given_expenses_threshold(self):
+        subject = TraveledSpeedsClassifier(contamination=.2)
+        subject.fit(self.dataset)
+        returned_contamination = \
+            (subject.predict(self.dataset) == -1).sum() / len(self.dataset)
+        self.assertGreater(returned_contamination, .2)
+
     def test_predict_validates_range_of_values_for_contamination_param(self):
         with self.assertRaises(ValueError):
             TraveledSpeedsClassifier(contamination=0)
