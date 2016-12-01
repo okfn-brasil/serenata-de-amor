@@ -15,9 +15,6 @@ class TestTraveledSpeedsClassifier(TestCase):
         self.subject = TraveledSpeedsClassifier()
         self.subject.fit(self.dataset)
 
-    def test_it_works(self):
-        self.assertEqual(4, 2 + 2)
-
     def test_fit_learns_a_polynomial_for_regression(self):
         self.assertIsInstance(self.subject.polynomial, np.ndarray)
 
