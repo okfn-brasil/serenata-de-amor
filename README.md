@@ -25,7 +25,7 @@ $ ./setup
 ## Running
 
 ```console
-$ python src/main.py
+$ python rosie/main.py
 ```
 
 A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
@@ -34,5 +34,5 @@ A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted 
 ## Test suite
 
 ```console
-$ python -m unittest discover test
+$ python -m unittest discover tests
 ```
