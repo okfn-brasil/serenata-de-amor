@@ -24,6 +24,7 @@ def update_datasets():
     ceap.clean()
     fetch(COMPANIES_DATASET, DATA_PATH)
 
+
 def get_reimbursements():
     dataset = \
         pd.read_csv(os.path.join(DATA_PATH, 'reimbursements.xz'),
@@ -35,6 +36,7 @@ def get_reimbursements():
     dataset['issue_date'] = pd.to_datetime(dataset['issue_date'],
                                            errors='coerce')
     return dataset
+
 
 def get_companies():
     is_in_brazil = '(-73.992222 < longitude < -34.7916667) & (-33.742222 < latitude < 5.2722222)'

@@ -1,6 +1,4 @@
-from datetime import datetime
 from itertools import combinations
-import os.path
 from geopy.distance import vincenty as distance
 import numpy as np
 import pandas as pd
