@@ -52,7 +52,10 @@ urlUpdate query model =
                 True
 
         documents =
-            model.documents
+            if List.isEmpty query then
+                Documents.Update.newSearch model.documents
+            else
+                model.documents
 
         inputs =
             Documents.Inputs.Update.updateFromQuery documents.inputs query

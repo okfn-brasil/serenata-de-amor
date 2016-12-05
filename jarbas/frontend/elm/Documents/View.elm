@@ -420,10 +420,13 @@ viewDocuments model =
             InputsUpdate.toQuery model.inputs |> List.isEmpty |> not
 
         results =
-            if total == 1 then
-                (translate model.lang ResultTitleSingular)
+            if model.showForm then
+                if total == 1 then
+                    (translate model.lang ResultTitleSingular)
+                else
+                    (translate model.lang ResultTitlePlural)
             else
-                (translate model.lang ResultTitlePlural)
+                ""
 
         title =
             cell

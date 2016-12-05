@@ -3,6 +3,7 @@ module Documents.Update exposing (..)
 import Char
 import Documents.Fields as Fields
 import Documents.Inputs.Update as Inputs
+import Documents.Inputs.Model
 import Documents.Receipt.Update as Receipt
 import Documents.Supplier.Update as Supplier
 import Http
@@ -37,6 +38,16 @@ type Msg
     | SupplierMsg Int Supplier.Msg
     | MapMsg
     | Mdl (Material.Msg Msg)
+
+
+newSearch : Model -> Model
+newSearch model =
+    { model
+        | results = results
+        , showForm = True
+        , loading = False
+        , inputs = Documents.Inputs.Model.model
+    }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
