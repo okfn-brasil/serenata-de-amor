@@ -23,7 +23,7 @@ python manage.py migrate
 echo "==> $ python manage.py ceapdatasets"
 python manage.py ceapdatasets
 
-echo "==> $ python manage.py assets build --no-cache"
+echo "==> $ npm run assets"
 npm run assets
 
 echo "==> $ python manage.py collectstatic --no-input"
