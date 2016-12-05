@@ -1,7 +1,7 @@
 module Layout exposing (Model, drawer, header, model)
 
-import Html exposing (a, text, img)
-import Html.Attributes exposing (alt, src, style)
+import Html exposing (a, div, text, img)
+import Html.Attributes exposing (alt, href, src, style)
 import Material
 import Material.Layout as Layout
 import Internationalization exposing (Language(..), TranslationId(..), translate)
@@ -42,10 +42,21 @@ header model =
                     ]
                     []
                 ]
+
+        title =
+            a
+                [ href "/"
+                , style
+                    [ ( "color", "white" )
+                    , ( "text-decoration", "none" )
+                    , ( "font-weight", "normal" )
+                    ]
+                ]
+                [ text "Jarbas" ]
     in
         Layout.row
             []
-            [ Layout.title [] [ text "Jarbas" ]
+            [ Layout.title [] [ title ]
             , Layout.spacer
             , Layout.navigation [] [ digitalOcean ]
             ]
