@@ -2,6 +2,53 @@ from django.db import models
 from requests import head
 
 
+
+class Reimbursement(models.Model):
+    year = models.IntegerField('Year', db_index=True)
+    applicant_id = models.IntegerField('Applicant ID', db_index=True)
+    document_id = models.IntegerField('Document ID', db_index=True)
+
+    total_reimbursement_value = models.DecimalField('Total reimbusrsement value', max_digits=10, decimal_places=3, blank=True, null=True)
+    total_net_value = models.DecimalField('Total net value', max_digits=10, decimal_places=3, db_index=True)
+    reimbursement_numbers = models.CharField('Reimbursement numbers', max_length=140)
+
+    congressperson_id = models.IntegerField('Congressperson ID', db_index=True, blank=True, null=True)
+    congressperson_name = models.CharField('Congressperson name', max_length=140, db_index=True, blank=True, null=True)
+    congressperson_document = models.IntegerField('Congressperson document', blank=True, null=True)
+
+    party = models.CharField('Party', max_length=7, db_index=True)
+    state = models.CharField('State', max_length=2, db_index=True)
+
+    term_id = models.IntegerField('Term ID')
+    term = models.IntegerField('Term')
+
+    subquota_id = models.IntegerField('Subquota ID', db_index=True)
+    subquota_description = models.CharField('Subquota descrition', max_length=140)
+    subquota_group_id = models.IntegerField('Subquota group ID', blank=True, null=True)
+    subquota_group_description = models.CharField('Subquota group description', max_length=140, blank=True, null=True)
+
+    supplier = models.CharField('Supplier', max_length=140)
+    cnpj_cpf = models.CharField('CNPJ or CPF', max_length=14, db_index=True, blank=True, null=True)
+
+    document_type = models.IntegerField('Document type')
+    document_number = models.CharField('Document number', max_length=140)
+    document_value = models.DecimalField('Document value', max_digits=10, decimal_places=3)
+
+    issue_date = models.DateField('Issue date', blank=True, null=True)
+    month = models.IntegerField('Month', db_index=True)
+    remark_value = models.DecimalField('Remark value', max_digits=10, decimal_places=3, blank=True, null=True)
+    net_values = models.CharField('Net values', max_length=140)
+    installment = models.IntegerField('Installment', blank=True, null=True)
+    batch_number = models.IntegerField('Batch number')
+    reimbursement_values = models.CharField('Reimbusrsement values', max_length=140, blank=True, null=True)
+
+    passenger = models.CharField('Passenger', max_length=140, blank=True, null=True)
+    leg_of_the_trip = models.CharField('Leg of the trip', max_length=140, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('year', 'applicant_id', 'document_id')
+
+
 class Document(models.Model):
 
     document_id = models.IntegerField('Document ID', db_index=True)

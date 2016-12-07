@@ -34,6 +34,39 @@ sample_document_data = dict(
     applicant_id=13
 )
 
+sample_reimbursement_data = dict(
+    applicant_id=13,
+    batch_number=9,
+    cnpj_cpf='11111111111111',
+    congressperson_document=2,
+    congressperson_id=1,
+    congressperson_name='Roger That',
+    document_id=42,
+    document_number='6',
+    document_type=7,
+    document_value=8.90,
+    installment=7,
+    issue_date=date(1970, 1, 1),
+    leg_of_the_trip=8,
+    month=1,
+    party='Partido',
+    passenger='John Doe',
+    reimbursement_numbers='10,11',
+    reimbursement_values='12.13,14,14',
+    remark_value=1.23,
+    state='UF',
+    subquota_description='Subquota description',
+    subquota_group_description='Subquota group desc',
+    subquota_group_id=5,
+    subquota_id=4,
+    supplier='Acme',
+    term=1970,
+    term_id=3,
+    total_net_value=4.56,
+    total_reimbursement_value=None,
+    year=1970,
+)
+
 sample_activity_data = dict(
     code='42',
     description='So long, so long, and thanks for all the fish'
