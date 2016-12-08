@@ -1,6 +1,13 @@
 from rest_framework import serializers
 
-from jarbas.core.models import Activity, Document, Receipt, Supplier
+from jarbas.core.models import Activity, Document, Receipt, Reimbursement, Supplier
+
+
+class ReimbursementSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reimbursement
+        exclude = ('id',)
 
 
 class ReceiptSerializer(serializers.ModelSerializer):

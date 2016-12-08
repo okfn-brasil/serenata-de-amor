@@ -1,9 +1,26 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ViewSet
+from rest_framework.generics import ListAPIView
 
-from jarbas.api.serializers import DocumentSerializer, SupplierSerializer
-from jarbas.core.models import Document, Receipt, Supplier
+from jarbas.api.serializers import DocumentSerializer, ReimbursementSerializer, SupplierSerializer
+from jarbas.core.models import Document, Receipt, Reimbursement, Supplier
+
+
+class ReimbursementListView(ListAPIView):
+
+    queryset = Reimbursement.objects.all()
+    serializer_class = ReimbursementSerializer
+
+    def get(self, request, year=None, applicant_id=None):
+
+        if year:
+            self.queryset = self.queryset.filter(year=year)
+
+        if applicant_id:
+            self.queryset = self.queryset.filter(applicant_id=applicant_id)
+
+        return super().get(request)
 
 
 class DocumentViewSet(ReadOnlyModelViewSet):
