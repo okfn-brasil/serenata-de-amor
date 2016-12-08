@@ -21,4 +21,4 @@ RUN conda update --yes conda \
     && conda install --yes --file conda_requirements.txt \
     && conda clean -tipsy
 
-
+COPY docker/jupyter_notebook_config.py /home/jovyan/.jupyter/jupyter_notebook_config.py
