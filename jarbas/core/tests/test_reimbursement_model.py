@@ -47,12 +47,26 @@ class TestCreate(TestReimbursement):
 
 class TestCustomMethods(TestReimbursement):
 
-    def test_values(self):
+    def test_all_reimbursemenet_values(self):
         Reimbursement.objects.create(**self.data)
         reimbursement = Reimbursement.objects.first()
-        self.assertEqual([12.13, 14.15], list(reimbursement.values))
+        self.assertEqual(
+            [12.13, 14.15],
+            list(reimbursement.all_reimbursement_values)
+        )
 
-    def test_numbers(self):
+    def test_all_numbers(self):
         Reimbursement.objects.create(**self.data)
         reimbursement = Reimbursement.objects.first()
-        self.assertEqual([10, 11], list(reimbursement.numbers))
+        self.assertEqual(
+            [10, 11],
+            list(reimbursement.all_reimbursement_numbers)
+        )
+
+    def test_all_net_values(self):
+        Reimbursement.objects.create(**self.data)
+        reimbursement = Reimbursement.objects.first()
+        self.assertEqual(
+            [1.99, 2.99],
+            list(reimbursement.all_net_values)
+        )

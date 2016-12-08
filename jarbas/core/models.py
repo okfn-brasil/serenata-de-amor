@@ -52,12 +52,24 @@ class Reimbursement(models.Model):
         unique_together = ('year', 'applicant_id', 'document_id')
 
     @property
-    def values(self):
-        return map(lambda x: float(x), self.reimbursement_values.split(','))
+    def all_net_values(self):
+        return self.as_list(self.net_values, float)
 
     @property
-    def numbers(self):
-        return map(lambda x: int(x), self.reimbursement_numbers.split(','))
+    def all_reimbursement_values(self):
+        return self.as_list(self.reimbursement_values, float)
+
+    @property
+    def all_reimbursement_numbers(self):
+        return self.as_list(self.reimbursement_numbers, int)
+
+    @staticmethod
+    def as_list(content, cast=None):
+        if not content:
+            return None
+
+        parts = content.split(',')
+        return map(lambda x: cast(x), parts) if cast else parts
 
 
 class Document(models.Model):

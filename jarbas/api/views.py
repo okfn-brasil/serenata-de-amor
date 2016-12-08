@@ -1,10 +1,19 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ViewSet
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from jarbas.api.serializers import DocumentSerializer, ReimbursementSerializer, SupplierSerializer
 from jarbas.core.models import Document, Receipt, Reimbursement, Supplier
+
+
+class MultipleFieldLookupMixin(object):
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        queryset = self.filter_queryset(queryset)
+        filter = {k: self.kwargs[k] for k in self.lookup_fields}
+        return get_object_or_404(queryset, **filter)
 
 
 class ReimbursementListView(ListAPIView):
@@ -21,6 +30,13 @@ class ReimbursementListView(ListAPIView):
             self.queryset = self.queryset.filter(applicant_id=applicant_id)
 
         return super().get(request)
+
+
+class ReimbursementDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
+
+    lookup_fields = ('year', 'applicant_id', 'document_id')
+    queryset = Reimbursement.objects.all()
+    serializer_class = ReimbursementSerializer
 
 
 class DocumentViewSet(ReadOnlyModelViewSet):

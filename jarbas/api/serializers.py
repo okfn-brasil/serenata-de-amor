@@ -5,9 +5,54 @@ from jarbas.core.models import Activity, Document, Receipt, Reimbursement, Suppl
 
 class ReimbursementSerializer(serializers.ModelSerializer):
 
+    all_net_values = serializers.SerializerMethodField()
+    all_reimbursement_numbers = serializers.SerializerMethodField()
+    all_reimbursement_values = serializers.SerializerMethodField()
+    document_value = serializers.SerializerMethodField()
+    probability = serializers.SerializerMethodField()
+    remark_value = serializers.SerializerMethodField()
+    total_net_value = serializers.SerializerMethodField()
+    total_reimbursement_value = serializers.SerializerMethodField()
+
+    def get_all_net_values(self, obj):
+        return obj.all_net_values
+
+    def get_all_reimbursement_numbers(self, obj):
+        return obj.all_reimbursement_numbers
+
+    def get_all_reimbursement_values(self, obj):
+        return obj.all_reimbursement_values
+
+    def get_document_value(self, obj):
+        return self.to_float(obj.document_value)
+
+    def get_probability(self, obj):
+        return self.to_float(obj.probability)
+
+    def get_remark_value(self, obj):
+        return self.to_float(obj.remark_value)
+
+    def get_total_net_value(self, obj):
+        return self.to_float(obj.total_net_value)
+
+    def get_total_reimbursement_value(self, obj):
+        return self.to_float(obj.total_reimbursement_value)
+
+    @staticmethod
+    def to_float(number):
+        try:
+            return float(number)
+        except TypeError:
+            return None
+
     class Meta:
         model = Reimbursement
-        exclude = ('id',)
+        exclude = (
+            'id',
+            'net_values',
+            'reimbursement_numbers',
+            'reimbursement_values'
+        )
 
 
 class ReceiptSerializer(serializers.ModelSerializer):
