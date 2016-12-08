@@ -1,6 +1,6 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from requests import head
-
 
 
 class Reimbursement(models.Model):
@@ -11,6 +11,7 @@ class Reimbursement(models.Model):
     total_reimbursement_value = models.DecimalField('Total reimbusrsement value', max_digits=10, decimal_places=3, blank=True, null=True)
     total_net_value = models.DecimalField('Total net value', max_digits=10, decimal_places=3, db_index=True)
     reimbursement_numbers = models.CharField('Reimbursement numbers', max_length=140)
+    net_values = models.CharField('Net values', max_length=140)
 
     congressperson_id = models.IntegerField('Congressperson ID', db_index=True, blank=True, null=True)
     congressperson_name = models.CharField('Congressperson name', max_length=140, db_index=True, blank=True, null=True)
@@ -37,7 +38,6 @@ class Reimbursement(models.Model):
     issue_date = models.DateField('Issue date', blank=True, null=True)
     month = models.IntegerField('Month', db_index=True)
     remark_value = models.DecimalField('Remark value', max_digits=10, decimal_places=3, blank=True, null=True)
-    net_values = models.CharField('Net values', max_length=140)
     installment = models.IntegerField('Installment', blank=True, null=True)
     batch_number = models.IntegerField('Batch number')
     reimbursement_values = models.CharField('Reimbusrsement values', max_length=140, blank=True, null=True)
@@ -45,8 +45,19 @@ class Reimbursement(models.Model):
     passenger = models.CharField('Passenger', max_length=140, blank=True, null=True)
     leg_of_the_trip = models.CharField('Leg of the trip', max_length=140, blank=True, null=True)
 
+    probability = models.DecimalField('Probability', max_digits=6, decimal_places=5, blank=True, null=True)
+    suspicions = JSONField('Suspicions', blank=True, null=True)
+
     class Meta:
         unique_together = ('year', 'applicant_id', 'document_id')
+
+    @property
+    def values(self):
+        return map(lambda x: float(x), self.reimbursement_values.split(','))
+
+    @property
+    def numbers(self):
+        return map(lambda x: int(x), self.reimbursement_numbers.split(','))
 
 
 class Document(models.Model):

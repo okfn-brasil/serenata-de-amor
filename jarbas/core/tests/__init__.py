@@ -34,6 +34,10 @@ sample_document_data = dict(
     applicant_id=13
 )
 
+suspicions = {
+    'over_monthly_subquota': {'is_suspect': True, 'probability': 1.0}
+}
+
 sample_reimbursement_data = dict(
     applicant_id=13,
     batch_number=9,
@@ -52,7 +56,7 @@ sample_reimbursement_data = dict(
     party='Partido',
     passenger='John Doe',
     reimbursement_numbers='10,11',
-    reimbursement_values='12.13,14,14',
+    reimbursement_values='12.13,14.15',
     remark_value=1.23,
     state='UF',
     subquota_description='Subquota description',
@@ -65,6 +69,8 @@ sample_reimbursement_data = dict(
     total_net_value=4.56,
     total_reimbursement_value=None,
     year=1970,
+    probability=0.5,
+    suspicions=suspicions
 )
 
 sample_activity_data = dict(

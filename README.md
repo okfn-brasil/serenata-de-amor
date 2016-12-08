@@ -114,7 +114,7 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 ##### Database
 
-* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema)
+* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
 
 ##### Amazon S3 settings
 
