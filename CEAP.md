@@ -29,10 +29,12 @@ Artigo 2 - Atende as seguintes despesas:
 * Contratação **para apoio da atividade parlamentar** de consultoria e trabalhos técnicos, permitindo pesquisa socioeconômica
 * Divulgação da atividade parlamentar, **exceto nos 120 dias anteriores à eleição federal, estadual ou municipal**, exceto se o deputado não for candidato.
 * Participação em cursos, palestras, seminários, simpósios, congressos ou eventos do mesmo gênero, **realizado por instituição especializada, até o limite de 25% do valor da menor cota mensal (R$ 7697.16) por mês**
-* Complementação do auxílio moradia (hotel ou aluguel), **até R$ 1747,00 reais mensais**]
+* Complementação do auxílio moradia (hotel ou aluguel), **até R$ 1747,00 reais mensais**
+
 Artigo 3 - A cota pode ser usada da seguinte forma:
 * Por meio de serviços disponibilizados pela Câmara dos Deputados
 * Mediante reembolso, inclusive em caso de despesas realizadas por meio eletrônico
+
 Artigo 4 - Reembolso é efetuado mediante requerimento padrão, assinado pelo parlamentar, que assume inteira responsabilidade pela despesa, atestando que:
 * O material foi recebido, e em caso de serviço, atestando que o serviço foi realizado
 * O objeto do gasto obedece aos limites estabelecidos na legislação
@@ -71,13 +73,16 @@ Artigo 5. Sobre transporte aéreo e de serviços e produtos postais podem ser fe
 * A RPA e o bilhete não podem ser convertidos em ordem de crédito de passagem
 
 Artigo 6. As empresas de transporte aéreo credenciadas devem informar, quando solicitado, informações detalhadas dos bilhetes emitidos
+
 Artigo 7. Se o bilhete emitido é contra as normas, é descontado automaticamente em folha de pagamento
+
 Artigo 8. Despesas com telefone só são reembolsadas quando comprovadas que são de responsabilidade do deputado.
 * Todos os gastos passíveis de reembolso são correspondentes a comunicação em geral, como acesso a internet, aluguel e instalação de equipamentos destinados a comunicação por voz ou dados
 * A comprovação da despesa por telefone se dá mediante apresentação da folha de rosto da conta, acompanhada de comprovante de pagamento.
 * Em caso de extravio de conta, e possível comprovar com segunda via emitida pela operadora, acompanhada de declaração de extravio assinada pelo deputado.
 
 Artigo 9. Não é admitido aluguel de imóvel que pertença ao próprio deputado ou qualquer entidade que ele tenha participação
+
 Artigo 10. **Os contratos de aluguel de bens móveis não permitem a compra do móvel com utilização da cota**
 * Aluguel de carro não inclui serviço de motorista, e só pode ser feito por empresa jurídica, podendo ser incluso o seguro.
 * O carro deve pertencer a empresa, fato comprovado com a apresentação do CRVL do veículo
@@ -86,7 +91,11 @@ Artigo 10. **Os contratos de aluguel de bens móveis não permitem a compra do m
 Artigo 11. A cota é calculada proporcionalmente ao período de efetivo exercício no mês.
 * Se um deputado é removido ou adicionado, tem preferência a cota àquele que regista presença, se ambos estão presentes, atribui-se ao titular do mandato, ou em caso de sucessão de suplentes atribui-se ao de maior ascendência na ordem de suplência
 * Caso haja convocação de suplente, não há redução da cota.
+
 Artigo 12. **O uso da cota se restringe ao período do mandato**, desde que não haja convocação de suplente
+
 Artigo 13. **O saldo da cota não se acumula ao longo do exercício financeiro**
+
 Artigo 14. A cota não pode ser adiantada, transferida de um beneficiário para outro.
+
 Artigo 15. **Não é permitido gasto de caráter eleitoral**
