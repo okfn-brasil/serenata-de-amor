@@ -12,8 +12,10 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
 ## Table of Contents
 
 1. [JSON API endpoints](#json-api-endpoints)
-    1. [Documents](#documents)
+    1. [Reimbursement](#reimbursement)
     1. [Supplier](#supplier)
+    1. [Subquota](#subquota)
+    1. [Applicant](#applicant)
     1. [Tapioca Jarbas](#tapioca-jarbas)
 1. [Installing](#installing)
     1. [Using Docker](#using-docker)
@@ -21,43 +23,103 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
  
 ## JSON API endpoints
 
-### Documents
+### Reimbursement
 
-In Jarbas context a `Document` refers to a document (a reimbursement claim) from [CEAP](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar).
+Each `Reimbursement` object is a reimbursement claim made by a congressperson. Each reimbursement isidentified by an unique combination of `year`, `applicant_id` and `document_id`.
 
-#### `GET /api/document/`
+#### Retrieving a specific reimbursement
 
-This endpoint lists `Document` objects and it accepts any field (and any combination among them) as a filter. For example:
+##### `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/`
 
-`GET /api/document/?year=2015&state=RS&congressperson_id=42`
+Details from a specific reimbursement. If `receipt_url` wasn't fecthed yet, the server **won't** try to fetche it.
 
-These are the fields that can be combined for filtering purposes:
+##### `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/receipt/`
+
+URL of the digitalized version of the receipt of this specific reimbursement.
+
+If `receipt_url` wasn't fecthed yet, the server **will** try to fetche it.
+
+If you append the parameter `force` (i.e. `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/receipt/?force`) server will re-fetch the receipt URL.
+
+Not all receipts are available, so this URL can be `null`.
+
+#### Listing reimbursements
+
+##### `GET /api/reimbursement/`
+
+Lists all reimbursements.
+
+##### `GET /api/reimbursement/<year>/`
+
+Lists all reimbursements from a specific `year`.
+
+##### `GET /api/reimbursement/<year>/<applicant_id>/`
+
+Lists all reimbursements from a specific `year` and `applicant_id`.
+
+##### Filtering
+
+All these endpoints accepts any combination of these filtering parameters by:
 
 * `applicant_id`
 * `cnpj_cpf`
 * `congressperson_id`
 * `document_id`
-* `document_type`
 * `month`
-* `party`
-* `reimbursement_number`
-* `state`
-* `subquota_group_id`
-* `subquota_number`
-* `term`
+* `subquota_id`
 * `year`
+* `sort_by`: `issue_date` (default) or `probability` (both descending)
 
-#### `GET /api/receipt/<Document.pk>`
+For example:
 
-This endpoint gets the URL to the digitalized version of the receipt of a `Document`. It returns `{ url: null }` if the digitalized version is not available. The endpoint expects a `Document.pk` (i.e. the primary key of the `Document` object).
+```
+GET /api/reimbursement/2016/?cnpj_cpf=11111111111111&subquota_id=42&sort_by=probability
+```
+
+This request will list:
+
+* all 2016 reimbursements
+* made in the supplier with the CNPJ 11.111.111/1111-11
+* made according to the subquota with the ID 42
+* sorted by the highest probability
 
 ### Supplier
 
 A supplier is a Brazilian company in which congressperson have made expenses and claimed for reimbursement.
 
-#### `GET /api/supplier/<Supplier.cnpj>`
+#### Retrieving a specific supplier
 
-This endpoit gets the info we have for a specific supplier. The endpoint expects a `Supplier.cnpj` (i.e. the CNPJ of a `Supplier` object). It returns `404` if the supplier is not found.
+##### `GET /api/supplier/<cnpj>/`
+
+This endpoit gets the info we have for a specific supplier. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Supplier` object, digits only). It returns `404` if the supplier is not found.
+
+### Subquota
+
+Subqoutas are categories of expenses that can be reimbursed by congresspeople.
+
+#### Listing subquotas
+
+##### `GET /api/subquota/`
+
+Lists all subquotas names and IDs.
+
+##### Filtering
+
+Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/subquota/?q=meal` list all applicant that have `meal` in their names.
+
+### Applicant
+
+An applicant is the person (congressperson or theleadership of aparty or government) who claimed the reimbursemement.
+
+#### List applicants
+
+##### `GET /api/applicant/`
+
+Lists all names of applicants together with their IDs.
+
+##### Filtering
+
+Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/applicant/?q=lideranca` list all applicant that have `lideranca` in their names.
 
 ### Tapioca Jarbas
 

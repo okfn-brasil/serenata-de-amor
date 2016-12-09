@@ -18,7 +18,7 @@ urlpatterns = [
                 url(r'^$', ReimbursementListView.as_view(), name='reimbursement-by-applicant-list'),
                 url(r'^(?P<document_id>\d+)/', include([
                     url(r'^$', ReimbursementDetailView.as_view(), name='reimbursement-detail'),
-                    url(r'^/receipt/$', ReceiptDetailView.as_view(), name='reimbursement-receipt')
+                    url(r'^receipt/$', ReceiptDetailView.as_view(), name='reimbursement-receipt')
                 ]))
             ]))
         ]))

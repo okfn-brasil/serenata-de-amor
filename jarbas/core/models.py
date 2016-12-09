@@ -150,7 +150,7 @@ class Receipt(models.Model):
 
     url = models.URLField('URL', null=True, blank=True, default=None, max_length=128)
     fetched = models.BooleanField('Was fetched?', default=False)
-    document = models.OneToOneField(Document, on_delete=models.CASCADE, blank=True, )
+    document = models.OneToOneField(Document, on_delete=models.CASCADE)
 
     def get_url(self):
         server = 'www.camara.gov.br'
