@@ -10,6 +10,7 @@ class ReimbursementSerializer(serializers.ModelSerializer):
     all_reimbursement_values = serializers.SerializerMethodField()
     document_value = serializers.SerializerMethodField()
     probability = serializers.SerializerMethodField()
+    receipt = serializers.SerializerMethodField()
     remark_value = serializers.SerializerMethodField()
     total_net_value = serializers.SerializerMethodField()
     total_reimbursement_value = serializers.SerializerMethodField()
@@ -28,6 +29,9 @@ class ReimbursementSerializer(serializers.ModelSerializer):
 
     def get_probability(self, obj):
         return self.to_float(obj.probability)
+
+    def get_receipt(self, obj):
+        return dict(fecthed=obj.receipt_fetched, url=obj.receipt_url)
 
     def get_remark_value(self, obj):
         return self.to_float(obj.remark_value)
@@ -50,8 +54,27 @@ class ReimbursementSerializer(serializers.ModelSerializer):
         exclude = (
             'id',
             'net_values',
+            'receipt_fetched',
+            'receipt_url',
             'reimbursement_numbers',
             'reimbursement_values'
+        )
+
+
+class NewReceiptSerializer(serializers.ModelSerializer):
+
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, obj):
+        return obj.receipt_url
+
+    class Meta:
+        model = Reimbursement
+        fields = (
+            'applicant_id',
+            'document_id',
+            'url',
+            'year'
         )
 
 

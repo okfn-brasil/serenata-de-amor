@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from jarbas.core.models import Reimbursement
@@ -70,3 +72,64 @@ class TestCustomMethods(TestReimbursement):
             [1.99, 2.99],
             list(reimbursement.all_net_values)
         )
+
+
+class TestReceipt(TestCase):
+
+    def setUp(self):
+        self.obj = Reimbursement.objects.create(**sample_reimbursement_data)
+        self.expected_receipt_url = 'http://www.camara.gov.br/cota-parlamentar/documentos/publ/13/1970/42.pdf'
+
+    def test_url_is_none(self):
+        self.assertIsNone(self.obj.receipt_url)
+        self.assertFalse(self.obj.receipt_fetched)
+
+    @patch('jarbas.core.models.head')
+    def test_get_existing_url(self, mocked_head):
+        mocked_head.return_value.status_code = 200
+        self.assertEqual(self.expected_receipt_url, self.obj.get_receipt_url())
+        self.assertEqual(self.expected_receipt_url, self.obj.receipt_url)
+        self.assertTrue(self.obj.receipt_fetched)
+        mocked_head.assert_called_once_with(self.expected_receipt_url)
+
+    @patch('jarbas.core.models.head')
+    def test_get_non_existing_url(self, mocked_head):
+        mocked_head.return_value.status_code = 404
+        self.assertIsNone(self.obj.get_receipt_url())
+        self.assertIsNone(self.obj.receipt_url)
+        self.assertTrue(self.obj.receipt_fetched)
+        mocked_head.assert_called_once_with(self.expected_receipt_url)
+
+    @patch('jarbas.core.models.head')
+    def test_get_fetched_existing_url(self, mocked_head):
+        self.obj.receipt_fetched = True
+        self.obj.receipt_url = '42'
+        self.obj.save()
+        self.assertEqual('42', self.obj.get_receipt_url())
+        self.assertEqual('42', self.obj.receipt_url)
+        self.assertTrue(self.obj.receipt_fetched)
+        mocked_head.assert_not_called()
+
+    @patch('jarbas.core.models.head')
+    def test_get_fetched_non_existing_url(self, mocked_head):
+        self.obj.receipt_fetched = True
+        self.obj.receipt_url = None
+        self.obj.save()
+        self.assertIsNone(self.obj.get_receipt_url())
+        self.assertIsNone(self.obj.receipt_url)
+        self.assertTrue(self.obj.receipt_fetched)
+        mocked_head.assert_not_called()
+
+    @patch('jarbas.core.models.head')
+    def test_force_get_receipt_url(self, mocked_head):
+        mocked_head.return_value.status_code = 200
+        self.obj.receipt_fetched = True
+        self.obj.receipt_url = None
+        self.obj.save()
+        self.assertEqual(
+            self.expected_receipt_url,
+            self.obj.get_receipt_url(force=True)
+        )
+        self.assertEqual(self.expected_receipt_url, self.obj.receipt_url)
+        self.assertTrue(self.obj.receipt_fetched)
+        mocked_head.assert_called_once_with(self.expected_receipt_url)

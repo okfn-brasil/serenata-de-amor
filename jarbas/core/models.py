@@ -3,6 +3,29 @@ from django.db import models
 from requests import head
 
 
+class NewReceipt:
+
+    def __init__(self, year, applicant_id, document_id):
+        self.year = year
+        self.applicant_id = applicant_id
+        self.document_id = document_id
+        self.url = self.get_url()
+
+    def get_url(self):
+        args = (self.applicant_id, self.year, self.document_id)
+        return (
+            'http://www.camara.gov.br/'
+            'cota-parlamentar/documentos/publ/{}/{}/{}.pdf'
+        ).format(*args)
+
+    @property
+    def exists(self):
+        status = head(self.get_url()).status_code
+        if 200 <= status < 400:
+            return True
+        return False
+
+
 class Reimbursement(models.Model):
     year = models.IntegerField('Year', db_index=True)
     applicant_id = models.IntegerField('Applicant ID', db_index=True)
@@ -48,8 +71,26 @@ class Reimbursement(models.Model):
     probability = models.DecimalField('Probability', max_digits=6, decimal_places=5, blank=True, null=True)
     suspicions = JSONField('Suspicions', blank=True, null=True)
 
+    receipt_fetched = models.BooleanField('Was the receipt URL fetched?', default=False)
+    receipt_url = models.CharField('Receipt URL', max_length=140, blank=True, null=True)
+
     class Meta:
         unique_together = ('year', 'applicant_id', 'document_id')
+
+    def get_receipt_url(self, force=False):
+        if self.receipt_url:
+            return self.receipt_url
+
+        if self.receipt_fetched and not force:
+            return None
+
+        receipt = NewReceipt(self.year, self.applicant_id, self.document_id)
+        if receipt.exists:
+            self.receipt_url = receipt.url
+        self.receipt_fetched = True
+        self.save()
+
+        return self.receipt_url
 
     @property
     def all_net_values(self):
@@ -109,7 +150,7 @@ class Receipt(models.Model):
 
     url = models.URLField('URL', null=True, blank=True, default=None, max_length=128)
     fetched = models.BooleanField('Was fetched?', default=False)
-    document = models.OneToOneField(Document, on_delete=models.CASCADE)
+    document = models.OneToOneField(Document, on_delete=models.CASCADE, blank=True, )
 
     def get_url(self):
         server = 'www.camara.gov.br'

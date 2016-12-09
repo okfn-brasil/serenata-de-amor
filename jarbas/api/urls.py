@@ -3,12 +3,12 @@ from django.conf.urls import include, url
 from jarbas.api.views import (
     DocumentViewSet,
     ReceiptViewSet,
+    ReceiptDetailView,
     ReimbursementDetailView,
     ReimbursementListView,
     SupplierViewSet
 )
 
-# r'^reimbursement/(?P<year>\d{4}/(?P<applicant_id>\d+)/(?P<document_id>\d+)/$',
 urlpatterns = [
     url(r'^reimbursement/', include([
         url(r'^$', ReimbursementListView.as_view(), name='reimbursement-list'),
@@ -16,7 +16,10 @@ urlpatterns = [
             url(r'^$', ReimbursementListView.as_view(), name='reimbursement-by-year-list'),
             url(r'^(?P<applicant_id>\d+)/', include([
                 url(r'^$', ReimbursementListView.as_view(), name='reimbursement-by-applicant-list'),
-                url(r'^(?P<document_id>\d+)/$', ReimbursementDetailView.as_view(), name='reimbursement-detail')
+                url(r'^(?P<document_id>\d+)/', include([
+                    url(r'^$', ReimbursementDetailView.as_view(), name='reimbursement-detail'),
+                    url(r'^/receipt/$', ReceiptDetailView.as_view(), name='reimbursement-receipt')
+                ]))
             ]))
         ]))
     ])),

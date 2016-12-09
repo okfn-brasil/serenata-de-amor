@@ -1,4 +1,5 @@
 from json import loads
+from unittest.mock import patch
 
 from django.shortcuts import resolve_url
 from django.test import TestCase
@@ -61,6 +62,7 @@ class TestRetrieveApi(TestCase):
         unique_id = {'year': 1970, 'applicant_id': 13, 'document_id': 42}
         url = resolve_url('api:reimbursement-detail', **unique_id)
         self.resp = self.client.get(url)
+        self.maxDiff = 2 ** 11
 
     def test_status(self):
         self.assertEqual(200, self.resp.status_code)
@@ -100,6 +102,46 @@ class TestRetrieveApi(TestCase):
             total_reimbursement_value=None,
             year=1970,
             probability=0.5,
-            suspicions=suspicions
+            suspicions=suspicions,
+            receipt=dict(fecthed=False, url=None)
         )
         self.assertEqual(expected, contents)
+
+
+class TestReceiptApi(TestCase):
+
+    def setUp(self):
+        self.obj = Reimbursement.objects.create(**sample_reimbursement_data)
+        self.unique_id = {'year': 1970, 'applicant_id': 13, 'document_id': 42}
+        self.url = resolve_url('api:reimbursement-receipt', **self.unique_id)
+        self.expected_receipt_url = 'http://www.camara.gov.br/cota-parlamentar/documentos/publ/13/1970/42.pdf'
+
+    @patch('jarbas.core.models.head')
+    def test_fetch_existing_receipt(self, mocked_head):
+        mocked_head.return_value.status_code = 200
+        resp = self.client.get(self.url)
+        expected = self.unique_id.copy()
+        expected['url'] = self.expected_receipt_url
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(expected, content)
+
+    @patch('jarbas.core.models.head')
+    def test_fetch_non_existing_receipt(self, mocked_head):
+        mocked_head.return_value.status_code = 404
+        resp = self.client.get(self.url)
+        expected = self.unique_id.copy()
+        expected['url'] = None
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(expected, content)
+
+    @patch('jarbas.core.models.head')
+    def test_refetch_existing_receipt(self, mocked_head):
+        self.obj.receipt_fetched = True
+        self.obj.receipt_url = None
+        self.obj.save()
+        mocked_head.return_value.status_code = 200
+        resp = self.client.get(self.url + '?force')
+        expected = self.unique_id.copy()
+        expected['url'] = self.expected_receipt_url
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(expected, content)

@@ -1,0 +1,26 @@
+from json import loads
+from unittest.mock import patch
+
+from django.test import TestCase
+
+from jarbas.core.models import NewReceipt
+
+
+class TestReceipt(TestCase):
+
+    def setUp(self):
+        self.receipt = NewReceipt(1970, 13, 42)
+
+    def test_url(self):
+        expected = 'http://www.camara.gov.br/cota-parlamentar/documentos/publ/13/1970/42.pdf'
+        self.assertEqual(expected, self.receipt.url)
+
+    @patch('jarbas.core.models.head')
+    def test_existing_url(self, mocked_head):
+        mocked_head.return_value.status_code = 200
+        self.assertTrue(self.receipt.exists)
+
+    @patch('jarbas.core.models.head')
+    def test_no_existing_url(self, mocked_head):
+        mocked_head.return_value.status_code = 404
+        self.assertFalse(self.receipt.exists)

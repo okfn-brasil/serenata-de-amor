@@ -3,7 +3,12 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ViewSet
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
-from jarbas.api.serializers import DocumentSerializer, ReimbursementSerializer, SupplierSerializer
+from jarbas.api.serializers import (
+    DocumentSerializer,
+    NewReceiptSerializer,
+    ReimbursementSerializer,
+    SupplierSerializer
+)
 from jarbas.core.models import Document, Receipt, Reimbursement, Supplier
 
 
@@ -37,6 +42,19 @@ class ReimbursementDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
     lookup_fields = ('year', 'applicant_id', 'document_id')
     queryset = Reimbursement.objects.all()
     serializer_class = ReimbursementSerializer
+
+
+class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
+
+    lookup_fields = ('year', 'applicant_id', 'document_id')
+    queryset = Reimbursement.objects.all()
+    serializer_class = NewReceiptSerializer
+
+    def get_object(self):
+        obj = super().get_object()
+        force = 'force' in self.request.query_params
+        obj.get_receipt_url(force=force)
+        return obj
 
 
 class DocumentViewSet(ReadOnlyModelViewSet):
