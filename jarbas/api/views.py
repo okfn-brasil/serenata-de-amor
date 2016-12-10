@@ -14,13 +14,12 @@ from jarbas.api.serializers import (
 from jarbas.core.models import Document, Receipt, Reimbursement, Supplier
 
 
-def get_distinct(field, order_by):
-    qs = Reimbursement\
-        .objects\
-        .values(field, order_by)\
-        .order_by(order_by)\
-        .distinct()
-    return qs
+def get_distinct(field, order_by, query=None):
+    qs = Reimbursement.objects.all()
+    if query:
+        filter = {order_by + '__icontains': query}
+        qs = qs.filter(**filter)
+    return qs.values(field, order_by).order_by(order_by) .distinct()
 
 
 class MultipleFieldLookupMixin(object):
@@ -39,11 +38,32 @@ class ReimbursementListView(ListAPIView):
 
     def get(self, request, year=None, applicant_id=None):
 
-        if year:
-            self.queryset = self.queryset.filter(year=year)
+        # get filtering parameters from query string
+        params = (
+            'applicant_id',
+            'cnpj_cpf',
+            'document_id',
+            'month',
+            'subquota_id',
+            'year'
+        )
+        values = map(self.request.query_params.get, params)
+        filters = {k: v for k, v in zip(params, values) if v is not None}
 
+        # select year and applicant ID from the URL path (not query string)
+        if year:
+            filters['year'] = year
         if applicant_id:
-            self.queryset = self.queryset.filter(applicant_id=applicant_id)
+            filters['applicant_id'] = applicant_id
+
+        # filter queryset
+        if filters:
+            self.queryset = self.queryset.filter(**filters)
+
+        # change ordering if needed
+        order_by = self.request.query_params.get('order_by')
+        if order_by in ('probability', 'issue_date'):
+            self.queryset = self.queryset.order_by('-' + order_by)
 
         return super().get(request)
 
@@ -70,14 +90,20 @@ class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
 
 class ApplicantListView(ListAPIView):
 
-    queryset = get_distinct('applicant_id', 'congressperson_name')
     serializer_class = ApplicantSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get('q')
+        return get_distinct('applicant_id', 'congressperson_name', query)
 
 
 class SubquotaListView(ListAPIView):
 
-    queryset = get_distinct('subquota_id', 'subquota_description')
     serializer_class = SubquotaSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get('q')
+        return get_distinct('subquota_id', 'subquota_description', query)
 
 
 class DocumentViewSet(ReadOnlyModelViewSet):

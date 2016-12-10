@@ -63,17 +63,16 @@ All these endpoints accepts any combination of these filtering parameters by:
 
 * `applicant_id`
 * `cnpj_cpf`
-* `congressperson_id`
 * `document_id`
 * `month`
 * `subquota_id`
 * `year`
-* `sort_by`: `issue_date` (default) or `probability` (both descending)
+* `order_by`: `issue_date` (default) or `probability` (both descending)
 
 For example:
 
 ```
-GET /api/reimbursement/2016/?cnpj_cpf=11111111111111&subquota_id=42&sort_by=probability
+GET /api/reimbursement/2016/?cnpj_cpf=11111111111111&subquota_id=42&order_by=probability
 ```
 
 This request will list:

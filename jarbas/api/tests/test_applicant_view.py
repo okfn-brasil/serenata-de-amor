@@ -33,6 +33,21 @@ class TestApplicant(TestCase):
         self.assertEqual(2, content['count'])
         self.assertEqual(expected, content['results'])
 
+    def test_contents_with_filter(self):
+        expected = [
+            dict(congressperson_name='John Doe', applicant_id=42)
+        ]
+
+        secondary_data = sample_reimbursement_data.copy()
+        secondary_data['applicant_id'] = 42
+        secondary_data['congressperson_name'] = 'John Doe'
+        Reimbursement.objects.create(**secondary_data)
+        resp = self.client.get(self.url + '?q=doe')
+
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(1, content['count'])
+        self.assertEqual(expected, content['results'])
+
     def test_content_non_duplicate_name(self):
         expected = [
             dict(congressperson_name='Roger That', applicant_id=13)

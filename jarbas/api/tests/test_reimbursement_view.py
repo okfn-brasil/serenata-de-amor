@@ -1,3 +1,4 @@
+from datetime import date
 from json import loads
 from unittest.mock import patch
 
@@ -19,12 +20,24 @@ class TestListApi(TestCase):
             sample_reimbursement_data.copy()
         ]
 
+        data[1]['cnpj_cpf'] = '22222222222'
         data[1]['document_id'] = 42 * 2
+        data[1]['issue_date'] = date(1969, 12, 31)
+        data[1]['probability'] = None
+        data[1]['subquota_id'] = 22
+
         data[2]['applicant_id'] = 13 * 3
+        data[2]['cnpj_cpf'] = '22222222222'
         data[2]['document_id'] = 42 * 3
-        data[3]['year'] = 1983
+        data[2]['probability'] = 0.1
+        data[2]['subquota_id'] = 22
+
         data[3]['applicant_id'] = 13 * 4
+        data[3]['cnpj_cpf'] = '22222222222'
         data[3]['document_id'] = 42 * 4
+        data[3]['probability'] = 0.9
+        data[3]['subquota_id'] = 22
+        data[3]['year'] = 1983
 
         for d in data:
             Reimbursement.objects.create(**d)
@@ -48,6 +61,25 @@ class TestListApi(TestCase):
 
     def test_content_by_applicant_id(self):
         self.assertEqual(2, self._count_results(self.by_applicant))
+
+    def test_ordering(self):
+        resp = self.client.get(self.all)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(4, len(content['results']))
+        self.assertEqual('1969-12-31', content['results'][3]['issue_date'])
+
+    def test_content_with_filters(self):
+        url = self.all + (
+            '?cnpj_cpf=22222222222'
+            '&subquota_id=22'
+            '&sort_by=probability'
+        )
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(3, len(content['results']))
+        self.assertEqual(0.9, content['results'][0]['probability'])
+        self.assertEqual(0.1, content['results'][1]['probability'])
+        self.assertEqual(None, content['results'][2]['probability'])
 
     def _count_results(self, url):
         resp = self.client.get(url)

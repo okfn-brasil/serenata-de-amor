@@ -75,6 +75,7 @@ class Reimbursement(models.Model):
     receipt_url = models.CharField('Receipt URL', max_length=140, blank=True, null=True)
 
     class Meta:
+        ordering = ['-issue_date']
         unique_together = ('year', 'applicant_id', 'document_id')
 
     def get_receipt_url(self, force=False):
