@@ -1,6 +1,5 @@
 import csv
 import lzma
-from datetime import date
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -87,19 +86,6 @@ class Command(LoadCommand):
             date=settings.AMAZON_S3_SUPPLIERS_DATE,
             name=name
         )
-
-    @staticmethod
-    def to_date(text):
-        try:
-            day, month, year = map(int, text.split('/'))
-            if 0 <= year <= 50:
-                year += 2000
-            elif 50 < year <= 99:
-                year += 1900
-            return date(year, month, day)
-
-        except ValueError:
-            return None
 
     @staticmethod
     def to_email(email):

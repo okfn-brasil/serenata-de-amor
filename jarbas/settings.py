@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'test_without_migrations',
     'corsheaders',
-    'debug_toolbar',
     'rest_framework',
     'jarbas.core',
     'jarbas.api',
@@ -52,7 +51,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.cache.UpdateCacheMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -174,8 +172,3 @@ CACHES = {
         'TIMEOUT': 60 * 60 * 6
     }
 }
-
-
-# Debug toolbar
-
-INTERNAL_IPS = '127.0.0.1'

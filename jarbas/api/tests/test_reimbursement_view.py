@@ -73,7 +73,7 @@ class TestListApi(TestCase):
         url = self.all + (
             '?cnpj_cpf=22222222222'
             '&subquota_id=22'
-            '&sort_by=probability'
+            '&order_by=probability'
         )
         resp = self.client.get(url)
         content = loads(resp.content.decode('utf-8'))

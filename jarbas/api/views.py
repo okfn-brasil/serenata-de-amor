@@ -62,8 +62,12 @@ class ReimbursementListView(ListAPIView):
 
         # change ordering if needed
         order_by = self.request.query_params.get('order_by')
-        if order_by in ('probability', 'issue_date'):
-            self.queryset = self.queryset.order_by('-' + order_by)
+        if order_by == 'probability':
+            kwargs = {
+                'select': {'probability_is_null': 'probability IS NULL'},
+                'order_by': ['probability_is_null', '-probability']
+            }
+            self.queryset = self.queryset.extra(**kwargs)
 
         return super().get(request)
 

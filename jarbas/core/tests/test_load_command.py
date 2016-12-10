@@ -27,7 +27,7 @@ class TestStaticMethods(TestCase):
         self.assertEqual(self.cmd.to_date('1991-07-22 03:15:00+0300'), expected)
         self.assertEqual(self.cmd.to_date('22/13/91'), None)
         self.assertEqual(self.cmd.to_date('aa/7/91'), None)
-
+        self.assertEqual(self.cmd.to_date('22/07/16'), date(2016, 7, 22))
 
 class TestPrintCount(TestCase):
 

@@ -49,6 +49,11 @@ class TestCreate(TestReimbursement):
 
 class TestCustomMethods(TestReimbursement):
 
+    def test_as_list(self):
+        self.assertIsNone(Reimbursement.as_list(''))
+        self.assertEqual(['1', '2'], Reimbursement.as_list('1,2'))
+        self.assertEqual([1, 2], Reimbursement.as_list('1,2', int))
+
     def test_all_reimbursemenet_values(self):
         Reimbursement.objects.create(**self.data)
         reimbursement = Reimbursement.objects.first()
