@@ -78,6 +78,20 @@ class NewReceiptSerializer(serializers.ModelSerializer):
         )
 
 
+class ApplicantSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reimbursement
+        fields = ('applicant_id', 'congressperson_name')
+
+
+class SubquotaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reimbursement
+        fields = ('subquota_id', 'subquota_description')
+
+
 class ReceiptSerializer(serializers.ModelSerializer):
 
     class Meta:

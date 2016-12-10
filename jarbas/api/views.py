@@ -4,12 +4,23 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ViewSet
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from jarbas.api.serializers import (
+    ApplicantSerializer,
     DocumentSerializer,
     NewReceiptSerializer,
     ReimbursementSerializer,
+    SubquotaSerializer,
     SupplierSerializer
 )
 from jarbas.core.models import Document, Receipt, Reimbursement, Supplier
+
+
+def get_distinct(field, order_by):
+    qs = Reimbursement\
+        .objects\
+        .values(field, order_by)\
+        .order_by(order_by)\
+        .distinct()
+    return qs
 
 
 class MultipleFieldLookupMixin(object):
@@ -55,6 +66,18 @@ class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
         force = 'force' in self.request.query_params
         obj.get_receipt_url(force=force)
         return obj
+
+
+class ApplicantListView(ListAPIView):
+
+    queryset = get_distinct('applicant_id', 'congressperson_name')
+    serializer_class = ApplicantSerializer
+
+
+class SubquotaListView(ListAPIView):
+
+    queryset = get_distinct('subquota_id', 'subquota_description')
+    serializer_class = SubquotaSerializer
 
 
 class DocumentViewSet(ReadOnlyModelViewSet):

@@ -1,11 +1,13 @@
 from django.conf.urls import include, url
 
 from jarbas.api.views import (
+    ApplicantListView,
     DocumentViewSet,
-    ReceiptViewSet,
     ReceiptDetailView,
+    ReceiptViewSet,
     ReimbursementDetailView,
     ReimbursementListView,
+    SubquotaListView,
     SupplierViewSet
 )
 
@@ -23,6 +25,9 @@ urlpatterns = [
             ]))
         ]))
     ])),
+
+    url(r'^applicant/$', ApplicantListView.as_view(), name='applicant-list'),
+    url(r'^subquota/$', SubquotaListView.as_view(), name='subquota-list'),
 
     url(r'^document/$', DocumentViewSet.as_view({'get': 'list'}), name='document-list'),
     url(r'^supplier/(?P<pk>\d+)/$', SupplierViewSet.as_view({'get': 'retrieve'}), name='supplier-detail'),
