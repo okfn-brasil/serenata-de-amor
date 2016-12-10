@@ -10,9 +10,12 @@ services:
     environment:
        - SECRET_KEY=lets-rock
        - DATABASE_URL=postgres://jarbas:mysecretpassword@db/jarbas
+       - CACHE_BACKEND=django.core.cache.backends.memcached.MemcachedCache
+       - CACHE_LOCATION=cache:11211
     depends_on:
        - elm
        - db
+       - cache
     networks:
       backend:
       frontend:
@@ -50,6 +53,9 @@ services:
         - backend
     volumes:
         - "db:/var/lib/postgresql"
+
+  cache:
+    image: memcached:1.4
 
 volumes:
   assets:

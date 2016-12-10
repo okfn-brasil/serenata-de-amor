@@ -1,5 +1,6 @@
 from json import loads
 
+from django.core.cache import cache
 from django.shortcuts import resolve_url
 from django.test import TestCase
 
@@ -23,6 +24,7 @@ class TestApplicant(TestCase):
             dict(congressperson_name='Roger That', applicant_id=13)
         ]
 
+        cache.clear()
         secondary_data = sample_reimbursement_data.copy()
         secondary_data['applicant_id'] = 42
         secondary_data['congressperson_name'] = 'John Doe'

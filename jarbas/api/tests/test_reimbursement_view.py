@@ -2,6 +2,7 @@ from datetime import date
 from json import loads
 from unittest.mock import patch
 
+from django.core.cache import cache
 from django.shortcuts import resolve_url
 from django.test import TestCase
 
@@ -160,6 +161,7 @@ class TestReceiptApi(TestCase):
     @patch('jarbas.core.models.head')
     def test_fetch_non_existing_receipt(self, mocked_head):
         mocked_head.return_value.status_code = 404
+        cache.clear()
         resp = self.client.get(self.url)
         expected = self.unique_id.copy()
         expected['url'] = None

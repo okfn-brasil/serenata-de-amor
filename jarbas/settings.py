@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'jarbas.frontend',
 ]
 
+
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -59,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 ROOT_URLCONF = 'jarbas.urls'
@@ -160,6 +163,17 @@ USE_X_FORWARDED_HOST = config('USE_X_FORWARDED_HOST', default=False, cast=bool)
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
 
+
+# Cache
+
+default_cache = 'django.core.cache.backends.dummy.DummyCache'
+CACHES = {
+    'default': {
+        'BACKEND': config('CACHE_BACKEND', default=default_cache),
+        'LOCATION': config('CACHE_LOCATION', default=None),
+        'TIMEOUT': 60 * 60 * 6
+    }
+}
 
 
 # Debug toolbar

@@ -1,5 +1,6 @@
 from json import loads
 
+from django.core.cache import cache
 from django.shortcuts import resolve_url
 from django.test import TestCase
 
@@ -23,6 +24,7 @@ class TestSubquota(TestCase):
             dict(subquota_description='Subquota description', subquota_id=4)
         ]
 
+        cache.clear()
         secondary_data = sample_reimbursement_data.copy()
         secondary_data['year'] = 1971
         secondary_data['subquota_id'] = 42

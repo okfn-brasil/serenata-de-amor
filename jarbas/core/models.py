@@ -110,8 +110,8 @@ class Reimbursement(models.Model):
         if not content:
             return None
 
-        parts = content.split(',')
-        return map(lambda x: cast(x), parts) if cast else parts
+        parts = list(content.split(','))
+        return list(map(lambda x: cast(x), parts)) if cast else parts
 
 
 class Document(models.Model):
