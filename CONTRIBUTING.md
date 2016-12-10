@@ -121,6 +121,7 @@ Here we explain what each script from `src/` does for you:
 1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
 1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
+1. `src/group_receipts.py` creates a `data/YYYY-MM-DD-reimbursements.xz` file with grouped data from all of the available datasets (current-year, last-year, previous-years)
 
 ##### Suppliers information (CNPJ)
 

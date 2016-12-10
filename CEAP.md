@@ -1,8 +1,9 @@
-Artigo 1 - Pode utilizar, além da cota calculada para o seu estado, um adicional de R$ 1353,04 reais, o deputado que for:
-* Líder ou vice-líder de partido político, bloco parlamentar ou da Minoria
-* Líder ou vice-líder do Governo na Câmara dos Deputados ou Congresso Nacional.
-* Presidente ou Vice-Presidente de Comissão Permanente
-* Representantes de Partidos Políticos **com menos de um centésimo** da composição da Câmara dos Deputados
+Artigo 1 - Pode utilizar, além da cota calculada para o seu estado, um adicional de R$ 1353,04 reais
+* O deputado que for:
+  * Líder ou vice-líder de partido político, bloco parlamentar ou da Minoria
+  * Líder ou vice-líder do Governo na Câmara dos Deputados ou Congresso Nacional.
+  * Presidente ou Vice-Presidente de Comissão Permanente
+  * Representantes de Partidos Políticos **com menos de um centésimo** da composição da Câmara dos Deputados
 * Se um mesmo deputado ocupa mais de um cargo simultaneamente, o valor **não se acumula**
 * Deputado que for representar o Brasil em missão no mercosul pode gastar mais 20% do valor da menor cota, por viagem
 
@@ -30,6 +31,7 @@ Artigo 2 - Atende as seguintes despesas:
 * Divulgação da atividade parlamentar, **exceto nos 120 dias anteriores à eleição federal, estadual ou municipal**, exceto se o deputado não for candidato.
 * Participação em cursos, palestras, seminários, simpósios, congressos ou eventos do mesmo gênero, **realizado por instituição especializada, até o limite de 25% do valor da menor cota mensal (R$ 7697.16) por mês**
 * Complementação do auxílio moradia (hotel ou aluguel), **até R$ 1747,00 reais mensais**]
+
 Artigo 3 - A cota pode ser usada da seguinte forma:
 * Por meio de serviços disponibilizados pela Câmara dos Deputados
 * Mediante reembolso, inclusive em caso de despesas realizadas por meio eletrônico
