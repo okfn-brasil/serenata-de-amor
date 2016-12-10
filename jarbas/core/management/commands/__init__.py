@@ -19,6 +19,15 @@ class LoadCommand(BaseCommand):
             '--drop-all', '-d', dest='drop', action='store_true',
             help='Drop all existing records before loading the datasets'
         )
+        parser.add_argument(
+            '--dataset-version', dest='dataset_version', default=None,
+            help='Dataset file version (usualy a YYYY-MM-DD date)'
+        )
+
+    def get_dataset(self, name):
+        if self.source:
+            return self.load_local(self.source, name)
+        return self.load_remote(name)
 
     def load_remote(self, name):
         """Load a document from Amazon S3"""
@@ -50,6 +59,16 @@ class LoadCommand(BaseCommand):
         return os.path.join(source, self.get_file_name(name))
 
     @staticmethod
+    def to_number(value, cast=None):
+        if value.lower() in ('nan', ''):
+            return None
+
+        number = float(value)
+        if cast:
+            return cast(number)
+        return number
+
+    @staticmethod
     def to_date(text):
 
         ddmmyyyy = match(r'^[\d]{1,2}/[\d]{1,2}/[\d]{2,4}$', text)
@@ -72,12 +91,11 @@ class LoadCommand(BaseCommand):
         except ValueError:
             return None
 
-    @staticmethod
-    def get_file_name(name):
-        return '{date}-{name}.xz'.format(
-            date=settings.AMAZON_S3_DATASET_DATE,
-            name=name
-        )
+    def get_file_name(self, name):
+        if not self.date:
+            settings_name = 'AMAZON_S3_{}_DATE'.format(name.upper())
+            self.date = getattr(settings, settings_name)
+        return '{date}-{name}.xz'.format(date=self.date, name=name)
 
     def drop_all(self, model):
         if model.objects.count() != 0:
@@ -87,10 +105,12 @@ class LoadCommand(BaseCommand):
             self.print_count(model, permanent=True)
 
     def print_count(self, model, **kwargs):
+        count = kwargs.get('count', model.objects.count())
         raw_msg = 'Current count: {:,} {}s                                    '
-        msg = raw_msg.format(model.objects.count(), self.get_model_name(model))
+        msg = raw_msg.format(count, self.get_model_name(model))
         end = '\n' if kwargs.get('permanent', False) else '\r'
         print(msg, end=end)
+        return count
 
     @staticmethod
     def get_model_name(model):

@@ -140,6 +140,7 @@ You can access it at [`localhost:80`](http://localhost:80/). However your databa
 ```console
 $ docker-compose run --rm jarbas python manage.py collectstatic --no-input
 $ docker-compose run --rm jarbas python manage.py loaddatasets
+$ docker-compose run --rm jarbas python manage.py reimbursements
 $ docker-compose run --rm jarbas python manage.py loadsupliers
 
 ```
@@ -184,7 +185,8 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 * `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
 * `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
 * `AMAZON_S3_DATASET_DATE` (_str_) Datasets file name prefix of CEAP datasets from Serenata de Amor (e.g. `2016-08-08` for `2016-08-08-current-year.xz`)
-* `AMAZON_S3_SUPPLIERS_DATE` (_str_) Datasets file name prefix for suppliers dataset (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
+* `AMAZON_S3_REIMBURSEMENTS_DATE` (_str_) Reumbursements dataset file name date prefix (e.g. `2016-12-06` for `2016-12-06-reimbursements.xz`)
+* `AMAZON_S3_COMPANIES_DATE` (_str_) Suppliers (companies) datasets file name date prefix (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
 * `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
 
 ##### Google settings
@@ -207,6 +209,7 @@ Now you can load the data from our datasets and get some other data as static fi
 ```
 $ python manage.py loaddatasets
 $ python manage.py loadsuppliers
+$ python manage.py reimbursements
 $ python manage.py ceapdatasets
 ```
 

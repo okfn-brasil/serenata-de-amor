@@ -40,11 +40,11 @@ class Reimbursement(models.Model):
     congressperson_name = models.CharField('Congressperson name', max_length=140, db_index=True, blank=True, null=True)
     congressperson_document = models.IntegerField('Congressperson document', blank=True, null=True)
 
-    party = models.CharField('Party', max_length=7, db_index=True)
-    state = models.CharField('State', max_length=2, db_index=True)
+    party = models.CharField('Party', max_length=7, db_index=True, blank=True, null=True)
+    state = models.CharField('State', max_length=2, db_index=True, blank=True, null=True)
 
-    term_id = models.IntegerField('Term ID')
-    term = models.IntegerField('Term')
+    term_id = models.IntegerField('Term ID', blank=True, null=True)
+    term = models.IntegerField('Term', blank=True, null=True)
 
     subquota_id = models.IntegerField('Subquota ID', db_index=True)
     subquota_description = models.CharField('Subquota descrition', max_length=140)
@@ -55,7 +55,7 @@ class Reimbursement(models.Model):
     cnpj_cpf = models.CharField('CNPJ or CPF', max_length=14, db_index=True, blank=True, null=True)
 
     document_type = models.IntegerField('Document type')
-    document_number = models.CharField('Document number', max_length=140)
+    document_number = models.CharField('Document number', max_length=140, blank=True, null=True)
     document_value = models.DecimalField('Document value', max_digits=10, decimal_places=3)
 
     issue_date = models.DateField('Issue date', blank=True, null=True)
