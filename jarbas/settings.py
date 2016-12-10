@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'test_without_migrations',
     'corsheaders',
+    'debug_toolbar',
     'rest_framework',
     'jarbas.core',
     'jarbas.api',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -157,3 +159,9 @@ GOOGLE_STREET_VIEW_API_KEY = config('GOOGLE_STREET_VIEW_API_KEY', default='')
 USE_X_FORWARDED_HOST = config('USE_X_FORWARDED_HOST', default=False, cast=bool)
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
+
+
+
+# Debug toolbar
+
+INTERNAL_IPS = '127.0.0.1'
