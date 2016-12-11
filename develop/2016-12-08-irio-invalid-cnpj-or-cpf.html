@@ -11827,6 +11827,16 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>document_type</code> 2 means expenses made abroad.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
@@ -11837,8 +11847,9 @@ div#notebook {
         <span class="s1">&#39;document_id&#39;</span><span class="p">,</span>
         <span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span>
         <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;supplier&#39;</span><span class="p">]</span>
-<span class="n">dataset</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;valid_cnpj_cpf&#39;</span><span class="p">],</span> <span class="n">keys</span><span class="p">]</span>
+        <span class="s1">&#39;supplier&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;document_type&#39;</span><span class="p">]</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;document_type != 2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;valid_cnpj_cpf&#39;</span><span class="p">],</span> <span class="n">keys</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -11863,6 +11874,7 @@ div#notebook {
       <th>total_net_value</th>
       <th>cnpj_cpf</th>
       <th>supplier</th>
+      <th>document_type</th>
     </tr>
   </thead>
   <tbody>
@@ -11874,6 +11886,7 @@ div#notebook {
       <td>123.57</td>
       <td>11111111111</td>
       <td>CAP HORN</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>53467</th>
@@ -11883,6 +11896,7 @@ div#notebook {
       <td>100.25</td>
       <td>11111111111</td>
       <td>CAP HORN</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>53468</th>
@@ -11892,6 +11906,7 @@ div#notebook {
       <td>229.25</td>
       <td>11111111111</td>
       <td>DENSKALDEDEKOK  RESTAURANT</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>53469</th>
@@ -11901,6 +11916,7 @@ div#notebook {
       <td>18.89</td>
       <td>11111111111</td>
       <td>BELLA CENTER</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>53470</th>
@@ -11910,6 +11926,7 @@ div#notebook {
       <td>581.85</td>
       <td>11111111111</td>
       <td>FIRST HOTEL SKT. PETRI</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>284494</th>
@@ -11919,6 +11936,7 @@ div#notebook {
       <td>2974.63</td>
       <td>11111111111</td>
       <td>AKA CENTRAL PARK - NEW YORK</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>284495</th>
@@ -11928,6 +11946,7 @@ div#notebook {
       <td>2974.63</td>
       <td>11111111111</td>
       <td>AKA CENTRAL PARK - NEW YORK</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>527753</th>
@@ -11937,6 +11956,7 @@ div#notebook {
       <td>190.74</td>
       <td>00000000000000</td>
       <td>PREFEITURA MUNICIPAL DE FORTALEZA</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>552301</th>
@@ -11946,6 +11966,7 @@ div#notebook {
       <td>372.72</td>
       <td>00000000000</td>
       <td>TAM LINHAS AREAS S/A</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>552775</th>
@@ -11955,6 +11976,7 @@ div#notebook {
       <td>290.91</td>
       <td>00000000000</td>
       <td>CONDOMINIO CENTRO EMPRESARIAL IGUATEMI</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>

@@ -32,6 +32,8 @@ cnpj_cpf_list = dataset['cnpj_cpf'].astype(np.str).replace('nan', None)
 dataset['valid_cnpj_cpf'] = np.vectorize(validate_cnpj_cpf)(cnpj_cpf_list)
 
 
+# `document_type` 2 means expenses made abroad.
+
 # In[3]:
 
 keys = ['year',
@@ -39,8 +41,9 @@ keys = ['year',
         'document_id',
         'total_net_value',
         'cnpj_cpf',
-        'supplier']
-dataset.loc[~dataset['valid_cnpj_cpf'], keys]
+        'supplier',
+        'document_type']
+dataset.query('document_type != 2').loc[~dataset['valid_cnpj_cpf'], keys]
 
 
 # With 1,532,491 records in the dataset and just 10 with invalid CNPJ/CPF, we can probably assume that the Chamber of Deputies has a validation in the tool where the congressperson requests for reimbursements. These represent a mistake in the implemented algorithm.
