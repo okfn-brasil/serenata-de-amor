@@ -186,6 +186,7 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 * `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
 * `AMAZON_S3_DATASET_DATE` (_str_) Datasets file name prefix of CEAP datasets from Serenata de Amor (e.g. `2016-08-08` for `2016-08-08-current-year.xz`)
 * `AMAZON_S3_REIMBURSEMENTS_DATE` (_str_) Reumbursements dataset file name date prefix (e.g. `2016-12-06` for `2016-12-06-reimbursements.xz`)
+* `AMAZON_S3_IRREGULARITIES_DATE` (_str_) Irregularities dataset file name date prefix (e.g. `2016-12-11` for `2016-12-11-irregularities.xz`)
 * `AMAZON_S3_COMPANIES_DATE` (_str_) Suppliers (companies) datasets file name date prefix (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
 * `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
 
