@@ -11,7 +11,7 @@ DATASET_KEYS = ['applicant_id', 'year', 'document_id']
 COMPANIES_DATASET = '2016-09-03-companies.xz'
 CLASSIFIERS = {
     MonthlySubquotaLimitClassifier: 'over_monthly_subquota_limit',
-    TraveledSpeedsClassifier: 'day_traveled_speed',
+    TraveledSpeedsClassifier: 'suspicious_traveled_speed_day',
 }
 
 
@@ -54,7 +54,8 @@ def run_classifiers(data):
     for classifier, irregularity in CLASSIFIERS.items():
         model = classifier()
         model.fit_transform(data)
-        irregularities[irregularity] = model.predict(data)
+        irregularities[irregularity] = model.predict(data) \
+            .replace({1: False, -1: True})
 
     irregularities.to_csv(os.path.join(DATA_PATH, 'irregularities.xz'),
                           compression='xz',
