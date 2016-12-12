@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, resolve_url
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ViewSet
 from rest_framework.generics import ListAPIView, RetrieveAPIView
@@ -110,6 +111,24 @@ class SubquotaListView(ListAPIView):
         return get_distinct('subquota_id', 'subquota_description', query)
 
 
+class CompanyDetailView(RetrieveAPIView):
+
+    lookup_field = 'cnpj'
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
+
+    def get_object(self):
+        cnpj = self.kwargs.get(self.lookup_field, '00000000000000')
+        formatted = '{}.{}.{}/{}-{}'.format(
+            cnpj[0:2],
+            cnpj[2:5],
+            cnpj[5:8],
+            cnpj[8:12],
+            cnpj[12:14]
+        )
+        return get_object_or_404(Supplier, cnpj=formatted)
+
+
 class DocumentViewSet(ReadOnlyModelViewSet):
 
     serializer_class = DocumentSerializer
@@ -157,20 +176,5 @@ class ReceiptViewSet(ViewSet):
         return Response({'url': obj.fetch_url()})
 
 
-class SupplierViewSet(ViewSet):
-
-    serializer_class = SupplierSerializer
-    queryset = Supplier.objects.all()
-
-    def retrieve(self, request, pk=None):
-        cnpj = str(pk).zfill(14)
-        formatted = '{}.{}.{}/{}-{}'.format(
-            cnpj[0:2],
-            cnpj[2:5],
-            cnpj[5:8],
-            cnpj[8:12],
-            cnpj[12:14]
-        )
-        supplier = get_object_or_404(Supplier, cnpj=formatted)
-        serializer = SupplierSerializer(supplier)
-        return Response(serializer.data)
+def supplier(request, cnpj):
+    return HttpResponseRedirect(resolve_url('api:company-detail', cnpj))

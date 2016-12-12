@@ -13,9 +13,9 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
 
 1. [JSON API endpoints](#json-api-endpoints)
     1. [Reimbursement](#reimbursement)
-    1. [Supplier](#supplier)
     1. [Subquota](#subquota)
     1. [Applicant](#applicant)
+    1. [Company](#company)
     1. [Tapioca Jarbas](#tapioca-jarbas)
 1. [Installing](#installing)
     1. [Using Docker](#using-docker)
@@ -82,16 +82,6 @@ This request will list:
 * made according to the subquota with the ID 42
 * sorted by the highest probability
 
-### Supplier
-
-A supplier is a Brazilian company in which congressperson have made expenses and claimed for reimbursement.
-
-#### Retrieving a specific supplier
-
-##### `GET /api/supplier/<cnpj>/`
-
-This endpoit gets the info we have for a specific supplier. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Supplier` object, digits only). It returns `404` if the supplier is not found.
-
 ### Subquota
 
 Subqoutas are categories of expenses that can be reimbursed by congresspeople.
@@ -119,6 +109,16 @@ Lists all names of applicants together with their IDs.
 ##### Filtering
 
 Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/applicant/?q=lideranca` list all applicant that have `lideranca` in their names.
+
+### Company
+
+A company is a Brazilian company in which congressperson have made expenses and claimed for reimbursement.
+
+#### Retrieving a specific company
+
+##### `GET /api/company/<cnpj>/`
+
+This endpoit gets the info we have for a specific company. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Supplier` object, digits only). It returns `404` if the company is not found.
 
 ### Tapioca Jarbas
 
