@@ -43,9 +43,10 @@ class TestListApi(TestCase):
         for d in data:
             Reimbursement.objects.create(**d)
 
-        self.all = resolve_url('api:reimbursement-list')
-        self.by_year = resolve_url('api:reimbursement-by-year-list', year=1970)
-        self.by_applicant = resolve_url('api:reimbursement-by-applicant-list', year=1970, applicant_id=13)
+        url_name = 'api:reimbursement-list'
+        self.all = resolve_url(url_name)
+        self.by_year = resolve_url(url_name, year=1970)
+        self.by_applicant = resolve_url(url_name, year=1970, applicant_id=13)
 
     def test_status(self):
         urls = (self.all, self.by_year, self.by_applicant)
