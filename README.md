@@ -22,3 +22,7 @@ We [were crowdfunded](https://catarse.me/serenata) to operate for the first two 
 
 * Donate via Bitcoin:[`1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b`](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20project%20Serenata%20de%20Amor)
 * Donate via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=%63%75%64%75%63%6f%73%40%67%6d%61%69%6c%2e%63%6f%6d&lc=GB&item_name=Serenata%20de%20Amor&currency_code=BRL&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
+
+## License
+  
+The project Serenata de Amor Operation is available under [MIT license](LICENSE).
