@@ -1,12 +1,13 @@
-import os
 import numpy as np
+import os
 import pandas as pd
+import sys
 from serenata_toolbox.ceap_dataset import CEAPDataset
 from serenata_toolbox.datasets import fetch
 from monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 from traveled_speeds_classifier import TraveledSpeedsClassifier
 
-DATA_PATH = '/tmp/serenata-data'
+DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else '/tmp/serenata-data'
 DATASET_KEYS = ['applicant_id', 'year', 'document_id']
 COMPANIES_DATASET = '2016-09-03-companies.xz'
 CLASSIFIERS = {
