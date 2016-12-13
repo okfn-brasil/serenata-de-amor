@@ -4,6 +4,7 @@ import pandas as pd
 import sys
 from serenata_toolbox.ceap_dataset import CEAPDataset
 from serenata_toolbox.datasets import fetch
+from meal_price_outlier_classifier import MealPriceOutlierClassifier
 from monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 from traveled_speeds_classifier import TraveledSpeedsClassifier
 
@@ -11,6 +12,7 @@ DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else '/tmp/serenata-data'
 DATASET_KEYS = ['applicant_id', 'year', 'document_id']
 COMPANIES_DATASET = '2016-09-03-companies.xz'
 CLASSIFIERS = {
+    MealPriceOutlierClassifier: 'meal_price_outlier',
     MonthlySubquotaLimitClassifier: 'over_monthly_subquota_limit',
     TraveledSpeedsClassifier: 'suspicious_traveled_speed_day',
 }
