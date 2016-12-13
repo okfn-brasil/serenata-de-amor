@@ -23,7 +23,7 @@ The recommended way of setting your environment up is with [Anaconda](https://ww
 
 The project uses Python 3 (specified in the `python=3` bit of the commands below). [Download Anaconda](https://www.continuum.io/downloads) and create an _environment_ for the project.
 
-The Python version in Anaconda doesn't have to be 3 as `conda` environments manage other versions as well. But if you're going to do a fresh install we recommend Python 3 — it's newer and it makes no sense to have Python 2 as your default Anaconda Python.
+You can use either Anaconda 2 and Anaconda 3, since `conda` environments manage Python versions. But if you're going to do a fresh install, we recommend Anaconda 3 — it's newer and it makes no sense to have Python 2 as your default Anaconda Python.
 
 ```console
 $ cd serenata-de-amor
@@ -102,7 +102,7 @@ Beyond that we have four big directories with different purposes:
 |-----------|---------|-------------|
 | **`develop/`** | This is where we _explore_ data, feel free to create your own notebook for your exploration. | `[ISO 8601 date]-[author-username]-[2-4 word description].ipynb` (e.g. `2016-05-13-anaschwendler-air-tickets.ipynb`) |
 |**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
-| **`src/`** | This is where our auxiliary scripts lie, as well as code to scrap data, to convert stuff etc. | Small caps, no special character, `-` instead of spaces. |
+| **`src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
 
 ### Source files (`src/`)
