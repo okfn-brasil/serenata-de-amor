@@ -21,24 +21,47 @@ def download_source():
 
         print('Renaming columns in: %s' % filepath.replace('.zip', ''))
         data = pd.read_csv(filepath_or_buffer=filepath.replace('.zip', ''), sep=';')
-        data.rename(columns={
-                'ID_PROPOSTA':'proposal_id',
-                'QUALIF_PROPONENTE':'proponent_qualification',
-                'COD_PROGRAMA_EMENDA':'amendment_program_code',
-                'NR_EMENDA':'amendment_number',
-                'NOME_PARLAMENTAR':'congressperson_name',
-                'BENEFICIARIO_EMENDA':'amendment_beneficiary',
-                'IND_IMPOSITIVO':'tax_indicative',
-                'TIPO_PARLAMENTAR':'congressperson_type',
-                'VALOR_REPASSE_PROPOSTA_EMENDA':'amendment_proposal_tranfer_value',
-                'VALOR_REPASSE_EMENDA':'amendment_tranfer_value'
-            }, inplace=True)
-
+        data = translate_amendments_dataset(data)
         print('Saving %s dataset' % dataset_name)
-        data.to_csv(path_or_buf='data/%s' % dataset_name, sep=',', compression='xz', index=False)
+        data.to_csv(path_or_buf='data/%s' % dataset_name, sep=',',
+                    compression='xz', encoding='utf-8', index=False)
 
         print('Removing temporary files')
         os.remove(filepath)
         os.remove(filepath.replace('.zip', ''))
+
+def translate_amendments_dataset(data):
+    data.rename(columns={
+            'ID_PROPOSTA': 'proposal_id',
+            'QUALIF_PROPONENTE': 'proponent_qualification',
+            'COD_PROGRAMA_EMENDA': 'amendment_program_code',
+            'NR_EMENDA': 'amendment_number',
+            'NOME_PARLAMENTAR': 'congressperson_name',
+            'BENEFICIARIO_EMENDA': 'amendment_beneficiary',
+            'IND_IMPOSITIVO': 'tax_indicative',
+            'TIPO_PARLAMENTAR': 'congressperson_type',
+            'VALOR_REPASSE_PROPOSTA_EMENDA': 'amendment_proposal_tranfer_value',
+            'VALOR_REPASSE_EMENDA': 'amendment_tranfer_value',
+        }, inplace=True)
+
+    data['congressperson_type'] = data['congressperson_type'].astype('category')
+    data['congressperson_type'].cat.rename_categories([
+            'seat',
+            'committee',
+            'individual',
+        ], inplace=True)
+
+    data['proponent_qualification'] = data['proponent_qualification'].astype('category')
+    data['proponent_qualification'].cat.rename_categories([
+            'parliamentary amendment beneficiary',
+        ], inplace=True)
+
+    data['tax_indicative'] = data['tax_indicative'].astype('category')
+    data['tax_indicative'].cat.rename_categories([
+            'no',
+            'yes'
+        ], inplace=True)
+
+    return(data)
 
 download_source()
