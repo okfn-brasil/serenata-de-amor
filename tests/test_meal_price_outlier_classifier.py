@@ -1,10 +1,9 @@
-from unittest import TestCase, main, skip
-from unittest.mock import MagicMock, patch
+from unittest import TestCase, main
+from unittest.mock import patch
 from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 import numpy as np
 from numpy.testing import assert_array_equal
 import pandas as pd
-import sklearn
 
 
 class TestMealPriceOutlierClassifier(TestCase):
@@ -87,4 +86,4 @@ class TestMealPriceOutlierClassifier(TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    main()

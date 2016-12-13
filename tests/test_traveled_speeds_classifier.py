@@ -9,7 +9,7 @@ import sklearn
 class TestTraveledSpeedsClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('tests/reimbursements_and_companies.csv',
+        self.dataset = pd.read_csv('tests/traveled_speeds_classifier.csv',
                                    dtype={'cnpj_cpf': np.str})
         self.subject = TraveledSpeedsClassifier()
         self.subject.fit(self.dataset)
@@ -70,4 +70,4 @@ class TestTraveledSpeedsClassifier(TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    main()
