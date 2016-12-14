@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'test_without_migrations',
     'corsheaders',
     'rest_framework',
     'jarbas.core',
@@ -47,7 +48,9 @@ INSTALLED_APPS = [
     'jarbas.frontend',
 ]
 
+
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -56,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 ROOT_URLCONF = 'jarbas.urls'
@@ -133,7 +137,9 @@ CORE_STATIC_DIR = os.path.join(BASE_DIR, 'jarbas', 'core', 'static')
 AMAZON_S3_BUCKET = config('AMAZON_S3_BUCKET', default='serenata-de-amor-data')
 AMAZON_S3_REGION = config('AMAZON_S3_REGIN', default='s3-sa-east-1')
 AMAZON_S3_DATASET_DATE = config('AMAZON_S3_DATASET_DATE', default='2016-11-19')
-AMAZON_S3_SUPPLIERS_DATE = config('AMAZON_S3_SUPPLIERS_DATE', default='2016-09-03')
+AMAZON_S3_REIMBURSEMENTS_DATE = config('AMAZON_S3_REIMBURSEMENTS_DATE', default='2016-12-06')
+AMAZON_S3_IRREGULARITIES_DATE = config('AMAZON_S3_IRREGULARITIES_DATE', default='2016-12-11')
+AMAZON_S3_COMPANIES_DATE = config('AMAZON_S3_COMPANIES_DATE', default='2016-09-03')
 AMAZON_S3_CEAPTRANSLATION_DATE = config('AMAZON_S3_CEAPTRANSLATION_DATE', default='2016-08-08')
 
 # Django REST Framework
@@ -156,3 +162,15 @@ GOOGLE_STREET_VIEW_API_KEY = config('GOOGLE_STREET_VIEW_API_KEY', default='')
 USE_X_FORWARDED_HOST = config('USE_X_FORWARDED_HOST', default=False, cast=bool)
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
+
+
+# Cache
+
+default_cache = 'django.core.cache.backends.dummy.DummyCache'
+CACHES = {
+    'default': {
+        'BACKEND': config('CACHE_BACKEND', default=default_cache),
+        'LOCATION': config('CACHE_LOCATION', default=None),
+        'TIMEOUT': 60 * 60 * 6
+    }
+}

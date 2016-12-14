@@ -1,23 +1,25 @@
 sudo: false
+dist: trusty
+
 language: python
 python:
   - 3.5
+
+addons:
+    postgresql: "9.6"
+
 services:
     - postgresql
 
-branches:
-  only:
-    - master
+env:
+  - DATABASE_URL="postgres://postgres@localhost/jarbas"
 
 install:
-  - psql -c 'create database jarbas;' -U postgres
+  - psql -U postgres -c 'create database "jarbas";'
   - nvm install 6
   - nvm use 6
   - npm install
   - pip install -r requirements.txt coveralls
-
-env:
-  - DATABASE_URL="postgres://postgres@localhost/jarbas"
 
 before_script:
   - python manage.py migrate

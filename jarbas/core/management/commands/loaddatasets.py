@@ -3,6 +3,8 @@ import lzma
 import os
 import re
 
+from django.conf import settings
+
 from jarbas.core.management.commands import LoadCommand
 from jarbas.core.models import Document
 
@@ -19,12 +21,13 @@ class Command(LoadCommand):
         )
 
     def handle(self, *args, **options):
+        self.date = options.get('dataset_version')
+        source = options.get('source')
         print('Starting with {:,} documents'.format(Document.objects.count()))
 
         if options.get('drop', False):
             self.drop_all(Document)
 
-        source = options['source']
         datasets = self.load_local(source) if source else self.load_remote()
         documents = self.documents_from(datasets)
         self.bulk_create_by(documents, options['batch_size'])
@@ -113,3 +116,9 @@ class Command(LoadCommand):
         match = re.compile(regex).match(name)
         if match:
             return match.group(1)
+
+    def get_file_name(self, name):
+        return '{date}-{name}.xz'.format(
+            date=self.date or settings.AMAZON_S3_DATASET_DATE,
+            name=name
+        )

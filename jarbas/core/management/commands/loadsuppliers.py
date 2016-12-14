@@ -1,8 +1,6 @@
 import csv
 import lzma
-from datetime import date
 
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
@@ -14,20 +12,18 @@ class Command(LoadCommand):
     help = 'Load Serenata de Amor supplier dataset into the database'
 
     def handle(self, *args, **options):
-        print('Starting with {:,} suppliers'.format(Supplier.objects.count()))
+        self.date = options.get('dataset_version')
+        self.source = options.get('source')
+        self.count = self.print_count(Supplier)
+        print('self.cont =', self.count)
+        print('Starting with {:,} suppliers'.format(self.count))
 
         if options.get('drop', False):
             self.drop_all(Supplier)
             self.drop_all(Activity)
+            self.count = 0
 
-        source = options['source']
-        if source:
-            dataset = self.load_local(source, 'companies')
-        else:
-            dataset = self.load_remote('companies')
-
-        self.save_suppliers(dataset)
-        self.print_count(Supplier, permanent=True)
+        self.save_suppliers(self.get_dataset('companies'))
 
     def save_suppliers(self, dataset):
         """
@@ -48,7 +44,8 @@ class Command(LoadCommand):
                     obj.secondary_activity.add(activity)
                 obj.save()
 
-                self.print_count(Supplier)
+                self.count += 1
+                self.print_count(Supplier, count=self.count)
 
     def save_activities(self, row):
         data = dict(
@@ -77,29 +74,9 @@ class Command(LoadCommand):
 
         decimals = ('latitude', 'longitude')
         for key in decimals:
-            row[key] = self.to_float(row[key])
+            row[key] = self.to_number(row[key])
 
         return row
-
-    @staticmethod
-    def get_file_name(name):
-        return '{date}-{name}.xz'.format(
-            date=settings.AMAZON_S3_SUPPLIERS_DATE,
-            name=name
-        )
-
-    @staticmethod
-    def to_date(text):
-        try:
-            day, month, year = map(int, text.split('/'))
-            if 0 <= year <= 50:
-                year += 2000
-            elif 50 < year <= 99:
-                year += 1900
-            return date(year, month, day)
-
-        except ValueError:
-            return None
 
     @staticmethod
     def to_email(email):
@@ -108,11 +85,4 @@ class Command(LoadCommand):
             return email
 
         except ValidationError:
-            return None
-
-    @staticmethod
-    def to_float(number):
-        try:
-            return float(number)
-        except ValueError:
             return None

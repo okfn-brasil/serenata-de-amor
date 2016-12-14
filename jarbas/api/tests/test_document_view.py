@@ -1,5 +1,6 @@
 import json
 
+from django.core.cache import cache
 from django.shortcuts import resolve_url
 from django.test import TestCase
 
@@ -38,6 +39,7 @@ class TestGetDocuments(TestApi):
 class TestGetNonExistentDocument(TestApi):
 
     def setUp(self):
+        cache.clear()
         self.resp = self.client.get(self.url)
 
     def test_status_code(self):

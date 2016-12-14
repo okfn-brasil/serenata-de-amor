@@ -2,7 +2,7 @@ from datetime import date
 from io import StringIO
 from unittest.mock import MagicMock, call, patch
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from jarbas.core.management.commands.loaddatasets import Command
 from jarbas.core.models import Document
@@ -118,6 +118,12 @@ class TestFileLoader(TestCommand):
         list(self.command.documents_from(range(0, 3)))
         self.assertEqual(3, document.call_count)
 
+    @override_settings(AMAZON_S3_DATASET_DATE='1980-01-01')
+    def test_get_file_name(self):
+        expected = '1980-01-01-last-year.xz'
+        self.command.date = None
+        self.assertEqual(expected, self.command.get_file_name('last-year'))
+
 
 class TestBulkCreate(TestCommand):
 
@@ -155,11 +161,12 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.loaddatasets.Command.drop_all')
     def test_handler_with_options(self, drop_all, bulk_create_by, documents_from, load_local, print_):
         documents_from.return_value = (1, 2, 3)
-        self.command.handle(batch_size=42, source='ahoy', drop=True)
+        self.command.handle(batch_size=42, source='ahoy', drop=True, dataset_version='1')
         print_.assert_called_once_with('Starting with 0 documents')
         self.assertEqual(1, load_local.call_count)
         drop_all.assert_called_once_with(Document)
         bulk_create_by.assert_called_once_with((1, 2, 3), 42)
+        self.assertEqual('1', self.command.date)
 
     @patch('jarbas.core.management.commands.loaddatasets.LoadCommand.add_arguments')
     def test_add_arguments(self, super_add_arguments):
