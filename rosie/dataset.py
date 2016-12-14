@@ -1,7 +1,9 @@
-import numpy as np
 import os
+
+import numpy as np
 import pandas as pd
 from serenata_toolbox.ceap_dataset import CEAPDataset
+
 
 class Dataset:
     COMPANIES_DATASET = '2016-09-03-companies.xz'

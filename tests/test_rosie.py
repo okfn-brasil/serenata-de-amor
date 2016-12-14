@@ -3,10 +3,10 @@ from pathlib import Path
 from tempfile import mkdtemp
 from unittest import TestCase, main
 from unittest.mock import MagicMock, Mock, patch
-from rosie.rosie import Rosie
+
 import numpy as np
 import pandas as pd
-
+from rosie.rosie import Rosie
 
 
 class TestRosie(TestCase):

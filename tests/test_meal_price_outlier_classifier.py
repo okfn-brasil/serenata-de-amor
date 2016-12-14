@@ -1,9 +1,10 @@
 from unittest import TestCase, main
 from unittest.mock import patch
-from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
+
 import numpy as np
-from numpy.testing import assert_array_equal
 import pandas as pd
+from numpy.testing import assert_array_equal
+from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 
 
 class TestMealPriceOutlierClassifier(TestCase):

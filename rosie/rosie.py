@@ -1,10 +1,12 @@
-import numpy as np
 import os.path
-from sklearn.externals import joblib
-from serenata_toolbox.datasets import fetch
+
+import numpy as np
 from meal_price_outlier_classifier import MealPriceOutlierClassifier
 from monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
+from serenata_toolbox.datasets import fetch
+from sklearn.externals import joblib
 from traveled_speeds_classifier import TraveledSpeedsClassifier
+
 
 class Rosie:
     CLASSIFIERS = {
