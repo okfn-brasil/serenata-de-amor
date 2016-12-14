@@ -16,7 +16,7 @@ class TestApi(TestCase):
         self.supplier.main_activity.add(activity)
         self.supplier.save()
         cnpj = re.compile(r'\D').sub('', self.supplier.cnpj)
-        self.url = resolve_url('api:supplier-detail', cnpj)
+        self.url = resolve_url('api:company-detail', cnpj)
 
 
 class TestGet(TestApi):
@@ -42,7 +42,16 @@ class TestGet(TestApi):
 class TestGetNonExistentSupplier(TestApi):
 
     def setUp(self):
-        self.resp = self.client.get(resolve_url('api:supplier-detail', 42))
+        url = resolve_url('api:company-detail', '42424242424242')
+        self.resp = self.client.get(url)
 
     def test_status_code(self):
         self.assertEqual(404, self.resp.status_code)
+
+
+class TestOldURLRedirect(TestApi):
+
+    def test_redirect(self):
+        old_url = self.url.replace('company', 'supplier')
+        resp = self.client.get(old_url, follow=True)
+        self.assertRedirects(resp, self.url)

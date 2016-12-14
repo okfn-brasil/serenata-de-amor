@@ -12,8 +12,10 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
 ## Table of Contents
 
 1. [JSON API endpoints](#json-api-endpoints)
-    1. [Documents](#documents)
-    1. [Supplier](#supplier)
+    1. [Reimbursement](#reimbursement)
+    1. [Subquota](#subquota)
+    1. [Applicant](#applicant)
+    1. [Company](#company)
     1. [Tapioca Jarbas](#tapioca-jarbas)
 1. [Installing](#installing)
     1. [Using Docker](#using-docker)
@@ -21,43 +23,102 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
  
 ## JSON API endpoints
 
-### Documents
+### Reimbursement
 
-In Jarbas context a `Document` refers to a document (a reimbursement claim) from [CEAP](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar).
+Each `Reimbursement` object is a reimbursement claim made by a congressperson. Each reimbursement isidentified by an unique combination of `year`, `applicant_id` and `document_id`.
 
-#### `GET /api/document/`
+#### Retrieving a specific reimbursement
 
-This endpoint lists `Document` objects and it accepts any field (and any combination among them) as a filter. For example:
+##### `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/`
 
-`GET /api/document/?year=2015&state=RS&congressperson_id=42`
+Details from a specific reimbursement. If `receipt_url` wasn't fecthed yet, the server **won't** try to fetche it.
 
-These are the fields that can be combined for filtering purposes:
+##### `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/receipt/`
+
+URL of the digitalized version of the receipt of this specific reimbursement.
+
+If `receipt_url` wasn't fecthed yet, the server **will** try to fetche it.
+
+If you append the parameter `force` (i.e. `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/receipt/?force`) server will re-fetch the receipt URL.
+
+Not all receipts are available, so this URL can be `null`.
+
+#### Listing reimbursements
+
+##### `GET /api/reimbursement/`
+
+Lists all reimbursements.
+
+##### `GET /api/reimbursement/<year>/`
+
+Lists all reimbursements from a specific `year`.
+
+##### `GET /api/reimbursement/<year>/<applicant_id>/`
+
+Lists all reimbursements from a specific `year` and `applicant_id`.
+
+##### Filtering
+
+All these endpoints accepts any combination of these filtering parameters by:
 
 * `applicant_id`
 * `cnpj_cpf`
-* `congressperson_id`
 * `document_id`
-* `document_type`
 * `month`
-* `party`
-* `reimbursement_number`
-* `state`
-* `subquota_group_id`
-* `subquota_number`
-* `term`
+* `subquota_id`
 * `year`
+* `order_by`: `issue_date` (default) or `probability` (both descending)
 
-#### `GET /api/receipt/<Document.pk>`
+For example:
 
-This endpoint gets the URL to the digitalized version of the receipt of a `Document`. It returns `{ url: null }` if the digitalized version is not available. The endpoint expects a `Document.pk` (i.e. the primary key of the `Document` object).
+```
+GET /api/reimbursement/2016/?cnpj_cpf=11111111111111&subquota_id=42&order_by=probability
+```
 
-### Supplier
+This request will list:
 
-A supplier is a Brazilian company in which congressperson have made expenses and claimed for reimbursement.
+* all 2016 reimbursements
+* made in the supplier with the CNPJ 11.111.111/1111-11
+* made according to the subquota with the ID 42
+* sorted by the highest probability
 
-#### `GET /api/supplier/<Supplier.cnpj>`
+### Subquota
 
-This endpoit gets the info we have for a specific supplier. The endpoint expects a `Supplier.cnpj` (i.e. the CNPJ of a `Supplier` object). It returns `404` if the supplier is not found.
+Subqoutas are categories of expenses that can be reimbursed by congresspeople.
+
+#### Listing subquotas
+
+##### `GET /api/subquota/`
+
+Lists all subquotas names and IDs.
+
+##### Filtering
+
+Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/subquota/?q=meal` list all applicant that have `meal` in their names.
+
+### Applicant
+
+An applicant is the person (congressperson or theleadership of aparty or government) who claimed the reimbursemement.
+
+#### List applicants
+
+##### `GET /api/applicant/`
+
+Lists all names of applicants together with their IDs.
+
+##### Filtering
+
+Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/applicant/?q=lideranca` list all applicant that have `lideranca` in their names.
+
+### Company
+
+A company is a Brazilian company in which congressperson have made expenses and claimed for reimbursement.
+
+#### Retrieving a specific company
+
+##### `GET /api/company/<cnpj>/`
+
+This endpoit gets the info we have for a specific company. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Supplier` object, digits only). It returns `404` if the company is not found.
 
 ### Tapioca Jarbas
 
@@ -79,8 +140,9 @@ You can access it at [`localhost:80`](http://localhost:80/). However your databa
 ```console
 $ docker-compose run --rm jarbas python manage.py collectstatic --no-input
 $ docker-compose run --rm jarbas python manage.py loaddatasets
+$ docker-compose run --rm jarbas python manage.py reimbursements
 $ docker-compose run --rm jarbas python manage.py loadsupliers
-
+$ python manage.py irregularities <path to irregularities.xz file>
 ```
 
 There are some cleaver shortcuts in the `Makefile` if you like it.
@@ -111,17 +173,20 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 * `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
 * `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
 * `USE_X_FORWARDED_HOST` (_bool_) [Whether to use the `X-Forwarded-Host` header](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-USE_X_FORWARDED_HOST)
+* `CACHE_BACKEND` (_str_) [Cache backend](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-CACHES-BACKEND) (e.g. `django.core.cache.backends.memcached.MemcachedCache`)
+* `CACHE_LOCATION` (_str_) [Cache location](https://docs.djangoproject.com/en/1.10/ref/settings/#location) (e.g. `localhost:11211`)
 
 ##### Database
 
-* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema)
+* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
 
 ##### Amazon S3 settings
 
 * `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
 * `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
 * `AMAZON_S3_DATASET_DATE` (_str_) Datasets file name prefix of CEAP datasets from Serenata de Amor (e.g. `2016-08-08` for `2016-08-08-current-year.xz`)
-* `AMAZON_S3_SUPPLIERS_DATE` (_str_) Datasets file name prefix for suppliers dataset (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
+* `AMAZON_S3_REIMBURSEMENTS_DATE` (_str_) Reumbursements dataset file name date prefix (e.g. `2016-12-06` for `2016-12-06-reimbursements.xz`)
+* `AMAZON_S3_COMPANIES_DATE` (_str_) Suppliers (companies) datasets file name date prefix (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
 * `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
 
 ##### Google settings
@@ -144,10 +209,18 @@ Now you can load the data from our datasets and get some other data as static fi
 ```
 $ python manage.py loaddatasets
 $ python manage.py loadsuppliers
+$ python manage.py reimbursements
 $ python manage.py ceapdatasets
 ```
 
 Use `python manage.py loaddatasets --help` and `python manage.py loadsuppliers --help` to check options on limiting the number of documents to be loaded from the datasets.
+
+If [Rosie](https://github.com/datasciencebr/rosie) was kind enough to give you
+a `irregularities.xz`, you can load it with:
+
+```
+$ python manage.py irregularities <path to irregularities.xz file>
+```
 
 #### Generate static files
 
