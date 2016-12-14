@@ -1,5 +1,6 @@
 import csv
 import lzma
+import os
 
 from jarbas.core.management.commands import LoadCommand
 from jarbas.core.models import Reimbursement
@@ -10,16 +11,23 @@ class Command(LoadCommand):
     count = 0
     filter_keys = ('applicant_id', 'document_id', 'year')
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--irregularities', '-i', dest='irregularities_path',
+            default='irregularities.xz',
+            help='Path to the irregularities.xz dataset'
+        )
+
     def handle(self, *args, **options):
-        self.date = options.get('dataset_version')
-        self.source = options.get('source')
+        self.path = options.get('irregularities_path', 'irregularities.xz')
+        if not os.path.exists(self.path):
+            raise FileNotFoundError(os.path.abspath(self.path))
         self.update(self.irregularities)
 
     @property
     def irregularities(self):
         """Returns a Generator with a irregularities for each reimbursement."""
-        dataset = self.get_dataset('irregularities')
-        with lzma.open(dataset, mode='rt') as file_handler:
+        with lzma.open(self.path, mode='rt') as file_handler:
             for row in csv.DictReader(file_handler):
                 yield self.serialize(row)
 
