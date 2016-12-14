@@ -1,3 +1,6 @@
 *.pyc
+.coverage
 .python-version
-__pycache__
+__pycache__/
+htmlcov/
+

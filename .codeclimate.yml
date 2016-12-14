@@ -1,0 +1,6 @@
+engines:
+  pep8:
+    enabled: true
+ratings:
+   paths:
+   - "**.py"
