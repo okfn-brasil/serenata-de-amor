@@ -25,14 +25,19 @@ $ ./setup
 ## Running
 
 ```console
-$ python rosie/main.py
+$ python rosie.py run
 ```
 
 A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
 
+Also a target directory (where files are saved) can de passed — for example:
+
+```console
+$ python rosie.py run /my/serenata/directory/
+```
 
 ## Test suite
 
 ```console
-$ python -m unittest discover tests
+$ python rosie.py test
 ```
