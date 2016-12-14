@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 from serenata_toolbox.ceap_dataset import CEAPDataset
+from serenata_toolbox.datasets import fetch
 
 
 class Dataset:

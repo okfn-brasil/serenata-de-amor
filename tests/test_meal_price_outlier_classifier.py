@@ -1,9 +1,10 @@
-from unittest import TestCase, main
+from unittest import TestCase
 from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
 from numpy.testing import assert_array_equal
+
 from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 
 
@@ -88,7 +89,3 @@ class TestMealPriceOutlierClassifier(TestCase):
     def test_predict_inlier_non_meal_expenses_in_companies_also_selling_food(self):
         prediction = self.subject.predict(self.dataset)
         self.assertEqual(1, prediction[79])
-
-
-if __name__ == '__main__':
-    main()

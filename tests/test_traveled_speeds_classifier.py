@@ -1,9 +1,10 @@
-from unittest import TestCase, main
+from unittest import TestCase
 
 import numpy as np
 import pandas as pd
 import sklearn
 from numpy.testing import assert_array_equal
+
 from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
 
 
@@ -68,7 +69,3 @@ class TestTraveledSpeedsClassifier(TestCase):
             TraveledSpeedsClassifier(contamination=0)
         with self.assertRaises(ValueError):
             TraveledSpeedsClassifier(contamination=1)
-
-
-if __name__ == '__main__':
-    main()
