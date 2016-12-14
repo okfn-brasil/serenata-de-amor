@@ -83,17 +83,21 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
     @patch('jarbas.core.management.commands.irregularities.Command.update')
     @patch('jarbas.core.management.commands.irregularities.os.path.exists')
-    def test_handler_without_options(self, exists, update, irregularities):
+    @patch('jarbas.core.management.commands.irregularities.print')
+    def test_handler_without_options(self, print_, exists, update, irregularities):
         self.command.handle()
         update.assert_called_once_with(irregularities)
+        print_.assert_called_once_with('0 reimbursements updated.')
         self.assertEqual(self.command.path, 'irregularities.xz')
 
     @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
     @patch('jarbas.core.management.commands.irregularities.Command.update')
     @patch('jarbas.core.management.commands.irregularities.os.path.exists')
-    def test_handler_with_options(self, exists, update, irregularities):
+    @patch('jarbas.core.management.commands.irregularities.print')
+    def test_handler_with_options(self, print_, exists, update, irregularities):
         self.command.handle(irregularities_path='0')
         update.assert_called_once_with(irregularities)
+        print_.assert_called_once_with('0 reimbursements updated.')
         self.assertEqual('0', self.command.path)
 
     @patch('jarbas.core.management.commands.irregularities.Command.irregularities')

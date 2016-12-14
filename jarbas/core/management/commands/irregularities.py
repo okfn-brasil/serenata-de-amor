@@ -22,7 +22,9 @@ class Command(LoadCommand):
         self.path = options.get('irregularities_path', 'irregularities.xz')
         if not os.path.exists(self.path):
             raise FileNotFoundError(os.path.abspath(self.path))
+
         self.update(self.irregularities)
+        print('{:,} reimbursements updated.'.format(self.count))
 
     @property
     def irregularities(self):
