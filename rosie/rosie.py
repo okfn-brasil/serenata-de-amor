@@ -1,11 +1,12 @@
 import os.path
 
 import numpy as np
-from meal_price_outlier_classifier import MealPriceOutlierClassifier
-from monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 from serenata_toolbox.datasets import fetch
 from sklearn.externals import joblib
-from traveled_speeds_classifier import TraveledSpeedsClassifier
+
+from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
+from rosie.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
+from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
 
 
 class Rosie:

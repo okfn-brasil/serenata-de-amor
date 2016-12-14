@@ -25,7 +25,7 @@ $ ./setup
 ## Running
 
 ```console
-$ python rosie/main.py
+$ python -m rosie.main
 ```
 
 A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
