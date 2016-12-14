@@ -1,7 +1,8 @@
 from itertools import combinations
-from geopy.distance import vincenty as distance
+
 import numpy as np
 import pandas as pd
+from geopy.distance import vincenty as distance
 from sklearn.base import TransformerMixin
 from sklearn.utils.validation import check_is_fitted
 

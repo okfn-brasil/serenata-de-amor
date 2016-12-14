@@ -1,15 +1,17 @@
-from unittest import TestCase, main
-from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
+from unittest import TestCase
+
 import numpy as np
-from numpy.testing import assert_array_equal
 import pandas as pd
 import sklearn
+from numpy.testing import assert_array_equal
+
+from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
 
 
 class TestTraveledSpeedsClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('tests/reimbursements_and_companies.csv',
+        self.dataset = pd.read_csv('tests/traveled_speeds_classifier.csv',
                                    dtype={'cnpj_cpf': np.str})
         self.subject = TraveledSpeedsClassifier()
         self.subject.fit(self.dataset)
@@ -67,7 +69,3 @@ class TestTraveledSpeedsClassifier(TestCase):
             TraveledSpeedsClassifier(contamination=0)
         with self.assertRaises(ValueError):
             TraveledSpeedsClassifier(contamination=1)
-
-
-if __name__ == '__main__':
-    unittest.main()

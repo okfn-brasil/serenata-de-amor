@@ -1,4 +1,10 @@
 language: python
 python: 3.5
-install: ./setup
-script: python -m unittest discover tests
+install: 
+  - ./setup
+  - pip install coveralls
+script: 
+  - coverage run rosie.py test
+
+after_success:
+  - coveralls

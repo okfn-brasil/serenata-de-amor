@@ -1,3 +1,6 @@
-rosie/serenata-toolbox
-rosie/pip-delete-this-directory.txt
-__pycache__
+*.pyc
+.coverage
+.python-version
+__pycache__/
+htmlcov/
+

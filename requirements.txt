@@ -1,4 +1,4 @@
--e git+https://github.com/datasciencebr/serenata-toolbox.git#egg=serenata-toolbox
+git+https://github.com/datasciencebr/serenata-toolbox.git#egg=serenata-toolbox
 scikit-learn>=0.17
 scipy>=0.18
 geopy>=1.11.0
