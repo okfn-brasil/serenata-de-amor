@@ -84,6 +84,10 @@ class TestMealPriceOutlierClassifier(TestCase):
         prediction = self.subject.predict(self.dataset)
         self.assertEqual(1, prediction[0])
 
+    def test_predict_inlier_non_meal_expenses_in_companies_also_selling_food(self):
+        prediction = self.subject.predict(self.dataset)
+        self.assertEqual(1, prediction[79])
+
 
 if __name__ == '__main__':
     main()

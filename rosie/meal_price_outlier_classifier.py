@@ -11,9 +11,6 @@ class MealPriceOutlierClassifier(TransformerMixin):
     HOTEL_REGEX = r'hote(?:(?:ls?)|is)'
     CLUSTER_KEYS = ['mean', 'std']
 
-    def __init__(self):
-        pass
-
     def fit(self, X):
         _X = X[self.__applicable_rows(X)]
         companies = _X.groupby('cnpj_cpf').apply(self.__company_stats) \
@@ -55,8 +52,10 @@ class MealPriceOutlierClassifier(TransformerMixin):
             _X.loc[_X['cnpj_threshold'].notnull(),
                   'threshold'] = _X['cnpj_threshold']
         _X['y'] = 1
-        _X.loc[_X['threshold'].notnull() & (_X['total_net_value'] > _X['threshold']),
-              'y'] = -1
+        is_outlier = self.__applicable_rows(_X) & \
+            _X['threshold'].notnull() & \
+            (_X['total_net_value'] > _X['threshold'])
+        _X.loc[is_outlier, 'y'] = -1
         return _X['y']
 
     def __applicable_rows(self, X):
