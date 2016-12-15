@@ -2,4 +2,4 @@
 
 import pip
 
-pip.main(['install', '--upgrade', '-r', 'requirements.txt', '--src', 'rosie'])
+pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
