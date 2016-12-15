@@ -13,8 +13,7 @@ RUN pip install --upgrade pip
 COPY requirements.txt ./
 COPY setup ./
 RUN ./setup
-
 COPY rosie.py ./
 COPY rosie ./rosie
-VOLUME /tmp/serenata-data:/tmp/serenata-data
+
 CMD python rosie.py run

@@ -22,7 +22,7 @@ A Python application reading receipts from the [Quota for Exercising Parliamenta
 
 ```console
 $ docker build -t rosie .
-$ docker run rosie
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data rosie
 
 ```
 
