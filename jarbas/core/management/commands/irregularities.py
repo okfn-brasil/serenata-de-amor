@@ -1,6 +1,8 @@
+from functools import partial
 import csv
 import lzma
 import os
+import concurrent.futures
 
 from jarbas.core.management.commands import LoadCommand
 from jarbas.core.models import Reimbursement
@@ -22,11 +24,12 @@ class Command(LoadCommand):
         self.path = options.get('irregularities_path', 'irregularities.xz')
         if not os.path.exists(self.path):
             raise FileNotFoundError(os.path.abspath(self.path))
-        self.update(self.irregularities)
+        self.main()
 
     @property
     def irregularities(self):
         """Returns a Generator with a irregularities for each reimbursement."""
+        print('Loading irregularities dataset…')
         with lzma.open(self.path, mode='rt') as file_handler:
             for row in csv.DictReader(file_handler):
                 yield self.serialize(row)
@@ -58,8 +61,21 @@ class Command(LoadCommand):
             string = ''
         return bool(string)
 
-    def update(self, irregularities):
-        for filters, content in irregularities:
-            Reimbursement.objects.filter(**filters).update(**content)
-            self.count += 1
-            print('{:,} reimbursements updated.'.format(self.count), end='\r')
+    def main(self):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
+            print('Preparing updates…')
+            futures = dict(
+                (executor.submit(self.update, filters, content), filters)
+                for filters, content in self.irregularities
+            )
+            for future in concurrent.futures.as_completed(futures):
+                obj = futures[future]
+                if future.exception():
+                    print('{} raised an exception: {}'.format(obj,  future.exception()))
+                else:
+                    self.count += 1
+                    print('{:,} reimbursements updated.'.format(self.count), end='\r')
+
+    @staticmethod
+    def update(filters, content):
+        return Reimbursement.objects.filter(**filters).update(**content)
