@@ -1,4 +1,3 @@
-from functools import partial
 import csv
 import lzma
 import os
@@ -24,7 +23,9 @@ class Command(LoadCommand):
         self.path = options.get('irregularities_path', 'irregularities.xz')
         if not os.path.exists(self.path):
             raise FileNotFoundError(os.path.abspath(self.path))
+
         self.main()
+        print('{:,} reimbursements updated.'.format(self.count))
 
     @property
     def irregularities(self):
