@@ -1,5 +1,7 @@
 from concurrent import futures
 import json
+from optparse import OptionParser
+
 import numpy as np
 import os.path
 import pandas as pd
@@ -9,6 +11,7 @@ from urllib.request import urlopen
 
 INFO_DATASET_PATH = os.path.join('data', 'cnpj-info.xz')
 TEMP_PATH = os.path.join('data', 'cnpj-info')
+
 
 def load_info_dataset():
     if os.path.exists(INFO_DATASET_PATH):
@@ -40,25 +43,22 @@ def load_info_dataset():
                                      'situacao_especial',
                                      'data_situacao_especial'])
 
-def read_csv(name):
-    return pd.read_csv('data/2016-08-08-%s.xz' % name,
-                       parse_dates=[16],
-                       dtype={'document_id': np.str,
-                              'congressperson_id': np.str,
-                              'congressperson_document': np.str,
-                              'term_id': np.str,
-                              'cnpj_cpf': np.str,
-                              'reimbursement_number': np.str})
 
-def remaining_cnpjs(info_dataset):
-    datasets = [read_csv(name)
-                for name in ['current-year', 'last-year', 'previous-years']]
-    dataset = pd.concat(datasets)
-    del(datasets)
-    is_cnpj = dataset['cnpj_cpf'].str.len() == 14.
-    cnpj_list = set(dataset.loc[is_cnpj, 'cnpj_cpf'])
+def read_cnpj_list_to_import(filename, column):
+    cnpj_list = pd.read_csv(filename,
+                    usecols=([column]),
+                    index_col=([column]),
+                    dtype={column: np.str}
+                ).index.map(lambda cnpj: str(cnpj).replace(r'[./-]', ''))
+    #is_cnpj = map(lambda c: c == 14., cnpj_list)
+    return cnpj_list#[is_cnpj]
+
+
+def remaining_cnpjs(cnpj_list_to_import, info_dataset):
+    cnpj_list = set(cnpj_list_to_import)
     already_fetched = set(info_dataset['cnpj'].str.replace(r'[./-]', ''))
     return list(cnpj_list - already_fetched)
+
 
 def fetch_cnpj_info(cnpj, timeout=5):
     url = 'http://receitaws.com.br/v1/cnpj/%s' % cnpj
@@ -66,14 +66,17 @@ def fetch_cnpj_info(cnpj, timeout=5):
     json_contents = urlopen(url, timeout=timeout).read().decode('utf-8')
     return json.loads(json_contents)
 
+
 def write_cnpj_info(cnpj, cnpj_info):
     print('Writing %s' % cnpj)
     with open('%s/%s.pkl' % (TEMP_PATH, cnpj), 'wb') as f:
         pickle.dump(cnpj_info, f, pickle.HIGHEST_PROTOCOL)
 
+
 def read_cnpj_info(cnpj_filename):
     with open('%s/%s' % (TEMP_PATH, cnpj_filename), 'rb') as f:
         return pickle.load(f)
+
 
 def import_cnpj_infos(info_dataset):
     cnpjs_to_import = [filename
@@ -89,25 +92,37 @@ def import_cnpj_infos(info_dataset):
                         index=False)
 
 
+parser = OptionParser()
+(options, args) = parser.parse_args()
 
-if not os.path.exists(TEMP_PATH):
-    os.makedirs(TEMP_PATH)
+if args:
+    if not os.path.exists(TEMP_PATH):
+        os.makedirs(TEMP_PATH)
 
-info_dataset = load_info_dataset()
-cnpj_list = remaining_cnpjs(info_dataset)
-print('%i CNPJ\'s to be fetched' % len(cnpj_list))
+    cnpj_list_to_import = read_cnpj_list_to_import(args[0], args[1])
+    info_dataset = load_info_dataset()
+    cnpj_list = remaining_cnpjs(cnpj_list_to_import, info_dataset)
+    print('%i CNPJ\'s to be fetched' % len(cnpj_list))
 
-with futures.ThreadPoolExecutor(max_workers=10) as executor:
-    future_to_cnpj_info = dict((executor.submit(fetch_cnpj_info, cnpj), cnpj)
-                               for cnpj in cnpj_list)
+    with futures.ThreadPoolExecutor(max_workers=10) as executor:
+        future_to_cnpj_info = dict((executor.submit(fetch_cnpj_info, cnpj), cnpj)
+                                   for cnpj in cnpj_list)
 
-    for future in futures.as_completed(future_to_cnpj_info):
-        cnpj = future_to_cnpj_info[future]
-        if future.exception() is not None:
-            print('%r raised an exception: %s' % (cnpj, future.exception()))
-        else:
-            write_cnpj_info(cnpj, future.result())
+        for future in futures.as_completed(future_to_cnpj_info):
+            cnpj = future_to_cnpj_info[future]
+            if future.exception() is not None:
+                print('%r raised an exception: %s' % (cnpj, future.exception()))
+            else:
+                write_cnpj_info(cnpj, future.result())
 
-import_cnpj_infos(info_dataset)
+    import_cnpj_infos(info_dataset)
 
-shutil.rmtree(TEMP_PATH)
+    print('%i CNPJ\'s listed in file' % len(set(cnpj_list_to_import)))
+    cnpj_list = remaining_cnpjs(cnpj_list_to_import, info_dataset)
+    print('%i CNPJ\'s remaining' % len(cnpj_list))
+
+    shutil.rmtree(TEMP_PATH)
+else:
+    print('no files to fetch CNPJ\'s')
+    print('usage: fetch_cnpj_info.py \'filename\' \'CNPJ column name\'')
+    print('ex: fetch_cnpj_info.py \'./data/reimbursements.xz\' \'cnpj_cpf\' ')

@@ -1,3 +1,4 @@
+import time
 import os
 import zipfile
 import pandas as pd
@@ -12,6 +13,7 @@ def download_source():
         'amendments.xz']
 
     for url, filename, dataset_name in zip(datasets_urls, filenames, datasets_names):
+        dataset_name = (time.strftime("%Y-%m-%d") + '-' + dataset_name)
         filepath = 'data/%s' % filename
         print('Downloading %s' % filename)
         urlretrieve(url, filepath)
@@ -20,7 +22,12 @@ def download_source():
         zip_ref.close()
 
         print('Renaming columns in: %s' % filepath.replace('.zip', ''))
-        data = pd.read_csv(filepath_or_buffer=filepath.replace('.zip', ''), sep=';')
+        data = pd.read_csv(filepath_or_buffer=filepath.replace('.zip', ''), sep=';',
+                           decimal=',',  dtype={'proposal_id': np.str,
+                                                'amendment_beneficiary': np.str,
+                                                 'amendment_program_code': np.str,
+                                                 'amendment_proposal_tranfer_value': np.double,
+                                                 'amendment_tranfer_value': np.double})
         data = translate_amendments_dataset(data)
         print('Saving %s dataset' % dataset_name)
         data.to_csv(path_or_buf='data/%s' % dataset_name, sep=',',
@@ -29,6 +36,7 @@ def download_source():
         print('Removing temporary files')
         os.remove(filepath)
         os.remove(filepath.replace('.zip', ''))
+
 
 def translate_amendments_dataset(data):
     data.rename(columns={
@@ -43,6 +51,9 @@ def translate_amendments_dataset(data):
             'VALOR_REPASSE_PROPOSTA_EMENDA': 'amendment_proposal_tranfer_value',
             'VALOR_REPASSE_EMENDA': 'amendment_tranfer_value',
         }, inplace=True)
+
+    # need to be done in another place else than translate
+    data['amendment_beneficiary'] = data['amendment_beneficiary'].map(lambda x: str(x).zfill(14))
 
     data['congressperson_type'] = data['congressperson_type'].astype('category')
     data['congressperson_type'].cat.rename_categories([
@@ -63,5 +74,6 @@ def translate_amendments_dataset(data):
         ], inplace=True)
 
     return(data)
+
 
 download_source()
