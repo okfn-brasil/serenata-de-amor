@@ -1,5 +1,6 @@
 import csv
 import datetime
+import lzma
 import os
 from itertools import chain, islice
 from lxml import html
@@ -28,7 +29,7 @@ FIELDNAMES = (
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, 'data')
 DATE = datetime.date.today().strftime('%Y-%m-%d')
-FILE_BASE_NAME = '{}-deputies-advisors.csv'.format(DATE)
+FILE_BASE_NAME = '{}-deputies-advisors.xz'.format(DATE)
 OUTPUT = os.path.join(DATA_PATH, FILE_BASE_NAME)
 
 
@@ -216,7 +217,7 @@ def write_to_csv(data, output):
     :data: (list) list with organized deputy information ready to be written
     :output: (string) the full path to a file where :data: should be written
     """
-    with open(output, "a", newline="") as fh:
+    with lzma.open(output, "at") as fh:
         kwargs = dict(fieldnames=FIELDNAMES, quoting=csv.QUOTE_ALL)
         writer = csv.DictWriter(fh, **kwargs)
         writer.writeheader()
