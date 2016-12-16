@@ -99,6 +99,9 @@ type TranslationId
     | PaginationPage
     | PaginationOf
     | DocumentNotFound
+    | BrazilianCurrency String
+    | ThousandSeparator
+    | DecimalSeparator
 
 
 translate : Language -> TranslationId -> String
@@ -535,6 +538,21 @@ translate lang trans =
                     TranslationSet
                         "Document not found."
                         "Documento não encontrado."
+
+                BrazilianCurrency value ->
+                    TranslationSet
+                        (value ++ " BRL")
+                        ("R$ " ++ value)
+
+                ThousandSeparator ->
+                    TranslationSet
+                        ","
+                        "."
+
+                DecimalSeparator ->
+                    TranslationSet
+                        "."
+                        ","
     in
         case lang of
             English ->
