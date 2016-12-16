@@ -45,7 +45,7 @@ def run():
             "deputy_name": deputy_with_advisors["deputy_name"],
             "deputy_number": deputy_with_advisors["deputy_number"]
         }
-        advisors = deputy_with_advisors["deputy_advisors"]
+        advisors = tuple(deputy_with_advisors["deputy_advisors"])
         deputy_information = organize_deputy_data(deputy, advisors)
         write_to_csv(deputy_information, OUTPUT)
 
@@ -138,7 +138,7 @@ def extract_data_from_page(page):
     current_page = extract_current_page(html_tree)
 
     tbody = html_tree.xpath('//tbody[@class="coresAlternadas"]/tr')
-    deputy_advisors = extract_adivisors(tbody)
+    deputy_advisors = tuple(extract_adivisors(tbody))
 
     select = html_tree.xpath('//select[@id="lotacao"]/option[@selected]')[0]
     deputy_data = {
@@ -188,19 +188,21 @@ def extract_number_of_pages(tree):
 
 def organize_deputy_data(deputy, advisors):
     """
-    Organizes all the deputies information in a list. Use this function to prepare data to be written to CSV format.
-    :deputy: (Dict) A dict with keys `deputy_name` and `deputy_number`
-    :advisors: (list) A list of lists with advisors data.
+    Organizes all the deputies information in a list. Use this function to
+    prepare data to be written to CSV format.
+    :deputy: (dict) A dict with keys `deputy_name` and `deputy_number`
+    :advisors: (tuple) lists with advisors data.
     """
-    output = list()
-    if len(advisors) == 0:
-        output.append(["","","","", deputy["deputy_name"], deputy["deputy_number"]])
-        return output
+    name, number = deputy["deputy_name"], deputy["deputy_number"]
+    if not advisors:
+        values = ('', '', '', '', name, number)
+        yield dict(zip(FIELDNAMES, values))
     else:
-        for dep in advisors:
-            output.append(dep[:] + [deputy["deputy_name"], deputy["deputy_number"]])
+        for advisor in advisors:
+            values = chain(advisor, (name, number))
+            cleaned = map(lambda x: '' if x == '-' else x, values)
+            yield dict(zip(FIELDNAMES, cleaned))
 
-    return output
 
 def extract_adivisors(tbody):
     """Extracts advisors name from a HTML table"""
@@ -211,15 +213,15 @@ def extract_adivisors(tbody):
 def write_to_csv(data, output):
     """
     Writes `data` to `output`
-    :data: (list) the list with organized deputy information ready to be written
+    :data: (list) list with organized deputy information ready to be written
     :output: (string) the full path to a file where :data: should be written
     """
-    with open(output, "a", newline="") as latest_file:
-        fieldnames = ['ponto', 'nome', 'data_de_publicacao_do_ato', 'orgao_de_origem', 'deputy_name', 'deputy_number']
-        writer = csv.DictWriter(latest_file, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
-
+    with open(output, "a", newline="") as fh:
+        kwargs = dict(fieldnames=FIELDNAMES, quoting=csv.QUOTE_ALL)
+        writer = csv.DictWriter(fh, **kwargs)
+        writer.writeheader()
         for advisor in data:
-            writer.writerow({'ponto': advisor[0], 'nome': advisor[1], 'data_de_publicacao_do_ato': advisor[2],'orgao_de_origem': advisor[3], 'deputy_name': advisor[4], 'deputy_number': advisor[5]})
+            writer.writerow(advisor)
 
 
 def http_exception_handler(request, exception):
