@@ -20,7 +20,7 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
 1. [Installing](#installing)
     1. [Using Docker](#using-docker)
     1. [Local install](#local-install)
- 
+
 ## JSON API endpoints
 
 ### Reimbursement
@@ -128,10 +128,12 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 
 ### Using Docker
 
-If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and make, jusr run:
+If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and make, just run:
 
 ```console
-$ docker-compose up -d
+$ docker-compose up -d --build
+$	docker-compose run --rm jarbas python manage.py migrate
+$	docker-compose run --rm jarbas python manage.py ceapdatasets
 ```
 
 
