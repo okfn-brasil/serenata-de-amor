@@ -64,11 +64,11 @@ class Command(LoadCommand):
 
     def main(self):
         with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
-            print('Preparing updates…')
             futures = dict(
                 (executor.submit(self.update, filters, content), filters)
                 for filters, content in self.irregularities
             )
+            print('Preparing updates…')
             for future in concurrent.futures.as_completed(futures):
                 obj = futures[future]
                 if future.exception():
