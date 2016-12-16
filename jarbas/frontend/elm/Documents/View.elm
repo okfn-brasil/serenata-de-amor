@@ -7,6 +7,7 @@ import Documents.Map.View as MapView
 import Documents.Map.Model as MapModel
 import Documents.Receipt.View as ReceiptView
 import Documents.Supplier.View as SupplierView
+import Format.Number exposing (formatNumber)
 import Html exposing (a, div, form, p, span, text)
 import Html.App
 import Html.Attributes exposing (href)
@@ -27,9 +28,8 @@ import Documents.Update exposing (Msg(..), onlyDigits, totalPages)
 
 
 --
--- View
---
 -- Form
+--
 
 
 viewButton : Model -> Int -> List (Button.Property Msg) -> TranslationId -> Html.Html Msg
@@ -92,7 +92,9 @@ viewForm model =
 
 
 
+--
 -- Pagination
+--
 
 
 jumpToWidth : String -> String
@@ -210,7 +212,9 @@ viewPagination model =
 
 
 
+--
 -- Documents
+--
 
 
 sourceUrl : Document -> String
@@ -224,6 +228,23 @@ sourceUrl document =
         , ( "cnpjFornecedor", document.cnpj_cpf )
         , ( "idDocumento", document.document_number )
         ]
+
+
+viewPrice : Language -> String -> String
+viewPrice lang price =
+    let
+        num =
+            String.toFloat price |> Result.withDefault 0.0
+
+        formatted =
+            formatNumber
+                2
+                (translate lang ThousandSeparator)
+                (translate lang DecimalSeparator)
+                num
+    in
+        BrazilianCurrency formatted
+            |> translate lang
 
 
 viewError : Language -> Maybe Http.Error -> Html.Html Msg
@@ -330,10 +351,10 @@ viewDocument lang index document =
               )
             , ( translate lang FieldsetValues
               , "monetization_on"
-              , [ ( getLabel "document_value", toString document.document_value )
-                , ( getLabel "remark_value", toString document.remark_value )
-                , ( getLabel "net_value", toString document.net_value )
-                , ( getLabel "reimbursement_value", toString document.reimbursement_value )
+              , [ ( getLabel "document_value", viewPrice lang document.document_value )
+                , ( getLabel "remark_value", viewPrice lang document.remark_value )
+                , ( getLabel "net_value", viewPrice lang document.net_value )
+                , ( getLabel "reimbursement_value", viewPrice lang document.reimbursement_value )
                 , ( getLabel "installment", toString document.installment )
                 ]
               )
