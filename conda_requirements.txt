@@ -1,5 +1,6 @@
 beautifulsoup4==4.4.1
 geopy==1.11.0
+grequests==0.30
 humanize==0.5.1
 networkx==1.11
 nltk==3.2.1
