@@ -1,110 +1,161 @@
 import csv
 import datetime
 import os
+from itertools import chain, islice
 from lxml import html
 
 import grequests
 import requests
 
-CAMARA_URL = 'http://www2.camara.leg.br/transparencia/recursos-humanos/quadro-remuneratorio/consulta-secretarios-parlamentares/layouts_transpar_quadroremuner_consultaSecretariosParlamentares'
-USERAGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36'
-
+CAMARA_URL = (
+    'http://www2.camara.leg.br/transparencia/recursos-humanos/'
+    'quadro-remuneratorio/consulta-secretarios-parlamentares/'
+    'layouts_transpar_quadroremuner_consultaSecretariosParlamentares'
+)
+USERAGENT = (
+    'Mozilla/5.0 (X11; Linux x86_64) '
+    'AppleWebKit/537.36 (KHTML, like Gecko) '
+    'Chrome/46.0.2490.86 Safari/537.36'
+)
+FIELDNAMES = (
+    'point',
+    'name',
+    'act_issue_at',
+    'act_issued_by',
+    'deputy_name',
+    'deputy_number'
+)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, 'data')
 DATE = datetime.date.today().strftime('%Y-%m-%d')
 FILE_BASE_NAME = '{}-deputies-advisors.csv'.format(DATE)
+OUTPUT = os.path.join(DATA_PATH, FILE_BASE_NAME)
+
 
 def run():
-    print("Fetching deputies data...")
+    print("Fetching deputies data…")
     deputies_data = fetch_deputies_data()
 
-    print("Preparing requests to fetch advisors data...")
-    requests = [get_request_to_page_of_advisors_from_deputy(deputy) for deputy in deputies_data]
+    print("Preparing requests to fetch advisors data…")
+    requests_ = (get_page(deputy) for deputy in deputies_data)
 
-    for page_data in send_requests(requests):
+    for page_data in send_requests(requests_):
         deputy_with_advisors = page_data["data"]
-        deputy_information = organize_deputy_data({"deputy_name": deputy_with_advisors["deputy_name"], "deputy_number": deputy_with_advisors["deputy_number"]}, deputy_with_advisors["deputy_advisors"])
-        write_to_csv(deputy_information, os.path.join(DATA_PATH, FILE_BASE_NAME))
+        deputy = {
+            "deputy_name": deputy_with_advisors["deputy_name"],
+            "deputy_number": deputy_with_advisors["deputy_number"]
+        }
+        advisors = deputy_with_advisors["deputy_advisors"]
+        deputy_information = organize_deputy_data(deputy, advisors)
+        write_to_csv(deputy_information, OUTPUT)
 
-    print("\nFinished! The file can be found at data/{}".format(FILE_BASE_NAME))
+    print("\nDone! The file can be found at {}".format(OUTPUT))
 
 
 def send_requests(reqs):
     """
-    Send all the requests in :reqs: and reads the response data to extract the deputies data.
-    It will check if a deputy has more than one page of advisors and send new requests if True
+    Send all the requests in :reqs: and reads the response data to extract the
+    deputies data.  It will check if a deputy has more than one page of
+    advisors and send new requests if True
     """
-    request_buffer = list()
+    buffer = list()
 
     print("Sending!")
-    for response in grequests.imap(reqs, size=8, exception_handler=http_exception_handler):
+    kwargs = dict(size=8, exception_handler=http_exception_handler)
+    for response in grequests.imap(reqs, **kwargs):
         page_data = extract_data_from_page(response)
 
         yield page_data
         print('.', end="", flush=True)
 
         if page_data["has_next_page"]:
-            for rq in [get_request_to_page_of_advisors_from_deputy(page_data['data'], page_number) for page_number in range(page_data["current_page"], page_data["number_of_pages"])]:
-                request_buffer.append(rq)
+            current = page_data["current_page"]
+            total = page_data["number_of_pages"]
+            for page in range(current + 1, total + 1):
+                buffer.append(get_page(page_data['data'], page))
 
-    print("\nFound {} more pages to fetch. Starting now...".format(len(request_buffer)))
-    for req in grequests.imap(request_buffer, size=8, exception_handler=http_exception_handler):
+    pending = len(buffer)
+    print("\nFound {} more pages to fetch. Starting now…".format(pending))
+    for req in grequests.imap(buffer, **kwargs):
         page_data = extract_data_from_page(req)
-
         yield page_data
-        print(':', end="", flush=True)
+        print('.', end="", flush=True)
 
 
 def fetch_deputies_data():
     """
-    Returns a list with all deputies names and its numbers after parsing the `<select>` element in `CAMARA_URL`
+    Returns a list with all deputies names and its numbers after parsing the
+    `<select>` element in `CAMARA_URL`
     """
     page = requests.get(CAMARA_URL)
     tree = html.fromstring(page.content)
 
-    deputies_data = [{"deputy_name": element.xpath("./text()")[0], "deputy_number": element.xpath('./@value')[0]} for element in tree.xpath('//select[@id="lotacao"]/option')]
+    select = tree.xpath('//select[@id="lotacao"]/option')
+    deputies_data = get_deputies_list(select)
 
-    return deputies_data[1:] # removing the first element: it's the "Selecione um deputado" option.
+    return islice(deputies_data, 1, None)  # skip first as it is "Selecione…"
 
 
-def get_request_to_page_of_advisors_from_deputy(deputy, page=1):
+def get_deputies_list(select):
+    """ Parses the `<select>` element in `CAMARA_URL` """
+    for option in select:
+        yield dict(
+            deputy_name=option.xpath("./text()")[0],
+            deputy_number=option.xpath('./@value')[0]
+        )
+
+
+def get_page(deputy, page=1):
     """
-    Returns a POST AsyncRequest object from grequests ready to be sent to `CAMARA_URL` with `lotacao` field filled with `deputy_number`
-    Some deputies can have more than 20 advisors, so some pages will have pagination.
-    In this case it's necessary to inform the specific page you want to create a request to, otherwise a request to the first page will be created.
+    Returns a POST AsyncRequest object from grequests ready to be sent to
+    `CAMARA_URL` with `lotacao` field filled with `deputy_number`. Some
+    deputies can have more than 20 advisors, so some pages will have
+    pagination. In this case it's necessary to inform the specific page you
+    want to create a request to, otherwise a request to the first page will be
+    created.
     :deputy: (dict) A Dict with fields `deputy_name` and `deputy_number`
     :page: (int) Defaults to 1. The page number
     """
-    params = {"lotacao": deputy["deputy_number"],"b_start:int": 0 if page==1 else 20 + (page - 2) * 20} # page 1 = 0, page 2 = 20, page 3 = 40, ...
-    return grequests.post(CAMARA_URL, data=params)
+    data = {
+        "lotacao": deputy["deputy_number"],
+        "b_start:int": (page - 1) * 20  # page 1 = 0, page 2 = 20, page 3 = 40
+    }
+    return grequests.post(CAMARA_URL, data=data)
 
 
 def extract_data_from_page(page):
     """
-    Extracts all relevant data from a page and returns it as Dict.
-    Each information is inside a key in the dict as following:
-    - Deputy name, number and advisors inside the key `data` as `deputy_name`, `deputy_number` and `deputy_advisors` respectively.
+    Extracts all relevant data from a page and returns it as Dict. Each
+    information is inside a key in the dict as following:
+    - Deputy name, number and advisors inside the key `data` as `deputy_name`,
+      `deputy_number` and `deputy_advisors` respectively.
     - Number of pages of advisors; as `number_of_pages`
-    - the current page number as `current_page`
-    - if it has more pages of advisors as `has_next_page`
+    - The current page number as `current_page`
+    - If it has more pages of advisors as `has_next_page`
     """
     html_tree = html.fromstring(page.content)
-
     number_of_pages = extract_number_of_pages(html_tree)
     current_page = extract_current_page(html_tree)
-    select = html_tree.xpath('//select[@id="lotacao"]/option[@selected]')[0]
-    deputy_advisors = [element.xpath('./td/text() | ./td/span/text()') for element in html_tree.xpath('//tbody[@class="coresAlternadas"]/tr')]
 
-    # Some "Data de Publicação do Ato" are empty in `CAMARA_URL` and xpath are not adding an 'empty string' inside the returned array, so we are adding it manualy below
+    tbody = html_tree.xpath('//tbody[@class="coresAlternadas"]/tr')
+    deputy_advisors = extract_adivisors(tbody)
+
+    select = html_tree.xpath('//select[@id="lotacao"]/option[@selected]')[0]
+    deputy_data = {
+        "deputy_name": select.xpath('./text()')[0],
+        "deputy_number": select.xpath("./@value")[0],
+        "deputy_advisors": deputy_advisors
+    }
+
+    # Some "Data de Publicação do Ato" are empty in `CAMARA_URL` and xpath are
+    # not adding an 'empty string' inside the returned array, so we are adding
+    # it manualy below
     for advisor_info in deputy_advisors:
         if len(advisor_info) == 3:
             advisor_info.append("Empty")
-    # End
 
     return {
-        'data': {
-            "deputy_name": select.xpath('./text()')[0], "deputy_number": select.xpath("./@value")[0], "deputy_advisors": deputy_advisors
-        },
+        'data': deputy_data,
         'number_of_pages': number_of_pages,
         'current_page': current_page,
         'has_next_page': False if current_page == number_of_pages else True
@@ -113,17 +164,25 @@ def extract_data_from_page(page):
 
 def extract_current_page(tree):
     """
-    Helper function to extract the current page number of the page of advisors from a HTMLElement (lxml)
+    Helper function to extract the current page number of the page of advisors
+    from a HTMLElement (lxml)
     """
-    result = tree.xpath('//ul[@class="pagination"]/li[@class="current"]/span/text()')
+    selector = '//ul[@class="pagination"]/li[@class="current"]/span/text()'
+    result = tree.xpath(selector)
     return 1 if len(result) == 0 else int(result[0])
 
 
 def extract_number_of_pages(tree):
     """
-    Helper function to extract the number of pages of the page of advisors from a HTMLElement (lxml)
+    Helper function to extract the number of pages of the page of advisors from
+    a HTMLElement (lxml)
     """
-    result = tree.xpath('count(//ul[@class="pagination"]/li[not(contains(@class,"next"))][not(contains(@class,"previous"))])')
+    selector = (
+        'count(//ul'
+        '[@class="pagination"]/li[not(contains(@class,"next"))]'
+        '[not(contains(@class,"previous"))])'
+    )
+    result = tree.xpath(selector)
     return 1 if result == 0 else int(result)
 
 
@@ -143,6 +202,11 @@ def organize_deputy_data(deputy, advisors):
 
     return output
 
+def extract_adivisors(tbody):
+    """Extracts advisors name from a HTML table"""
+    for element in tbody:
+        yield element.xpath('./td/text() | ./td/span/text()')
+
 
 def write_to_csv(data, output):
     """
@@ -159,11 +223,9 @@ def write_to_csv(data, output):
 
 
 def http_exception_handler(request, exception):
-    """
-    Callback to be executed by grequests when a request fails
-    """
-    print(exception)
+    """Callback to be executed by grequests when a request fails"""
+    print('\n', exception)
+
 
 if __name__ == '__main__':
     run()
-
