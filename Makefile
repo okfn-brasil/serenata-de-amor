@@ -1,5 +1,7 @@
 run.jarbas:
-	docker-compose up -d
+	docker-compose up -d --build
+	docker-compose run --rm jarbas python manage.py migrate
+	docker-compose run --rm jarbas python manage.py ceapdatasets
 
 collectstatic: run.jarbas
 	docker-compose run --rm jarbas python manage.py collectstatic --no-input
