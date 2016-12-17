@@ -119,9 +119,10 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.reimbursements.Command.print_count')
     def test_handler_without_options(self, print_count, bulk_create_by, reimbursements, print_):
         reimbursements.return_value = (1, 2, 3)
-        self.command.handle(batch_size=42, source=False)
+        self.command.handle(dataset='reimbursements.xz', batch_size=42)
         print_.assert_called_once_with('Starting with 0 reimbursements')
         bulk_create_by.assert_called_once_with(reimbursements, 42)
+        self.assertEqual('reimbursements.xz', self.command.path)
 
     @patch('jarbas.core.management.commands.reimbursements.print')
     @patch('jarbas.core.management.commands.reimbursements.Command.reimbursements')
@@ -129,11 +130,10 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.reimbursements.Command.drop_all')
     @patch('jarbas.core.management.commands.reimbursements.Command.print_count')
     def test_handler_with_options(self, print_count, drop_all, bulk_create_by, reimbursements, print_):
-        self.command.handle(batch_size=1, source='ahoy', drop=True, dataset_version='1')
+        self.command.handle(dataset='reimbursements.xz', batch_size=1, drop=True)
         print_.assert_called_once_with('Starting with 0 reimbursements')
         drop_all.assert_called_once_with(Reimbursement)
         bulk_create_by.assert_called_once_with(reimbursements, 1)
-        self.assertEqual('1', self.command.date)
 
     @patch('jarbas.core.management.commands.reimbursements.LoadCommand.add_arguments')
     def test_add_arguments(self, super_add_arguments):
@@ -149,9 +149,9 @@ class TestFileLoader(TestCommand):
     @patch('jarbas.core.management.commands.reimbursements.csv.DictReader')
     @patch('jarbas.core.management.commands.reimbursements.Reimbursement')
     @patch('jarbas.core.management.commands.reimbursements.Command.serialize')
-    @patch('jarbas.core.management.commands.reimbursements.Command.get_dataset')
-    def test_reimbursement_property(self, get_dataset, serializer, reimbursement, row, lzma):
+    def test_reimbursement_property(self, serializer, reimbursement, row, lzma):
         lzma.return_value = StringIO()
         row.return_value = dict(ahoy=42)
+        self.command.path = 'reimbursements.xz'
         list(self.command.reimbursements)
         self.assertEqual(1, reimbursement.call_count)

@@ -16,8 +16,7 @@ class Command(LoadCommand):
         )
 
     def handle(self, *args, **options):
-        self.date = options.get('dataset_version')
-        self.source = options.get('source')
+        self.path = options['dataset']
         self.count = Reimbursement.objects.count()
         print('Starting with {:,} reimbursements'.format(self.count))
 
@@ -31,8 +30,7 @@ class Command(LoadCommand):
     @property
     def reimbursements(self):
         """Returns a Generator with a Reimbursement object for each row."""
-        dataset = self.get_dataset('reimbursements')
-        with lzma.open(dataset, mode='rt') as file_handler:
+        with lzma.open(self.path, mode='rt') as file_handler:
             for row in csv.DictReader(file_handler):
                 yield Reimbursement(**self.serialize(row))
 

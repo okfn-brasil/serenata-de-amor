@@ -12,14 +12,10 @@ class Command(LoadCommand):
     filter_keys = ('applicant_id', 'document_id', 'year')
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            '--irregularities', '-i', dest='irregularities_path',
-            default='irregularities.xz',
-            help='Path to the irregularities.xz dataset'
-        )
+        super().add_arguments(parser, add_drop_all=False)
 
     def handle(self, *args, **options):
-        self.path = options.get('irregularities_path', 'irregularities.xz')
+        self.path = options['dataset']
         if not os.path.exists(self.path):
             raise FileNotFoundError(os.path.abspath(self.path))
 

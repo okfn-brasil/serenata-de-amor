@@ -5,11 +5,11 @@ import re
 
 from django.conf import settings
 
-from jarbas.core.management.commands import LoadCommand
+from jarbas.core.management.commands import OldLoadCommand
 from jarbas.core.models import Document
 
 
-class Command(LoadCommand):
+class Command(OldLoadCommand):
     help = 'Load Serenata de Amor datasets into the database'
     suffixes = ('current-year', 'last-year', 'previous-years')
 
