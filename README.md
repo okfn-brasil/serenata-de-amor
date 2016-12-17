@@ -132,8 +132,8 @@ If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker
 
 ```console
 $ docker-compose up -d --build
-$	docker-compose run --rm jarbas python manage.py migrate
-$	docker-compose run --rm jarbas python manage.py ceapdatasets
+$ docker-compose run --rm jarbas python manage.py migrate
+$ docker-compose run --rm jarbas python manage.py ceapdatasets
 ```
 
 
