@@ -2,16 +2,23 @@ from concurrent import futures
 import json
 from optparse import OptionParser
 
+import itertools
 import numpy as np
 import os.path
 import pandas as pd
 import pickle
 import shutil
 from urllib.request import urlopen
+import re
 
 INFO_DATASET_PATH = os.path.join('data', 'cnpj-info.xz')
 TEMP_PATH = os.path.join('data', 'cnpj-info')
 
+datasets_cols = {'reimbursements': 'cnpj_cpf',
+                 'current-year': 'cnpj_cpf',
+                 'last-year': 'cnpj_cpf',
+                 'previous-years': 'cnpj_cpf',
+                 'amendments': 'amendment_beneficiary'}
 
 def load_info_dataset():
     if os.path.exists(INFO_DATASET_PATH):
@@ -47,11 +54,11 @@ def load_info_dataset():
 def read_cnpj_list_to_import(filename, column):
     cnpj_list = pd.read_csv(filename,
                     usecols=([column]),
-                    index_col=([column]),
                     dtype={column: np.str}
-                ).index.map(lambda cnpj: str(cnpj).replace(r'[./-]', ''))
-    #is_cnpj = map(lambda c: c == 14., cnpj_list)
-    return cnpj_list#[is_cnpj]
+                )[column]
+    cnpj_list = cnpj_list.map(lambda cnpj:
+                              str(cnpj).replace(r'[./-]', '')).where(cnpj_list.str.len() == 14).unique()
+    return list(cnpj_list)
 
 
 def remaining_cnpjs(cnpj_list_to_import, info_dataset):
@@ -92,6 +99,14 @@ def import_cnpj_infos(info_dataset):
                         index=False)
 
 
+def extract_dataset_name(filepath):
+    date = re.compile('\d+-\d+-\d+-').findall(os.path.basename(filepath))
+    if date:
+        filename_without_date = os.path.basename(filepath).replace(date[0], '')
+    else:
+        filename_without_date = os.path.basename(filepath)
+    return filename_without_date[:filename_without_date.rfind('.')]
+
 parser = OptionParser()
 (options, args) = parser.parse_args()
 
@@ -99,10 +114,18 @@ if args:
     if not os.path.exists(TEMP_PATH):
         os.makedirs(TEMP_PATH)
 
-    cnpj_list_to_import = read_cnpj_list_to_import(args[0], args[1])
+    filesNotFound = list(filter(lambda file: not os.path.exists(file) or
+                                             datasets_cols.get(extract_dataset_name(file.lower())) is None, args))
+    filesFound = list(filter(lambda file: os.path.exists(file) and
+                                          datasets_cols.get(extract_dataset_name(file.lower())), args))
+    cnpj_list_to_import = list(itertools.chain.from_iterable(
+            map(lambda file: read_cnpj_list_to_import(file,
+                                                      datasets_cols.get(extract_dataset_name(file.lower()))),
+                filesFound)))
     info_dataset = load_info_dataset()
     cnpj_list = remaining_cnpjs(cnpj_list_to_import, info_dataset)
-    print('%i CNPJ\'s to be fetched' % len(cnpj_list))
+
+    print('%i CNPJ\'s to be fetched' % len(cnpj_list_to_import))
 
     with futures.ThreadPoolExecutor(max_workers=10) as executor:
         future_to_cnpj_info = dict((executor.submit(fetch_cnpj_info, cnpj), cnpj)
@@ -117,6 +140,14 @@ if args:
 
     import_cnpj_infos(info_dataset)
 
+    if len(filesNotFound) > 0:
+        print('The following files were not found:')
+        for file in filesNotFound:
+            print(file)
+        print('Maybe they were misspelled or the CNPJ\'s columns are not mapped:')
+        for file in datasets_cols:
+            print('File: %s | Column: %s' % (file, datasets_cols[file]))
+
     print('%i CNPJ\'s listed in file' % len(set(cnpj_list_to_import)))
     cnpj_list = remaining_cnpjs(cnpj_list_to_import, info_dataset)
     print('%i CNPJ\'s remaining' % len(cnpj_list))
@@ -124,5 +155,5 @@ if args:
     shutil.rmtree(TEMP_PATH)
 else:
     print('no files to fetch CNPJ\'s')
-    print('usage: fetch_cnpj_info.py \'filename\' \'CNPJ column name\'')
-    print('ex: fetch_cnpj_info.py \'./data/reimbursements.xz\' \'cnpj_cpf\' ')
+    print('usage: fetch_cnpj_info.py \'filename\'')
+    print('ex: fetch_cnpj_info.py \'./data/2016-12-10-reimbursements.xz 2016-12-14-amendments.xz\' ')

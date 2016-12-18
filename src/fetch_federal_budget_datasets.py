@@ -5,14 +5,12 @@ import pandas as pd
 import numpy as np
 from urllib.request import urlretrieve
 
-def download_source():
-    datasets_urls = [
-        'http://portal.convenios.gov.br/images/docs/CGSIS/csv/siconv_emenda.csv.zip']
-    filenames = map(lambda url: url.split('/')[-1], datasets_urls)
-    datasets_names = [
-        'amendments.xz']
 
-    for url, filename, dataset_name in zip(datasets_urls, filenames, datasets_names):
+def download_datasets():
+
+    filenames = map(lambda url: url.split('/')[-1], datasets_urls)
+
+    for url, filename, dataset_name, translate_dataset in zip(datasets_urls, filenames, datasets_names, translation_functions):
         dataset_name = (time.strftime("%Y-%m-%d") + '-' + dataset_name)
         filepath = 'data/%s' % filename
         print('Downloading %s' % filename)
@@ -21,24 +19,16 @@ def download_source():
         zip_ref.extractall('data')
         zip_ref.close()
 
-        print('Renaming columns in: %s' % filepath.replace('.zip', ''))
-        data = pd.read_csv(filepath_or_buffer=filepath.replace('.zip', ''), sep=';',
-                           decimal=',',  dtype={'proposal_id': np.str,
-                                                'amendment_beneficiary': np.str,
-                                                 'amendment_program_code': np.str,
-                                                 'amendment_proposal_tranfer_value': np.double,
-                                                 'amendment_tranfer_value': np.double})
-        data = translate_amendments_dataset(data)
-        print('Saving %s dataset' % dataset_name)
-        data.to_csv(path_or_buf='data/%s' % dataset_name, sep=',',
-                    compression='xz', encoding='utf-8', index=False)
+        translate_dataset(filepath, dataset_name)
 
         print('Removing temporary files')
         os.remove(filepath)
         os.remove(filepath.replace('.zip', ''))
 
 
-def translate_amendments_dataset(data):
+def translate_amendments_dataset(filepath, dataset_name):
+    print('Renaming columns in: %s' % filepath.replace('.zip', ''))
+    data = pd.read_csv(filepath_or_buffer=filepath.replace('.zip', ''), sep=';', decimal=',')
     data.rename(columns={
             'ID_PROPOSTA': 'proposal_id',
             'QUALIF_PROPONENTE': 'proponent_qualification',
@@ -73,7 +63,31 @@ def translate_amendments_dataset(data):
             'yes'
         ], inplace=True)
 
-    return(data)
+    data.to_csv(path_or_buf='data/%s' % dataset_name, sep=',',
+                compression='xz', encoding='utf-8', index=False)
 
 
-download_source()
+def dummy_translation_dataset(filepath, dataset_name):
+    print('There is not translation function for %s' % filepath)
+    data = pd.read_csv(filepath_or_buffer=filepath.replace('.zip', ''), sep=';', decimal=',', low_memory=False)
+    data.to_csv(path_or_buf='data/%s' % dataset_name, sep=',',
+                compression='xz', encoding='utf-8', index=False)
+
+
+datasets_urls = [
+    'http://portal.convenios.gov.br/images/docs/CGSIS/csv/siconv_emenda.csv.zip',
+    'http://portal.convenios.gov.br/images/docs/CGSIS/csv/siconv_convenio.csv.zip',
+    'http://portal.convenios.gov.br/images/docs/CGSIS/csv/siconv_pagamento.csv.zip']#,
+    # 'http://portal.convenios.gov.br/images/docs/CGSIS/csv/siconv_convenente.csv.zip']
+
+datasets_names = [
+    'amendments.xz',
+    'agreements.xz',
+    'payments.xz']
+
+translation_functions = [
+    translate_amendments_dataset,
+    dummy_translation_dataset,
+    dummy_translation_dataset]
+
+download_datasets()
