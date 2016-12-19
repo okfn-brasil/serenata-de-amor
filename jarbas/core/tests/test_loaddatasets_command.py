@@ -88,7 +88,7 @@ class TestFileLoader(TestCommand):
         self.assertEqual(self.command.get_suffix(name), 'current-year')
         self.assertEqual(self.command.get_suffix(''), None)
 
-    @patch('jarbas.core.management.commands.loaddatasets.LoadCommand.load_local')
+    @patch('jarbas.core.management.commands.loaddatasets.OldLoadCommand.load_local')
     def test_get_load_local(self, super_load_local):
         list(self.command.load_local('ahoy'))
         expected = (
@@ -98,7 +98,7 @@ class TestFileLoader(TestCommand):
         )
         super_load_local.assert_has_calls(expected)
 
-    @patch('jarbas.core.management.commands.loaddatasets.LoadCommand.load_remote')
+    @patch('jarbas.core.management.commands.loaddatasets.OldLoadCommand.load_remote')
     def test_get_load_remote(self, super_load_remote):
         list(self.command.load_remote())
         expected = (
@@ -168,7 +168,7 @@ class TestConventionMethods(TestCommand):
         bulk_create_by.assert_called_once_with((1, 2, 3), 42)
         self.assertEqual('1', self.command.date)
 
-    @patch('jarbas.core.management.commands.loaddatasets.LoadCommand.add_arguments')
+    @patch('jarbas.core.management.commands.loaddatasets.OldLoadCommand.add_arguments')
     def test_add_arguments(self, super_add_arguments):
         parser = MagicMock()
         self.command.add_arguments(parser)

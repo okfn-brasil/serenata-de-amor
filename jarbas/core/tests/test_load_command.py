@@ -13,12 +13,6 @@ class TestStaticMethods(TestCase):
     def setUp(self):
         self.cmd = LoadCommand()
 
-    def test_get_file_name(self):
-        self.cmd.date = None
-        expected = '1970-01-01-companies.xz'
-        with self.settings(AMAZON_S3_COMPANIES_DATE='1970-01-01'):
-            self.assertEqual(expected, self.cmd.get_file_name('companies'))
-
     def test_get_model_name(self):
         self.assertEqual('Activity', self.cmd.get_model_name(Activity))
 
@@ -79,66 +73,14 @@ class TestDropAll(TestCase):
         self.assertEqual(0, Activity.objects.count())
 
 
-class TestLocalMethods(TestCase):
-
-    def setUp(self):
-        self.cmd = LoadCommand()
-        self.source = '/whatever/works'
-        self.name = 'companies'
-
-    def test_get_path(self):
-        self.cmd.date = None
-        expected = '/whatever/works/1970-01-01-companies.xz'
-        with self.settings(AMAZON_S3_COMPANIES_DATE='1970-01-01'):
-            result = self.cmd.get_path(self.source, self.name)
-            self.assertEqual(expected, result)
-
-    @patch('jarbas.core.management.commands.print')
-    @patch('jarbas.core.management.commands.os.path.exists')
-    def test_load_local_exists(self, mock_exists, mock_print):
-        self.cmd.date = None
-        mock_exists.return_value = True
-        self.assertIsInstance(self.cmd.load_local(self.source, self.name), str)
-
-    @patch('jarbas.core.management.commands.print')
-    @patch('jarbas.core.management.commands.os.path.exists')
-    def test_load_local_fail(self, mock_exists, mock_print):
-        self.cmd.date = None
-        mock_exists.return_value = False
-        self.assertFalse(self.cmd.load_local(self.source, self.name))
-
-
-class TestRemoteMethods(TestCase):
-
-    def setUp(self):
-        self.cmd = LoadCommand()
-        self.name = 'companies'
-        self.url = 'https://south.amazonaws.com/jarbas/1970-01-01-companies.xz'
-        self.custom_settings = {
-            'AMAZON_S3_COMPANIES_DATE': '1970-01-01',
-            'AMAZON_S3_REGION': 'south',
-            'AMAZON_S3_BUCKET': 'jarbas'
-        }
-
-    def test_get_url(self):
-        self.cmd.date = None
-        with self.settings(**self.custom_settings):
-            result = self.cmd.get_url(self.name)
-            self.assertEqual(self.url, result)
-
-    @patch('jarbas.core.management.commands.print')
-    @patch('jarbas.core.management.commands.urlretrieve')
-    def test_load_remote(self, mock_urlretrieve, mock_print):
-        self.cmd.date = None
-        with self.settings(**self.custom_settings):
-            result = self.cmd.load_remote(self.name)
-            self.assertEqual(self.url, mock_urlretrieve.call_args[0][0])
-            self.assertIsInstance(result, str)
-
-
 class TestAddArguments(TestCase):
 
     def test_add_arguments(self):
         mock = Mock()
         LoadCommand().add_arguments(mock)
-        self.assertEqual(3, mock.add_argument.call_count)
+        self.assertEqual(2, mock.add_argument.call_count)
+
+    def test_add_arguments_without_drop_all(self):
+        mock = Mock()
+        LoadCommand().add_arguments(mock, add_drop_all=False)
+        self.assertEqual(1, mock.add_argument.call_count)

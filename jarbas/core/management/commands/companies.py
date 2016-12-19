@@ -12,10 +12,8 @@ class Command(LoadCommand):
     help = 'Load Serenata de Amor supplier dataset into the database'
 
     def handle(self, *args, **options):
-        self.date = options.get('dataset_version')
-        self.source = options.get('source')
+        self.path = options['dataset']
         self.count = self.print_count(Supplier)
-        print('self.cont =', self.count)
         print('Starting with {:,} suppliers'.format(self.count))
 
         if options.get('drop', False):
@@ -23,16 +21,16 @@ class Command(LoadCommand):
             self.drop_all(Activity)
             self.count = 0
 
-        self.save_suppliers(self.get_dataset('companies'))
+        self.save_suppliers()
 
-    def save_suppliers(self, dataset):
+    def save_suppliers(self):
         """
         Receives path to the dataset file and create a Supplier object for
         each row of each file. It creates the related activity when needed.
         """
         skip = ('main_activity', 'secondary_activty')
         keys = list(f.name for f in Supplier._meta.fields if f not in skip)
-        with lzma.open(dataset, mode='rt') as file_handler:
+        with lzma.open(self.path, mode='rt') as file_handler:
             for row in csv.DictReader(file_handler):
                 main, secondary = self.save_activities(row)
 
