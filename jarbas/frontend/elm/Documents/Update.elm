@@ -4,16 +4,18 @@ import Char
 import Documents.Fields as Fields
 import Documents.Inputs.Update as Inputs
 import Documents.Inputs.Model
+import Documents.Receipt.Model exposing (ReimbursementId)
 import Documents.Receipt.Update as Receipt
+import Documents.Decoder exposing (decoder)
+import Documents.Model exposing (Model, Document, Results, results)
 import Documents.Supplier.Update as Supplier
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 import Navigation
+import Regex exposing (regex, replace)
 import String
 import Task
-import Documents.Model exposing (Model, Document, Results, results)
-import Documents.Decoder exposing (decoder)
 
 
 totalPages : Int -> Int
@@ -56,7 +58,7 @@ update msg model =
         Submit ->
             let
                 url =
-                    Inputs.toQuery model.inputs |> toUrl
+                    toUrl (Inputs.toQuery model.inputs)
             in
                 ( { model | loading = True }, Navigation.newUrl url )
 
@@ -119,7 +121,7 @@ update msg model =
                     getIndexedDocuments newModel
 
                 indexedSupplierCmds =
-                    List.map (\( idx, doc ) -> ( idx, Supplier.load doc.cnpj_cpf )) indexedDocuments
+                    List.map (\( idx, doc ) -> ( idx, Maybe.withDefault "" doc.cnpjCpf |> Supplier.load )) indexedDocuments
 
                 cmds =
                     List.map (\( idx, cmd ) -> Cmd.map (SupplierMsg idx) cmd) indexedSupplierCmds
@@ -158,7 +160,7 @@ updateSuppliers lang target msg ( index, document ) =
     if target == index then
         let
             updated =
-                Supplier.update msg document.supplier_info
+                Supplier.update msg document.supplierInfo
 
             newSupplier =
                 fst updated
@@ -166,7 +168,7 @@ updateSuppliers lang target msg ( index, document ) =
             newCmd =
                 Cmd.map (SupplierMsg target) (snd updated)
         in
-            ( { document | supplier_info = { newSupplier | lang = lang } }, newCmd )
+            ( { document | supplierInfo = { newSupplier | lang = lang } }, newCmd )
     else
         ( document, Cmd.none )
 
@@ -178,13 +180,22 @@ updateReceipts lang target msg ( index, document ) =
             updated =
                 Receipt.update msg document.receipt
 
-            newReceipt =
+            updatedReceipt =
                 fst updated
 
             newCmd =
-                Cmd.map (ReceiptMsg target) (snd updated)
+                snd updated |> Cmd.map (ReceiptMsg target)
+
+            reimbursement =
+                ReimbursementId document.year document.applicantId document.documentId
+
+            newReceipt =
+                { updatedReceipt
+                    | lang = lang
+                    , reimbursement = Just reimbursement
+                }
         in
-            ( { document | receipt = { newReceipt | lang = lang } }, newCmd )
+            ( { document | receipt = newReceipt }, newCmd )
     else
         ( document, Cmd.none )
 
@@ -244,6 +255,34 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
         ( { model | results = newResults }, Cmd.batch newCommands )
 
 
+{-| Convert from camelCase to underscore:
+
+    >>> convertQueryKey "applicationId"
+    "application_id"
+
+    >>> convertQueryKey "subquotaGroupId"
+    "subquota_group_id"
+
+-}
+convertQueryKey : String -> String
+convertQueryKey key =
+    key
+        |> replace Regex.All (regex "[A-Z]") (\{ match } -> "_" ++ match)
+        |> String.map Char.toLower
+
+
+{-| Convert from keys from a query tuple to underscore:
+
+    >>> convertQuery [("applicantId", "1"), ("subqotaGroupId", "2")]
+    [("applicant_id", "1"), ("subqota_group_id", "2")]
+
+-}
+convertQuery : List ( String, a ) -> List ( String, a )
+convertQuery query =
+    query
+        |> List.map (\( key, value ) -> ( convertQueryKey key, value ))
+
+
 loadDocuments : Language -> String -> List ( String, String ) -> Cmd Msg
 loadDocuments lang apiKey query =
     if List.isEmpty query then
@@ -251,12 +290,12 @@ loadDocuments lang apiKey query =
     else
         let
             jsonQuery =
-                ( "format", "json" ) :: query
+                ( "format", "json" ) :: convertQuery query
 
             request =
                 Http.get
                     (decoder lang apiKey jsonQuery)
-                    (Http.url "/api/document/" jsonQuery)
+                    (Http.url "/api/reimbursement/" jsonQuery)
         in
             Task.perform
                 ApiFail

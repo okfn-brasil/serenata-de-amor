@@ -54,20 +54,17 @@ update msg model =
 
 load : String -> Cmd Msg
 load cnpj =
-    let
-        query =
-            [ ( "format", "json" ) ]
+    if isValid cnpj then
+        let
+            path =
+                "/api/supplier/" ++ (cleanUp cnpj)
 
-        path =
-            "/api/supplier/" ++ (cleanUp cnpj)
-
-        url =
-            Http.url path query
-    in
-        if path == "/api/supplier/" then
-            Cmd.none
-        else
+            url =
+                Http.url path [ ( "format", "json" ) ]
+        in
             Task.perform
                 ApiFail
                 ApiSuccess
                 (Http.get decoder url)
+    else
+        Cmd.none

@@ -62,7 +62,7 @@ viewFieldset loading model ( index, ( title, names ) ) =
             List.map (viewField model.mdl loading) indexedNamesAndFields
     in
         cell
-            [ size Desktop 4, size Tablet 4, size Phone 4 ]
+            [ size Desktop 6, size Tablet 6, size Phone 6 ]
             (List.append heading inputs)
 
 

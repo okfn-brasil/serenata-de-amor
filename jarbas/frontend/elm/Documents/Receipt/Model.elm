@@ -1,12 +1,20 @@
-module Documents.Receipt.Model exposing (Model, model)
+module Documents.Receipt.Model exposing (Model, ReimbursementId, model)
 
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 
 
+type alias ReimbursementId =
+    { year : Int
+    , applicantId : Int
+    , documentId : Int
+    }
+
+
 type alias Model =
-    { url : Maybe String
+    { reimbursement : Maybe ReimbursementId
+    , url : Maybe String
     , fetched : Bool
     , loading : Bool
     , error : Maybe Http.Error
@@ -17,4 +25,4 @@ type alias Model =
 
 model : Model
 model =
-    Model Nothing False False Nothing English Material.model
+    Model Nothing Nothing False False Nothing English Material.model

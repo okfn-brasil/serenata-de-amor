@@ -25,7 +25,7 @@ fromUrl hash =
             List.map
                 (\header ->
                     if header == "document" then
-                        "document_id"
+                        "documentId"
                     else
                         header
                 )

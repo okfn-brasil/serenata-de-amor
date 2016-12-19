@@ -33,7 +33,6 @@ class TestCreate(TestReimbursement):
             'subquota_group_id',
             'subquota_group_description',
             'cnpj_cpf',
-            'issue_date',
             'remark_value',
             'installment',
             'reimbursement_values',

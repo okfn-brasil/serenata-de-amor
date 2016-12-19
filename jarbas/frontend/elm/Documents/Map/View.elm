@@ -3,7 +3,7 @@ module Documents.Map.View exposing (view)
 import Material.Button as Button
 import Material.Icon as Icon
 import Html exposing (a, text)
-import Html.Attributes exposing (href)
+import Html.Attributes exposing (href, target)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import String
 import Documents.Map.Model exposing (Model)
@@ -21,7 +21,7 @@ view model =
                             String.concat [ "https://ddg.gg/?q=!gm+", lat, ",", long ]
                     in
                         a
-                            [ href mapUrl ]
+                            [ href mapUrl, target "_blank" ]
                             [ Button.render
                                 Mdl
                                 [ 0 ]

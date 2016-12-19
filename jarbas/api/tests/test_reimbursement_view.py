@@ -137,7 +137,7 @@ class TestRetrieveApi(TestCase):
             year=1970,
             probability=0.5,
             suspicions=suspicions,
-            receipt=dict(fecthed=False, url=None)
+            receipt=dict(fetched=False, url=None)
         )
         self.assertEqual(expected, contents)
 
@@ -154,8 +154,10 @@ class TestReceiptApi(TestCase):
     def test_fetch_existing_receipt(self, mocked_head):
         mocked_head.return_value.status_code = 200
         resp = self.client.get(self.url)
-        expected = self.unique_id.copy()
-        expected['url'] = self.expected_receipt_url
+        expected = dict(
+            reimbursement=self.unique_id,
+            url=self.expected_receipt_url
+        )
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, content)
 
@@ -165,7 +167,10 @@ class TestReceiptApi(TestCase):
         cache.clear()
         resp = self.client.get(self.url)
         expected = self.unique_id.copy()
-        expected['url'] = None
+        expected = dict(
+            reimbursement=self.unique_id,
+            url=None
+        )
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, content)
 
@@ -176,7 +181,9 @@ class TestReceiptApi(TestCase):
         self.obj.save()
         mocked_head.return_value.status_code = 200
         resp = self.client.get(self.url + '?force')
-        expected = self.unique_id.copy()
-        expected['url'] = self.expected_receipt_url
+        expected = dict(
+            reimbursement=self.unique_id,
+            url=self.expected_receipt_url
+        )
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, content)

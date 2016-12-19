@@ -1,7 +1,7 @@
 module Documents.Supplier.View exposing (view)
 
 import Html exposing (a, br, div, img, p, span, text)
-import Html.Attributes exposing (href, src, style)
+import Html.Attributes exposing (href, src, style, target)
 import Http exposing (url)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material.Icon as Icon
@@ -41,7 +41,7 @@ streetImageTag apiKey latitude longitude heading =
                             ]
                     in
                         a
-                            [ href source ]
+                            [ href source, target "_blank" ]
                             [ img [ src source, style css ] [] ]
 
                 Nothing ->
