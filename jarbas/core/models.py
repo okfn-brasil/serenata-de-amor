@@ -58,7 +58,7 @@ class Reimbursement(models.Model):
     document_number = models.CharField('Document number', max_length=140, blank=True, null=True)
     document_value = models.DecimalField('Document value', max_digits=10, decimal_places=3)
 
-    issue_date = models.DateField('Issue date', blank=True, null=True)
+    issue_date = models.DateField('Issue date')
     month = models.IntegerField('Month', db_index=True)
     remark_value = models.DecimalField('Remark value', max_digits=10, decimal_places=3, blank=True, null=True)
     installment = models.IntegerField('Installment', blank=True, null=True)

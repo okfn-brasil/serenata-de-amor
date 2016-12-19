@@ -1,5 +1,6 @@
 module Documents.Model exposing (..)
 
+import Date
 import Documents.Inputs.Model as Inputs
 import Documents.Receipt.Model as Receipt
 import Documents.Supplier.Model as Supplier
@@ -9,38 +10,41 @@ import Material
 
 
 type alias Document =
-    { id : Int
-    , document_id : Int
-    , congressperson_name : String
-    , congressperson_id : Int
-    , congressperson_document : Int
+    { year : Int
+    , documentId : Int
+    , applicantId : Int
+    , totalReimbursementValue : Maybe Float
+    , totalNetValue : Float
+    , reimbursementNumbers : List Int
+    , netValues : List Float
+    , congresspersonId : Maybe Int
+    , congresspersonName : Maybe String
+    , congresspersonDocument : Maybe Int
+    , state : Maybe String
+    , party : Maybe String
+    , termId : Int
     , term : Int
-    , state : String
-    , party : String
-    , term_id : Int
-    , subquota_number : Int
-    , subquota_description : String
-    , subquota_group_id : Int
-    , subquota_group_description : String
+    , subquotaId : Int
+    , subquotaDescription : String
+    , subquotaGroupId : Maybe Int
+    , subquotaGroupDescription : Maybe String
     , supplier : String
-    , cnpj_cpf : String
-    , document_number : String
-    , document_type : Int
-    , issue_date : Maybe String
-    , document_value : String
-    , remark_value : String
-    , net_value : String
+    , cnpjCpf : Maybe String
+    , documentType : Int
+    , documentNumber : Maybe String
+    , documentValue : Float
+    , issueDate : Date.Date
     , month : Int
-    , year : Int
-    , installment : Int
-    , passenger : String
-    , leg_of_the_trip : String
-    , batch_number : Int
-    , reimbursement_number : Int
-    , reimbursement_value : String
-    , applicant_id : Int
+    , remarkValue : Maybe Float
+    , installment : Maybe Int
+    , batchNumber : Maybe Int
+    , reimbursementValues : Maybe (List Float)
+    , passenger : Maybe String
+    , legOfTheTrip : Maybe String
+    , probability : Maybe Float
+    , suspicions : Maybe (List ( String, Bool ))
     , receipt : Receipt.Model
-    , supplier_info : Supplier.Model
+    , supplierInfo : Supplier.Model
     }
 
 

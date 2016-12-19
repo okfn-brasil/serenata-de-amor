@@ -6,35 +6,39 @@ import Internationalization exposing (Language(..), TranslationId(..), translate
 
 names : List String
 names =
-    [ "document_id"
-    , "congressperson_name"
-    , "congressperson_id"
-    , "congressperson_document"
-    , "term"
+    [ "year"
+    , "documentId"
+    , "applicantId"
+    , "totalReimbursementValue"
+    , "totalNetValue"
+    , "reimbursementNumbers"
+    , "netValues"
+    , "congresspersonId"
+    , "congresspersonName"
+    , "congresspersonDocument"
     , "state"
     , "party"
-    , "term_id"
-    , "subquota_number"
-    , "subquota_description"
-    , "subquota_group_id"
-    , "subquota_group_description"
+    , "termId"
+    , "term"
+    , "subquotaId"
+    , "subquotaDescription"
+    , "subquotaGroupId"
+    , "subquotaGroupDescription"
     , "supplier"
-    , "cnpj_cpf"
-    , "document_number"
-    , "document_type"
-    , "issue_date"
-    , "document_value"
-    , "remark_value"
-    , "net_value"
+    , "cnpjCpf"
+    , "documentType"
+    , "documentNumber"
+    , "documentValue"
+    , "issueDate"
     , "month"
-    , "year"
+    , "remarkValue"
     , "installment"
+    , "batchNumber"
+    , "reimbursementValues"
     , "passenger"
-    , "leg_of_the_trip"
-    , "batch_number"
-    , "reimbursement_number"
-    , "reimbursement_value"
-    , "applicant_id"
+    , "legOfTheTrip"
+    , "probability"
+    , "suspicions"
     ]
 
 
@@ -42,35 +46,39 @@ labels : Language -> List String
 labels lang =
     List.map
         (\f -> translate lang f)
-        [ FieldDocumentId
-        , FieldCongresspersonName
+        [ FieldYear
+        , FieldDocumentId
+        , FieldApplicantId
+        , FieldTotalReimbursementValue
+        , FieldTotalNetValue
+        , FieldReimbursementNumbers
+        , FieldNetValues
         , FieldCongresspersonId
+        , FieldCongresspersonName
         , FieldCongresspersonDocument
-        , FieldTerm
         , FieldState
         , FieldParty
         , FieldTermId
-        , FieldSubquotaNumber
+        , FieldTerm
+        , FieldSubquotaId
         , FieldSubquotaDescription
         , FieldSubquotaGroupId
         , FieldSubquotaGroupDescription
         , FieldSupplier
-        , FieldCNPJOrCPF
-        , FieldDocumentNumber
+        , FieldCnpjCpf
         , FieldDocumentType
-        , FieldIssueDate
+        , FieldDocumentNumber
         , FieldDocumentValue
-        , FieldRemarkValue
-        , FieldNetValue
+        , FieldIssueDate
         , FieldMonth
-        , FieldYear
+        , FieldRemarkValue
         , FieldInstallment
+        , FieldBatchNumber
+        , FieldReimbursementValues
         , FieldPassenger
         , FieldLegOfTheTrip
-        , FieldBatchNumber
-        , FieldReimbursementNumber
-        , FieldReimbursementValue
-        , FieldApplicantId
+        , FieldProbability
+        , FieldSuspicions
         ]
 
 
@@ -88,18 +96,11 @@ isSearchable ( field, label ) =
         True
     else
         List.member field
-            [ "applicant_id"
-            , "cnpj_cpf"
-            , "congressperson_id"
-            , "document_id"
-            , "document_type"
+            [ "applicantId"
+            , "cnpjCpf"
+            , "documentId"
             , "month"
-            , "party"
-            , "reimbursement_number"
-            , "state"
-            , "subquota_group_id"
-            , "subquota_number"
-            , "term"
+            , "subquotaId"
             , "year"
             ]
 
@@ -108,27 +109,11 @@ sets : Language -> List ( Int, ( String, List String ) )
 sets lang =
     List.indexedMap
         (,)
-        [ ( translate lang SearchFieldsetReimbursement
-          , [ "document_id"
-            , "document_type"
-            , "applicant_id"
-            , "reimbursement_number"
-            , "subquota_number"
-            , "subquota_group_id"
-            ]
+        [ ( translate lang SearchFieldsetCongressperson
+          , [ "applicantId", "year", "month", "subquotaId", "cnpjCpf" ]
           )
-        , ( translate lang SearchFieldsetCongressperson
-          , [ "congressperson_id"
-            , "party"
-            , "state"
-            , "term"
-            ]
-          )
-        , ( translate lang SearchFieldsetExpense
-          , [ "cnpj_cpf"
-            , "year"
-            , "month"
-            ]
+        , ( translate lang SearchFieldsetReimbursement
+          , [ "applicantId", "year", "documentId" ]
           )
         ]
 
@@ -136,15 +121,11 @@ sets lang =
 isNumeric : String -> Bool
 isNumeric field =
     List.member field
-        [ "applicant_id"
-        , "cnpj_cpf"
-        , "congressperson_id"
-        , "document_id"
-        , "document_type"
+        [ "applicantId"
+        , "cnpjCpf"
+        , "congresspersonId"
+        , "documentId"
         , "month"
-        , "reimbursement_number"
-        , "subquota_group_id"
-        , "subquota_number"
-        , "term"
+        , "subquotaId"
         , "year"
         ]

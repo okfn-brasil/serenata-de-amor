@@ -1,7 +1,7 @@
 module Documents.Receipt.View exposing (view)
 
 import Html exposing (a, button, div, text)
-import Html.Attributes exposing (href)
+import Html.Attributes exposing (href, target)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material.Button as Button
 import Material.Icon as Icon
@@ -10,12 +10,12 @@ import Documents.Receipt.Model exposing (Model)
 import Documents.Receipt.Update exposing (Msg(Mdl, LoadUrl))
 
 
-view : Int -> Model -> Html.Html Msg
-view id model =
+view : Model -> Html.Html Msg
+view model =
     case model.url of
         Just url ->
             a
-                [ href url ]
+                [ href url, target "_blank" ]
                 [ Button.render
                     Mdl
                     [ 1 ]
@@ -44,7 +44,7 @@ view id model =
                     [ 0 ]
                     model.mdl
                     [ Button.minifab
-                    , Button.onClick (LoadUrl id)
+                    , Button.onClick (LoadUrl model.reimbursement)
                     ]
                     [ Icon.i "search"
                     , text (translate model.lang ReceiptFetch)
