@@ -1,7 +1,7 @@
 module Documents.Receipt.View exposing (view)
 
-import Html exposing (a, button, div, text)
-import Html.Attributes exposing (href, target)
+import Html exposing (a, div, text, span)
+import Html.Attributes exposing (href, target, class)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material.Button as Button
 import Material.Icon as Icon
@@ -15,7 +15,7 @@ view model =
     case model.url of
         Just url ->
             a
-                [ href url, target "_blank" ]
+                [ href url, target "_blank", class "receipt view-receipt" ]
                 [ Button.render
                     Mdl
                     [ 1 ]
@@ -40,12 +40,15 @@ view model =
             else if model.loading then
                 Spinner.spinner [ Spinner.active True ]
             else
-                Button.render Mdl
-                    [ 0 ]
-                    model.mdl
-                    [ Button.minifab
-                    , Button.onClick (LoadUrl model.reimbursement)
-                    ]
-                    [ Icon.i "search"
-                    , text (translate model.lang ReceiptFetch)
+                span
+                    [ class "receipt fetch-receipt" ]
+                    [ Button.render Mdl
+                        [ 0 ]
+                        model.mdl
+                        [ Button.minifab
+                        , Button.onClick (LoadUrl model.reimbursement)
+                        ]
+                        [ Icon.i "search"
+                        , text (translate model.lang ReceiptFetch)
+                        ]
                     ]

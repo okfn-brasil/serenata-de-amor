@@ -1,7 +1,7 @@
 module Documents.Supplier.View exposing (view)
 
 import Html exposing (a, br, div, img, p, span, text)
-import Html.Attributes exposing (href, src, style, target)
+import Html.Attributes exposing (class, href, src, style, target)
 import Http exposing (url)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material.Icon as Icon
@@ -121,7 +121,7 @@ viewSupplier lang apiKey supplier =
                 p
                 [ Typography.caption, Options.css "margin-top" "1rem" ]
                 [ text (translate lang SupplierSource)
-                , a [ href source ] [ text (translate lang SupplierFederalRevenue) ]
+                , a [ href source, class "supplier-federal-revenue-source" ] [ text (translate lang SupplierFederalRevenue) ]
                 ]
             ]
 
