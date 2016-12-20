@@ -4,6 +4,7 @@
 .floo
 *.sqlite3
 htmlcov/
+npm-debug.log
 
 # cache, compiled & downloaded files
 *.pyc
