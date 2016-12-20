@@ -77,6 +77,16 @@ class TestCustomMethods(TestReimbursement):
             list(reimbursement.all_net_values)
         )
 
+    def test_repr(self):
+        obj = Reimbursement.objects.create(**self.data)
+        expected = (
+            'Reimbursement('
+            'year=1970, '
+            'applicant_id=13, '
+            'document_id=42)'
+        )
+        self.assertEqual(expected, obj.__repr__())
+
 
 class TestReceipt(TestCase):
 
