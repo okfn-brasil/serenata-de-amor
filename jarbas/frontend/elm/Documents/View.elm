@@ -437,7 +437,7 @@ viewPs lang document =
                     [ Typography.caption ]
                     [ translate lang FieldsetCurrencyDetails |> text
                     , a
-                        [ href currencyUrl, target "_blank" ]
+                        [ href currencyUrl, target "_blank", class "currency" ]
                         [ translate lang FieldsetCurrencyDetailsLink |> text
                         , viewDate lang document.issueDate |> text
                         ]
