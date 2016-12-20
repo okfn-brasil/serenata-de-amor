@@ -7,13 +7,19 @@ var rename = require('gulp-rename');
 gulp.task('elm', function () {
   return gulp.src('jarbas/frontend/elm/Main.elm')
     .pipe(elm())
+    .on('error', onError)
     .pipe(uglify())
     .pipe(rename('jarbas/frontend/static/app.js'))
     .pipe(gulp.dest('.'));
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', ['elm'], function () {
   watch('**/*.elm', function () {
     gulp.start('elm');
   });
 });
+
+function onError(err) {
+    console.log(err);
+    this.emit('end');
+}
