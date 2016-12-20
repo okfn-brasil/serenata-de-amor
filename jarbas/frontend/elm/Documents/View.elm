@@ -11,7 +11,7 @@ import Documents.Supplier.View as SupplierView
 import Format.Number exposing (formatNumber)
 import Html exposing (a, div, form, p, span, text)
 import Html.App
-import Html.Attributes exposing (href)
+import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
@@ -600,7 +600,7 @@ viewDocument lang index document =
                 [ Typography.caption, Options.css "margin-top" "1rem" ]
                 [ text (translate lang DocumentSource)
                 , a
-                    [ href (sourceUrl document) ]
+                    [ href (sourceUrl document), class "chamber-of-deputies-source" ]
                     [ text (translate lang DocumentChamberOfDeputies) ]
                 ]
             ]
