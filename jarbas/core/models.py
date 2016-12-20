@@ -71,7 +71,7 @@ class Reimbursement(models.Model):
     probability = models.DecimalField('Probability', max_digits=6, decimal_places=5, blank=True, null=True)
     suspicions = JSONField('Suspicions', blank=True, null=True)
 
-    receipt_fetched = models.BooleanField('Was the receipt URL fetched?', default=False)
+    receipt_fetched = models.BooleanField('Was the receipt URL fetched?', default=False, db_index=True)
     receipt_url = models.CharField('Receipt URL', max_length=140, blank=True, null=True)
 
     class Meta:
@@ -112,6 +112,14 @@ class Reimbursement(models.Model):
 
         parts = list(content.split(','))
         return list(map(lambda x: cast(x), parts)) if cast else parts
+
+    def __repr__(self):
+        unique_id = (
+            'year={year}, '
+            'applicant_id={applicant_id}, '
+            'document_id={document_id}'
+        ).format(**self.__dict__)
+        return 'Reimbursement({})'.format(unique_id)
 
 
 class Document(models.Model):
