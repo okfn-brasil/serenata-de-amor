@@ -1,6 +1,7 @@
 module Documents.View exposing (..)
 
 import Date
+import Date.Format
 import Documents.Fields as Fields
 import Documents.Inputs.View as InputsView
 import Documents.Inputs.Update as InputsUpdate
@@ -11,7 +12,7 @@ import Documents.Supplier.View as SupplierView
 import Format.Number exposing (formatNumber)
 import Html exposing (a, div, form, p, span, text)
 import Html.App
-import Html.Attributes exposing (class, href)
+import Html.Attributes exposing (class, href, target)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
@@ -418,18 +419,52 @@ viewDocumentBlockLine ( label, value ) =
             ]
 
 
-viewDocumentBlock : Language -> ( String, String, List ( String, String ) ) -> Html.Html Msg
-viewDocumentBlock lang ( title, icon, fields ) =
+viewPs : Language -> Document -> Html.Html Msg
+viewPs lang document =
+    let
+        currencyUrl =
+            String.concat
+                [ "http://x-rates.com/historical/?from=BRL&amount="
+                , toString document.totalNetValue
+                , "&date="
+                , Date.Format.format "%Y-%m-%d" document.issueDate
+                ]
+
+        currency =
+            if document.documentType == 2 then
+                Options.styled
+                    p
+                    [ Typography.caption ]
+                    [ translate lang FieldsetCurrencyDetails |> text
+                    , a
+                        [ href currencyUrl, target "_blank" ]
+                        [ translate lang FieldsetCurrencyDetailsLink |> text
+                        , viewDate lang document.issueDate |> text
+                        ]
+                    , text "."
+                    ]
+            else
+                text ""
+    in
+        div
+            []
+            [ currency
+            , Options.styled
+                p
+                [ Typography.caption ]
+                [ text (translate lang FieldsetSupplierDetails) ]
+            ]
+
+
+viewDocumentBlock : Language -> Document -> ( String, String, List ( String, String ) ) -> Html.Html Msg
+viewDocumentBlock lang document ( title, icon, fields ) =
     let
         iconTag =
             Icon.view icon [ Options.css "transform" "translateY(0.4rem)" ]
 
         ps =
             if title == (translate lang FieldsetSummary) then
-                Options.styled
-                    p
-                    [ Typography.caption ]
-                    [ text (translate lang FieldsetSupplierDetails) ]
+                viewPs lang document
             else
                 text ""
     in
@@ -485,7 +520,7 @@ viewSummaryBlock lang document =
             ]
                 |> List.filter (\( key, value ) -> String.isEmpty value |> not)
     in
-        viewDocumentBlock lang ( translate lang FieldsetSummary, "list", fields )
+        viewDocumentBlock lang document ( translate lang FieldsetSummary, "list", fields )
 
 
 viewReimbursementDetails : Language -> Document -> Html.Html Msg
@@ -513,7 +548,7 @@ viewReimbursementDetails lang document =
             ]
                 |> List.filter (\( key, value ) -> String.isEmpty value |> not)
     in
-        viewDocumentBlock lang ( translate lang FieldsetReimbursement, "folder", fields )
+        viewDocumentBlock lang document ( translate lang FieldsetReimbursement, "folder", fields )
 
 
 viewCongressPersonDetails : Language -> Document -> Html.Html Msg
@@ -527,7 +562,7 @@ viewCongressPersonDetails lang document =
             ]
                 |> List.filter (\( key, value ) -> String.isEmpty value |> not)
     in
-        viewDocumentBlock lang ( translate lang FieldsetCongressperson, "face", fields )
+        viewDocumentBlock lang document ( translate lang FieldsetCongressperson, "face", fields )
 
 
 viewTrip : Language -> Document -> Html.Html Msg
@@ -542,7 +577,7 @@ viewTrip lang document =
         if List.isEmpty fields then
             text ""
         else
-            viewDocumentBlock lang ( translate lang FieldsetTrip, "flight", fields )
+            viewDocumentBlock lang document ( translate lang FieldsetTrip, "flight", fields )
 
 
 viewDocument : Language -> Int -> Document -> List (Material.Grid.Cell Msg)

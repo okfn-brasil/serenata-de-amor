@@ -1,7 +1,7 @@
 module Internationalization exposing (Language(..), TranslationId(..), translate)
 
 import Date
-import String
+import Date.Format
 
 
 type alias TranslationSet =
@@ -27,6 +27,8 @@ type TranslationId
     | FieldsetReimbursement
     | FieldsetCongressperson
     | FieldsetSupplierDetails
+    | FieldsetCurrencyDetails
+    | FieldsetCurrencyDetailsLink
     | FieldYear
     | FieldDocumentId
     | FieldApplicantId
@@ -112,46 +114,6 @@ type TranslationId
     | DocumentType Int
 
 
-monthNumber : Date.Date -> Int
-monthNumber date =
-    case Date.month date of
-        Date.Jan ->
-            1
-
-        Date.Feb ->
-            2
-
-        Date.Mar ->
-            3
-
-        Date.Apr ->
-            4
-
-        Date.May ->
-            5
-
-        Date.Jun ->
-            6
-
-        Date.Jul ->
-            7
-
-        Date.Aug ->
-            8
-
-        Date.Sep ->
-            9
-
-        Date.Oct ->
-            10
-
-        Date.Nov ->
-            11
-
-        Date.Dec ->
-            12
-
-
 translate : Language -> TranslationId -> String
 translate lang trans =
     let
@@ -211,6 +173,16 @@ translate lang trans =
                     TranslationSet
                         "If we can find the CNPJ of this supplier in our database more info will be available in the sidebar."
                         "Se o CNPJ estiver no nosso banco de dados mais detalhes sobre o fornecedor aparecerão ao lado."
+
+                FieldsetCurrencyDetails ->
+                    TranslationSet
+                        "Expense made abroad: "
+                        "Despesa feita no exterior "
+
+                FieldsetCurrencyDetailsLink ->
+                    TranslationSet
+                        "check the currency rate on "
+                        "veja a cotação em "
 
                 FieldYear ->
                     TranslationSet
@@ -614,22 +586,8 @@ translate lang trans =
 
                 FormattedDate date ->
                     TranslationSet
-                        (String.concat
-                            [ Date.month date |> toString
-                            , " "
-                            , Date.day date |> toString
-                            , ", "
-                            , Date.year date |> toString
-                            ]
-                        )
-                        (List.map
-                            toString
-                            [ Date.day date
-                            , monthNumber date
-                            , Date.year date
-                            ]
-                            |> String.join "/"
-                        )
+                        (Date.Format.format "%b %e, %Y" date)
+                        (Date.Format.format "%d/%m/%Y" date)
 
                 Suspicion suspicion ->
                     case suspicion of
