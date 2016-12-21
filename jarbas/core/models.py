@@ -3,7 +3,7 @@ from django.db import models
 from requests import head
 
 
-class NewReceipt:
+class Receipt:
 
     def __init__(self, year, applicant_id, document_id):
         self.year = year
@@ -85,7 +85,7 @@ class Reimbursement(models.Model):
         if self.receipt_fetched and not force:
             return None
 
-        receipt = NewReceipt(self.year, self.applicant_id, self.document_id)
+        receipt = Receipt(self.year, self.applicant_id, self.document_id)
         if receipt.exists:
             self.receipt_url = receipt.url
         self.receipt_fetched = True

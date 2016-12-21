@@ -61,7 +61,7 @@ class ReimbursementSerializer(serializers.ModelSerializer):
         )
 
 
-class NewReceiptSerializer(serializers.ModelSerializer):
+class ReceiptSerializer(serializers.ModelSerializer):
 
     reimbursement = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()

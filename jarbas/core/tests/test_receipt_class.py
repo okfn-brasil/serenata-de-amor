@@ -3,13 +3,13 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
-from jarbas.core.models import NewReceipt
+from jarbas.core.models import Receipt
 
 
 class TestReceipt(TestCase):
 
     def setUp(self):
-        self.receipt = NewReceipt(1970, 13, 42)
+        self.receipt = Receipt(1970, 13, 42)
 
     def test_url(self):
         expected = 'http://www.camara.gov.br/cota-parlamentar/documentos/publ/13/1970/42.pdf'

@@ -3,7 +3,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from jarbas.api.serializers import (
     ApplicantSerializer,
-    NewReceiptSerializer,
+    ReceiptSerializer,
     ReimbursementSerializer,
     SubquotaSerializer,
     SupplierSerializer
@@ -80,7 +80,7 @@ class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
 
     lookup_fields = ('year', 'applicant_id', 'document_id')
     queryset = Reimbursement.objects.all()
-    serializer_class = NewReceiptSerializer
+    serializer_class = ReceiptSerializer
 
     def get_object(self):
         obj = super().get_object()
