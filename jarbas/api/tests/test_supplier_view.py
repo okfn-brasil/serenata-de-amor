@@ -47,11 +47,3 @@ class TestGetNonExistentSupplier(TestApi):
 
     def test_status_code(self):
         self.assertEqual(404, self.resp.status_code)
-
-
-class TestOldURLRedirect(TestApi):
-
-    def test_redirect(self):
-        old_url = self.url.replace('company', 'supplier')
-        resp = self.client.get(old_url, follow=True)
-        self.assertRedirects(resp, self.url)

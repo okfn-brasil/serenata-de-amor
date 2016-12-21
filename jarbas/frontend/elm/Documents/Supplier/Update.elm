@@ -57,7 +57,7 @@ load cnpj =
     if isValid cnpj then
         let
             path =
-                "/api/supplier/" ++ (cleanUp cnpj)
+                "/api/company/" ++ (cleanUp cnpj) ++ "/"
 
             url =
                 Http.url path [ ( "format", "json" ) ]

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from jarbas.core.models import Activity, Document, Receipt, Reimbursement, Supplier
+from jarbas.core.models import Activity, Reimbursement, Supplier
 
 
 class ReimbursementSerializer(serializers.ModelSerializer):
@@ -96,29 +96,6 @@ class SubquotaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reimbursement
         fields = ('subquota_id', 'subquota_description')
-
-
-class ReceiptSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Receipt
-        fields = ('url', 'fetched')
-
-
-class DocumentSerializer(serializers.ModelSerializer):
-
-    receipt = serializers.SerializerMethodField()
-
-    def get_receipt(self, obj):
-        receipt, created = Receipt.objects.get_or_create(
-            document=obj,
-            defaults=dict(document=obj)
-        )
-        return ReceiptSerializer(receipt).data
-
-    class Meta:
-        model = Document
-        exclude = ()
 
 
 class ActivitySerializer(serializers.ModelSerializer):
