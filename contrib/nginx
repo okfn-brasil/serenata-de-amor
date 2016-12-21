@@ -11,6 +11,14 @@ server {
         alias /opt/jarbas/staticfiles/;
     }
 
+    location /favicon.ico {
+        alias /opt/jarbas/staticfiles/favicon/favicon.ico;
+    }
+
+    location /browserconfig.xml {
+        alias /opt/jarbas/staticfiles/favicon/browserconfig.xml;
+    }
+
     location / {
         proxy_pass http://$alias:8001;
         proxy_set_header Host $host;
