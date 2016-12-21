@@ -47,7 +47,7 @@ sample_activity_data = dict(
     description='So long, so long, and thanks for all the fish'
 )
 
-sample_supplier_data = dict(
+sample_company_data = dict(
     cnpj='12.345.678/9012-34',
     opening=date(1995, 9, 27),
     legal_entity='42 - The answer to life, the universe, and everything',

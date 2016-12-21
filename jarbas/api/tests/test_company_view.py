@@ -4,18 +4,18 @@ import json
 from django.shortcuts import resolve_url
 from django.test import TestCase
 
-from jarbas.core.models import Activity, Supplier
-from jarbas.core.tests import sample_activity_data, sample_supplier_data
+from jarbas.core.models import Activity, Company
+from jarbas.core.tests import sample_activity_data, sample_company_data
 
 
 class TestApi(TestCase):
 
     def setUp(self):
         activity = Activity.objects.create(**sample_activity_data)
-        self.supplier = Supplier.objects.create(**sample_supplier_data)
-        self.supplier.main_activity.add(activity)
-        self.supplier.save()
-        cnpj = re.compile(r'\D').sub('', self.supplier.cnpj)
+        self.company = Company.objects.create(**sample_company_data)
+        self.company.main_activity.add(activity)
+        self.company.save()
+        cnpj = re.compile(r'\D').sub('', self.company.cnpj)
         self.url = resolve_url('api:company-detail', cnpj)
 
 
@@ -39,7 +39,7 @@ class TestGet(TestApi):
         self.assertIn('longitude', response)
 
 
-class TestGetNonExistentSupplier(TestApi):
+class TestGetNonExistentCompany(TestApi):
 
     def setUp(self):
         url = resolve_url('api:company-detail', '42424242424242')

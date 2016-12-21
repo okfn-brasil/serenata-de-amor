@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from jarbas.core.models import Activity, Reimbursement, Supplier
+from jarbas.core.models import Activity, Reimbursement, Company
 
 
 class ReimbursementSerializer(serializers.ModelSerializer):
@@ -105,12 +105,12 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = ('code', 'description')
 
 
-class SupplierSerializer(serializers.ModelSerializer):
+class CompanySerializer(serializers.ModelSerializer):
 
     main_activity = ActivitySerializer(many=True, read_only=True)
     secondary_activity = ActivitySerializer(many=True, read_only=True)
 
     class Meta:
-        model = Supplier
+        model = Company
         exclude = ('id',)
         depth = 1

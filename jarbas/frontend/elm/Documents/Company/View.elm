@@ -1,4 +1,4 @@
-module Documents.Supplier.View exposing (view)
+module Documents.Company.View exposing (view)
 
 import Html exposing (a, br, div, img, p, span, text)
 import Html.Attributes exposing (class, href, src, style, target)
@@ -7,8 +7,8 @@ import Internationalization exposing (Language(..), TranslationId(..), translate
 import Material.Icon as Icon
 import Material.Options as Options
 import Material.Typography as Typography
-import Documents.Supplier.Update exposing (Msg)
-import Documents.Supplier.Model exposing (Model, Supplier, Activity)
+import Documents.Company.Update exposing (Msg)
+import Documents.Company.Model exposing (Model, Company, Activity)
 
 
 streetImageUrl : String -> Int -> Int -> String -> String -> Int -> String
@@ -51,44 +51,44 @@ streetImageTag apiKey latitude longitude heading =
             text ""
 
 
-viewImage : String -> Supplier -> Html.Html Msg
-viewImage apiKey supplier =
+viewImage : String -> Company -> Html.Html Msg
+viewImage apiKey company =
     let
         images =
             List.map
-                (streetImageTag apiKey supplier.latitude supplier.longitude)
+                (streetImageTag apiKey company.latitude company.longitude)
                 [ 90, 180, 270, 360 ]
     in
         div [] images
 
 
-viewSupplier : Language -> String -> Supplier -> Html.Html Msg
-viewSupplier lang apiKey supplier =
+viewCompany : Language -> String -> Company -> Html.Html Msg
+viewCompany lang apiKey company =
     let
         labels =
-            [ ( (translate lang SupplierCNPJ), supplier.cnpj )
-            , ( (translate lang SupplierTradeName), Maybe.withDefault "" supplier.trade_name )
-            , ( (translate lang SupplierName), Maybe.withDefault "" supplier.name )
-            , ( (translate lang SupplierOpeningDate), Maybe.withDefault "" supplier.opening )
-            , ( (translate lang SupplierLegalEntity), Maybe.withDefault "" supplier.legal_entity )
-            , ( (translate lang SupplierType), Maybe.withDefault "" supplier.supplier_type )
-            , ( (translate lang SupplierStatus), Maybe.withDefault "" supplier.status )
-            , ( (translate lang SupplierSituation), Maybe.withDefault "" supplier.situation )
-            , ( (translate lang SupplierSituationReason), Maybe.withDefault "" supplier.situation_reason )
-            , ( (translate lang SupplierSituationDate), Maybe.withDefault "" supplier.situation_date )
-            , ( (translate lang SupplierSpecialSituation), Maybe.withDefault "" supplier.special_situation )
-            , ( (translate lang SupplierSpecialSituationDate), Maybe.withDefault "" supplier.special_situation_date )
-            , ( (translate lang SupplierResponsibleFederativeEntity), Maybe.withDefault "" supplier.responsible_federative_entity )
-            , ( (translate lang SupplierAddress), Maybe.withDefault "" supplier.address )
-            , ( (translate lang SupplierNumber), Maybe.withDefault "" supplier.address_number )
-            , ( (translate lang SupplierAdditionalAddressDetails), Maybe.withDefault "" supplier.additional_address_details )
-            , ( (translate lang SupplierNeighborhood), Maybe.withDefault "" supplier.neighborhood )
-            , ( (translate lang SupplierZipCode), Maybe.withDefault "" supplier.zip_code )
-            , ( (translate lang SupplierCity), Maybe.withDefault "" supplier.city )
-            , ( (translate lang SupplierState), Maybe.withDefault "" supplier.state )
-            , ( (translate lang SupplierEmail), Maybe.withDefault "" supplier.email )
-            , ( (translate lang SupplierPhone), Maybe.withDefault "" supplier.phone )
-            , ( (translate lang SupplierLastUpdated), Maybe.withDefault "" supplier.last_updated )
+            [ ( (translate lang CompanyCNPJ), company.cnpj )
+            , ( (translate lang CompanyTradeName), Maybe.withDefault "" company.trade_name )
+            , ( (translate lang CompanyName), Maybe.withDefault "" company.name )
+            , ( (translate lang CompanyOpeningDate), Maybe.withDefault "" company.opening )
+            , ( (translate lang CompanyLegalEntity), Maybe.withDefault "" company.legal_entity )
+            , ( (translate lang CompanyType), Maybe.withDefault "" company.company_type )
+            , ( (translate lang CompanyStatus), Maybe.withDefault "" company.status )
+            , ( (translate lang CompanySituation), Maybe.withDefault "" company.situation )
+            , ( (translate lang CompanySituationReason), Maybe.withDefault "" company.situation_reason )
+            , ( (translate lang CompanySituationDate), Maybe.withDefault "" company.situation_date )
+            , ( (translate lang CompanySpecialSituation), Maybe.withDefault "" company.special_situation )
+            , ( (translate lang CompanySpecialSituationDate), Maybe.withDefault "" company.special_situation_date )
+            , ( (translate lang CompanyResponsibleFederativeEntity), Maybe.withDefault "" company.responsible_federative_entity )
+            , ( (translate lang CompanyAddress), Maybe.withDefault "" company.address )
+            , ( (translate lang CompanyNumber), Maybe.withDefault "" company.address_number )
+            , ( (translate lang CompanyAdditionalAddressDetails), Maybe.withDefault "" company.additional_address_details )
+            , ( (translate lang CompanyNeighborhood), Maybe.withDefault "" company.neighborhood )
+            , ( (translate lang CompanyZipCode), Maybe.withDefault "" company.zip_code )
+            , ( (translate lang CompanyCity), Maybe.withDefault "" company.city )
+            , ( (translate lang CompanyState), Maybe.withDefault "" company.state )
+            , ( (translate lang CompanyEmail), Maybe.withDefault "" company.email )
+            , ( (translate lang CompanyPhone), Maybe.withDefault "" company.phone )
+            , ( (translate lang CompanyLastUpdated), Maybe.withDefault "" company.last_updated )
             ]
 
         rows =
@@ -97,15 +97,15 @@ viewSupplier lang apiKey supplier =
         activities =
             List.map
                 viewActivities
-                [ ( (translate lang SupplierMainActivity), supplier.main_activity )
-                , ( (translate lang SupplierSecondaryActivity), supplier.secondary_activity )
+                [ ( (translate lang CompanyMainActivity), company.main_activity )
+                , ( (translate lang CompanySecondaryActivity), company.secondary_activity )
                 ]
 
         icon =
             Icon.view "store" [ Options.css "transform" "translateY(0.4rem)" ]
 
         title =
-            " " ++ (Maybe.withDefault "" supplier.name)
+            " " ++ (Maybe.withDefault "" company.name)
 
         source =
             "http://www.receita.fazenda.gov.br/PessoaJuridica/CNPJ/cnpjreva/cnpjreva_solicitacao2.asp"
@@ -115,13 +115,13 @@ viewSupplier lang apiKey supplier =
             [ Options.styled
                 p
                 [ Typography.subhead ]
-                [ icon, text title, viewImage apiKey supplier ]
+                [ icon, text title, viewImage apiKey company ]
             , Options.styled div [] (rows ++ activities)
             , Options.styled
                 p
                 [ Typography.caption, Options.css "margin-top" "1rem" ]
-                [ text (translate lang SupplierSource)
-                , a [ href source, class "supplier-federal-revenue-source" ] [ text (translate lang SupplierFederalRevenue) ]
+                [ text (translate lang CompanySource)
+                , a [ href source, class "supplier-federal-revenue-source" ] [ text (translate lang CompanyFederalRevenue) ]
                 ]
             ]
 
@@ -170,9 +170,9 @@ viewActivities ( label, activities ) =
 view : Model -> Html.Html Msg
 view model =
     if model.loaded then
-        case model.supplier of
+        case model.company of
             Just info ->
-                viewSupplier model.lang model.googleStreetViewApiKey info
+                viewCompany model.lang model.googleStreetViewApiKey info
 
             Nothing ->
                 Options.styled div
@@ -181,6 +181,6 @@ view model =
     else if model.loading then
         Options.styled div
             [ Typography.caption ]
-            [ text "Fetching supplier info from CNPJ…" ]
+            [ text "Fetching company info from CNPJ…" ]
     else
         text ""

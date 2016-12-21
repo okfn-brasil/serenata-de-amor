@@ -64,7 +64,7 @@ labels lang =
         , FieldSubquotaDescription
         , FieldSubquotaGroupId
         , FieldSubquotaGroupDescription
-        , FieldSupplier
+        , FieldCompany
         , FieldCnpjCpf
         , FieldDocumentType
         , FieldDocumentNumber

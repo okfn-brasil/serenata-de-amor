@@ -128,7 +128,7 @@ class Activity(models.Model):
     description = models.CharField('Description', max_length=167)
 
 
-class Supplier(models.Model):
+class Company(models.Model):
 
     cnpj = models.CharField('CNPJ', db_index=True, max_length=18)
     opening = models.DateField('Opening date', blank=True, null=True)

@@ -1,4 +1,4 @@
-module Documents.Supplier.Model exposing (Model, Supplier, Activity, model)
+module Documents.Company.Model exposing (Model, Company, Activity, model)
 
 import Http exposing (url)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
@@ -11,7 +11,7 @@ type alias Activity =
     }
 
 
-type alias Supplier =
+type alias Company =
     { main_activity : List Activity
     , secondary_activity : List Activity
     , cnpj : String
@@ -19,7 +19,7 @@ type alias Supplier =
     , legal_entity : Maybe String
     , trade_name : Maybe String
     , name : Maybe String
-    , supplier_type : Maybe String
+    , company_type : Maybe String
     , status : Maybe String
     , situation : Maybe String
     , situation_reason : Maybe String
@@ -43,7 +43,7 @@ type alias Supplier =
 
 
 type alias Model =
-    { supplier : Maybe Supplier
+    { company : Maybe Company
     , loading : Bool
     , loaded : Bool
     , error : Maybe Http.Error

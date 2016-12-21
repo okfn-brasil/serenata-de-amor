@@ -26,7 +26,7 @@ type TranslationId
     | FieldsetTrip
     | FieldsetReimbursement
     | FieldsetCongressperson
-    | FieldsetSupplierDetails
+    | FieldsetCompanyDetails
     | FieldsetCurrencyDetails
     | FieldsetCurrencyDetailsLink
     | FieldYear
@@ -48,7 +48,7 @@ type TranslationId
     | FieldSubquotaDescription
     | FieldSubquotaGroupId
     | FieldSubquotaGroupDescription
-    | FieldSupplier
+    | FieldCompany
     | FieldCnpjCpf
     | FieldDocumentType
     | FieldDocumentNumber
@@ -70,33 +70,33 @@ type TranslationId
     | ReceiptAvailable
     | ReceiptNotAvailable
     | Map
-    | SupplierCNPJ
-    | SupplierTradeName
-    | SupplierName
-    | SupplierOpeningDate
-    | SupplierLegalEntity
-    | SupplierType
-    | SupplierStatus
-    | SupplierSituation
-    | SupplierSituationReason
-    | SupplierSituationDate
-    | SupplierSpecialSituation
-    | SupplierSpecialSituationDate
-    | SupplierResponsibleFederativeEntity
-    | SupplierAddress
-    | SupplierNumber
-    | SupplierAdditionalAddressDetails
-    | SupplierNeighborhood
-    | SupplierZipCode
-    | SupplierCity
-    | SupplierState
-    | SupplierEmail
-    | SupplierPhone
-    | SupplierLastUpdated
-    | SupplierMainActivity
-    | SupplierSecondaryActivity
-    | SupplierSource
-    | SupplierFederalRevenue
+    | CompanyCNPJ
+    | CompanyTradeName
+    | CompanyName
+    | CompanyOpeningDate
+    | CompanyLegalEntity
+    | CompanyType
+    | CompanyStatus
+    | CompanySituation
+    | CompanySituationReason
+    | CompanySituationDate
+    | CompanySpecialSituation
+    | CompanySpecialSituationDate
+    | CompanyResponsibleFederativeEntity
+    | CompanyAddress
+    | CompanyNumber
+    | CompanyAdditionalAddressDetails
+    | CompanyNeighborhood
+    | CompanyZipCode
+    | CompanyCity
+    | CompanyState
+    | CompanyEmail
+    | CompanyPhone
+    | CompanyLastUpdated
+    | CompanyMainActivity
+    | CompanySecondaryActivity
+    | CompanySource
+    | CompanyFederalRevenue
     | ResultTitleSingular
     | ResultTitlePlural
     | DocumentTitle
@@ -169,7 +169,7 @@ translate lang trans =
                         "Reimbursement details"
                         "Detalhes do reembolso"
 
-                FieldsetSupplierDetails ->
+                FieldsetCompanyDetails ->
                     TranslationSet
                         "If we can find the CNPJ of this supplier in our database more info will be available in the sidebar."
                         "Se o CNPJ estiver no nosso banco de dados mais detalhes sobre o fornecedor aparecerão ao lado."
@@ -279,9 +279,9 @@ translate lang trans =
                         "Subquota group"
                         "Especificação da subcota"
 
-                FieldSupplier ->
+                FieldCompany ->
                     TranslationSet
-                        "Supplier"
+                        "Company"
                         "Fornecedor"
 
                 FieldCnpjCpf ->
@@ -386,140 +386,140 @@ translate lang trans =
 
                 Map ->
                     TranslationSet
-                        " Supplier on Maps"
+                        " Company on Maps"
                         " Ver no Google Maps"
 
-                SupplierCNPJ ->
+                CompanyCNPJ ->
                     TranslationSet
                         "CNPJ"
                         "CNPJ"
 
-                SupplierTradeName ->
+                CompanyTradeName ->
                     TranslationSet
                         "Trade name"
                         "Nome fantasia"
 
-                SupplierName ->
+                CompanyName ->
                     TranslationSet
                         "Name"
                         "Razão social"
 
-                SupplierOpeningDate ->
+                CompanyOpeningDate ->
                     TranslationSet
                         "Opening date"
                         "Data de abertura"
 
-                SupplierLegalEntity ->
+                CompanyLegalEntity ->
                     TranslationSet
                         "Legal entity"
                         "Natureza jurídica"
 
-                SupplierType ->
+                CompanyType ->
                     TranslationSet
                         "Type"
                         "Tipo"
 
-                SupplierStatus ->
+                CompanyStatus ->
                     TranslationSet
                         "Status"
                         "Status"
 
-                SupplierSituation ->
+                CompanySituation ->
                     TranslationSet
                         "Situation"
                         "Situação"
 
-                SupplierSituationReason ->
+                CompanySituationReason ->
                     TranslationSet
                         "Situation Reason"
                         "Motivo situação"
 
-                SupplierSituationDate ->
+                CompanySituationDate ->
                     TranslationSet
                         "Situation Date"
                         "Data situação"
 
-                SupplierSpecialSituation ->
+                CompanySpecialSituation ->
                     TranslationSet
                         "Special Situation"
                         "Situação especial"
 
-                SupplierSpecialSituationDate ->
+                CompanySpecialSituationDate ->
                     TranslationSet
                         "Special Situation Date"
                         "Data situação especial"
 
-                SupplierResponsibleFederativeEntity ->
+                CompanyResponsibleFederativeEntity ->
                     TranslationSet
                         "Responsible Federative Entity"
                         "EFR"
 
-                SupplierAddress ->
+                CompanyAddress ->
                     TranslationSet
                         "Address"
                         "Endereço"
 
-                SupplierNumber ->
+                CompanyNumber ->
                     TranslationSet
                         "Number"
                         "Número"
 
-                SupplierAdditionalAddressDetails ->
+                CompanyAdditionalAddressDetails ->
                     TranslationSet
                         "Additional Address Details"
                         "Complemento"
 
-                SupplierNeighborhood ->
+                CompanyNeighborhood ->
                     TranslationSet
                         "Neighborhood"
                         "Bairro"
 
-                SupplierZipCode ->
+                CompanyZipCode ->
                     TranslationSet
                         "Zip Code"
                         "CEP"
 
-                SupplierCity ->
+                CompanyCity ->
                     TranslationSet
                         "City"
                         "Cidade"
 
-                SupplierState ->
+                CompanyState ->
                     TranslationSet
                         "State"
                         "Estado"
 
-                SupplierEmail ->
+                CompanyEmail ->
                     TranslationSet
                         "Email"
                         "Email"
 
-                SupplierPhone ->
+                CompanyPhone ->
                     TranslationSet
                         "Telephone"
                         "Telefone"
 
-                SupplierLastUpdated ->
+                CompanyLastUpdated ->
                     TranslationSet
                         "Last Updated"
                         "Última atualização"
 
-                SupplierMainActivity ->
+                CompanyMainActivity ->
                     TranslationSet
                         "Main Activity"
                         "Atividade principal"
 
-                SupplierSecondaryActivity ->
+                CompanySecondaryActivity ->
                     TranslationSet
                         "Secondary Activity"
                         "Atividades secundárias"
 
-                SupplierSource ->
+                CompanySource ->
                     TranslationSet
                         "Source: "
                         "Fonte: "
 
-                SupplierFederalRevenue ->
+                CompanyFederalRevenue ->
                     TranslationSet
                         "Federal Revenue of Brazil"
                         "Receita Federal"

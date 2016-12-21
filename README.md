@@ -118,7 +118,7 @@ A company is a Brazilian company in which congressperson have made expenses and 
 
 ##### `GET /api/company/<cnpj>/`
 
-This endpoit gets the info we have for a specific company. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Supplier` object, digits only). It returns `404` if the company is not found.
+This endpoit gets the info we have for a specific company. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Company` object, digits only). It returns `404` if the company is not found.
 
 ### Tapioca Jarbas
 

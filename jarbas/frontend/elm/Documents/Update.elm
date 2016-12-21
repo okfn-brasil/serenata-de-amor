@@ -8,7 +8,7 @@ import Documents.Receipt.Model exposing (ReimbursementId)
 import Documents.Receipt.Update as Receipt
 import Documents.Decoder exposing (decoder)
 import Documents.Model exposing (Model, Document, Results, results)
-import Documents.Supplier.Update as Supplier
+import Documents.Company.Update as Company
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
@@ -37,7 +37,7 @@ type Msg
     | ApiFail Http.Error
     | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
-    | SupplierMsg Int Supplier.Msg
+    | CompanyMsg Int Company.Msg
     | MapMsg
     | Mdl (Material.Msg Msg)
 
@@ -120,11 +120,11 @@ update msg model =
                 indexedDocuments =
                     getIndexedDocuments newModel
 
-                indexedSupplierCmds =
-                    List.map (\( idx, doc ) -> ( idx, Maybe.withDefault "" doc.cnpjCpf |> Supplier.load )) indexedDocuments
+                indexedCompanyCmds =
+                    List.map (\( idx, doc ) -> ( idx, Maybe.withDefault "" doc.cnpjCpf |> Company.load )) indexedDocuments
 
                 cmds =
-                    List.map (\( idx, cmd ) -> Cmd.map (SupplierMsg idx) cmd) indexedSupplierCmds
+                    List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd) indexedCompanyCmds
             in
                 ( newModel, Cmd.batch cmds )
 
@@ -145,8 +145,8 @@ update msg model =
         ReceiptMsg index receiptMsg ->
             getDocumentsAndCmd model index updateReceipts receiptMsg
 
-        SupplierMsg index supplierMsg ->
-            getDocumentsAndCmd model index updateSuppliers supplierMsg
+        CompanyMsg index companyMsg ->
+            getDocumentsAndCmd model index updateCompanys companyMsg
 
         MapMsg ->
             ( model, Cmd.none )
@@ -155,20 +155,20 @@ update msg model =
             Material.update mdlMsg model
 
 
-updateSuppliers : Language -> Int -> Supplier.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
-updateSuppliers lang target msg ( index, document ) =
+updateCompanys : Language -> Int -> Company.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateCompanys lang target msg ( index, document ) =
     if target == index then
         let
             updated =
-                Supplier.update msg document.supplierInfo
+                Company.update msg document.supplierInfo
 
-            newSupplier =
+            newCompany =
                 fst updated
 
             newCmd =
-                Cmd.map (SupplierMsg target) (snd updated)
+                Cmd.map (CompanyMsg target) (snd updated)
         in
-            ( { document | supplierInfo = { newSupplier | lang = lang } }, newCmd )
+            ( { document | supplierInfo = { newCompany | lang = lang } }, newCmd )
     else
         ( document, Cmd.none )
 
@@ -215,7 +215,7 @@ getIndexedDocuments model =
 
 {-
    This type signature is terrible, but it is a flexible function to update
-   Suppliers and Receipts.
+   Companys and Receipts.
 
    It returns a new model with the documents field updated, and the list of
    commands already mapped to the current module (i.e.  it returns what the
@@ -223,10 +223,10 @@ getIndexedDocuments model =
 
    The arguments it expects:
        * (Model) current model
-       * (Int) index of the object (Supplier or Receipt) being updated
+       * (Int) index of the object (Company or Receipt) being updated
        * (Int -> a -> ( Int, Document ) -> ( Document, Cmd Msg )) this is
-         a function such as updateSuppliers or updateReceipts
-       * (a) The kind of message inside the former argument, i.e. Supplier.Msg
+         a function such as updateCompanys or updateReceipts
+       * (a) The kind of message inside the former argument, i.e. Company.Msg
          or Receipt.Msg
 -}
 

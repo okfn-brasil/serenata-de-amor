@@ -2,7 +2,7 @@ module Documents.Decoder exposing (..)
 
 import Documents.Inputs.Update as InputsUpdate
 import Documents.Receipt.Decoder as ReceiptDecoder
-import Documents.Supplier.Model as SupplierModel
+import Documents.Company.Model as CompanyModel
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Json.Decode exposing ((:=), Decoder, bool, fail, float, int, list, keyValuePairs, string, succeed)
 import Json.Decode.Extra exposing (date)
@@ -58,7 +58,7 @@ singleDecoder : Language -> String -> Decoder Document
 singleDecoder lang apiKey =
     let
         supplier =
-            SupplierModel.model
+            CompanyModel.model
     in
         decode Document
             |> required "year" int
@@ -110,10 +110,10 @@ updateDocumentLanguage lang document =
         supplier =
             document.supplierInfo
 
-        newSupplier =
+        newCompany =
             { supplier | lang = lang }
     in
-        { document | receipt = newReceipt, supplierInfo = newSupplier }
+        { document | receipt = newReceipt, supplierInfo = newCompany }
 
 
 updateLanguage : Language -> Model -> Model

@@ -6,9 +6,9 @@ from jarbas.api.serializers import (
     ReceiptSerializer,
     ReimbursementSerializer,
     SubquotaSerializer,
-    SupplierSerializer
+    CompanySerializer
 )
-from jarbas.core.models import Reimbursement, Supplier
+from jarbas.core.models import Reimbursement, Company
 
 
 def get_distinct(field, order_by, query=None):
@@ -110,8 +110,8 @@ class SubquotaListView(ListAPIView):
 class CompanyDetailView(RetrieveAPIView):
 
     lookup_field = 'cnpj'
-    queryset = Supplier.objects.all()
-    serializer_class = SupplierSerializer
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
 
     def get_object(self):
         cnpj = self.kwargs.get(self.lookup_field, '00000000000000')
@@ -122,4 +122,4 @@ class CompanyDetailView(RetrieveAPIView):
             cnpj[8:12],
             cnpj[12:14]
         )
-        return get_object_or_404(Supplier, cnpj=formatted)
+        return get_object_or_404(Company, cnpj=formatted)
