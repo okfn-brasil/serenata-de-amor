@@ -16,6 +16,13 @@ To achieve this goal, unprecedented, we invite everyone to train the intelligenc
 
 **[Visit out official website](http://serenata.datasciencebr.com/)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
 
-## License
+## Support Serenata de Amor
 
-The project Serenata de Amor Operation is available under [MIT license](LICENSE).
+We [were crowdfunded](https://catarse.me/serenata) to operate for the first two months. We're really glad for this support. However if you got here to late to join our crowdfunding campaign and/or you would like us to go further:
+
+* Donate via Bitcoin:[`1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b`](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20Serenata%20de%20Amor%20Operation)
+* Donate via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=%63%75%64%75%63%6f%73%40%67%6d%61%69%6c%2e%63%6f%6d&lc=GB&item_name=Support%20to%20Serenata%20de%20Amor%20Operation&currency_code=BRL&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
+
+## License
+  
+The project Serenata de Amor Operation is available under the [MIT license](LICENSE).
