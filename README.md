@@ -150,6 +150,8 @@ You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie)
 
 Also there are some cleaver shortcuts in the `Makefile` if you like it. 
 
+If you have some issues with settings, maybe [this section can be helpful](#settings).
+
 ### Local install
 
 #### Requirements
