@@ -21,9 +21,7 @@ class Receipt:
     @property
     def exists(self):
         status = head(self.get_url()).status_code
-        if 200 <= status < 400:
-            return True
-        return False
+        return 200 <= status < 400
 
 
 class Reimbursement(models.Model):
