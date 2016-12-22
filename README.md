@@ -82,6 +82,8 @@ This request will list:
 * made according to the subquota with the ID 42
 * sorted by the highest probability
 
+Also you can pass more than one value per field (e.g. `document_id=111111,222222`).
+
 ### Subquota
 
 Subqoutas are categories of expenses that can be reimbursed by congresspeople.

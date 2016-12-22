@@ -83,6 +83,15 @@ class TestListApi(TestCase):
         self.assertEqual(0.1, content['results'][1]['probability'])
         self.assertEqual(None, content['results'][2]['probability'])
 
+    def test_more_than_one_document_query(self):
+        extra = sample_reimbursement_data.copy()
+        extra['document_id'] = 0
+        Reimbursement.objects.create(**extra)
+        url = self.all + '?document_id=42,84+126,+168'
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(4, len(content['results']))
+
     def _count_results(self, url):
         resp = self.client.get(url)
         content = loads(resp.content.decode('utf-8'))

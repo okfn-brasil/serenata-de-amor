@@ -1,5 +1,10 @@
+import re
+from collections import namedtuple
+from functools import reduce
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, resolve_url
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ViewSet
 from rest_framework.generics import ListAPIView, RetrieveAPIView
@@ -15,12 +20,16 @@ from jarbas.api.serializers import (
 from jarbas.core.models import Document, Receipt, Reimbursement, Supplier
 
 
+Pair = namedtuple('Pair', ('key', 'values'))
+
+
 def get_distinct(field, order_by, query=None):
     qs = Reimbursement.objects.all()
     if query:
         filter = {order_by + '__icontains': query}
         qs = qs.filter(**filter)
     return qs.values(field, order_by).order_by(order_by) .distinct()
+
 
 
 class MultipleFieldLookupMixin(object):
@@ -59,7 +68,7 @@ class ReimbursementListView(ListAPIView):
 
         # filter queryset
         if filters:
-            self.queryset = self.queryset.filter(**filters)
+            self.queryset = self.queryset.filter(self.big_q(filters))
 
         # change ordering if needed
         order_by = self.request.query_params.get('order_by')
@@ -71,6 +80,25 @@ class ReimbursementListView(ListAPIView):
             self.queryset = self.queryset.extra(**kwargs)
 
         return super().get(request)
+
+    def big_q(self, filters):
+        """
+        Gets filters (dict) and returns a sequence of Q objects with the AND
+        operator.
+        """
+        regex = re.compile('[ ,]+')
+        as_pairs = (Pair(k, regex.split(v)) for k, v in filters.items())
+        as_q = map(self.big_q_or, as_pairs)
+        return reduce(lambda q, new_q: q & (new_q), as_q, Q())
+
+    @staticmethod
+    def big_q_or(query):
+        """
+        Gets a Pair with a key and an iterable as values and returns a Q object
+        with the OR operator.
+        """
+        pairs = ({query.key: v} for v in query.values)
+        return reduce(lambda q, new_q: q | Q(**new_q), pairs, Q())
 
 
 class ReimbursementDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
