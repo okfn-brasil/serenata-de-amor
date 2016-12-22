@@ -2,22 +2,18 @@ import re
 from collections import namedtuple
 from functools import reduce
 
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, resolve_url
+from django.shortcuts import get_object_or_404
 from django.db.models import Q
-from rest_framework.response import Response
-from rest_framework.viewsets import ReadOnlyModelViewSet, ViewSet
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from jarbas.api.serializers import (
     ApplicantSerializer,
-    DocumentSerializer,
-    NewReceiptSerializer,
+    ReceiptSerializer,
     ReimbursementSerializer,
     SubquotaSerializer,
-    SupplierSerializer
+    CompanySerializer
 )
-from jarbas.core.models import Document, Receipt, Reimbursement, Supplier
+from jarbas.core.models import Reimbursement, Company
 
 
 Pair = namedtuple('Pair', ('key', 'values'))
@@ -29,7 +25,6 @@ def get_distinct(field, order_by, query=None):
         filter = {order_by + '__icontains': query}
         qs = qs.filter(**filter)
     return qs.values(field, order_by).order_by(order_by) .distinct()
-
 
 
 class MultipleFieldLookupMixin(object):
@@ -112,7 +107,7 @@ class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
 
     lookup_fields = ('year', 'applicant_id', 'document_id')
     queryset = Reimbursement.objects.all()
-    serializer_class = NewReceiptSerializer
+    serializer_class = ReceiptSerializer
 
     def get_object(self):
         obj = super().get_object()
@@ -142,8 +137,8 @@ class SubquotaListView(ListAPIView):
 class CompanyDetailView(RetrieveAPIView):
 
     lookup_field = 'cnpj'
-    queryset = Supplier.objects.all()
-    serializer_class = SupplierSerializer
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
 
     def get_object(self):
         cnpj = self.kwargs.get(self.lookup_field, '00000000000000')
@@ -154,55 +149,4 @@ class CompanyDetailView(RetrieveAPIView):
             cnpj[8:12],
             cnpj[12:14]
         )
-        return get_object_or_404(Supplier, cnpj=formatted)
-
-
-class DocumentViewSet(ReadOnlyModelViewSet):
-
-    serializer_class = DocumentSerializer
-
-    def get_queryset(self):
-
-        # look up for filters in the query parameters
-        params = (
-            'applicant_id',
-            'cnpj_cpf',
-            'congressperson_id',
-            'document_id',
-            'document_type',
-            'month',
-            'party',
-            'reimbursement_number',
-            'state',
-            'subquota_group_id',
-            'subquota_number',
-            'term',
-            'year',
-        )
-        values = map(self.request.query_params.get, params)
-        filters = {k: v for k, v in zip(params, values) if v is not None}
-
-        # build queryset
-        queryset = Document.objects.all()
-        if filters:
-            queryset = queryset.filter(**filters)
-
-        return queryset
-
-
-class ReceiptViewSet(ViewSet):
-
-    queryset = Receipt.objects.all()
-
-    def retrieve(self, request, pk=None):
-        document = get_object_or_404(Document, pk=pk)
-        defaults = dict(url=None, fetched=False, document=document)
-        obj, created = self.queryset.get_or_create(
-            document=document,
-            defaults=defaults
-        )
-        return Response({'url': obj.fetch_url()})
-
-
-def supplier(request, cnpj):
-    return HttpResponseRedirect(resolve_url('api:company-detail', cnpj))
+        return get_object_or_404(Company, cnpj=formatted)

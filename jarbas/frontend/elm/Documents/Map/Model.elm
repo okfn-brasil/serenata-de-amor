@@ -1,6 +1,6 @@
 module Documents.Map.Model exposing (Model, modelFrom)
 
-import Documents.Supplier.Model as Supplier
+import Documents.Company.Model as Company
 import Material
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 
@@ -18,13 +18,13 @@ type alias Model =
     }
 
 
-modelFrom : Language -> Supplier.Model -> Model
+modelFrom : Language -> Company.Model -> Model
 modelFrom lang model =
-    case model.supplier of
-        Just supplier ->
+    case model.company of
+        Just company ->
             Model
-                { latitude = supplier.latitude
-                , longitude = supplier.longitude
+                { latitude = company.latitude
+                , longitude = company.longitude
                 }
                 lang
                 Material.model

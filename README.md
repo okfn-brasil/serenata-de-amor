@@ -120,7 +120,7 @@ A company is a Brazilian company in which congressperson have made expenses and 
 
 ##### `GET /api/company/<cnpj>/`
 
-This endpoit gets the info we have for a specific company. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Supplier` object, digits only). It returns `404` if the company is not found.
+This endpoit gets the info we have for a specific company. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Company` object, digits only). It returns `404` if the company is not found.
 
 ### Tapioca Jarbas
 
@@ -191,7 +191,6 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 * `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
 * `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
-* `AMAZON_S3_DATASET_DATE` (_str_) Datasets file name prefix of CEAP datasets from Serenata de Amor (e.g. `2016-08-08` for `2016-08-08-current-year.xz`)
 * `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
 
 ##### Google settings

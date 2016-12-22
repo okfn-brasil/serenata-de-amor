@@ -8,7 +8,7 @@ import Documents.Inputs.Update as InputsUpdate
 import Documents.Map.View as MapView
 import Documents.Map.Model as MapModel
 import Documents.Receipt.View as ReceiptView
-import Documents.Supplier.View as SupplierView
+import Documents.Company.View as CompanyView
 import Format.Number exposing (formatNumber)
 import Html exposing (a, div, form, p, span, text)
 import Html.App
@@ -357,8 +357,8 @@ viewCnpjCpf value =
             value
 
 
-viewSupplier : Document -> String
-viewSupplier document =
+viewCompany : Document -> String
+viewCompany document =
     case document.cnpjCpf of
         Just value ->
             String.concat
@@ -452,7 +452,7 @@ viewPs lang document =
             , Options.styled
                 p
                 [ Typography.caption ]
-                [ text (translate lang FieldsetSupplierDetails) ]
+                [ text (translate lang FieldsetCompanyDetails) ]
             ]
 
 
@@ -511,7 +511,7 @@ viewSummaryBlock lang document =
             , ( translate lang FieldClaimDate, claimedDate )
             , ( translate lang FieldSubquotaDescription, subquota )
             , ( translate lang FieldSubquotaGroupDescription, Maybe.withDefault "" document.subquotaGroupDescription )
-            , ( translate lang FieldSupplier, viewSupplier document )
+            , ( translate lang FieldCompany, viewCompany document )
             , ( translate lang FieldDocumentValue, viewPrice lang document.documentValue )
             , ( translate lang FieldRemarkValue, maybeViewPrice lang document.remarkValue )
             , ( translate lang FieldTotalNetValue, viewPrice lang document.totalNetValue )
@@ -609,7 +609,7 @@ viewDocument lang index document =
                 [ (translate lang DocumentTitle) ++ (toString document.documentId) |> text ]
 
         supplier =
-            Html.App.map (SupplierMsg index) (SupplierView.view document.supplierInfo)
+            Html.App.map (CompanyMsg index) (CompanyView.view document.supplierInfo)
 
         supplierTitle =
             Options.styled

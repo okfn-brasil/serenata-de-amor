@@ -1,13 +1,13 @@
-module Documents.Supplier.Decoder exposing (decoder)
+module Documents.Company.Decoder exposing (decoder)
 
 import Json.Decode exposing ((:=))
 import Json.Decode.Pipeline exposing (decode, nullable, required)
-import Documents.Supplier.Model exposing (Supplier, Activity)
+import Documents.Company.Model exposing (Company, Activity)
 
 
-decoder : Json.Decode.Decoder Supplier
+decoder : Json.Decode.Decoder Company
 decoder =
-    decode Supplier
+    decode Company
         |> required "main_activity" decodeActivities
         |> required "secondary_activity" decodeActivities
         |> required "cnpj" Json.Decode.string
