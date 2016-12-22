@@ -6,6 +6,7 @@ from jarbas.api.views import (
     ReceiptDetailView,
     ReimbursementDetailView,
     ReimbursementListView,
+    SameDayReimbursementListView,
     SubquotaListView,
 )
 
@@ -25,6 +26,11 @@ urlpatterns = [
         r'^reimbursement/(?P<year>\d{4})/(?P<applicant_id>\d+)/(?P<document_id>\d+)/receipt/$',
         ReceiptDetailView.as_view(),
         name='reimbursement-receipt'
+    ),
+    url(
+        r'^reimbursement/(?P<year>\d{4})/(?P<applicant_id>\d+)/(?P<document_id>\d+)/same_day/$',
+        SameDayReimbursementListView.as_view(),
+        name='reimbursement-same-day'
     ),
     url(r'^applicant/$', ApplicantListView.as_view(), name='applicant-list'),
     url(r'^company/(?P<cnpj>\d{14})/$', CompanyDetailView.as_view(), name='company-detail'),

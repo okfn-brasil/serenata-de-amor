@@ -5,8 +5,10 @@ from jarbas.api.serializers import (
     ApplicantSerializer,
     ReceiptSerializer,
     ReimbursementSerializer,
+    SameDayReimbursementSerializer,
     SubquotaSerializer,
-    CompanySerializer
+    CompanySerializer,
+    format_cnpj
 )
 from jarbas.core.models import Reimbursement, Company
 
@@ -89,6 +91,14 @@ class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
         return obj
 
 
+class SameDayReimbursementListView(ListAPIView):
+
+    serializer_class = SameDayReimbursementSerializer
+
+    def get_queryset(self):
+        return Reimbursement.objects.same_day(**self.kwargs)
+
+
 class ApplicantListView(ListAPIView):
 
     serializer_class = ApplicantSerializer
@@ -115,11 +125,4 @@ class CompanyDetailView(RetrieveAPIView):
 
     def get_object(self):
         cnpj = self.kwargs.get(self.lookup_field, '00000000000000')
-        formatted = '{}.{}.{}/{}-{}'.format(
-            cnpj[0:2],
-            cnpj[2:5],
-            cnpj[5:8],
-            cnpj[8:12],
-            cnpj[12:14]
-        )
-        return get_object_or_404(Company, cnpj=formatted)
+        return get_object_or_404(Company, cnpj=format_cnpj(cnpj))

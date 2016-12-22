@@ -61,6 +61,35 @@ class ReimbursementSerializer(serializers.ModelSerializer):
         )
 
 
+class SameDayReimbursementSerializer(serializers.ModelSerializer):
+
+    city = serializers.SerializerMethodField()
+
+    def get_city(self, obj):
+        try:
+            company = Company.objects.get(cnpj=format_cnpj(obj.cnpj_cpf))
+        except Company.DoesNotExist:
+            return None
+
+        location = company.city, company.state
+        if not any(location):
+            return None
+
+        return ' - '.join(v for v in location if v)
+
+    class Meta:
+        model = Reimbursement
+        fields = (
+            'applicant_id',
+            'city',
+            'document_id',
+            'subquota_description',
+            'supplier',
+            'total_net_value',
+            'year'
+        )
+
+
 class ReceiptSerializer(serializers.ModelSerializer):
 
     reimbursement = serializers.SerializerMethodField()
@@ -114,3 +143,13 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         exclude = ('id',)
         depth = 1
+
+
+def format_cnpj(cnpj):
+    return '{}.{}.{}/{}-{}'.format(
+        cnpj[0:2],
+        cnpj[2:5],
+        cnpj[5:8],
+        cnpj[8:12],
+        cnpj[12:14]
+    )
