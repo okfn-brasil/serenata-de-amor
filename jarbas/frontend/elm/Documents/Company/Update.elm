@@ -1,17 +1,17 @@
-module Documents.Supplier.Update exposing (Msg(..), load, update)
+module Documents.Company.Update exposing (Msg(..), load, update)
 
 import Char
 import Http exposing (url)
 import Material
 import String
 import Task
-import Documents.Supplier.Model exposing (Model, Supplier)
-import Documents.Supplier.Decoder exposing (decoder)
+import Documents.Company.Model exposing (Model, Company)
+import Documents.Company.Decoder exposing (decoder)
 
 
 type Msg
-    = LoadSupplier String
-    | ApiSuccess Supplier
+    = LoadCompany String
+    | ApiSuccess Company
     | ApiFail Http.Error
     | Mdl (Material.Msg Msg)
 
@@ -32,14 +32,14 @@ isValid cnpj =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        LoadSupplier cnpj ->
+        LoadCompany cnpj ->
             if isValid cnpj then
                 ( { model | loading = True }, load cnpj )
             else
-                ( { model | loaded = True, supplier = Nothing }, Cmd.none )
+                ( { model | loaded = True, company = Nothing }, Cmd.none )
 
-        ApiSuccess supplier ->
-            ( { model | supplier = Just supplier, loading = False, loaded = True }, Cmd.none )
+        ApiSuccess company ->
+            ( { model | company = Just company, loading = False, loaded = True }, Cmd.none )
 
         ApiFail error ->
             let
@@ -57,7 +57,7 @@ load cnpj =
     if isValid cnpj then
         let
             path =
-                "/api/supplier/" ++ (cleanUp cnpj)
+                "/api/company/" ++ (cleanUp cnpj) ++ "/"
 
             url =
                 Http.url path [ ( "format", "json" ) ]

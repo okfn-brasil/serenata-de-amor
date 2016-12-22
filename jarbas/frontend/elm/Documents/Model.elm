@@ -3,7 +3,7 @@ module Documents.Model exposing (..)
 import Date
 import Documents.Inputs.Model as Inputs
 import Documents.Receipt.Model as Receipt
-import Documents.Supplier.Model as Supplier
+import Documents.Company.Model as Company
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
@@ -44,7 +44,7 @@ type alias Document =
     , probability : Maybe Float
     , suspicions : Maybe (List ( String, Bool ))
     , receipt : Receipt.Model
-    , supplierInfo : Supplier.Model
+    , supplierInfo : Company.Model
     }
 
 

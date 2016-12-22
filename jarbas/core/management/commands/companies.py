@@ -5,37 +5,37 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 from jarbas.core.management.commands import LoadCommand
-from jarbas.core.models import Activity, Supplier
+from jarbas.core.models import Activity, Company
 
 
 class Command(LoadCommand):
-    help = 'Load Serenata de Amor supplier dataset into the database'
+    help = 'Load Serenata de Amor companies dataset into the database'
 
     def handle(self, *args, **options):
         self.path = options['dataset']
-        self.count = self.print_count(Supplier)
-        print('Starting with {:,} suppliers'.format(self.count))
+        self.count = self.print_count(Company)
+        print('Starting with {:,} companies'.format(self.count))
 
         if options.get('drop', False):
-            self.drop_all(Supplier)
+            self.drop_all(Company)
             self.drop_all(Activity)
             self.count = 0
 
-        self.save_suppliers()
+        self.save_companies()
 
-    def save_suppliers(self):
+    def save_companies(self):
         """
-        Receives path to the dataset file and create a Supplier object for
+        Receives path to the dataset file and create a Company object for
         each row of each file. It creates the related activity when needed.
         """
         skip = ('main_activity', 'secondary_activty')
-        keys = list(f.name for f in Supplier._meta.fields if f not in skip)
+        keys = list(f.name for f in Company._meta.fields if f not in skip)
         with lzma.open(self.path, mode='rt') as file_handler:
             for row in csv.DictReader(file_handler):
                 main, secondary = self.save_activities(row)
 
                 filtered = {k: v for k, v in row.items() if k in keys}
-                obj = Supplier.objects.create(**self.serialize(filtered))
+                obj = Company.objects.create(**self.serialize(filtered))
                 for activity in main:
                     obj.main_activity.add(activity)
                 for activity in secondary:
@@ -43,7 +43,7 @@ class Command(LoadCommand):
                 obj.save()
 
                 self.count += 1
-                self.print_count(Supplier, count=self.count)
+                self.print_count(Company, count=self.count)
 
     def save_activities(self, row):
         data = dict(

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from jarbas.core.models import Activity, Document, Receipt, Reimbursement, Supplier
+from jarbas.core.models import Activity, Reimbursement, Company
 
 
 class ReimbursementSerializer(serializers.ModelSerializer):
@@ -61,7 +61,7 @@ class ReimbursementSerializer(serializers.ModelSerializer):
         )
 
 
-class NewReceiptSerializer(serializers.ModelSerializer):
+class ReceiptSerializer(serializers.ModelSerializer):
 
     reimbursement = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -98,29 +98,6 @@ class SubquotaSerializer(serializers.ModelSerializer):
         fields = ('subquota_id', 'subquota_description')
 
 
-class ReceiptSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Receipt
-        fields = ('url', 'fetched')
-
-
-class DocumentSerializer(serializers.ModelSerializer):
-
-    receipt = serializers.SerializerMethodField()
-
-    def get_receipt(self, obj):
-        receipt, created = Receipt.objects.get_or_create(
-            document=obj,
-            defaults=dict(document=obj)
-        )
-        return ReceiptSerializer(receipt).data
-
-    class Meta:
-        model = Document
-        exclude = ()
-
-
 class ActivitySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -128,12 +105,12 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = ('code', 'description')
 
 
-class SupplierSerializer(serializers.ModelSerializer):
+class CompanySerializer(serializers.ModelSerializer):
 
     main_activity = ActivitySerializer(many=True, read_only=True)
     secondary_activity = ActivitySerializer(many=True, read_only=True)
 
     class Meta:
-        model = Supplier
+        model = Company
         exclude = ('id',)
         depth = 1
