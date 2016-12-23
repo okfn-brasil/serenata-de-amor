@@ -63,7 +63,7 @@ class TraveledSpeedsClassifier(TransformerMixin):
 
     def __applicable_rows(self, X):
         return (X['subquota_description'] == 'Congressperson meal') & \
-            X['congressperson_id'].notnull()
+            X[['congressperson_id', 'latitude', 'longitude']].notnull().all(axis=1)
 
     def __calculate_sum_distances(self, X):
         coordinate_list = X[['latitude', 'longitude']].values

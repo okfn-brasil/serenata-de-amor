@@ -11,7 +11,7 @@ from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 class TestMealPriceOutlierClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('tests/meal_price_outlier_classifier.csv',
+        self.dataset = pd.read_csv('tests/fixtures/meal_price_outlier_classifier.csv',
                                    dtype={'cnpj_cpf': np.str})
         self.subject = MealPriceOutlierClassifier()
         self.subject.fit(self.dataset)
