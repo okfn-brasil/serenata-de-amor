@@ -46,6 +46,37 @@ class TestCreate(TestReimbursement):
         self.assertEqual(1, Reimbursement.objects.count())
 
 
+class TestManager(TestReimbursement):
+
+    def test_same_day(self):
+        data1 = sample_reimbursement_data.copy()
+        data1['document_id'] = 42 * 2
+        data1['issue_date'] = '1970-12-31'
+        Reimbursement.objects.create(**data1)
+
+        data2 = sample_reimbursement_data.copy()
+        data2['document_id'] = 42 * 3
+        data2['issue_date'] = '1970-12-31'
+        Reimbursement.objects.create(**data2)
+
+        data3 = sample_reimbursement_data.copy()
+        data3['document_id'] = 42 * 4
+        data3['issue_date'] = '1970-12-31'
+        Reimbursement.objects.create(**data3)
+
+        unique_id = dict(
+            year=1970,
+            applicant_id=13,
+            document_id=84
+        )
+        qs = Reimbursement.objects.same_day(**unique_id)
+        self.assertEqual(2, qs.count())
+
+    def test_same_day_error(self):
+        with self.assertRaises(TypeError):
+            Reimbursement.objects.same_day(year=2016, document_id=42)
+
+
 class TestCustomMethods(TestReimbursement):
 
     def test_as_list(self):
