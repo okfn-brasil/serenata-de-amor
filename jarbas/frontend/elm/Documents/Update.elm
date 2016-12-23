@@ -1,14 +1,16 @@
 module Documents.Update exposing (..)
 
 import Char
+import Documents.Company.Update as Company
+import Documents.Decoder exposing (decoder)
 import Documents.Fields as Fields
-import Documents.Inputs.Update as Inputs
 import Documents.Inputs.Model
+import Documents.Inputs.Update as Inputs
+import Documents.Model exposing (Model, Document, Results, results)
 import Documents.Receipt.Model exposing (ReimbursementId)
 import Documents.Receipt.Update as Receipt
-import Documents.Decoder exposing (decoder)
-import Documents.Model exposing (Model, Document, Results, results)
-import Documents.Company.Update as Company
+import Documents.SameDay.Model exposing (UniqueId)
+import Documents.SameDay.Update as SameDay
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
@@ -16,16 +18,6 @@ import Navigation
 import Regex exposing (regex, replace)
 import String
 import Task
-
-
-totalPages : Int -> Int
-totalPages results =
-    toFloat results / 7.0 |> ceiling
-
-
-onlyDigits : String -> String
-onlyDigits value =
-    String.filter (\c -> Char.isDigit c) value
 
 
 type Msg
@@ -38,8 +30,24 @@ type Msg
     | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
     | CompanyMsg Int Company.Msg
+    | SameDayMsg Int SameDay.Msg
     | MapMsg
     | Mdl (Material.Msg Msg)
+
+
+totalPages : Int -> Int
+totalPages results =
+    toFloat results / 7.0 |> ceiling
+
+
+onlyDigits : String -> String
+onlyDigits value =
+    String.filter (\c -> Char.isDigit c) value
+
+
+toUniqueId : Document -> UniqueId
+toUniqueId document =
+    UniqueId document.applicantId document.year document.documentId
 
 
 newSearch : Model -> Model
@@ -121,17 +129,26 @@ update msg model =
                     getIndexedDocuments newModel
 
                 indexedCompanyCmds =
-                    List.map (\( idx, doc ) -> ( idx, Maybe.withDefault "" doc.cnpjCpf |> Company.load )) indexedDocuments
+                    List.map
+                        (\( idx, doc ) -> ( idx, Maybe.withDefault "" doc.cnpjCpf |> Company.load ))
+                        indexedDocuments
+
+                indexedSameDayCmds =
+                    List.map
+                        (\( idx, doc ) -> ( idx, doc |> toUniqueId |> SameDay.load ))
+                        indexedDocuments
 
                 cmds =
-                    List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd) indexedCompanyCmds
+                    List.append
+                        (List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd) indexedCompanyCmds)
+                        (List.map (\( idx, cmd ) -> Cmd.map (SameDayMsg idx) cmd) indexedSameDayCmds)
             in
                 ( newModel, Cmd.batch cmds )
 
         ApiFail error ->
             let
                 err =
-                    Debug.log (toString error)
+                    Debug.log "ApiFail" (toString error)
             in
                 ( { model | results = results, error = Just error, loading = False }, Cmd.none )
 
@@ -147,6 +164,9 @@ update msg model =
 
         CompanyMsg index companyMsg ->
             getDocumentsAndCmd model index updateCompanys companyMsg
+
+        SameDayMsg index sameDayMsg ->
+            getDocumentsAndCmd model index updateSameDay sameDayMsg
 
         MapMsg ->
             ( model, Cmd.none )
@@ -196,6 +216,27 @@ updateReceipts lang target msg ( index, document ) =
                 }
         in
             ( { document | receipt = newReceipt }, newCmd )
+    else
+        ( document, Cmd.none )
+
+
+updateSameDay : Language -> Int -> SameDay.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateSameDay lang target msg ( index, document ) =
+    if target == index then
+        let
+            updated =
+                SameDay.update msg document.sameDay
+
+            sameDay =
+                fst updated
+
+            newSameDay =
+                { sameDay | lang = lang }
+
+            cmd =
+                snd updated |> Cmd.map (SameDayMsg target)
+        in
+            ( { document | sameDay = newSameDay }, cmd )
     else
         ( document, Cmd.none )
 

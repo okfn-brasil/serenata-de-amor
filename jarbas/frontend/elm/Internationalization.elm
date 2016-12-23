@@ -106,6 +106,7 @@ type TranslationId
     | PaginationPage
     | PaginationOf
     | DocumentNotFound
+    | SameDayTitle
     | BrazilianCurrency String
     | ThousandSeparator
     | DecimalSeparator
@@ -568,6 +569,11 @@ translate lang trans =
                     TranslationSet
                         "Document not found."
                         "Documento não encontrado."
+
+                SameDayTitle ->
+                    TranslationSet
+                        "Other reimbursements from the same day"
+                        "Outros reembolsos do mesmo dia"
 
                 BrazilianCurrency value ->
                     TranslationSet

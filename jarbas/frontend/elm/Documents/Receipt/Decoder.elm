@@ -1,10 +1,9 @@
 module Documents.Receipt.Decoder exposing (decoder, urlDecoder)
 
-import Json.Decode exposing (bool, int, string)
+import Json.Decode exposing (at, bool, maybe, string)
 import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
-import Json.Decode exposing (at, maybe, string)
 import Documents.Receipt.Model exposing (Model, ReimbursementId)
 
 

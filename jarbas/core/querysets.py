@@ -10,8 +10,7 @@ class SameDayQuerySet(models.QuerySet):
             msg = 'A same_day queryset requires the kwargs: ' + ', '.join(keys)
             raise TypeError(msg)
 
-        reference = self.get(**unique_id)
         return self.exclude(**unique_id).filter(
-            issue_date=reference.issue_date,
-            applicant_id=reference.applicant_id
+            issue_date=self.filter(**unique_id).values('issue_date'),
+            applicant_id=unique_id['applicant_id']
         )

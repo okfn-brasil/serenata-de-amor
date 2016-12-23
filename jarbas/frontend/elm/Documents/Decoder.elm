@@ -3,6 +3,7 @@ module Documents.Decoder exposing (..)
 import Documents.Inputs.Update as InputsUpdate
 import Documents.Receipt.Decoder as ReceiptDecoder
 import Documents.Company.Model as CompanyModel
+import Documents.SameDay.Model as SameDay
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Json.Decode exposing ((:=), Decoder, bool, fail, float, int, list, keyValuePairs, string, succeed)
 import Json.Decode.Extra exposing (date)
@@ -96,6 +97,7 @@ singleDecoder lang apiKey =
             |> required "suspicions" (nullable <| keyValuePairs bool)
             |> required "receipt" (ReceiptDecoder.decoder lang)
             |> hardcoded { supplier | googleStreetViewApiKey = apiKey }
+            |> hardcoded SameDay.model
 
 
 updateDocumentLanguage : Language -> Document -> Document

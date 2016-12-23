@@ -2,14 +2,17 @@ module Documents.View exposing (..)
 
 import Date
 import Date.Format
-import Documents.Fields as Fields
-import Documents.Inputs.View as InputsView
-import Documents.Inputs.Update as InputsUpdate
-import Documents.Map.View as MapView
-import Documents.Map.Model as MapModel
-import Documents.Receipt.View as ReceiptView
 import Documents.Company.View as CompanyView
-import Format.Number exposing (formatNumber)
+import Documents.Inputs.Update as InputsUpdate
+import Documents.Inputs.View as InputsView
+import Documents.Map.Model as MapModel
+import Documents.Map.View as MapView
+import Documents.Model exposing (Model, Document, Results, results)
+import Documents.Receipt.View as ReceiptView
+import Documents.SameDay.View as SameDay
+import Documents.Update exposing (Msg(..), onlyDigits, totalPages)
+import Format.CnpjCpf exposing (formatCnpjCpf)
+import Format.Price exposing (..)
 import Html exposing (a, div, form, p, span, text)
 import Html.App
 import Html.Attributes exposing (class, href, target)
@@ -25,8 +28,6 @@ import Material.Options as Options
 import Material.Textfield as Textfield
 import Material.Typography as Typography
 import String
-import Documents.Model exposing (Model, Document, Results, results)
-import Documents.Update exposing (Msg(..), onlyDigits, totalPages)
 
 
 --
@@ -232,43 +233,6 @@ sourceUrl document =
         ]
 
 
-viewPrice : Language -> Float -> String
-viewPrice lang price =
-    formatNumber
-        2
-        (translate lang ThousandSeparator)
-        (translate lang DecimalSeparator)
-        price
-        |> BrazilianCurrency
-        |> translate lang
-
-
-viewPrices : Language -> List Float -> String
-viewPrices lang prices =
-    List.map (viewPrice lang) prices
-        |> String.join ", "
-
-
-maybeViewPrice : Language -> Maybe Float -> String
-maybeViewPrice lang maybePrice =
-    case maybePrice of
-        Just price ->
-            viewPrice lang price
-
-        Nothing ->
-            ""
-
-
-maybeViewPrices : Language -> Maybe (List Float) -> String
-maybeViewPrices lang maybePrices =
-    case maybePrices of
-        Just prices ->
-            viewPrices lang prices
-
-        Nothing ->
-            ""
-
-
 viewDate : Language -> Date.Date -> String
 viewDate lang date =
     FormattedDate date |> translate lang
@@ -287,76 +251,6 @@ viewSuspicions lang maybeSuspicions =
             ""
 
 
-viewCpf : String -> String
-viewCpf cpf =
-    let
-        part1 =
-            String.slice 0 3 cpf
-
-        part2 =
-            String.slice 3 6 cpf
-
-        part3 =
-            String.slice 6 9 cpf
-
-        part4 =
-            String.slice 9 11 cpf
-    in
-        String.concat
-            [ part1
-            , "."
-            , part2
-            , "."
-            , part3
-            , "-"
-            , part4
-            ]
-
-
-viewCnpj : String -> String
-viewCnpj cnpj =
-    let
-        part1 =
-            String.slice 0 2 cnpj
-
-        part2 =
-            String.slice 2 5 cnpj
-
-        part3 =
-            String.slice 5 8 cnpj
-
-        part4 =
-            String.slice 8 12 cnpj
-
-        part5 =
-            String.slice 12 14 cnpj
-    in
-        String.concat
-            [ part1
-            , "."
-            , part2
-            , "."
-            , part3
-            , "/"
-            , part4
-            , "-"
-            , part5
-            ]
-
-
-viewCnpjCpf : String -> String
-viewCnpjCpf value =
-    case String.length value of
-        11 ->
-            viewCpf value
-
-        14 ->
-            viewCnpj value
-
-        _ ->
-            value
-
-
 viewCompany : Document -> String
 viewCompany document =
     case document.cnpjCpf of
@@ -364,7 +258,7 @@ viewCompany document =
             String.concat
                 [ document.supplier
                 , " ("
-                , viewCnpjCpf value
+                , formatCnpjCpf value
                 , ")"
                 ]
 
@@ -512,10 +406,10 @@ viewSummaryBlock lang document =
             , ( translate lang FieldSubquotaDescription, subquota )
             , ( translate lang FieldSubquotaGroupDescription, Maybe.withDefault "" document.subquotaGroupDescription )
             , ( translate lang FieldCompany, viewCompany document )
-            , ( translate lang FieldDocumentValue, viewPrice lang document.documentValue )
-            , ( translate lang FieldRemarkValue, maybeViewPrice lang document.remarkValue )
-            , ( translate lang FieldTotalNetValue, viewPrice lang document.totalNetValue )
-            , ( translate lang FieldTotalReimbursementValue, maybeViewPrice lang document.totalReimbursementValue )
+            , ( translate lang FieldDocumentValue, formatPrice lang document.documentValue )
+            , ( translate lang FieldRemarkValue, maybeFormatPrice lang document.remarkValue )
+            , ( translate lang FieldTotalNetValue, formatPrice lang document.totalNetValue )
+            , ( translate lang FieldTotalReimbursementValue, maybeFormatPrice lang document.totalReimbursementValue )
             , ( translate lang FieldSuspicions, viewSuspicions lang document.suspicions )
             ]
                 |> List.filter (\( key, value ) -> String.isEmpty value |> not)
@@ -538,8 +432,8 @@ viewReimbursementDetails lang document =
         fields =
             [ ( translate lang FieldApplicantId, toString document.applicantId )
             , ( translate lang FieldDocumentId, toString document.documentId )
-            , ( translate lang FieldNetValues, viewPrices lang document.netValues )
-            , ( translate lang FieldReimbursementValues, maybeViewPrices lang document.reimbursementValues )
+            , ( translate lang FieldNetValues, formatPrices lang document.netValues )
+            , ( translate lang FieldReimbursementValues, maybeFormatPrices lang document.reimbursementValues )
             , ( translate lang FieldReimbursementNumbers, reimbursements )
             , ( translate lang FieldDocumentType, documentType )
             , ( translate lang FieldDocumentNumber, Maybe.withDefault "" document.documentNumber )
@@ -583,9 +477,6 @@ viewTrip lang document =
 viewDocument : Language -> Int -> Document -> List (Material.Grid.Cell Msg)
 viewDocument lang index document =
     let
-        getLabel =
-            Fields.getLabel lang
-
         blocks =
             [ viewSummaryBlock lang document
             , viewTrip lang document
@@ -594,13 +485,15 @@ viewDocument lang index document =
             ]
 
         receipt =
-            Html.App.map (ReceiptMsg index) (ReceiptView.view document.receipt)
+            ReceiptView.view document.receipt
+                |> Html.App.map (ReceiptMsg index)
 
         mapModel =
             MapModel.modelFrom lang document.supplierInfo
 
         mapButton =
-            Html.App.map (\_ -> MapMsg) <| MapView.view mapModel
+            MapView.view mapModel
+                |> Html.App.map (\_ -> MapMsg)
 
         title =
             Options.styled
@@ -609,13 +502,19 @@ viewDocument lang index document =
                 [ (translate lang DocumentTitle) ++ (toString document.documentId) |> text ]
 
         supplier =
-            Html.App.map (CompanyMsg index) (CompanyView.view document.supplierInfo)
+            CompanyView.view document.supplierInfo
+                |> Html.App.map (CompanyMsg index)
 
         supplierTitle =
             Options.styled
                 p
                 [ Typography.headline ]
                 [ text "" ]
+
+        sameDay : Html.Html Msg
+        sameDay =
+            SameDay.view document.sameDay
+                |> Html.App.map (SameDayMsg index)
     in
         [ cell
             [ size Desktop 6, size Tablet 4, size Phone 2 ]
@@ -638,6 +537,7 @@ viewDocument lang index document =
                     [ href (sourceUrl document), class "chamber-of-deputies-source" ]
                     [ text (translate lang DocumentChamberOfDeputies) ]
                 ]
+            , sameDay
             ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
