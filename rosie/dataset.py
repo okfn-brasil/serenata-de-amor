@@ -17,6 +17,7 @@ class Dataset:
         reimbursements = self.get_reimbursements()
         companies = self.get_companies()
         return pd.merge(reimbursements, companies,
+                        how='left',
                         left_on='cnpj_cpf',
                         right_on='cnpj')
 
@@ -45,7 +46,7 @@ class Dataset:
         is_in_brazil = ('(-73.992222 < longitude < -34.7916667) & '
                         '(-33.742222 < latitude < 5.2722222)')
         dataset = pd.read_csv(os.path.join(self.path, self.COMPANIES_DATASET),
-                              dtype={'cnpj_cpf': np.str},
+                              dtype={'cnpj': np.str},
                               low_memory=False)
         dataset = dataset.query(is_in_brazil)
         dataset['cnpj'] = dataset['cnpj'].str.replace(r'\D', '')
