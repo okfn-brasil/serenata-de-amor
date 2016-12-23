@@ -25,29 +25,22 @@ class ReimbursementSerializer(serializers.ModelSerializer):
         return obj.all_reimbursement_values
 
     def get_document_value(self, obj):
-        return self.to_float(obj.document_value)
+        return to_float(obj.document_value)
 
     def get_probability(self, obj):
-        return self.to_float(obj.probability)
+        return to_float(obj.probability)
 
     def get_receipt(self, obj):
         return dict(fetched=obj.receipt_fetched, url=obj.receipt_url)
 
     def get_remark_value(self, obj):
-        return self.to_float(obj.remark_value)
+        return to_float(obj.remark_value)
 
     def get_total_net_value(self, obj):
-        return self.to_float(obj.total_net_value)
+        return to_float(obj.total_net_value)
 
     def get_total_reimbursement_value(self, obj):
-        return self.to_float(obj.total_reimbursement_value)
-
-    @staticmethod
-    def to_float(number):
-        try:
-            return float(number)
-        except TypeError:
-            return None
+        return to_float(obj.total_reimbursement_value)
 
     class Meta:
         model = Reimbursement
@@ -64,6 +57,7 @@ class ReimbursementSerializer(serializers.ModelSerializer):
 class SameDayReimbursementSerializer(serializers.ModelSerializer):
 
     city = serializers.SerializerMethodField()
+    total_net_value = serializers.SerializerMethodField()
 
     def get_city(self, obj):
         try:
@@ -75,7 +69,10 @@ class SameDayReimbursementSerializer(serializers.ModelSerializer):
         if not any(location):
             return None
 
-        return ' - '.join(v for v in location if v)
+        return ', '.join(v for v in location if v)
+
+    def get_total_net_value(self, obj):
+        return to_float(obj.total_net_value)
 
     class Meta:
         model = Reimbursement
@@ -83,6 +80,7 @@ class SameDayReimbursementSerializer(serializers.ModelSerializer):
             'applicant_id',
             'city',
             'document_id',
+            'subquota_id',
             'subquota_description',
             'supplier',
             'total_net_value',
@@ -153,3 +151,10 @@ def format_cnpj(cnpj):
         cnpj[8:12],
         cnpj[12:14]
     )
+
+
+def to_float(number):
+    try:
+        return float(number)
+    except TypeError:
+        return None

@@ -1,9 +1,10 @@
 module Documents.Model exposing (..)
 
 import Date
+import Documents.Company.Model as Company
 import Documents.Inputs.Model as Inputs
 import Documents.Receipt.Model as Receipt
-import Documents.Company.Model as Company
+import Documents.SameDay.Model as SameDay
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
@@ -45,6 +46,7 @@ type alias Document =
     , suspicions : Maybe (List ( String, Bool ))
     , receipt : Receipt.Model
     , supplierInfo : Company.Model
+    , sameDay : SameDay.Model
     }
 
 

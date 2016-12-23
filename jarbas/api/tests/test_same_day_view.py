@@ -59,29 +59,32 @@ class TestSameDay(TestCase):
         expected = (
             {
                 'applicant_id': 13,
-                'city': 'Atlantis - WE',
+                'city': 'Atlantis, WE',
                 'document_id': 126,
+                'subquota_id': 4,
                 'subquota_description': 'Subquota description',
                 'supplier': 'Acme',
-                'total_net_value': '4.560',
+                'total_net_value': 4.56,
                 'year': 1970
             },
             {
                 'applicant_id': 13,
                 'city': None,
                 'document_id': 168,
+                'subquota_id': 4,
                 'subquota_description': 'Subquota description',
                 'supplier': 'Acme',
-                'total_net_value': '4.560',
+                'total_net_value': 4.56,
                 'year': 1970
             },
             {
                 'applicant_id': 13,
                 'city': None,
                 'document_id': 210,
+                'subquota_id': 4,
                 'subquota_description': 'Subquota description',
                 'supplier': 'Acme',
-                'total_net_value': '4.560',
+                'total_net_value': 4.56,
                 'year': 1970
             }
         )
