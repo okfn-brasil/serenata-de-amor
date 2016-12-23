@@ -140,7 +140,6 @@ You can access it at [`localhost:80`](http://localhost:80/). However your databa
 
 ```console
 $ docker-compose run --rm jarbas python manage.py collectstatic --no-input
-$ docker-compose run --rm jarbas python manage.py loaddatasets
 $ docker-compose run --rm jarbas python manage.py reimbursements <path to reimbursements.xz>
 $ docker-compose run --rm jarbas python manage.py irregularities <path to irregularities.xz file>
 $ docker-compose run --rm jarbas python manage.py companies <path to companies.xz>
@@ -211,7 +210,6 @@ $ python manage.py migrate
 Now you can load the data from our datasets and get some other data as static files:
 
 ```
-$ python manage.py loaddatasets
 $ python manage.py reimbursements <path to reimbursements.xz>
 $ python manage.py irregularities <path to irregularities.xz file>
 $ python manage.py companies <path to companies.xz>
