@@ -11,7 +11,7 @@ from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
 class TestTraveledSpeedsClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('tests/traveled_speeds_classifier.csv',
+        self.dataset = pd.read_csv('tests/fixtures/traveled_speeds_classifier.csv',
                                    dtype={'cnpj_cpf': np.str})
         self.subject = TraveledSpeedsClassifier()
         self.subject.fit(self.dataset)
