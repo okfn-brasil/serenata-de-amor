@@ -34,11 +34,27 @@ type Msg
     | Mdl (Material.Msg Msg)
 
 
+{-| Give the total page number based on the number of reimbursement found:
+
+    >>> totalPages 3
+    1
+
+    >>> totalPages 8
+    2
+
+    >>> totalPages 314
+    45
+-}
 totalPages : Int -> Int
 totalPages results =
     toFloat results / 7.0 |> ceiling
 
 
+{-| Clean up a numbers only input field:
+
+    >>> onlyDigits "a1b2c3"
+    "123"
+-}
 onlyDigits : String -> String
 onlyDigits value =
     String.filter (\c -> Char.isDigit c) value
@@ -338,19 +354,25 @@ loadDocuments lang apiKey query =
                 |> Http.send LoadDocuments
 
 
+{-| Convert a list of key/value query pairs to a valid URL:
+
+    >>> toUrl [ ( "year", "2016" ), ( "foo", "bar" ) ]
+    "#/year/2016"
+
+    >>> toUrl [ ( "foo", "bar" ) ]
+    ""
+
+-}
 toUrl : List ( String, String ) -> String
 toUrl query =
     let
         validQueries =
             List.filter Fields.isSearchable query
-
-        pairs =
-            List.map (\( index, value ) -> index ++ "/" ++ value) validQueries
-
-        trailing =
-            String.join "/" pairs
     in
         if List.isEmpty validQueries then
             ""
         else
-            "#/" ++ trailing
+            validQueries
+                |> List.map (\( index, value ) -> index ++ "/" ++ value)
+                |> String.join "/"
+                |> (++) "#/"

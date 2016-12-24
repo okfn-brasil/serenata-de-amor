@@ -1,4 +1,4 @@
-module Documents.Inputs.View exposing (view)
+module Documents.Inputs.View exposing (correctedFieldIndex, view)
 
 import Dict
 import Documents.Fields as Fields
@@ -66,6 +66,16 @@ viewFieldset loading model ( index, ( title, names ) ) =
             (List.append heading inputs)
 
 
+{-| Creates an unique index for each field, using the hundreds for the
+filedset, and the units for the field itself:
+
+    >>> correctedFieldIndex 0 42
+    142
+
+    >>> correctedFieldIndex 100 8
+    10108
+
+-}
 correctedFieldIndex : Int -> Int -> Int
 correctedFieldIndex fieldset field =
     ((fieldset + 1) * 100) + field

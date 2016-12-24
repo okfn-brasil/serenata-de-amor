@@ -1,4 +1,4 @@
-module Documents.SameDay.Update exposing (Msg(..), load, update)
+module Documents.SameDay.Update exposing (Msg(..), getUrl, load, update)
 
 import Documents.SameDay.Decoder exposing (decoder)
 import Documents.SameDay.Model exposing (Model, DocumentSummary, Results, UniqueId)
@@ -90,6 +90,12 @@ getDocumentUrl document =
         ]
 
 
+{-| Creates an URL from an UniqueId:
+
+    >>> getUrl { year = 2016, applicantId = 13,  documentId = 42 }
+    "/api/reimbursement/2016/13/42/same_day/?format=json"
+
+-}
 getUrl : UniqueId -> String
 getUrl uniqueId =
     String.join

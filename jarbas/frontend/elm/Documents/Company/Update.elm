@@ -1,4 +1,4 @@
-module Documents.Company.Update exposing (Msg(..), load, update)
+module Documents.Company.Update exposing (..)
 
 import Char
 import Documents.Company.Decoder exposing (decoder)
@@ -15,11 +15,29 @@ type Msg
     | Mdl (Material.Msg Msg)
 
 
+{-| Cleans up a CNPJ field allowing numbers only:
+
+    >>> cleanUp "12.345.678/9012-34"
+    "12345678901234"
+
+-}
 cleanUp : String -> String
 cleanUp cnpj =
     String.filter Char.isDigit cnpj
 
 
+{-| CNPJ validator:
+
+    >>> isValid "12.345.678/9012-34"
+    True
+
+    >>> isValid "12345678901234"
+    True
+
+    >>> isValid "123.456.789-01"
+    False
+
+-}
 isValid : String -> Bool
 isValid cnpj =
     if String.length (cleanUp cnpj) == 14 then

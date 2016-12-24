@@ -79,6 +79,12 @@ updateFromFlags flags model =
         }
 
 
+{-| Generates a list of URL paramenters (query string) from a URL hash:
+
+   >>> fromHash "#/year/2016/document/42/"
+   [ ( "year", "2016" ), ( "documentId", "42" ) ]
+
+-}
 fromHash : String -> List ( String, String )
 fromHash hash =
     let

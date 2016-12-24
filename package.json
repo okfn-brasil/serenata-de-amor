@@ -6,13 +6,11 @@
   },
   "scripts": {
     "postinstall": "elm-package install --yes",
-    "test": "elm-test jarbas/frontend/tests/elm-tests/Main.elm",
     "assets": "gulp elm",
     "watch": "gulp watch"
   },
   "dependencies": {
     "elm": "^0.18",
-    "elm-test": "^0.17.3",
     "gulp": "^3.9.1",
     "gulp-cli": "^1.2.2",
     "gulp-elm": "^0.5.0",

@@ -12,6 +12,18 @@ import Json.Decode.Pipeline exposing (decode, hardcoded, required)
 import String
 
 
+{-| From a query list of key/values get the page number:
+
+    >>> getPage [ ( "page", "42" ), ( "year", "2016" ) ]
+    Just 42
+
+    >>> getPage [ ( "page", "foo bar" ) ]
+    Nothing
+
+    >>> getPage [ ( "format", "json" ) ]
+    Nothing
+
+-}
 getPage : List ( String, String ) -> Maybe Int
 getPage query =
     let

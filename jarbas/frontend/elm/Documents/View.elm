@@ -100,6 +100,15 @@ viewForm model =
 --
 
 
+{-| Adjust the width of the jump to page field:
+
+    >>> jumpToWidth "8"
+    "1.618em"
+
+    >>> jumpToWidth "42"
+    "2em"
+
+-}
 jumpToWidth : String -> String
 jumpToWidth value =
     let
@@ -266,6 +275,18 @@ viewCompany document =
             document.supplier
 
 
+{-| Convert a Maybe Int to String except if it's zero:
+
+    >>> viewMaybeIntButZero ( Just 42 )
+    "42"
+
+    >>> viewMaybeIntButZero ( Just 0 )
+    ""
+
+    >>> viewMaybeIntButZero Nothing
+    ""
+
+-}
 viewMaybeIntButZero : Maybe Int -> String
 viewMaybeIntButZero maybeInt =
     case maybeInt of

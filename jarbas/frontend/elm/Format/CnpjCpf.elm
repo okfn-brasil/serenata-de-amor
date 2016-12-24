@@ -1,8 +1,14 @@
-module Format.CnpjCpf exposing (formatCnpjCpf)
+module Format.CnpjCpf exposing (formatCnpj, formatCnpjCpf, formatCpf)
 
 import String
 
 
+{-| Format a CPF number:
+
+    >>> formatCpf "12345678901"
+    "123.456.789-01"
+
+-}
 formatCpf : String -> String
 formatCpf cpf =
     let
@@ -29,6 +35,12 @@ formatCpf cpf =
             ]
 
 
+{-| Format a CNPJ number:
+
+    >>> formatCnpj "12345678901234"
+    "12.345.678/9012-34"
+
+-}
 formatCnpj : String -> String
 formatCnpj cnpj =
     let
@@ -60,6 +72,18 @@ formatCnpj cnpj =
             ]
 
 
+{-| Format a CNPJ or CPF number:
+
+    >>> formatCnpjCpf "12345678901"
+    "123.456.789-01"
+
+    >>> formatCnpjCpf "12345678901234"
+    "12.345.678/9012-34"
+
+    >>> formatCnpjCpf "42"
+    "42"
+
+-}
 formatCnpjCpf : String -> String
 formatCnpjCpf value =
     case String.length value of
