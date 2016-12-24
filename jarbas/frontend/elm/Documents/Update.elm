@@ -56,7 +56,7 @@ newSearch model =
         | results = results
         , showForm = True
         , loading = False
-        , inputs = Documents.Inputs.Model.model
+        , inputs = Inputs.updateLanguage model.lang Documents.Inputs.Model.model
     }
 
 
