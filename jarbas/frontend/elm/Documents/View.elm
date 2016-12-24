@@ -13,8 +13,8 @@ import Documents.SameDay.View as SameDay
 import Documents.Update exposing (Msg(..), onlyDigits, totalPages)
 import Format.CnpjCpf exposing (formatCnpjCpf)
 import Format.Price exposing (..)
+import Format.Url exposing (url)
 import Html exposing (a, div, form, p, span, text)
-import Html.App
 import Html.Attributes exposing (class, href, target)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
@@ -72,13 +72,13 @@ viewForm : Model -> Html.Html Msg
 viewForm model =
     let
         inputs =
-            InputsView.view model.loading model.inputs |> Html.App.map InputsMsg
+            InputsView.view model.loading model.inputs |> Html.map InputsMsg
 
         send =
             viewButton
                 model
                 0
-                [ Button.raised, Button.colored, Button.type' "submit" ]
+                [ Button.raised, Button.colored, Button.type_ "submit" ]
                 Search
 
         showForm =
@@ -222,7 +222,7 @@ viewPagination model =
 
 sourceUrl : Document -> String
 sourceUrl document =
-    Http.url
+    url
         "http://www.camara.gov.br/cota-parlamentar/documento"
         [ ( "nuDeputadoId", toString document.applicantId )
         , ( "numMes", toString document.month )
@@ -486,14 +486,14 @@ viewDocument lang index document =
 
         receipt =
             ReceiptView.view document.receipt
-                |> Html.App.map (ReceiptMsg index)
+                |> Html.map (ReceiptMsg index)
 
         mapModel =
             MapModel.modelFrom lang document.supplierInfo
 
         mapButton =
             MapView.view mapModel
-                |> Html.App.map (\_ -> MapMsg)
+                |> Html.map (\_ -> MapMsg)
 
         title =
             Options.styled
@@ -503,7 +503,7 @@ viewDocument lang index document =
 
         supplier =
             CompanyView.view document.supplierInfo
-                |> Html.App.map (CompanyMsg index)
+                |> Html.map (CompanyMsg index)
 
         supplierTitle =
             Options.styled
@@ -514,7 +514,7 @@ viewDocument lang index document =
         sameDay : Html.Html Msg
         sameDay =
             SameDay.view document.sameDay
-                |> Html.App.map (SameDayMsg index)
+                |> Html.map (SameDayMsg index)
     in
         [ cell
             [ size Desktop 6, size Tablet 4, size Phone 2 ]

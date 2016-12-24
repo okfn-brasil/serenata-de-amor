@@ -8,7 +8,7 @@ import Material.Icon as Icon
 import Material.Options as Options
 import Material.Spinner as Spinner
 import Documents.Receipt.Model exposing (Model)
-import Documents.Receipt.Update exposing (Msg(Mdl, LoadUrl))
+import Documents.Receipt.Update exposing (Msg(Mdl, SearchReceipt))
 
 
 view : Model -> Html.Html Msg
@@ -45,7 +45,7 @@ view model =
                     [ 0 ]
                     model.mdl
                     [ Button.minifab
-                    , Button.onClick (LoadUrl model.reimbursement)
+                    , Button.onClick (SearchReceipt model.reimbursement)
                     , Options.cs "receipt fetch-receipt"
                     ]
                     [ Icon.i "search"

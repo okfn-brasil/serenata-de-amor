@@ -1,8 +1,8 @@
 module Documents.SameDay.Decoder exposing (decoder)
 
 import Documents.SameDay.Model exposing (Results, DocumentSummary)
-import Json.Decode exposing (float, int, list, string)
-import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
+import Json.Decode exposing (float, int, list, nullable, string)
+import Json.Decode.Pipeline exposing (decode, hardcoded, required)
 
 
 documentSummaryDecoder : Json.Decode.Decoder (List DocumentSummary)

@@ -1,18 +1,17 @@
 module Documents.Company.Update exposing (Msg(..), load, update)
 
 import Char
-import Http exposing (url)
+import Documents.Company.Decoder exposing (decoder)
+import Documents.Company.Model exposing (Model, Company)
+import Format.Url exposing (url)
+import Http
 import Material
 import String
-import Task
-import Documents.Company.Model exposing (Model, Company)
-import Documents.Company.Decoder exposing (decoder)
 
 
 type Msg
-    = LoadCompany String
-    | ApiSuccess Company
-    | ApiFail Http.Error
+    = SearchCompany String
+    | LoadCompany (Result Http.Error Company)
     | Mdl (Material.Msg Msg)
 
 
@@ -32,16 +31,16 @@ isValid cnpj =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        LoadCompany cnpj ->
+        SearchCompany cnpj ->
             if isValid cnpj then
                 ( { model | loading = True }, load cnpj )
             else
                 ( { model | loaded = True, company = Nothing }, Cmd.none )
 
-        ApiSuccess company ->
+        LoadCompany (Ok company) ->
             ( { model | company = Just company, loading = False, loaded = True }, Cmd.none )
 
-        ApiFail error ->
+        LoadCompany (Err error) ->
             let
                 err =
                     Debug.log "ApiError" (toString error)
@@ -59,12 +58,11 @@ load cnpj =
             path =
                 "/api/company/" ++ (cleanUp cnpj) ++ "/"
 
-            url =
-                Http.url path [ ( "format", "json" ) ]
+            query =
+                [ ( "format", "json" ) ]
         in
-            Task.perform
-                ApiFail
-                ApiSuccess
-                (Http.get decoder url)
+            decoder
+                |> Http.get (url path query)
+                |> Http.send LoadCompany
     else
         Cmd.none

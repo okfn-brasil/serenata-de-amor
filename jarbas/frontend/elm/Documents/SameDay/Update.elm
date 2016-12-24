@@ -6,12 +6,10 @@ import Http
 import Material
 import Navigation
 import String
-import Task
 
 
 type Msg
-    = ApiSuccess Results
-    | ApiFail Http.Error
+    = LoadSameDay (Result Http.Error Results)
     | MouseOver Int Bool
     | GoTo DocumentSummary
     | Mdl (Material.Msg Msg)
@@ -28,7 +26,7 @@ updateDocument target mouseOver ( index, document ) =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ApiSuccess results ->
+        LoadSameDay (Ok results) ->
             let
                 newDocuments =
                     List.append model.results.documents results.documents
@@ -49,6 +47,13 @@ update msg model =
             in
                 ( { model | results = newResults }, cmd )
 
+        LoadSameDay (Err error) ->
+            let
+                err =
+                    Debug.log "ApiFail" (toString error)
+            in
+                ( model, Cmd.none )
+
         MouseOver target mouseOver ->
             let
                 newDocuments =
@@ -66,13 +71,6 @@ update msg model =
 
         GoTo document ->
             ( model, getDocumentUrl document |> Navigation.newUrl )
-
-        ApiFail error ->
-            let
-                err =
-                    Debug.log "ApiFail" (toString error)
-            in
-                ( model, Cmd.none )
 
         Mdl mdlMsg ->
             Material.update mdlMsg model
@@ -107,10 +105,9 @@ getUrl uniqueId =
 
 loadUrl : String -> Cmd Msg
 loadUrl url =
-    Task.perform
-        ApiFail
-        ApiSuccess
-        (Http.get decoder url)
+    Http.send
+        LoadSameDay
+        (Http.get url decoder)
 
 
 load : UniqueId -> Cmd Msg

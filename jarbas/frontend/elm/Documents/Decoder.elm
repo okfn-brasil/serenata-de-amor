@@ -1,15 +1,15 @@
 module Documents.Decoder exposing (..)
 
-import Documents.Inputs.Update as InputsUpdate
-import Documents.Receipt.Decoder as ReceiptDecoder
 import Documents.Company.Model as CompanyModel
-import Documents.SameDay.Model as SameDay
-import Internationalization exposing (Language(..), TranslationId(..), translate)
-import Json.Decode exposing ((:=), Decoder, bool, fail, float, int, list, keyValuePairs, string, succeed)
-import Json.Decode.Extra exposing (date)
-import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
-import String
+import Documents.Inputs.Update as InputsUpdate
 import Documents.Model exposing (Model, Document, Results, results)
+import Documents.Receipt.Decoder as ReceiptDecoder
+import Documents.SameDay.Model as SameDay
+import Internationalization exposing (Language)
+import Json.Decode exposing (Decoder, bool, float, int, keyValuePairs, list, nullable, string)
+import Json.Decode.Extra exposing (date)
+import Json.Decode.Pipeline exposing (decode, hardcoded, required)
+import String
 
 
 getPage : List ( String, String ) -> Maybe Int
