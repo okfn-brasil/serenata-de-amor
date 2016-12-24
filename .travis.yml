@@ -33,7 +33,7 @@ script:
   - coverage run manage.py test -v 3
   - cd jarbas/frontend/
   - elm-doc-test
-  - elm-test tests/Doc/Main.elm
+  - travis_wait 60 elm-test tests/Doc/Main.elm
   - cd ../../
 
 after_success:
