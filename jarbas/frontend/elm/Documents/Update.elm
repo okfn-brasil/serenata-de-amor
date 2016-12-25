@@ -11,13 +11,13 @@ import Documents.Receipt.Model exposing (ReimbursementId)
 import Documents.Receipt.Update as Receipt
 import Documents.SameDay.Model exposing (UniqueId)
 import Documents.SameDay.Update as SameDay
+import Format.Url exposing (url)
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 import Navigation
 import Regex exposing (regex, replace)
 import String
-import Task
 
 
 type Msg
@@ -25,8 +25,7 @@ type Msg
     | ToggleForm
     | Update String
     | Page Int
-    | ApiSuccess Results
-    | ApiFail Http.Error
+    | LoadDocuments (Result Http.Error Results)
     | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
     | CompanyMsg Int Company.Msg
@@ -35,11 +34,27 @@ type Msg
     | Mdl (Material.Msg Msg)
 
 
+{-| Give the total page number based on the number of reimbursement found:
+
+    >>> totalPages 3
+    1
+
+    >>> totalPages 8
+    2
+
+    >>> totalPages 314
+    45
+-}
 totalPages : Int -> Int
 totalPages results =
     toFloat results / 7.0 |> ceiling
 
 
+{-| Clean up a numbers only input field:
+
+    >>> onlyDigits "a1b2c3"
+    "123"
+-}
 onlyDigits : String -> String
 onlyDigits value =
     String.filter (\c -> Char.isDigit c) value
@@ -92,14 +107,14 @@ update msg model =
                     ( "page", toString page ) :: Inputs.toQuery model.inputs
 
                 cmd =
-                    if List.member page [1..total] then
+                    if List.member page (List.range 1 total) then
                         Navigation.newUrl (toUrl query)
                     else
                         Cmd.none
             in
                 ( model, cmd )
 
-        ApiSuccess results ->
+        LoadDocuments (Ok results) ->
             let
                 showForm =
                     if (Maybe.withDefault 0 results.total) > 0 then
@@ -145,7 +160,7 @@ update msg model =
             in
                 ( newModel, Cmd.batch cmds )
 
-        ApiFail error ->
+        LoadDocuments (Err error) ->
             let
                 err =
                     Debug.log "ApiFail" (toString error)
@@ -155,7 +170,7 @@ update msg model =
         InputsMsg msg ->
             let
                 inputs =
-                    Inputs.update msg model.inputs |> fst
+                    Inputs.update msg model.inputs |> Tuple.first
             in
                 ( { model | inputs = inputs }, Cmd.none )
 
@@ -183,10 +198,10 @@ updateCompanys lang target msg ( index, document ) =
                 Company.update msg document.supplierInfo
 
             newCompany =
-                fst updated
+                Tuple.first updated
 
             newCmd =
-                Cmd.map (CompanyMsg target) (snd updated)
+                Cmd.map (CompanyMsg target) (Tuple.second updated)
         in
             ( { document | supplierInfo = { newCompany | lang = lang } }, newCmd )
     else
@@ -201,10 +216,10 @@ updateReceipts lang target msg ( index, document ) =
                 Receipt.update msg document.receipt
 
             updatedReceipt =
-                fst updated
+                Tuple.first updated
 
             newCmd =
-                snd updated |> Cmd.map (ReceiptMsg target)
+                Tuple.second updated |> Cmd.map (ReceiptMsg target)
 
             reimbursement =
                 ReimbursementId document.year document.applicantId document.documentId
@@ -228,13 +243,13 @@ updateSameDay lang target msg ( index, document ) =
                 SameDay.update msg document.sameDay
 
             sameDay =
-                fst updated
+                Tuple.first updated
 
             newSameDay =
                 { sameDay | lang = lang }
 
             cmd =
-                snd updated |> Cmd.map (SameDayMsg target)
+                Tuple.second updated |> Cmd.map (SameDayMsg target)
         in
             ( { document | sameDay = newSameDay }, cmd )
     else
@@ -332,31 +347,32 @@ loadDocuments lang apiKey query =
         let
             jsonQuery =
                 ( "format", "json" ) :: convertQuery query
-
-            request =
-                Http.get
-                    (decoder lang apiKey jsonQuery)
-                    (Http.url "/api/reimbursement/" jsonQuery)
         in
-            Task.perform
-                ApiFail
-                ApiSuccess
-                request
+            Http.get
+                (url "/api/reimbursement/" jsonQuery)
+                (decoder lang apiKey jsonQuery)
+                |> Http.send LoadDocuments
 
 
+{-| Convert a list of key/value query pairs to a valid URL:
+
+    >>> toUrl [ ( "year", "2016" ), ( "foo", "bar" ) ]
+    "#/year/2016"
+
+    >>> toUrl [ ( "foo", "bar" ) ]
+    ""
+
+-}
 toUrl : List ( String, String ) -> String
 toUrl query =
     let
         validQueries =
             List.filter Fields.isSearchable query
-
-        pairs =
-            List.map (\( index, value ) -> index ++ "/" ++ value) validQueries
-
-        trailing =
-            String.join "/" pairs
     in
         if List.isEmpty validQueries then
             ""
         else
-            "#/" ++ trailing
+            validQueries
+                |> List.map (\( index, value ) -> index ++ "/" ++ value)
+                |> String.join "/"
+                |> (++) "#/"

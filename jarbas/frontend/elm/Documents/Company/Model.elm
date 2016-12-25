@@ -1,6 +1,7 @@
 module Documents.Company.Model exposing (Model, Company, Activity, model)
 
-import Http exposing (url)
+import Format.Url exposing (url)
+import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 

@@ -2,36 +2,35 @@ module Documents.Receipt.Update exposing (Msg(..), update)
 
 import Documents.Receipt.Decoder exposing (urlDecoder)
 import Documents.Receipt.Model exposing (Model, ReimbursementId)
+import Format.Url exposing (url)
 import Http
 import Material
 import String
-import Task
 
 
 type Msg
-    = LoadUrl (Maybe ReimbursementId)
-    | UpdateReimbursementId ReimbursementId
-    | ApiSuccess (Maybe String)
-    | ApiFail Http.Error
+    = UpdateReimbursementId ReimbursementId
+    | SearchReceipt (Maybe ReimbursementId)
+    | LoadReceipt (Result Http.Error (Maybe String))
     | Mdl (Material.Msg Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        LoadUrl (Just reimbursement) ->
-            ( { model | loading = True }, loadUrl reimbursement )
-
-        LoadUrl Nothing ->
-            ( model, Cmd.none )
-
         UpdateReimbursementId reimbursement ->
             ( { model | reimbursement = Just reimbursement }, Cmd.none )
 
-        ApiSuccess maybeUrl ->
+        SearchReceipt (Just reimbursement) ->
+            ( { model | loading = True }, loadUrl reimbursement )
+
+        SearchReceipt Nothing ->
+            ( model, Cmd.none )
+
+        LoadReceipt (Ok maybeUrl) ->
             ( { model | url = maybeUrl, loading = False, fetched = True }, Cmd.none )
 
-        ApiFail error ->
+        LoadReceipt (Err error) ->
             let
                 err =
                     Debug.log "ApiFail" (toString error)
@@ -59,11 +58,7 @@ loadUrl reimbursement =
                 , toString reimbursement.documentId
                 , "receipt/"
                 ]
-
-        url =
-            Http.url path query
     in
-        Task.perform
-            ApiFail
-            ApiSuccess
-            (Http.get urlDecoder url)
+        urlDecoder
+            |> Http.get (url path query)
+            |> Http.send LoadReceipt

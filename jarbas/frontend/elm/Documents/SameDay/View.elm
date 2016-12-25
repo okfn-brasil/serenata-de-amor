@@ -7,8 +7,6 @@ import Html exposing (a, br, div, p, text)
 import Html.Attributes exposing (attribute, class, href, style)
 import Html.Events exposing (onClick, onMouseEnter, onMouseLeave)
 import Material
-import Material.Button as Button
-import Material.Card as Card
 import Material.Icon as Icon
 import Material.Options as Options
 import Material.Typography as Typography

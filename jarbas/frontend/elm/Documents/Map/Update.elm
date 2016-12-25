@@ -8,10 +8,6 @@ type Msg
     = Mdl (Material.Msg Msg)
 
 
-
--- FIXIT: the update function is not being used anywhere
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of

@@ -1,16 +1,22 @@
-module Documents.Company.View exposing (view)
+module Documents.Company.View exposing (streetImageUrl, view)
 
+import Documents.Company.Model exposing (Model, Company, Activity)
+import Documents.Company.Update exposing (Msg)
+import Format.Url exposing (url)
 import Html exposing (a, br, div, img, p, span, text)
 import Html.Attributes exposing (class, href, src, style, target)
-import Http exposing (url)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material.Icon as Icon
 import Material.Options as Options
 import Material.Typography as Typography
-import Documents.Company.Update exposing (Msg)
-import Documents.Company.Model exposing (Model, Company, Activity)
 
 
+{-| Generates a link to a Google Street View image:
+
+    >>> streetImageUrl "foobar" 42 3 "3.14" "1.99" 1
+    "https://maps.googleapis.com/maps/api/streetview?size=42x3&location=3.14%2C1.99&fov=90&heading=1&pitch=10&key=foobar"
+
+-}
 streetImageUrl : String -> Int -> Int -> String -> String -> Int -> String
 streetImageUrl apiKey width height latitude longitude heading =
     url

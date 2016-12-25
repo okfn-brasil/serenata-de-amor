@@ -1,8 +1,14 @@
-module Format.Number exposing (formatNumber)
+module Format.Number exposing (addThousandSeparator, formatNumber)
 
 import String
 
 
+{-| Add thousand separator:
+
+    >>> addThousandSeparator "," "1234567890"
+    "1,234,567,890"
+
+-}
 addThousandSeparator : String -> String -> String
 addThousandSeparator separator num =
     let
@@ -39,6 +45,12 @@ addThousandSeparator separator num =
                 ]
 
 
+{-| Format a number as a pretty string:
+
+    >>> formatNumber 2 "," "." 123456.7890
+    "123,456.79"
+
+-}
 formatNumber : Int -> String -> String -> Float -> String
 formatNumber decimals thousandSeparetor decimalSeparator num =
     if num == 0 then

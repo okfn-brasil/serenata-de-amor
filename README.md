@@ -232,10 +232,21 @@ $ python manage.py collectstatic
 
 Not sure? Test it!
 
+##### Backend
+
 ```
-$ npm run test
 $ python manage.py check
 $ python manage.py test
+```
+
+##### Front-end
+
+The Elm tests depends on [`elm-doc-test`](https://github.com/stoeffel/elm-doc-test), once you have it installed run:
+
+```
+$ cd jarbas/frontend/
+$ elm-doc-test
+$ elm-test tests/Doc/Main.elm
 ```
 
 #### Ready!

@@ -90,6 +90,15 @@ getLabel lang name =
         |> Maybe.withDefault ""
 
 
+{-| Filter to get searchable fields:
+
+    >>> isSearchable ( "year", "2016" )
+    True
+
+    >>> isSearchable ( "format", "json" )
+    False
+
+-}
 isSearchable : ( String, String ) -> Bool
 isSearchable ( field, label ) =
     if field == "page" then
@@ -118,6 +127,15 @@ sets lang =
         ]
 
 
+{-| Filter to get numbers only fields:
+
+    >>> isNumeric "year"
+    True
+
+    >>> isNumeric "format"
+    False
+
+-}
 isNumeric : String -> Bool
 isNumeric field =
     List.member field
