@@ -1,10 +1,10 @@
 module Documents.SameDay.View exposing (view)
 
 import Documents.SameDay.Model exposing (DocumentSummary, Model)
-import Documents.SameDay.Update exposing (Msg(..))
+import Documents.SameDay.Update exposing (Msg(..), getDocumentUrl)
 import Format.Price exposing (formatPrice)
 import Html exposing (a, br, div, p, text)
-import Html.Attributes exposing (attribute, class, href, style)
+import Html.Attributes exposing (attribute, class, href, style, target)
 import Html.Events exposing (onClick, onMouseEnter, onMouseLeave)
 import Material
 import Material.Icon as Icon
@@ -24,10 +24,12 @@ viewDocument lang mdl ( index, document ) =
 
         baseStyles =
             [ ( "align-items", "center" )
+            , ( "color", "rgba(0, 0, 0, 0.870588)" )
             , ( "justify-content", "space-between" )
             , ( "margin-bottom", "1em" )
             , ( "display", "flex" )
             , ( "padding-right", "1rem" )
+            , ( "text-decoration", "none" )
             ]
 
         styles =
@@ -49,7 +51,8 @@ viewDocument lang mdl ( index, document ) =
                 (\e -> Options.attribute e)
                 [ MouseOver index True |> onMouseEnter
                 , MouseOver index False |> onMouseLeave
-                , GoTo document |> onClick
+                , getDocumentUrl document |> href
+                , target "_blank"
                 , document.subquotaId |> toString |> attribute "data-baseSyles"
                 , document.year |> toString |> attribute "data-year"
                 , document.applicantId |> toString |> attribute "data-applicant"
@@ -62,7 +65,7 @@ viewDocument lang mdl ( index, document ) =
                 |> List.append styles
     in
         Options.styled
-            div
+            a
             attr
             [ Options.span
                 []
