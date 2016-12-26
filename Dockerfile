@@ -1,4 +1,4 @@
-FROM jupyter/datascience-notebook:latest
+FROM python:3.5
 USER root
 RUN apt-get update && apt-get install -y \
   build-essential \
@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y \
   unzip \
   zlib1g-dev
   
-USER jovyan
 RUN pip install --upgrade pip
 COPY requirements.txt ./
 COPY setup ./
