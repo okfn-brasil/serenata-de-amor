@@ -4,19 +4,32 @@
 [![Code Climate](https://codeclimate.com/github/datasciencebr/rosie/badges/gpa.svg)](https://codeclimate.com/github/datasciencebr/rosie)
 [![Coverage Status](https://coveralls.io/repos/github/datasciencebr/rosie/badge.svg?branch=master)](https://coveralls.io/github/datasciencebr/rosie?branch=master)
 
-A Python application reading receipts from the Quota for Exercising Parliamentary Activity (aka CEAP, from the Brazilian Chamber of Deputies) and outputs, for each of the receipts, a "probability of corruption" and a list of reasons why is considered this way.
+A Python application reading receipts from the [Quota for Exercising Parliamentary Activity](https://github.com/datasciencebr/serenata-de-amor/blob/master/CONTRIBUTING.md#more-about-the-quota-for-exercising-parliamentary-activity-ceap) (aka CEAP) from the Brazilian Chamber of Deputies and outputs, for each of the receipts, a _probability of corruption_ and a list of reasons why it was considered this way.
 
-## Setup
+## Running
+
+### With Docker
 
 ```console
-$ cd rosie
+$ docker build -t rosie .
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data rosie
+
+```
+
+Then check your `/tmp/serenata-data/` directory in you host machine for `irregularities.xz`.
+
+### Without Docker
+
+#### Setup
+
+```console
 $ conda update conda
 $ conda create --name serenata_rosie python=3
 $ source activate serenata_rosie
 $ ./setup
 ```
 
-## Running
+#### Running
 
 ```console
 $ python rosie.py run
@@ -30,7 +43,7 @@ Also a target directory (where files are saved) can de passed — for example:
 $ python rosie.py run /my/serenata/directory/
 ```
 
-## Test suite
+#### Test suite
 
 ```console
 $ python rosie.py test
