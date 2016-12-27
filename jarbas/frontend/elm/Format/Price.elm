@@ -1,19 +1,23 @@
 module Format.Price exposing (..)
 
-import Format.Number exposing (formatNumber)
+import FormatNumber exposing (Locale, formatFloat)
 import Internationalization exposing (Language, TranslationId(..), translate)
 import String
 
 
 formatPrice : Language -> Float -> String
 formatPrice lang price =
-    formatNumber
-        2
-        (translate lang ThousandSeparator)
-        (translate lang DecimalSeparator)
-        price
-        |> BrazilianCurrency
-        |> translate lang
+    let
+        locale : Locale
+        locale =
+            Locale
+                2
+                (translate lang ThousandSeparator)
+                (translate lang DecimalSeparator)
+    in
+        formatFloat locale price
+            |> BrazilianCurrency
+            |> translate lang
 
 
 formatPrices : Language -> List Float -> String
