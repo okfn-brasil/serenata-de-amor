@@ -4,7 +4,10 @@ MAINTAINER Serenata de Amor "datasciencebr@gmail.com"
 USER root
 
 RUN apt-get update \
-    && apt-get install unzip -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
+                       unzip \
+                       libxml2-dev \
+                       libxslt-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
