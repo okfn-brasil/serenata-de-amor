@@ -1,17 +1,15 @@
-module Documents.SameDay.Update exposing (Msg(..), getUrl, load, update)
+module Documents.SameDay.Update exposing (Msg(..), getUrl, getDocumentUrl, load, update)
 
 import Documents.SameDay.Decoder exposing (decoder)
 import Documents.SameDay.Model exposing (Model, DocumentSummary, Results, UniqueId)
 import Http
 import Material
-import Navigation
 import String
 
 
 type Msg
     = LoadSameDay (Result Http.Error Results)
     | MouseOver Int Bool
-    | GoTo DocumentSummary
     | Mdl (Material.Msg Msg)
 
 
@@ -68,9 +66,6 @@ update msg model =
                     { results | documents = newDocuments }
             in
                 ( { model | results = newResults }, Cmd.none )
-
-        GoTo document ->
-            ( model, getDocumentUrl document |> Navigation.newUrl )
 
         Mdl mdlMsg ->
             Material.update mdlMsg model

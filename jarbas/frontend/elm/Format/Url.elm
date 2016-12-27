@@ -1,7 +1,6 @@
 module Format.Url exposing (queryEscape, queryPair, url)
 
 import Http exposing (encodeUri)
-import Regex exposing (HowMany(..), regex, replace)
 
 
 --
