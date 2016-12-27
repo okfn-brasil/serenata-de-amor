@@ -25,7 +25,6 @@
     "Documents.Update",
     "Documents.View",
     "Format.CnpjCpf",
-    "Format.Number",
     "Format.Price",
     "Format.Url",
     "Internationalization",
