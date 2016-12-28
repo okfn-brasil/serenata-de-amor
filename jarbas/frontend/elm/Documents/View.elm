@@ -1,7 +1,6 @@
 module Documents.View exposing (..)
 
-import Date
-import Date.Format
+import Date.Extra.Format exposing (utcIsoDateString)
 import Documents.Company.View as CompanyView
 import Documents.Inputs.Update as InputsUpdate
 import Documents.Inputs.View as InputsView
@@ -12,6 +11,7 @@ import Documents.Receipt.View as ReceiptView
 import Documents.SameDay.View as SameDay
 import Documents.Update exposing (Msg(..), onlyDigits, totalPages)
 import Format.CnpjCpf exposing (formatCnpjCpf)
+import Format.Date exposing (formatDate)
 import Format.Price exposing (..)
 import Format.Url exposing (url)
 import Html exposing (a, div, form, p, span, text)
@@ -242,11 +242,6 @@ sourceUrl document =
         ]
 
 
-viewDate : Language -> Date.Date -> String
-viewDate lang date =
-    FormattedDate date |> translate lang
-
-
 viewSuspicions : Language -> Maybe (List ( String, Bool )) -> String
 viewSuspicions lang maybeSuspicions =
     case maybeSuspicions of
@@ -342,7 +337,7 @@ viewPs lang document =
                 [ "http://x-rates.com/historical/?from=BRL&amount="
                 , toString document.totalNetValue
                 , "&date="
-                , Date.Format.format "%Y-%m-%d" document.issueDate
+                , utcIsoDateString document.issueDate
                 ]
 
         currency =
@@ -354,7 +349,7 @@ viewPs lang document =
                     , a
                         [ href currencyUrl, target "_blank", class "currency" ]
                         [ translate lang FieldsetCurrencyDetailsLink |> text
-                        , viewDate lang document.issueDate |> text
+                        , formatDate lang document.issueDate |> text
                         ]
                     , text "."
                     ]
@@ -422,7 +417,7 @@ viewSummaryBlock lang document =
 
         fields =
             [ ( translate lang FieldCongressperson, congressperson )
-            , ( translate lang FieldIssueDate, viewDate lang document.issueDate )
+            , ( translate lang FieldIssueDate, formatDate lang document.issueDate )
             , ( translate lang FieldClaimDate, claimedDate )
             , ( translate lang FieldSubquotaDescription, subquota )
             , ( translate lang FieldSubquotaGroupDescription, Maybe.withDefault "" document.subquotaGroupDescription )
