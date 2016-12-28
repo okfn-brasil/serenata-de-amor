@@ -1,5 +1,5 @@
 from io import StringIO
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 
 from django.test import TestCase
 
@@ -70,18 +70,21 @@ class TestMain(TestCommand):
     @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
     @patch('jarbas.core.management.commands.irregularities.Command.update')
     @patch('jarbas.core.management.commands.irregularities.print')
-    def test_main(self, print_, update, irregularities):
+    def test_main(self, print_,  update, irregularities):
         irregularities.return_value = [({'filter': 0}, {'content': 1})]
         self.command.count = 999
         self.command.main()
-        print_.assert_called_with('Preparing updates…')
-        print_.assert_called_with('1,000 reimbursements updated.', end='\r')
-        update.assert_called_once_with({'filter': 0}, {'content': 1})
+        print_calls = (
+            call('Preparing updates…', end='\r'),
+            call('1,000 reimbursements updated.', end='\r')
+        )
+        print_.assert_has_calls(print_calls)
+        update.assert_called_once_with(({'filter': 0}, {'content': 1}))
         self.assertEqual(1000, self.command.count)
 
     @patch.object(Reimbursement.objects, 'filter')
     def test_update(self, filter):
-        self.command.update({'filter': 0}, {'content': 1})
+        self.command.update(({'filter': 0}, {'content': 1}))
         filter.assert_called_once_with(filter=0)
         filter.return_value.update.assert_called_once_with(content=1)
 
@@ -120,15 +123,16 @@ class TestConventionMethods(TestCommand):
 
 class TestFileLoader(TestCommand):
 
+    @patch('jarbas.core.management.commands.irregularities.print')
     @patch('jarbas.core.management.commands.irregularities.lzma')
     @patch('jarbas.core.management.commands.irregularities.csv.DictReader')
     @patch('jarbas.core.management.commands.irregularities.Command.serialize')
     @patch('jarbas.core.management.commands.irregularities.Command.get_dataset')
-    def test_irregularities_property(self, get_dataset, serialize, rows, lzma):
+    def test_irregularities_property(self, get_dataset, serialize, rows, lzma, print_):
         lzma.return_value = StringIO()
         rows.return_value = range(42)
         self.command.path = 'irregularities.xz'
-        list(self.command.irregularities)
+        list(self.command.irregularities())
         self.assertEqual(42, serialize.call_count)
 
 
