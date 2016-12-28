@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from jarbas.core.models import Activity, Document, Receipt, Reimbursement, Supplier
+from jarbas.core.models import Activity, Reimbursement, Company
 
 
 class ReimbursementSerializer(serializers.ModelSerializer):
@@ -25,29 +25,22 @@ class ReimbursementSerializer(serializers.ModelSerializer):
         return obj.all_reimbursement_values
 
     def get_document_value(self, obj):
-        return self.to_float(obj.document_value)
+        return to_float(obj.document_value)
 
     def get_probability(self, obj):
-        return self.to_float(obj.probability)
+        return to_float(obj.probability)
 
     def get_receipt(self, obj):
-        return dict(fecthed=obj.receipt_fetched, url=obj.receipt_url)
+        return dict(fetched=obj.receipt_fetched, url=obj.receipt_url)
 
     def get_remark_value(self, obj):
-        return self.to_float(obj.remark_value)
+        return to_float(obj.remark_value)
 
     def get_total_net_value(self, obj):
-        return self.to_float(obj.total_net_value)
+        return to_float(obj.total_net_value)
 
     def get_total_reimbursement_value(self, obj):
-        return self.to_float(obj.total_reimbursement_value)
-
-    @staticmethod
-    def to_float(number):
-        try:
-            return float(number)
-        except TypeError:
-            return None
+        return to_float(obj.total_reimbursement_value)
 
     class Meta:
         model = Reimbursement
@@ -61,9 +54,51 @@ class ReimbursementSerializer(serializers.ModelSerializer):
         )
 
 
-class NewReceiptSerializer(serializers.ModelSerializer):
+class SameDayReimbursementSerializer(serializers.ModelSerializer):
 
+    city = serializers.SerializerMethodField()
+    total_net_value = serializers.SerializerMethodField()
+
+    def get_city(self, obj):
+        try:
+            company = Company.objects.get(cnpj=format_cnpj(obj.cnpj_cpf))
+        except Company.DoesNotExist:
+            return None
+
+        location = company.city, company.state
+        if not any(location):
+            return None
+
+        return ', '.join(v for v in location if v)
+
+    def get_total_net_value(self, obj):
+        return to_float(obj.total_net_value)
+
+    class Meta:
+        model = Reimbursement
+        fields = (
+            'applicant_id',
+            'city',
+            'document_id',
+            'subquota_id',
+            'subquota_description',
+            'supplier',
+            'total_net_value',
+            'year'
+        )
+
+
+class ReceiptSerializer(serializers.ModelSerializer):
+
+    reimbursement = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
+
+    def get_reimbursement(self, obj):
+        return dict(
+            year=obj.year,
+            applicant_id=obj.applicant_id,
+            document_id=obj.document_id
+        )
 
     def get_url(self, obj):
         return obj.receipt_url
@@ -71,10 +106,8 @@ class NewReceiptSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reimbursement
         fields = (
-            'applicant_id',
-            'document_id',
+            'reimbursement',
             'url',
-            'year'
         )
 
 
@@ -92,29 +125,6 @@ class SubquotaSerializer(serializers.ModelSerializer):
         fields = ('subquota_id', 'subquota_description')
 
 
-class ReceiptSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Receipt
-        fields = ('url', 'fetched')
-
-
-class DocumentSerializer(serializers.ModelSerializer):
-
-    receipt = serializers.SerializerMethodField()
-
-    def get_receipt(self, obj):
-        receipt, created = Receipt.objects.get_or_create(
-            document=obj,
-            defaults=dict(document=obj)
-        )
-        return ReceiptSerializer(receipt).data
-
-    class Meta:
-        model = Document
-        exclude = ()
-
-
 class ActivitySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -122,12 +132,29 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = ('code', 'description')
 
 
-class SupplierSerializer(serializers.ModelSerializer):
+class CompanySerializer(serializers.ModelSerializer):
 
     main_activity = ActivitySerializer(many=True, read_only=True)
     secondary_activity = ActivitySerializer(many=True, read_only=True)
 
     class Meta:
-        model = Supplier
+        model = Company
         exclude = ('id',)
         depth = 1
+
+
+def format_cnpj(cnpj):
+    return '{}.{}.{}/{}-{}'.format(
+        cnpj[0:2],
+        cnpj[2:5],
+        cnpj[5:8],
+        cnpj[8:12],
+        cnpj[12:14]
+    )
+
+
+def to_float(number):
+    try:
+        return float(number)
+    except TypeError:
+        return None

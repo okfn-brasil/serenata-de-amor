@@ -20,7 +20,7 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
 1. [Installing](#installing)
     1. [Using Docker](#using-docker)
     1. [Local install](#local-install)
- 
+
 ## JSON API endpoints
 
 ### Reimbursement
@@ -82,6 +82,8 @@ This request will list:
 * made according to the subquota with the ID 42
 * sorted by the highest probability
 
+Also you can pass more than one value per field (e.g. `document_id=111111,222222`).
+
 ### Subquota
 
 Subqoutas are categories of expenses that can be reimbursed by congresspeople.
@@ -118,7 +120,7 @@ A company is a Brazilian company in which congressperson have made expenses and 
 
 ##### `GET /api/company/<cnpj>/`
 
-This endpoit gets the info we have for a specific company. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Supplier` object, digits only). It returns `404` if the company is not found.
+This endpoit gets the info we have for a specific company. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Company` object, digits only). It returns `404` if the company is not found.
 
 ### Tapioca Jarbas
 
@@ -128,44 +130,50 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 
 ### Using Docker
 
-If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and make, jusr run:
+If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and make, just run:
 
 ```console
-$ docker-compose up -d
+$ docker-compose up -d --build
+$ docker-compose run --rm jarbas python manage.py migrate
+$ docker-compose run --rm jarbas python manage.py ceapdatasets
 ```
-
 
 You can access it at [`localhost:80`](http://localhost:80/). However your database starts empty and you still have to collect your static files:
 
 ```console
 $ docker-compose run --rm jarbas python manage.py collectstatic --no-input
-$ docker-compose run --rm jarbas python manage.py loaddatasets
-$ docker-compose run --rm jarbas python manage.py reimbursements
-$ docker-compose run --rm jarbas python manage.py loadsupliers
-$ python manage.py irregularities <path to irregularities.xz file>
+$ docker-compose run --rm jarbas python manage.py reimbursements <path to reimbursements.xz>
+$ docker-compose run --rm jarbas python manage.py irregularities <path to irregularities.xz file>
+$ docker-compose run --rm jarbas python manage.py companies <path to companies.xz>
 ```
 
-There are some cleaver shortcuts in the `Makefile` if you like it.
+You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
+
+Also there are some cleaver shortcuts in the `Makefile` if you like it. 
+
+If you have some issues with settings, maybe [this section can be helpful](#settings).
 
 ### Local install
 
 #### Requirements
 
-The app is based in [Python 3.5](http://python.org) and [Node.js 6](http://nodejs.org). Once you have `pip` and `npm` available, install the dependencies:
+Jarbas requires [Python 3.5](http://python.org), [Node.js 6](http://nodejs.org). and [PostgreSQL 9.4+](https://www.postgresql.org).
+
+Once you have `pip` and `npm` available install the dependencies:
 
 ```console
-npm i
+npm install
 python -m pip install -r requirements.txt
 ```
 
-Minor details on requirements:
+##### Python's `lzma` module
 
-* **`lzma`**: In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` but you mihght have to re-compile your Python. Some macOS Users might have the same problem. To check if you have `lzma` you can use `$ python -m lmza`. To fix it you need to install `lzma` using `$ brew install xz` and after that you need to recompile Python, and an way to do it is through `$ brew upgrade --cleanup python`.
-* **`psycopg2`**: The `requirements.txt` file is prepared to use [PostgresSQL](https://www.postgresql.org) and `psycopg2` might fail if you don't have Postgres installed locally.
+In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` or in macOS with `$ brew install xz` — but you mihght have to re-compile your Python.
+
 
 #### Settings
 
-Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main environment settings:
+Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
 
 ##### Django settings
 
@@ -184,9 +192,6 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 * `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
 * `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
-* `AMAZON_S3_DATASET_DATE` (_str_) Datasets file name prefix of CEAP datasets from Serenata de Amor (e.g. `2016-08-08` for `2016-08-08-current-year.xz`)
-* `AMAZON_S3_REIMBURSEMENTS_DATE` (_str_) Reumbursements dataset file name date prefix (e.g. `2016-12-06` for `2016-12-06-reimbursements.xz`)
-* `AMAZON_S3_COMPANIES_DATE` (_str_) Suppliers (companies) datasets file name date prefix (e.g. `2016-08-08` for `2016-08-08-companies.xz`)
 * `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
 
 ##### Google settings
@@ -207,20 +212,13 @@ $ python manage.py migrate
 Now you can load the data from our datasets and get some other data as static files:
 
 ```
-$ python manage.py loaddatasets
-$ python manage.py loadsuppliers
-$ python manage.py reimbursements
+$ python manage.py reimbursements <path to reimbursements.xz>
+$ python manage.py irregularities <path to irregularities.xz file>
+$ python manage.py companies <path to companies.xz>
 $ python manage.py ceapdatasets
 ```
 
-Use `python manage.py loaddatasets --help` and `python manage.py loadsuppliers --help` to check options on limiting the number of documents to be loaded from the datasets.
-
-If [Rosie](https://github.com/datasciencebr/rosie) was kind enough to give you
-a `irregularities.xz`, you can load it with:
-
-```
-$ python manage.py irregularities <path to irregularities.xz file>
-```
+You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
 
 #### Generate static files
 
@@ -236,10 +234,21 @@ $ python manage.py collectstatic
 
 Not sure? Test it!
 
+##### Backend
+
 ```
-$ npm run test
 $ python manage.py check
 $ python manage.py test
+```
+
+##### Front-end
+
+The Elm tests depends on [`elm-doc-test`](https://github.com/stoeffel/elm-doc-test), once you have it installed run:
+
+```
+$ cd jarbas/frontend/
+$ elm-doc-test
+$ elm-test tests/Doc/Main.elm
 ```
 
 #### Ready!

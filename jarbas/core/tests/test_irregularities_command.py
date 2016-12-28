@@ -96,7 +96,7 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.irregularities.os.path.exists')
     @patch('jarbas.core.management.commands.irregularities.print')
     def test_handler_without_options(self, print_, exists, main, irregularities):
-        self.command.handle()
+        self.command.handle(dataset='irregularities.xz')
         main.assert_called_once_with()
         print_.assert_called_once_with('0 reimbursements updated.')
         self.assertEqual(self.command.path, 'irregularities.xz')
@@ -104,21 +104,11 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
     @patch('jarbas.core.management.commands.irregularities.Command.main')
     @patch('jarbas.core.management.commands.irregularities.os.path.exists')
-    @patch('jarbas.core.management.commands.irregularities.print')
-    def test_handler_with_options(self, print_, exists, main, irregularities):
-        self.command.handle(irregularities_path='0')
-        main.assert_called_once_with()
-        print_.assert_called_once_with('0 reimbursements updated.')
-        self.assertEqual('0', self.command.path)
-
-    @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
-    @patch('jarbas.core.management.commands.irregularities.Command.main')
-    @patch('jarbas.core.management.commands.irregularities.os.path.exists')
-    def test_handler_with_non_existing_file(self, exists, main, irregularities):
+    def test_handler_with_non_existing_file(self, exists, update, irregularities):
         exists.return_value = False
         with self.assertRaises(FileNotFoundError):
-            self.command.handle()
-        main.assert_not_called()
+            self.command.handle(dataset='irregularities.xz')
+        update.assert_not_called()
 
 
 class TestFileLoader(TestCommand):
@@ -127,8 +117,7 @@ class TestFileLoader(TestCommand):
     @patch('jarbas.core.management.commands.irregularities.lzma')
     @patch('jarbas.core.management.commands.irregularities.csv.DictReader')
     @patch('jarbas.core.management.commands.irregularities.Command.serialize')
-    @patch('jarbas.core.management.commands.irregularities.Command.get_dataset')
-    def test_irregularities_property(self, get_dataset, serialize, rows, lzma, print_):
+    def test_irregularities_property(self, serialize, rows, lzma, print_):
         lzma.return_value = StringIO()
         rows.return_value = range(42)
         self.command.path = 'irregularities.xz'

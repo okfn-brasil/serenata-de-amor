@@ -1,29 +1,23 @@
 module Documents.Update exposing (..)
 
 import Char
+import Documents.Company.Update as Company
+import Documents.Decoder exposing (decoder)
 import Documents.Fields as Fields
-import Documents.Inputs.Update as Inputs
 import Documents.Inputs.Model
+import Documents.Inputs.Update as Inputs
+import Documents.Model exposing (Model, Document, Results, results)
+import Documents.Receipt.Model exposing (ReimbursementId)
 import Documents.Receipt.Update as Receipt
-import Documents.Supplier.Update as Supplier
+import Documents.SameDay.Model exposing (UniqueId)
+import Documents.SameDay.Update as SameDay
+import Format.Url exposing (url)
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 import Navigation
+import Regex exposing (regex, replace)
 import String
-import Task
-import Documents.Model exposing (Model, Document, Results, results)
-import Documents.Decoder exposing (decoder)
-
-
-totalPages : Int -> Int
-totalPages results =
-    toFloat results / 7.0 |> ceiling
-
-
-onlyDigits : String -> String
-onlyDigits value =
-    String.filter (\c -> Char.isDigit c) value
 
 
 type Msg
@@ -31,13 +25,44 @@ type Msg
     | ToggleForm
     | Update String
     | Page Int
-    | ApiSuccess Results
-    | ApiFail Http.Error
+    | LoadDocuments (Result Http.Error Results)
     | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
-    | SupplierMsg Int Supplier.Msg
+    | CompanyMsg Int Company.Msg
+    | SameDayMsg Int SameDay.Msg
     | MapMsg
     | Mdl (Material.Msg Msg)
+
+
+{-| Give the total page number based on the number of reimbursement found:
+
+    >>> totalPages 3
+    1
+
+    >>> totalPages 8
+    2
+
+    >>> totalPages 314
+    45
+-}
+totalPages : Int -> Int
+totalPages results =
+    toFloat results / 7.0 |> ceiling
+
+
+{-| Clean up a numbers only input field:
+
+    >>> onlyDigits "a1b2c3"
+    "123"
+-}
+onlyDigits : String -> String
+onlyDigits value =
+    String.filter (\c -> Char.isDigit c) value
+
+
+toUniqueId : Document -> UniqueId
+toUniqueId document =
+    UniqueId document.applicantId document.year document.documentId
 
 
 newSearch : Model -> Model
@@ -46,7 +71,7 @@ newSearch model =
         | results = results
         , showForm = True
         , loading = False
-        , inputs = Documents.Inputs.Model.model
+        , inputs = Inputs.updateLanguage model.lang Documents.Inputs.Model.model
     }
 
 
@@ -56,7 +81,7 @@ update msg model =
         Submit ->
             let
                 url =
-                    Inputs.toQuery model.inputs |> toUrl
+                    toUrl (Inputs.toQuery model.inputs)
             in
                 ( { model | loading = True }, Navigation.newUrl url )
 
@@ -82,14 +107,14 @@ update msg model =
                     ( "page", toString page ) :: Inputs.toQuery model.inputs
 
                 cmd =
-                    if List.member page [1..total] then
+                    if List.member page (List.range 1 total) then
                         Navigation.newUrl (toUrl query)
                     else
                         Cmd.none
             in
                 ( model, cmd )
 
-        ApiSuccess results ->
+        LoadDocuments (Ok results) ->
             let
                 showForm =
                     if (Maybe.withDefault 0 results.total) > 0 then
@@ -118,33 +143,45 @@ update msg model =
                 indexedDocuments =
                     getIndexedDocuments newModel
 
-                indexedSupplierCmds =
-                    List.map (\( idx, doc ) -> ( idx, Supplier.load doc.cnpj_cpf )) indexedDocuments
+                indexedCompanyCmds =
+                    List.map
+                        (\( idx, doc ) -> ( idx, Maybe.withDefault "" doc.cnpjCpf |> Company.load ))
+                        indexedDocuments
+
+                indexedSameDayCmds =
+                    List.map
+                        (\( idx, doc ) -> ( idx, doc |> toUniqueId |> SameDay.load ))
+                        indexedDocuments
 
                 cmds =
-                    List.map (\( idx, cmd ) -> Cmd.map (SupplierMsg idx) cmd) indexedSupplierCmds
+                    List.append
+                        (List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd) indexedCompanyCmds)
+                        (List.map (\( idx, cmd ) -> Cmd.map (SameDayMsg idx) cmd) indexedSameDayCmds)
             in
                 ( newModel, Cmd.batch cmds )
 
-        ApiFail error ->
+        LoadDocuments (Err error) ->
             let
                 err =
-                    Debug.log (toString error)
+                    Debug.log "ApiFail" (toString error)
             in
                 ( { model | results = results, error = Just error, loading = False }, Cmd.none )
 
         InputsMsg msg ->
             let
                 inputs =
-                    Inputs.update msg model.inputs |> fst
+                    Inputs.update msg model.inputs |> Tuple.first
             in
                 ( { model | inputs = inputs }, Cmd.none )
 
         ReceiptMsg index receiptMsg ->
             getDocumentsAndCmd model index updateReceipts receiptMsg
 
-        SupplierMsg index supplierMsg ->
-            getDocumentsAndCmd model index updateSuppliers supplierMsg
+        CompanyMsg index companyMsg ->
+            getDocumentsAndCmd model index updateCompanys companyMsg
+
+        SameDayMsg index sameDayMsg ->
+            getDocumentsAndCmd model index updateSameDay sameDayMsg
 
         MapMsg ->
             ( model, Cmd.none )
@@ -153,20 +190,20 @@ update msg model =
             Material.update mdlMsg model
 
 
-updateSuppliers : Language -> Int -> Supplier.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
-updateSuppliers lang target msg ( index, document ) =
+updateCompanys : Language -> Int -> Company.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateCompanys lang target msg ( index, document ) =
     if target == index then
         let
             updated =
-                Supplier.update msg document.supplier_info
+                Company.update msg document.supplierInfo
 
-            newSupplier =
-                fst updated
+            newCompany =
+                Tuple.first updated
 
             newCmd =
-                Cmd.map (SupplierMsg target) (snd updated)
+                Cmd.map (CompanyMsg target) (Tuple.second updated)
         in
-            ( { document | supplier_info = { newSupplier | lang = lang } }, newCmd )
+            ( { document | supplierInfo = { newCompany | lang = lang } }, newCmd )
     else
         ( document, Cmd.none )
 
@@ -178,13 +215,43 @@ updateReceipts lang target msg ( index, document ) =
             updated =
                 Receipt.update msg document.receipt
 
-            newReceipt =
-                fst updated
+            updatedReceipt =
+                Tuple.first updated
 
             newCmd =
-                Cmd.map (ReceiptMsg target) (snd updated)
+                Tuple.second updated |> Cmd.map (ReceiptMsg target)
+
+            reimbursement =
+                ReimbursementId document.year document.applicantId document.documentId
+
+            newReceipt =
+                { updatedReceipt
+                    | lang = lang
+                    , reimbursement = Just reimbursement
+                }
         in
-            ( { document | receipt = { newReceipt | lang = lang } }, newCmd )
+            ( { document | receipt = newReceipt }, newCmd )
+    else
+        ( document, Cmd.none )
+
+
+updateSameDay : Language -> Int -> SameDay.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateSameDay lang target msg ( index, document ) =
+    if target == index then
+        let
+            updated =
+                SameDay.update msg document.sameDay
+
+            sameDay =
+                Tuple.first updated
+
+            newSameDay =
+                { sameDay | lang = lang }
+
+            cmd =
+                Tuple.second updated |> Cmd.map (SameDayMsg target)
+        in
+            ( { document | sameDay = newSameDay }, cmd )
     else
         ( document, Cmd.none )
 
@@ -204,7 +271,7 @@ getIndexedDocuments model =
 
 {-
    This type signature is terrible, but it is a flexible function to update
-   Suppliers and Receipts.
+   Companys and Receipts.
 
    It returns a new model with the documents field updated, and the list of
    commands already mapped to the current module (i.e.  it returns what the
@@ -212,10 +279,10 @@ getIndexedDocuments model =
 
    The arguments it expects:
        * (Model) current model
-       * (Int) index of the object (Supplier or Receipt) being updated
+       * (Int) index of the object (Company or Receipt) being updated
        * (Int -> a -> ( Int, Document ) -> ( Document, Cmd Msg )) this is
-         a function such as updateSuppliers or updateReceipts
-       * (a) The kind of message inside the former argument, i.e. Supplier.Msg
+         a function such as updateCompanys or updateReceipts
+       * (a) The kind of message inside the former argument, i.e. Company.Msg
          or Receipt.Msg
 -}
 
@@ -244,6 +311,34 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
         ( { model | results = newResults }, Cmd.batch newCommands )
 
 
+{-| Convert from camelCase to underscore:
+
+    >>> convertQueryKey "applicationId"
+    "application_id"
+
+    >>> convertQueryKey "subquotaGroupId"
+    "subquota_group_id"
+
+-}
+convertQueryKey : String -> String
+convertQueryKey key =
+    key
+        |> replace Regex.All (regex "[A-Z]") (\{ match } -> "_" ++ match)
+        |> String.map Char.toLower
+
+
+{-| Convert from keys from a query tuple to underscore:
+
+    >>> convertQuery [("applicantId", "1"), ("subqotaGroupId", "2")]
+    [("applicant_id", "1"), ("subqota_group_id", "2")]
+
+-}
+convertQuery : List ( String, a ) -> List ( String, a )
+convertQuery query =
+    query
+        |> List.map (\( key, value ) -> ( convertQueryKey key, value ))
+
+
 loadDocuments : Language -> String -> List ( String, String ) -> Cmd Msg
 loadDocuments lang apiKey query =
     if List.isEmpty query then
@@ -251,32 +346,33 @@ loadDocuments lang apiKey query =
     else
         let
             jsonQuery =
-                ( "format", "json" ) :: query
-
-            request =
-                Http.get
-                    (decoder lang apiKey jsonQuery)
-                    (Http.url "/api/document/" jsonQuery)
+                ( "format", "json" ) :: convertQuery query
         in
-            Task.perform
-                ApiFail
-                ApiSuccess
-                request
+            Http.get
+                (url "/api/reimbursement/" jsonQuery)
+                (decoder lang apiKey jsonQuery)
+                |> Http.send LoadDocuments
 
 
+{-| Convert a list of key/value query pairs to a valid URL:
+
+    >>> toUrl [ ( "year", "2016" ), ( "foo", "bar" ) ]
+    "#/year/2016"
+
+    >>> toUrl [ ( "foo", "bar" ) ]
+    ""
+
+-}
 toUrl : List ( String, String ) -> String
 toUrl query =
     let
         validQueries =
             List.filter Fields.isSearchable query
-
-        pairs =
-            List.map (\( index, value ) -> index ++ "/" ++ value) validQueries
-
-        trailing =
-            String.join "/" pairs
     in
         if List.isEmpty validQueries then
             ""
         else
-            "#/" ++ trailing
+            validQueries
+                |> List.map (\( index, value ) -> index ++ "/" ++ value)
+                |> String.join "/"
+                |> (++) "#/"

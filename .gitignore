@@ -4,6 +4,7 @@
 .floo
 *.sqlite3
 htmlcov/
+npm-debug.log
 
 # cache, compiled & downloaded files
 *.pyc
@@ -13,6 +14,7 @@ app.css
 app.js
 ceap-datasets.html
 elm-stuff/
+jarbas/frontend/tests/Doc/
 node_modules/
 staticfiles/
 

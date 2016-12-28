@@ -1,62 +1,18 @@
-import os
 from datetime import date
 from re import match
-from tempfile import NamedTemporaryFile
-from urllib.request import urlretrieve
 
 from django.core.management.base import BaseCommand
-from django.conf import settings
 
 
 class LoadCommand(BaseCommand):
 
-    def add_arguments(self, parser):
-        parser.add_argument(
-            '--source', '-s', dest='source', default=None,
-            help='Data directory of Serenata de Amor (dataset source)'
-        )
-        parser.add_argument(
-            '--drop-all', '-d', dest='drop', action='store_true',
-            help='Drop all existing records before loading the datasets'
-        )
-        parser.add_argument(
-            '--dataset-version', dest='dataset_version', default=None,
-            help='Dataset file version (usualy a YYYY-MM-DD date)'
-        )
-
-    def get_dataset(self, name):
-        if self.source:
-            return self.load_local(self.source, name)
-        return self.load_remote(name)
-
-    def load_remote(self, name):
-        """Load a document from Amazon S3"""
-        url = self.get_url(name)
-        print("Loading " + url)
-        with NamedTemporaryFile(delete=False) as tmp:
-            urlretrieve(url, filename=tmp.name)
-            return tmp.name
-
-    def load_local(self, source, name):
-        """Load documents from local source"""
-        path = self.get_path(source, name)
-
-        if not os.path.exists(path):
-            print(path + " not found")
-            return None
-
-        print("Loading " + path)
-        return path
-
-    def get_url(self, suffix):
-        return 'https://{region}.amazonaws.com/{bucket}/{file_name}'.format(
-            region=settings.AMAZON_S3_REGION,
-            bucket=settings.AMAZON_S3_BUCKET,
-            file_name=self.get_file_name(suffix)
-        )
-
-    def get_path(self, source, name):
-        return os.path.join(source, self.get_file_name(name))
+    def add_arguments(self, parser, add_drop_all=True):
+        parser.add_argument('dataset', help='Path to the .xz dataset')
+        if add_drop_all:
+            parser.add_argument(
+                '--drop-all', '-d', dest='drop', action='store_true',
+                help='Drop all existing records before loading the datasets'
+            )
 
     @staticmethod
     def to_number(value, cast=None):
@@ -90,12 +46,6 @@ class LoadCommand(BaseCommand):
 
         except ValueError:
             return None
-
-    def get_file_name(self, name):
-        if not self.date:
-            settings_name = 'AMAZON_S3_{}_DATE'.format(name.upper())
-            self.date = getattr(settings, settings_name)
-        return '{date}-{name}.xz'.format(date=self.date, name=name)
 
     def drop_all(self, model):
         if model.objects.count() != 0:

@@ -1,15 +1,29 @@
 module Documents.Decoder exposing (..)
 
+import Documents.Company.Model as CompanyModel
 import Documents.Inputs.Update as InputsUpdate
-import Documents.Receipt.Decoder as ReceiptDecoder
-import Documents.Supplier.Model as SupplierModel
-import Internationalization exposing (Language(..), TranslationId(..), translate)
-import Json.Decode exposing ((:=), Decoder, int, list, maybe, string)
-import Json.Decode.Pipeline exposing (decode, hardcoded, nullable, required)
-import String
 import Documents.Model exposing (Model, Document, Results, results)
+import Documents.Receipt.Decoder as ReceiptDecoder
+import Documents.SameDay.Model as SameDay
+import Internationalization exposing (Language)
+import Json.Decode exposing (Decoder, bool, float, int, keyValuePairs, list, nullable, string)
+import Json.Decode.Extra exposing (date)
+import Json.Decode.Pipeline exposing (decode, hardcoded, required)
+import String
 
 
+{-| From a query list of key/values get the page number:
+
+    >>> getPage [ ( "page", "42" ), ( "year", "2016" ) ]
+    Just 42
+
+    >>> getPage [ ( "page", "foo bar" ) ]
+    Nothing
+
+    >>> getPage [ ( "format", "json" ) ]
+    Nothing
+
+-}
 getPage : List ( String, String ) -> Maybe Int
 getPage query =
     let
@@ -57,41 +71,45 @@ singleDecoder : Language -> String -> Decoder Document
 singleDecoder lang apiKey =
     let
         supplier =
-            SupplierModel.model
+            CompanyModel.model
     in
         decode Document
-            |> required "id" int
-            |> required "document_id" int
-            |> required "congressperson_name" string
-            |> required "congressperson_id" int
-            |> required "congressperson_document" int
-            |> required "term" int
-            |> required "state" string
-            |> required "party" string
-            |> required "term_id" int
-            |> required "subquota_number" int
-            |> required "subquota_description" string
-            |> required "subquota_group_id" int
-            |> required "subquota_group_description" string
-            |> required "supplier" string
-            |> required "cnpj_cpf" string
-            |> required "document_number" string
-            |> required "document_type" int
-            |> required "issue_date" (nullable string)
-            |> required "document_value" string
-            |> required "remark_value" string
-            |> required "net_value" string
-            |> required "month" int
             |> required "year" int
-            |> required "installment" int
-            |> required "passenger" string
-            |> required "leg_of_the_trip" string
-            |> required "batch_number" int
-            |> required "reimbursement_number" int
-            |> required "reimbursement_value" string
+            |> required "document_id" int
             |> required "applicant_id" int
+            |> required "total_reimbursement_value" (nullable float)
+            |> required "total_net_value" float
+            |> required "all_reimbursement_numbers" (list int)
+            |> required "all_net_values" (list float)
+            |> required "congressperson_id" (nullable int)
+            |> required "congressperson_name" (nullable string)
+            |> required "congressperson_document" (nullable int)
+            |> required "state" (nullable string)
+            |> required "party" (nullable string)
+            |> required "term_id" int
+            |> required "term" int
+            |> required "subquota_id" int
+            |> required "subquota_description" string
+            |> required "subquota_group_id" (nullable int)
+            |> required "subquota_group_description" (nullable string)
+            |> required "supplier" string
+            |> required "cnpj_cpf" (nullable string)
+            |> required "document_type" int
+            |> required "document_number" (nullable string)
+            |> required "document_value" float
+            |> required "issue_date" date
+            |> required "month" int
+            |> required "remark_value" (nullable float)
+            |> required "installment" (nullable int)
+            |> required "batch_number" (nullable int)
+            |> required "all_reimbursement_values" (nullable <| list float)
+            |> required "passenger" (nullable string)
+            |> required "leg_of_the_trip" (nullable string)
+            |> required "probability" (nullable float)
+            |> required "suspicions" (nullable <| keyValuePairs bool)
             |> required "receipt" (ReceiptDecoder.decoder lang)
             |> hardcoded { supplier | googleStreetViewApiKey = apiKey }
+            |> hardcoded SameDay.model
 
 
 updateDocumentLanguage : Language -> Document -> Document
@@ -104,12 +122,12 @@ updateDocumentLanguage lang document =
             { receipt | lang = lang }
 
         supplier =
-            document.supplier_info
+            document.supplierInfo
 
-        newSupplier =
+        newCompany =
             { supplier | lang = lang }
     in
-        { document | receipt = newReceipt, supplier_info = newSupplier }
+        { document | receipt = newReceipt, supplierInfo = newCompany }
 
 
 updateLanguage : Language -> Model -> Model

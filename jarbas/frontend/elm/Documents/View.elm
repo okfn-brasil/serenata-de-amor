@@ -1,15 +1,21 @@
 module Documents.View exposing (..)
 
-import Documents.Fields as Fields
-import Documents.Inputs.View as InputsView
+import Date
+import Date.Format
+import Documents.Company.View as CompanyView
 import Documents.Inputs.Update as InputsUpdate
-import Documents.Map.View as MapView
+import Documents.Inputs.View as InputsView
 import Documents.Map.Model as MapModel
+import Documents.Map.View as MapView
+import Documents.Model exposing (Model, Document, Results, results)
 import Documents.Receipt.View as ReceiptView
-import Documents.Supplier.View as SupplierView
+import Documents.SameDay.View as SameDay
+import Documents.Update exposing (Msg(..), onlyDigits, totalPages)
+import Format.CnpjCpf exposing (formatCnpjCpf)
+import Format.Price exposing (..)
+import Format.Url exposing (url)
 import Html exposing (a, div, form, p, span, text)
-import Html.App
-import Html.Attributes exposing (href)
+import Html.Attributes exposing (class, href, target)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
@@ -22,14 +28,11 @@ import Material.Options as Options
 import Material.Textfield as Textfield
 import Material.Typography as Typography
 import String
-import Documents.Model exposing (Model, Document, Results, results)
-import Documents.Update exposing (Msg(..), onlyDigits, totalPages)
 
 
---
--- View
 --
 -- Form
+--
 
 
 viewButton : Model -> Int -> List (Button.Property Msg) -> TranslationId -> Html.Html Msg
@@ -69,13 +72,13 @@ viewForm : Model -> Html.Html Msg
 viewForm model =
     let
         inputs =
-            InputsView.view model.loading model.inputs |> Html.App.map InputsMsg
+            InputsView.view model.loading model.inputs |> Html.map InputsMsg
 
         send =
             viewButton
                 model
                 0
-                [ Button.raised, Button.colored, Button.type' "submit" ]
+                [ Button.raised, Button.colored, Button.type_ "submit" ]
                 Search
 
         showForm =
@@ -92,9 +95,20 @@ viewForm model =
 
 
 
+--
 -- Pagination
+--
 
 
+{-| Adjust the width of the jump to page field:
+
+    >>> jumpToWidth "8"
+    "1.618em"
+
+    >>> jumpToWidth "42"
+    "2em"
+
+-}
 jumpToWidth : String -> String
 jumpToWidth value =
     let
@@ -210,20 +224,80 @@ viewPagination model =
 
 
 
+--
 -- Documents
+--
 
 
 sourceUrl : Document -> String
 sourceUrl document =
-    Http.url
+    url
         "http://www.camara.gov.br/cota-parlamentar/documento"
-        [ ( "nuDeputadoId", toString document.applicant_id )
+        [ ( "nuDeputadoId", toString document.applicantId )
         , ( "numMes", toString document.month )
         , ( "numAno", toString document.year )
-        , ( "despesa", toString document.subquota_number )
-        , ( "cnpjFornecedor", document.cnpj_cpf )
-        , ( "idDocumento", document.document_number )
+        , ( "despesa", toString document.subquotaId )
+        , ( "cnpjFornecedor", Maybe.withDefault "" document.cnpjCpf )
+        , ( "idDocumento", Maybe.withDefault "" document.documentNumber )
         ]
+
+
+viewDate : Language -> Date.Date -> String
+viewDate lang date =
+    FormattedDate date |> translate lang
+
+
+viewSuspicions : Language -> Maybe (List ( String, Bool )) -> String
+viewSuspicions lang maybeSuspicions =
+    case maybeSuspicions of
+        Just suspicions ->
+            suspicions
+                |> List.filter (\( key, value ) -> value)
+                |> List.map (\( key, value ) -> translate lang <| Suspicion key)
+                |> String.join ", "
+
+        Nothing ->
+            ""
+
+
+viewCompany : Document -> String
+viewCompany document =
+    case document.cnpjCpf of
+        Just value ->
+            String.concat
+                [ document.supplier
+                , " ("
+                , formatCnpjCpf value
+                , ")"
+                ]
+
+        Nothing ->
+            document.supplier
+
+
+{-| Convert a Maybe Int to String except if it's zero:
+
+    >>> viewMaybeIntButZero ( Just 42 )
+    "42"
+
+    >>> viewMaybeIntButZero ( Just 0 )
+    ""
+
+    >>> viewMaybeIntButZero Nothing
+    ""
+
+-}
+viewMaybeIntButZero : Maybe Int -> String
+viewMaybeIntButZero maybeInt =
+    case maybeInt of
+        Just int ->
+            if int == 0 then
+                ""
+            else
+                toString int
+
+        Nothing ->
+            ""
 
 
 viewError : Language -> Maybe Http.Error -> Html.Html Msg
@@ -260,18 +334,52 @@ viewDocumentBlockLine ( label, value ) =
             ]
 
 
-viewDocumentBlock : Language -> ( String, String, List ( String, String ) ) -> Html.Html Msg
-viewDocumentBlock lang ( title, icon, fields ) =
+viewPs : Language -> Document -> Html.Html Msg
+viewPs lang document =
+    let
+        currencyUrl =
+            String.concat
+                [ "http://x-rates.com/historical/?from=BRL&amount="
+                , toString document.totalNetValue
+                , "&date="
+                , Date.Format.format "%Y-%m-%d" document.issueDate
+                ]
+
+        currency =
+            if document.documentType == 2 then
+                Options.styled
+                    p
+                    [ Typography.caption ]
+                    [ translate lang FieldsetCurrencyDetails |> text
+                    , a
+                        [ href currencyUrl, target "_blank", class "currency" ]
+                        [ translate lang FieldsetCurrencyDetailsLink |> text
+                        , viewDate lang document.issueDate |> text
+                        ]
+                    , text "."
+                    ]
+            else
+                text ""
+    in
+        div
+            []
+            [ currency
+            , Options.styled
+                p
+                [ Typography.caption ]
+                [ text (translate lang FieldsetCompanyDetails) ]
+            ]
+
+
+viewDocumentBlock : Language -> Document -> ( String, String, List ( String, String ) ) -> Html.Html Msg
+viewDocumentBlock lang document ( title, icon, fields ) =
     let
         iconTag =
             Icon.view icon [ Options.css "transform" "translateY(0.4rem)" ]
 
         ps =
-            if title == (translate lang FieldsetSupplier) then
-                Options.styled
-                    p
-                    [ Typography.caption ]
-                    [ text (translate lang FieldsetSupplierDetails) ]
+            if title == (translate lang FieldsetSummary) then
+                viewPs lang document
             else
                 text ""
     in
@@ -286,95 +394,148 @@ viewDocumentBlock lang ( title, icon, fields ) =
             ]
 
 
+viewSummaryBlock : Language -> Document -> Html.Html Msg
+viewSummaryBlock lang document =
+    let
+        congressperson =
+            String.concat
+                [ Maybe.withDefault "" document.congresspersonName
+                , " ("
+                , Maybe.withDefault "" document.party
+                , "/"
+                , Maybe.withDefault "" document.state
+                , ")"
+                ]
+
+        claimedDate =
+            [ document.month, document.year ]
+                |> List.map toString
+                |> String.join "/"
+
+        subquota =
+            String.concat
+                [ document.subquotaDescription
+                , " ("
+                , toString document.subquotaId
+                , ")"
+                ]
+
+        fields =
+            [ ( translate lang FieldCongressperson, congressperson )
+            , ( translate lang FieldIssueDate, viewDate lang document.issueDate )
+            , ( translate lang FieldClaimDate, claimedDate )
+            , ( translate lang FieldSubquotaDescription, subquota )
+            , ( translate lang FieldSubquotaGroupDescription, Maybe.withDefault "" document.subquotaGroupDescription )
+            , ( translate lang FieldCompany, viewCompany document )
+            , ( translate lang FieldDocumentValue, formatPrice lang document.documentValue )
+            , ( translate lang FieldRemarkValue, maybeFormatPrice lang document.remarkValue )
+            , ( translate lang FieldTotalNetValue, formatPrice lang document.totalNetValue )
+            , ( translate lang FieldTotalReimbursementValue, maybeFormatPrice lang document.totalReimbursementValue )
+            , ( translate lang FieldSuspicions, viewSuspicions lang document.suspicions )
+            ]
+                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+    in
+        viewDocumentBlock lang document ( translate lang FieldsetSummary, "list", fields )
+
+
+viewReimbursementDetails : Language -> Document -> Html.Html Msg
+viewReimbursementDetails lang document =
+    let
+        reimbursements =
+            document.reimbursementNumbers
+                |> List.map toString
+                |> String.join ", "
+
+        documentType =
+            DocumentType document.documentType
+                |> translate lang
+
+        fields =
+            [ ( translate lang FieldApplicantId, toString document.applicantId )
+            , ( translate lang FieldDocumentId, toString document.documentId )
+            , ( translate lang FieldNetValues, formatPrices lang document.netValues )
+            , ( translate lang FieldReimbursementValues, maybeFormatPrices lang document.reimbursementValues )
+            , ( translate lang FieldReimbursementNumbers, reimbursements )
+            , ( translate lang FieldDocumentType, documentType )
+            , ( translate lang FieldDocumentNumber, Maybe.withDefault "" document.documentNumber )
+            , ( translate lang FieldInstallment, viewMaybeIntButZero document.installment )
+            , ( translate lang FieldBatchNumber, viewMaybeIntButZero document.batchNumber )
+            ]
+                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+    in
+        viewDocumentBlock lang document ( translate lang FieldsetReimbursement, "folder", fields )
+
+
+viewCongressPersonDetails : Language -> Document -> Html.Html Msg
+viewCongressPersonDetails lang document =
+    let
+        fields =
+            [ ( translate lang FieldCongresspersonId, viewMaybeIntButZero document.congresspersonId )
+            , ( translate lang FieldCongresspersonDocument, viewMaybeIntButZero document.congresspersonDocument )
+            , ( translate lang FieldTerm, toString document.term )
+            , ( translate lang FieldTermId, toString document.termId )
+            ]
+                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+    in
+        viewDocumentBlock lang document ( translate lang FieldsetCongressperson, "face", fields )
+
+
+viewTrip : Language -> Document -> Html.Html Msg
+viewTrip lang document =
+    let
+        fields =
+            [ ( translate lang FieldPassenger, Maybe.withDefault "" document.passenger )
+            , ( translate lang FieldLegOfTheTrip, Maybe.withDefault "" document.legOfTheTrip )
+            ]
+                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+    in
+        if List.isEmpty fields then
+            text ""
+        else
+            viewDocumentBlock lang document ( translate lang FieldsetTrip, "flight", fields )
+
+
 viewDocument : Language -> Int -> Document -> List (Material.Grid.Cell Msg)
 viewDocument lang index document =
     let
-        getLabel =
-            Fields.getLabel lang
-
         blocks =
-            [ ( translate lang FieldsetCongressperson
-              , "face"
-              , [ ( getLabel "congressperson_name", document.congressperson_name )
-                , ( getLabel "congressperson_id", toString document.congressperson_id )
-                , ( getLabel "congressperson_document", toString document.congressperson_document )
-                , ( getLabel "state", document.state )
-                , ( getLabel "party", document.party )
-                , ( getLabel "term", toString document.term )
-                , ( getLabel "term_id", toString document.term_id )
-                ]
-              )
-            , ( translate lang FieldsetSubquota
-              , "list"
-              , [ ( getLabel "subquota_number", toString document.subquota_number )
-                , ( getLabel "subquota_description", document.subquota_description )
-                , ( getLabel "subquota_group_id", toString document.subquota_group_id )
-                , ( getLabel "subquota_group_description", document.subquota_group_description )
-                ]
-              )
-            , ( translate lang FieldsetSupplier
-              , "store"
-              , [ ( getLabel "supplier", document.supplier )
-                , ( getLabel "cnpj_cpf", document.cnpj_cpf )
-                ]
-              )
-            , ( translate lang FieldsetDocument
-              , "receipt"
-              , [ ( getLabel "document_id", toString document.document_id )
-                , ( getLabel "document_number", document.document_number )
-                , ( getLabel "document_type", toString document.document_type )
-                , ( getLabel "month", toString document.month )
-                , ( getLabel "year", toString document.year )
-                , ( getLabel "issue_date", Maybe.withDefault "" document.issue_date )
-                ]
-              )
-            , ( translate lang FieldsetValues
-              , "monetization_on"
-              , [ ( getLabel "document_value", toString document.document_value )
-                , ( getLabel "remark_value", toString document.remark_value )
-                , ( getLabel "net_value", toString document.net_value )
-                , ( getLabel "reimbursement_value", toString document.reimbursement_value )
-                , ( getLabel "installment", toString document.installment )
-                ]
-              )
-            , ( translate lang FieldsetTrip
-              , "flight"
-              , [ ( getLabel "passenger", document.passenger )
-                , ( getLabel "leg_of_the_trip", document.leg_of_the_trip )
-                ]
-              )
-            , ( translate lang FieldsetApplication
-              , "folder"
-              , [ ( getLabel "applicant_id", toString document.applicant_id )
-                , ( getLabel "batch_number", toString document.batch_number )
-                , ( getLabel "reimbursement_number", toString document.reimbursement_number )
-                ]
-              )
+            [ viewSummaryBlock lang document
+            , viewTrip lang document
+            , viewReimbursementDetails lang document
+            , viewCongressPersonDetails lang document
             ]
 
         receipt =
-            Html.App.map (ReceiptMsg index) (ReceiptView.view document.id document.receipt)
+            ReceiptView.view document.receipt
+                |> Html.map (ReceiptMsg index)
 
         mapModel =
-            MapModel.modelFrom lang document.supplier_info
+            MapModel.modelFrom lang document.supplierInfo
 
         mapButton =
-            Html.App.map (\_ -> MapMsg) <| MapView.view mapModel
+            MapView.view mapModel
+                |> Html.map (\_ -> MapMsg)
 
         title =
             Options.styled
                 p
                 [ Typography.headline, Color.text Color.primary ]
-                [ (translate lang DocumentTitle) ++ (toString document.document_id) |> text ]
+                [ (translate lang DocumentTitle) ++ (toString document.documentId) |> text ]
 
         supplier =
-            Html.App.map (SupplierMsg index) (SupplierView.view document.supplier_info)
+            CompanyView.view document.supplierInfo
+                |> Html.map (CompanyMsg index)
 
         supplierTitle =
             Options.styled
                 p
                 [ Typography.headline ]
                 [ text "" ]
+
+        sameDay : Html.Html Msg
+        sameDay =
+            SameDay.view document.sameDay
+                |> Html.map (SameDayMsg index)
     in
         [ cell
             [ size Desktop 6, size Tablet 4, size Phone 2 ]
@@ -388,15 +549,16 @@ viewDocument lang index document =
             ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
-            [ Options.styled div [] (List.map (viewDocumentBlock lang) blocks)
+            [ Options.styled div [] blocks
             , Options.styled
                 p
                 [ Typography.caption, Options.css "margin-top" "1rem" ]
                 [ text (translate lang DocumentSource)
                 , a
-                    [ href (sourceUrl document) ]
+                    [ href (sourceUrl document), class "chamber-of-deputies-source" ]
                     [ text (translate lang DocumentChamberOfDeputies) ]
                 ]
+            , sameDay
             ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]
@@ -420,13 +582,10 @@ viewDocuments model =
             InputsUpdate.toQuery model.inputs |> List.isEmpty |> not
 
         results =
-            if model.showForm then
-                if total == 1 then
-                    (translate model.lang ResultTitleSingular)
-                else
-                    (translate model.lang ResultTitlePlural)
+            if total == 1 then
+                (toString total) ++ (translate model.lang ResultTitleSingular)
             else
-                ""
+                (toString total) ++ (translate model.lang ResultTitlePlural)
 
         title =
             cell
@@ -434,7 +593,7 @@ viewDocuments model =
                 [ Options.styled
                     div
                     [ Typography.center, Typography.display1 ]
-                    [ (toString total) ++ results |> text ]
+                    [ results |> text ]
                 ]
 
         pagination =

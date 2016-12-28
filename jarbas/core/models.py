@@ -2,8 +2,10 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from requests import head
 
+from jarbas.core.querysets import SameDayQuerySet
 
-class NewReceipt:
+
+class Receipt:
 
     def __init__(self, year, applicant_id, document_id):
         self.year = year
@@ -21,9 +23,7 @@ class NewReceipt:
     @property
     def exists(self):
         status = head(self.get_url()).status_code
-        if 200 <= status < 400:
-            return True
-        return False
+        return 200 <= status < 400
 
 
 class Reimbursement(models.Model):
@@ -58,7 +58,7 @@ class Reimbursement(models.Model):
     document_number = models.CharField('Document number', max_length=140, blank=True, null=True)
     document_value = models.DecimalField('Document value', max_digits=10, decimal_places=3)
 
-    issue_date = models.DateField('Issue date', blank=True, null=True)
+    issue_date = models.DateField('Issue date')
     month = models.IntegerField('Month', db_index=True)
     remark_value = models.DecimalField('Remark value', max_digits=10, decimal_places=3, blank=True, null=True)
     installment = models.IntegerField('Installment', blank=True, null=True)
@@ -71,8 +71,10 @@ class Reimbursement(models.Model):
     probability = models.DecimalField('Probability', max_digits=6, decimal_places=5, blank=True, null=True)
     suspicions = JSONField('Suspicions', blank=True, null=True)
 
-    receipt_fetched = models.BooleanField('Was the receipt URL fetched?', default=False)
+    receipt_fetched = models.BooleanField('Was the receipt URL fetched?', default=False, db_index=True)
     receipt_url = models.CharField('Receipt URL', max_length=140, blank=True, null=True)
+
+    objects = models.Manager.from_queryset(SameDayQuerySet)()
 
     class Meta:
         ordering = ['-issue_date']
@@ -85,7 +87,7 @@ class Reimbursement(models.Model):
         if self.receipt_fetched and not force:
             return None
 
-        receipt = NewReceipt(self.year, self.applicant_id, self.document_id)
+        receipt = Receipt(self.year, self.applicant_id, self.document_id)
         if receipt.exists:
             self.receipt_url = receipt.url
         self.receipt_fetched = True
@@ -113,68 +115,13 @@ class Reimbursement(models.Model):
         parts = list(content.split(','))
         return list(map(lambda x: cast(x), parts)) if cast else parts
 
-
-class Document(models.Model):
-
-    document_id = models.IntegerField('Document ID', db_index=True)
-    congressperson_name = models.CharField('Congressperson name', max_length=33)
-    congressperson_id = models.IntegerField('Congressperson ID', db_index=True)
-    congressperson_document = models.IntegerField('Congressperson document')
-    term = models.IntegerField('Term', db_index=True)
-    state = models.CharField('State', max_length=2)
-    party = models.CharField('Party', db_index=True, max_length=7)
-    term_id = models.IntegerField('Term ID')
-    subquota_number = models.IntegerField('Subquote ID', db_index=True)
-    subquota_description = models.CharField('Subquota descrition', max_length=128)
-    subquota_group_id = models.IntegerField('Subquota group ID', db_index=True)
-    subquota_group_description = models.CharField('Subquota group description', max_length=20)
-    supplier = models.CharField('Supplier', max_length=100)
-    cnpj_cpf = models.CharField('CNPJ or CPF', db_index=True, max_length=14)
-    document_number = models.CharField('Document number', max_length=30)
-    document_type = models.IntegerField('Document type', db_index=True)
-    issue_date = models.DateField('Issue date', blank=True, null=True)
-    document_value = models.DecimalField('Document value', max_digits=10, decimal_places=3)
-    remark_value = models.DecimalField('Remark value', max_digits=10, decimal_places=3)
-    net_value = models.DecimalField('Net value', max_digits=10, decimal_places=3)
-    month = models.IntegerField('Month', db_index=True)
-    year = models.IntegerField('Year', db_index=True)
-    installment = models.IntegerField('Installment')
-    passenger = models.CharField('Passenger', max_length=59)
-    leg_of_the_trip = models.CharField('Leg of the trip', max_length=100)
-    batch_number = models.IntegerField('Batch number')
-    reimbursement_number = models.IntegerField('Reimbursement number', db_index=True)
-    reimbursement_value = models.DecimalField('Reimbusrsement value', max_digits=10, decimal_places=3)
-    applicant_id = models.IntegerField('Applicant ID', db_index=True)
-
-
-class Receipt(models.Model):
-
-    url = models.URLField('URL', null=True, blank=True, default=None, max_length=128)
-    fetched = models.BooleanField('Was fetched?', default=False)
-    document = models.OneToOneField(Document, on_delete=models.CASCADE)
-
-    def get_url(self):
-        server = 'www.camara.gov.br'
-        path = 'cota-parlamentar/documentos/publ/{}/{}/{}.pdf'.format(
-            self.document.applicant_id,
-            self.document.year,
-            self.document.document_id
-        )
-        return 'http://{}/{}'.format(server, path)
-
-    def fetch_url(self):
-        if self.url:
-            return self.url
-
-        probable_url = self.get_url()
-        status = head(probable_url).status_code
-        url = probable_url if 200 <= status < 400 else None
-
-        self.url = url
-        self.fetched = True
-        self.save()
-
-        return url
+    def __repr__(self):
+        unique_id = (
+            'year={year}, '
+            'applicant_id={applicant_id}, '
+            'document_id={document_id}'
+        ).format(**self.__dict__)
+        return 'Reimbursement({})'.format(unique_id)
 
 
 class Activity(models.Model):
@@ -183,7 +130,7 @@ class Activity(models.Model):
     description = models.CharField('Description', max_length=167)
 
 
-class Supplier(models.Model):
+class Company(models.Model):
 
     cnpj = models.CharField('CNPJ', db_index=True, max_length=18)
     opening = models.DateField('Opening date', blank=True, null=True)

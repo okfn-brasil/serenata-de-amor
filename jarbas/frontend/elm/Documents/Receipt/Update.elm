@@ -1,32 +1,39 @@
 module Documents.Receipt.Update exposing (Msg(..), update)
 
+import Documents.Receipt.Decoder exposing (urlDecoder)
+import Documents.Receipt.Model exposing (Model, ReimbursementId)
+import Format.Url exposing (url)
 import Http
 import Material
-import Task
-import Documents.Receipt.Model exposing (Model)
-import Documents.Receipt.Decoder exposing (urlDecoder)
+import String
 
 
 type Msg
-    = LoadUrl Int
-    | ApiSuccess (Maybe String)
-    | ApiFail Http.Error
+    = UpdateReimbursementId ReimbursementId
+    | SearchReceipt (Maybe ReimbursementId)
+    | LoadReceipt (Result Http.Error (Maybe String))
     | Mdl (Material.Msg Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        LoadUrl id ->
-            ( { model | loading = True }, loadUrl id )
+        UpdateReimbursementId reimbursement ->
+            ( { model | reimbursement = Just reimbursement }, Cmd.none )
 
-        ApiSuccess maybeUrl ->
+        SearchReceipt (Just reimbursement) ->
+            ( { model | loading = True }, loadUrl reimbursement )
+
+        SearchReceipt Nothing ->
+            ( model, Cmd.none )
+
+        LoadReceipt (Ok maybeUrl) ->
             ( { model | url = maybeUrl, loading = False, fetched = True }, Cmd.none )
 
-        ApiFail error ->
+        LoadReceipt (Err error) ->
             let
                 err =
-                    Debug.log (toString error)
+                    Debug.log "ApiFail" (toString error)
             in
                 ( { model | loading = False, fetched = True, error = Just error }, Cmd.none )
 
@@ -34,19 +41,24 @@ update msg model =
             Material.update mdlMsg model
 
 
-loadUrl : Int -> Cmd Msg
-loadUrl id =
+loadUrl : ReimbursementId -> Cmd Msg
+loadUrl reimbursement =
     let
         query =
-            [ ( "format", "json" ) ]
+            [ ( "format", "json" )
+            , ( "force", "true" )
+            ]
 
         path =
-            "/api/receipt/" ++ (toString id)
-
-        url =
-            Http.url path query
+            String.join "/"
+                [ "/api"
+                , "reimbursement"
+                , toString reimbursement.year
+                , toString reimbursement.applicantId
+                , toString reimbursement.documentId
+                , "receipt/"
+                ]
     in
-        Task.perform
-            ApiFail
-            ApiSuccess
-            (Http.get urlDecoder url)
+        urlDecoder
+            |> Http.get (url path query)
+            |> Http.send LoadReceipt
