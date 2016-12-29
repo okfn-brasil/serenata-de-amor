@@ -18,23 +18,18 @@ install:
   - psql -U postgres -c 'create database "jarbas";'
   - nvm install 6
   - nvm use 6
-  - npm install -g elm
-  - npm install -g elm-test
-  - npm install -g elm-doc-test
-  - npm install
+  - npm install -g yarn
+  - yarn install
   - pip install -r requirements.txt coveralls
 
 before_script:
+  - yarn assets
   - python manage.py migrate
-  - travis_wait 60 npm run assets
   - python manage.py collectstatic --no-input
 
 script:
+  - travis_wait 60 yarn test
   - coverage run manage.py test -v 3
-  - cd jarbas/frontend/
-  - elm-doc-test
-  - travis_wait 60 elm-test tests/Doc/Main.elm
-  - cd ../../
 
 after_success:
   - coveralls
