@@ -10,7 +10,6 @@ import Documents.Model exposing (Model, Document, Results, results)
 import Documents.Receipt.Model exposing (ReimbursementId)
 import Documents.Receipt.Update as Receipt
 import Documents.RelatedTable.Update as RelatedTable
-import Documents.SameDay.Model exposing (UniqueId)
 import Documents.SameDay.Update as SameDay
 import Documents.SameSubquota.Update as SameSubquota
 import Format.Url exposing (url)
@@ -31,7 +30,7 @@ type Msg
     | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
     | CompanyMsg Int Company.Msg
-    | SameDayMsg Int SameDay.Msg
+    | SameDayMsg Int RelatedTable.Msg
     | SameSubquotaMsg Int RelatedTable.Msg
     | MapMsg
     | Mdl (Material.Msg Msg)
@@ -63,9 +62,9 @@ onlyDigits value =
     String.filter (\c -> Char.isDigit c) value
 
 
-toUniqueId : Document -> UniqueId
+toUniqueId : Document -> SameDay.UniqueId
 toUniqueId document =
-    UniqueId document.applicantId document.year document.documentId
+    SameDay.UniqueId document.applicantId document.year document.documentId
 
 
 toSameSubquotaFilter : Document -> SameSubquota.Filter
@@ -257,12 +256,12 @@ updateReceipts lang target msg ( index, document ) =
         ( document, Cmd.none )
 
 
-updateSameDay : Language -> Int -> SameDay.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateSameDay : Language -> Int -> RelatedTable.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
 updateSameDay lang target msg ( index, document ) =
     if target == index then
         let
             updated =
-                SameDay.update msg document.sameDay
+                RelatedTable.update msg document.sameDay
 
             sameDay =
                 Tuple.first updated
