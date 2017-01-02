@@ -5,6 +5,7 @@ import Documents.Inputs.Update as InputsUpdate
 import Documents.Model exposing (Model, Document, Results, results)
 import Documents.Receipt.Decoder as ReceiptDecoder
 import Documents.SameDay.Model as SameDay
+import Documents.RelatedTable.Model as RelatedTable
 import Internationalization exposing (Language)
 import Json.Decode exposing (Decoder, bool, float, int, keyValuePairs, list, nullable, string)
 import Json.Decode.Extra exposing (date)
@@ -110,6 +111,7 @@ singleDecoder lang apiKey =
             |> required "receipt" (ReceiptDecoder.decoder lang)
             |> hardcoded { supplier | googleStreetViewApiKey = apiKey }
             |> hardcoded SameDay.model
+            |> hardcoded RelatedTable.model
 
 
 updateDocumentLanguage : Language -> Document -> Document
