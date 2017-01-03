@@ -157,12 +157,12 @@ If you have some issues with settings, maybe [this section can be helpful](#sett
 
 #### Requirements
 
-Jarbas requires [Python 3.5](http://python.org), [Node.js 6](http://nodejs.org). and [PostgreSQL 9.4+](https://www.postgresql.org).
+Jarbas requires [Python 3.5](http://python.org), [Node.js 6](http://nodejs.org) with [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org).
 
-Once you have `pip` and `npm` available install the dependencies:
+Once you have `pip` and `yarn` available install the dependencies:
 
 ```console
-npm install
+yarn install
 python -m pip install -r requirements.txt
 ```
 
@@ -225,7 +225,7 @@ You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie)
 We generate assets through NodeJS, so run it before Django collecting static files:
 
 ```console
-$ npm run assets
+$ yarn assets
 $ python manage.py collectstatic
 
 ```
@@ -234,21 +234,10 @@ $ python manage.py collectstatic
 
 Not sure? Test it!
 
-##### Backend
-
 ```
 $ python manage.py check
 $ python manage.py test
-```
-
-##### Front-end
-
-The Elm tests depends on [`elm-doc-test`](https://github.com/stoeffel/elm-doc-test), once you have it installed run:
-
-```
-$ cd jarbas/frontend/
-$ elm-doc-test
-$ elm-test tests/Doc/Main.elm
+$ yarn test
 ```
 
 #### Ready!

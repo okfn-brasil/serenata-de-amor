@@ -1,8 +1,5 @@
 module Internationalization exposing (Language(..), TranslationId(..), translate)
 
-import Date
-import Date.Format
-
 
 type alias TranslationSet =
     { english : String
@@ -110,7 +107,6 @@ type TranslationId
     | BrazilianCurrency String
     | ThousandSeparator
     | DecimalSeparator
-    | FormattedDate Date.Date
     | Suspicion String
     | DocumentType Int
 
@@ -589,11 +585,6 @@ translate lang trans =
                     TranslationSet
                         "."
                         ","
-
-                FormattedDate date ->
-                    TranslationSet
-                        (Date.Format.format "%b %e, %Y" date)
-                        (Date.Format.format "%d/%m/%Y" date)
 
                 Suspicion suspicion ->
                     case suspicion of
