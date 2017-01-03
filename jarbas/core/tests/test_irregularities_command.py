@@ -1,5 +1,5 @@
 from io import StringIO
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 
 from django.test import TestCase
 
@@ -65,33 +65,44 @@ class TestSerializer(TestCommand):
         self.assertEqual(list(self.command.serialize(input)), expected)
 
 
-class TestUpdate(TestCommand):
+class TestMain(TestCommand):
+
+    @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
+    @patch('jarbas.core.management.commands.irregularities.Command.update')
+    @patch('jarbas.core.management.commands.irregularities.print')
+    def test_main(self, print_,  update, irregularities):
+        irregularities.return_value = [({'filter': 0}, {'content': 1})]
+        self.command.count = 999
+        self.command.main()
+        print_calls = (
+            call('Preparing updates…', end='\r'),
+            call('1,000 reimbursements updated.', end='\r')
+        )
+        print_.assert_has_calls(print_calls)
+        update.assert_called_once_with(({'filter': 0}, {'content': 1}))
+        self.assertEqual(1000, self.command.count)
 
     @patch.object(Reimbursement.objects, 'filter')
-    @patch('jarbas.core.management.commands.irregularities.print')
-    def test_update(self, p, filter):
-        self.command.count = 999
-        self.command.update([({'filter': 0}, {'content': 1})])
+    def test_update(self, filter):
+        self.command.update(({'filter': 0}, {'content': 1}))
         filter.assert_called_once_with(filter=0)
         filter.return_value.update.assert_called_once_with(content=1)
-        p.assert_called_once_with('1,000 reimbursements updated.', end='\r')
-        self.assertEqual(1000, self.command.count)
 
 
 class TestConventionMethods(TestCommand):
 
     @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
-    @patch('jarbas.core.management.commands.irregularities.Command.update')
+    @patch('jarbas.core.management.commands.irregularities.Command.main')
     @patch('jarbas.core.management.commands.irregularities.os.path.exists')
     @patch('jarbas.core.management.commands.irregularities.print')
-    def test_handler(self, print_, exists, update, irregularities):
+    def test_handler_without_options(self, print_, exists, main, irregularities):
         self.command.handle(dataset='irregularities.xz')
-        update.assert_called_once_with(irregularities)
+        main.assert_called_once_with()
         print_.assert_called_once_with('0 reimbursements updated.')
         self.assertEqual(self.command.path, 'irregularities.xz')
 
     @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
-    @patch('jarbas.core.management.commands.irregularities.Command.update')
+    @patch('jarbas.core.management.commands.irregularities.Command.main')
     @patch('jarbas.core.management.commands.irregularities.os.path.exists')
     def test_handler_with_non_existing_file(self, exists, update, irregularities):
         exists.return_value = False
@@ -102,14 +113,15 @@ class TestConventionMethods(TestCommand):
 
 class TestFileLoader(TestCommand):
 
+    @patch('jarbas.core.management.commands.irregularities.print')
     @patch('jarbas.core.management.commands.irregularities.lzma')
     @patch('jarbas.core.management.commands.irregularities.csv.DictReader')
     @patch('jarbas.core.management.commands.irregularities.Command.serialize')
-    def test_irregularities_property(self, serialize, rows, lzma):
+    def test_irregularities_property(self, serialize, rows, lzma, print_):
         lzma.return_value = StringIO()
         rows.return_value = range(42)
         self.command.path = 'irregularities.xz'
-        list(self.command.irregularities)
+        list(self.command.irregularities())
         self.assertEqual(42, serialize.call_count)
 
 
