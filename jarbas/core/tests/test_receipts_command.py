@@ -10,16 +10,21 @@ class TestCommandHandler(TestCase):
 
     @patch('jarbas.core.management.commands.receipts.Command.get_queryset')
     @patch('jarbas.core.management.commands.receipts.Command.fetch')
+    @patch('jarbas.core.management.commands.receipts.Command.print_count')
+    @patch('jarbas.core.management.commands.receipts.Command.print_pause')
+    @patch('jarbas.core.management.commands.receipts.sleep')
     @patch('jarbas.core.management.commands.receipts.print')
-    def test_handler_with_queryset(self, print_, fetch, get_queryset):
-        get_queryset.return_value = True
+    def test_handler_with_queryset(self, print_, sleep, print_pause, print_count, fetch, get_queryset):
+        get_queryset.side_effect = (True, True, True, False)
         command = Command()
-        command.handle(batch_size=42, pause=1)
-        print_.assert_called_once_with('Loading…', end='\r')
-        get_queryset.assert_called_once_with()
-        fetch.assert_called_once_with()
-        self.assertEqual(42, command.batch)
-        self.assertEqual(1, command.pause)
+        command.handle(batch_size=3, pause=42)
+        print_.assert_has_calls((call('Loading…'), call('Done!')))
+        print_pause.assert_has_calls((call(), call()))
+        print_count.assert_called_once_with(permanent=True)
+        sleep.assert_has_calls([call(42)] * 2)
+        self.assertEqual(3, fetch.call_count)
+        self.assertEqual(3, command.batch)
+        self.assertEqual(42, command.pause)
         self.assertEqual(0, command.count)
 
     @patch('jarbas.core.management.commands.receipts.Command.get_queryset')
@@ -30,7 +35,7 @@ class TestCommandHandler(TestCase):
         command = Command()
         command.handle(batch_size=42, pause=1)
         print_.assert_has_calls([
-            call('Loading…', end='\r'),
+            call('Loading…'),
             call('Nothing to fetch.')
         ])
         get_queryset.assert_called_once_with()
@@ -49,48 +54,18 @@ class TestCommandHandler(TestCase):
 class TestCommandMethods(TestCase):
 
     @patch('jarbas.core.management.commands.receipts.Command.update')
-    @patch('jarbas.core.management.commands.receipts.Command.get_queryset')
-    @patch('jarbas.core.management.commands.receipts.sleep')
-    @patch('jarbas.core.management.commands.receipts.print')
-    def test_fetch(self, print_, sleep, get_queryset, update):
-        get_queryset.side_effect = (
-            (1, 2, 3),
-            (4, 5, 6),
-            (7, 8, 9),
-            (10,),
-            ()
-        )
-
+    @patch('jarbas.core.management.commands.receipts.Command.bulk_update')
+    @patch('jarbas.core.management.commands.receipts.Command.print_count')
+    def test_fetch(self, print_count, bulk_update, update):
         command = Command()
         command.count = 0
-        command.batch = 3
-        command.pause = 42
-        command.queryset = command.get_queryset()
+        command.queryset = (1, 2, 3)
+        command.queue = []
         command.fetch()
-
-        print_calls = (
-            call('1 receipt URLs fetched                                         ', end='\r'),
-            call('2 receipt URLs fetched                                         ', end='\r'),
-            call('3 receipt URLs fetched                                         ', end='\r'),
-            call('3 receipt URLs fetched (Taking a break to avoid being blocked…)', end='\r'),
-            call('4 receipt URLs fetched                                         ', end='\r'),
-            call('5 receipt URLs fetched                                         ', end='\r'),
-            call('6 receipt URLs fetched                                         ', end='\r'),
-            call('6 receipt URLs fetched (Taking a break to avoid being blocked…)', end='\r'),
-            call('7 receipt URLs fetched                                         ', end='\r'),
-            call('8 receipt URLs fetched                                         ', end='\r'),
-            call('9 receipt URLs fetched                                         ', end='\r'),
-            call('9 receipt URLs fetched (Taking a break to avoid being blocked…)', end='\r'),
-            call('10 receipt URLs fetched                                         ', end='\r'),
-            call('10 receipt URLs fetched                                         ', end='\n'),
-            call('Done!')
-        )
-
-        get_queryset.aeert_has_calls(call() * 4)
-        update.assert_has_calls(call(i) for i in range(1, 11))
-        self.assertEqual(10, command.count)
-        print_.assert_has_calls(print_calls)
-        sleep.assert_has_calls([call(42)] * 3)
+        print_count.assert_has_calls((call(), call(), call()))
+        update.assert_has_calls(call(i) for i in range(1, 4))
+        self.assertEqual(3, command.count)
+        bulk_update.assert_called_once_with()
 
     @patch.object(QuerySet, '__getitem__')
     @patch.object(QuerySet, 'filter', return_value=QuerySet())
@@ -103,4 +78,65 @@ class TestCommandMethods(TestCase):
 
     def test_update(self):
         reimbursement = Mock()
-        Command.update(reimbursement)
+        command = Command()
+        command.queue = []
+        command.update(reimbursement)
+        reimbursement.get_receipt_url.assert_called_once_with(bulk=True)
+        self.assertEqual(1, len(command.queue))
+
+    @patch('jarbas.core.management.commands.receipts.bulk_update')
+    @patch('jarbas.core.management.commands.receipts.Command.print_saving')
+    def test_bulk_update(self, print_saving, bulk_update):
+        command = Command()
+        command.queue = [1, 2, 3]
+        command.bulk_update()
+        fields = ['receipt_url', 'receipt_fetched']
+        bulk_update.assert_called_once_with([1, 2, 3], update_fields=fields)
+        self.assertEqual([], command.queue)
+        print_saving.assert_called_once_with()
+
+
+class TestCommandPrintMethods(TestCase):
+
+    def test_count_msg(self):
+        command = Command()
+        command.count = 42
+        self.assertEqual('42 receipt URLs fetched', command.count_msg())
+
+    @patch('jarbas.core.management.commands.receipts.print')
+    def test_print_msg(self, print_):
+        Command.print_msg('42')
+        print_.assert_has_calls((
+            call('\x1b[1A\x1b[2K\x1b[1A'),
+            call('42')
+        ))
+
+    @patch('jarbas.core.management.commands.receipts.print')
+    def test_print_permanent_msg(self, print_):
+        Command.print_msg('42', permanent=True)
+        print_.assert_called_once_with('42')
+
+    @patch('jarbas.core.management.commands.receipts.Command.count_msg')
+    @patch('jarbas.core.management.commands.receipts.Command.print_msg')
+    def test_print_count(self, print_msg, count_msg):
+        count_msg.return_value = '42'
+        command = Command()
+        command.print_count()
+        command.print_count(permanent=True)
+        print_msg.assert_has_calls((call('42'), call('42', permanent=True)))
+
+    @patch('jarbas.core.management.commands.receipts.Command.count_msg')
+    @patch('jarbas.core.management.commands.receipts.Command.print_msg')
+    def test_print_pause(self, print_msg, count_msg):
+        count_msg.return_value = '42'
+        command = Command()
+        command.print_pause()
+        print_msg.assert_called_once_with('42 (Taking a break to avoid being blocked…)')
+
+    @patch('jarbas.core.management.commands.receipts.Command.count_msg')
+    @patch('jarbas.core.management.commands.receipts.Command.print_msg')
+    def test_print_saving(self, print_msg, count_msg):
+        count_msg.return_value = '42'
+        command = Command()
+        command.print_saving()
+        print_msg.assert_called_once_with('42 (Saving the URLs to the database…)')

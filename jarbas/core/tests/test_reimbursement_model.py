@@ -178,3 +178,11 @@ class TestReceipt(TestCase):
         self.assertEqual(self.expected_receipt_url, self.obj.receipt_url)
         self.assertTrue(self.obj.receipt_fetched)
         mocked_head.assert_called_once_with(self.expected_receipt_url)
+
+    @patch('jarbas.core.models.head')
+    def test_bulk_get_receipt_url(self, mocked_head):
+        mocked_head.return_value.status_code = 200
+        updated = self.obj.get_receipt_url(bulk=True)
+        self.assertIsInstance(updated, Reimbursement)
+        self.assertIsInstance(updated.receipt_url, str)
+        self.assertTrue(updated.receipt_fetched)
