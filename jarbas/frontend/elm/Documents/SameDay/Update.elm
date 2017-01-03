@@ -1,4 +1,4 @@
-module Documents.SameDay.Update exposing (UniqueId, load)
+module Documents.SameDay.Update exposing (..)
 
 import Documents.RelatedTable.Update exposing (Msg, loadUrl)
 import String

@@ -1,4 +1,4 @@
-module Documents.SameSubquota.Update exposing (Filter, load)
+module Documents.SameSubquota.Update exposing (..)
 
 import Documents.RelatedTable.Update exposing (Msg, loadUrl)
 import Format.Url exposing (url)
@@ -15,7 +15,7 @@ type alias Filter =
 {-| Creates an URL from a Filter:
 
     >>> getUrl { year = 2016, applicantId = 13,  subquotaId = 42, month = 2 }
-    "/api/reimbursement/2016/13/?format=json&month=2&subquotaId=42
+    "/api/reimbursement/2016/13/?format=json&month=2&subquota_id=42"
 
 -}
 getUrl : Filter -> String
