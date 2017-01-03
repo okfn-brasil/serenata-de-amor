@@ -5,6 +5,10 @@ language: python
 python:
   - 3.5
 
+cache:
+  directories:
+    - sysconfcpus
+
 addons:
     postgresql: "9.6"
 
@@ -14,27 +18,34 @@ services:
 env:
   - DATABASE_URL="postgres://postgres@localhost/jarbas"
 
-install:
-  - psql -U postgres -c 'create database "jarbas";'
+before_install:
+  - |
+    if [ ! -d sysconfcpus/bin ];
+    then
+      git clone https://github.com/obmarg/libsysconfcpus.git;
+      cd libsysconfcpus;
+      ./configure --prefix=$TRAVIS_BUILD_DIR/sysconfcpus;
+      make && make install;
+      cd ..;
+    fi
   - nvm install 6
   - nvm use 6
-  - npm install -g elm
-  - npm install -g elm-test
-  - npm install -g elm-doc-test
-  - npm install
-  - pip install -r requirements.txt coveralls
+  - npm install -g yarn
+  - python -m pip install -U pip
+
+install:
+  - psql -U postgres -c 'create database "jarbas";'
+  - yarn install
+  - python -m pip install -r requirements.txt coveralls
 
 before_script:
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 yarn assets
   - python manage.py migrate
-  - travis_wait 60 npm run assets
   - python manage.py collectstatic --no-input
 
 script:
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 yarn test
   - coverage run manage.py test -v 3
-  - cd jarbas/frontend/
-  - elm-doc-test
-  - travis_wait 60 elm-test tests/Doc/Main.elm
-  - cd ../../
 
 after_success:
   - coveralls
