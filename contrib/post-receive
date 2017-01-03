@@ -3,30 +3,30 @@
 GIT_REPO=/opt/jarbas.git
 PUBLIC_WWW=/opt/jarbas
 
-echo "==> Deploying to application directory…"
+echo "\n==> Deploying to application directory…\n"
 cd $PUBLIC_WWW || exit
 unset GIT_DIR
 git pull $GIT_REPO master
 
-echo "==> Activating virtualenv…"
+echo "\n==> Activating virtualenv…\n"
 . /opt/jarbas.venv/bin/activate
 
-echo "==> Installing NodeJS packages…"
-npm install
+echo "\n==> Installing NodeJS packages…\n"
+yarn install
 
-echo "==> Installing Python packages…"
+echo "\n==> Installing Python packages…\n"
 pip install -r requirements.txt
 
-echo "==> Running migrations…"
+echo "\n==> Running migrations…\n"
 python manage.py migrate
 
-echo "==> $ python manage.py ceapdatasets"
+echo "\n==> Updating CEAP dataset page\n"
 python manage.py ceapdatasets
 
-echo "==> $ npm run assets"
-npm run assets
+echo "\n==> Building assets\n"
+yarn assets
 
-echo "==> $ python manage.py collectstatic --no-input"
+echo "\n==> Collecting static files\n"
 python manage.py collectstatic --no-input
 
-echo "==> Done!"
+echo "\n==> Done!\n"

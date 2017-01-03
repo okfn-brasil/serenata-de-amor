@@ -1,11 +1,12 @@
 FROM node:6.9.1
+RUN npm install -g yarn
 COPY elm-package.json elm-package.json
 COPY package.json package.json
 COPY gulpfile.js gulpfile.js
 COPY jarbas jarbas
 COPY contrib/copyassets.sh copyassets.sh
 RUN chmod +x copyassets.sh
-RUN npm install
+RUN yarn install
 VOLUME /assets
-RUN npm run assets
+RUN yarn assets
 CMD ["./copyassets.sh"]
