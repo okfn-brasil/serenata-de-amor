@@ -9,6 +9,7 @@ import Documents.Map.View as MapView
 import Documents.Model exposing (Model, Document, Results, results)
 import Documents.Receipt.View as ReceiptView
 import Documents.SameDay.View as SameDay
+import Documents.SameSubquota.View as SameSubquota
 import Documents.Update exposing (Msg(..), onlyDigits, totalPages)
 import Format.CnpjCpf exposing (formatCnpjCpf)
 import Format.Date exposing (formatDate)
@@ -531,6 +532,11 @@ viewDocument lang index document =
         sameDay =
             SameDay.view document.sameDay
                 |> Html.map (SameDayMsg index)
+
+        sameSubquota : Html.Html Msg
+        sameSubquota =
+            SameSubquota.view document.sameSubquota
+                |> Html.map (SameSubquotaMsg index)
     in
         [ cell
             [ size Desktop 6, size Tablet 4, size Phone 2 ]
@@ -554,6 +560,7 @@ viewDocument lang index document =
                     [ text (translate lang DocumentChamberOfDeputies) ]
                 ]
             , sameDay
+            , sameSubquota
             ]
         , cell
             [ size Desktop 6, size Tablet 8, size Phone 4 ]

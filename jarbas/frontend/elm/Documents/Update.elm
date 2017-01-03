@@ -9,11 +9,12 @@ import Documents.Inputs.Update as Inputs
 import Documents.Model exposing (Model, Document, Results, results)
 import Documents.Receipt.Model exposing (ReimbursementId)
 import Documents.Receipt.Update as Receipt
-import Documents.SameDay.Model exposing (UniqueId)
+import Documents.RelatedTable.Update as RelatedTable
 import Documents.SameDay.Update as SameDay
+import Documents.SameSubquota.Update as SameSubquota
 import Format.Url exposing (url)
 import Http
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization exposing (Language)
 import Material
 import Navigation
 import Regex exposing (regex, replace)
@@ -29,7 +30,8 @@ type Msg
     | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
     | CompanyMsg Int Company.Msg
-    | SameDayMsg Int SameDay.Msg
+    | SameDayMsg Int RelatedTable.Msg
+    | SameSubquotaMsg Int RelatedTable.Msg
     | MapMsg
     | Mdl (Material.Msg Msg)
 
@@ -60,9 +62,18 @@ onlyDigits value =
     String.filter (\c -> Char.isDigit c) value
 
 
-toUniqueId : Document -> UniqueId
+toUniqueId : Document -> SameDay.UniqueId
 toUniqueId document =
-    UniqueId document.applicantId document.year document.documentId
+    SameDay.UniqueId document.applicantId document.year document.documentId
+
+
+toSameSubquotaFilter : Document -> SameSubquota.Filter
+toSameSubquotaFilter document =
+    SameSubquota.Filter
+        document.applicantId
+        document.year
+        document.month
+        document.subquotaId
 
 
 newSearch : Model -> Model
@@ -153,10 +164,17 @@ update msg model =
                         (\( idx, doc ) -> ( idx, doc |> toUniqueId |> SameDay.load ))
                         indexedDocuments
 
+                indexedSameSubquotaCmds =
+                    List.map
+                        (\( idx, doc ) -> ( idx, doc |> toSameSubquotaFilter |> SameSubquota.load ))
+                        indexedDocuments
+
                 cmds =
-                    List.append
-                        (List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd) indexedCompanyCmds)
-                        (List.map (\( idx, cmd ) -> Cmd.map (SameDayMsg idx) cmd) indexedSameDayCmds)
+                    List.concat
+                        [ (List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd) indexedCompanyCmds)
+                        , (List.map (\( idx, cmd ) -> Cmd.map (SameDayMsg idx) cmd) indexedSameDayCmds)
+                        , (List.map (\( idx, cmd ) -> Cmd.map (SameSubquotaMsg idx) cmd) indexedSameSubquotaCmds)
+                        ]
             in
                 ( newModel, Cmd.batch cmds )
 
@@ -182,6 +200,9 @@ update msg model =
 
         SameDayMsg index sameDayMsg ->
             getDocumentsAndCmd model index updateSameDay sameDayMsg
+
+        SameSubquotaMsg index sameSubquotaMsg ->
+            getDocumentsAndCmd model index updateSameSubquota sameSubquotaMsg
 
         MapMsg ->
             ( model, Cmd.none )
@@ -235,12 +256,12 @@ updateReceipts lang target msg ( index, document ) =
         ( document, Cmd.none )
 
 
-updateSameDay : Language -> Int -> SameDay.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateSameDay : Language -> Int -> RelatedTable.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
 updateSameDay lang target msg ( index, document ) =
     if target == index then
         let
             updated =
-                SameDay.update msg document.sameDay
+                RelatedTable.update msg document.sameDay
 
             sameDay =
                 Tuple.first updated
@@ -252,6 +273,27 @@ updateSameDay lang target msg ( index, document ) =
                 Tuple.second updated |> Cmd.map (SameDayMsg target)
         in
             ( { document | sameDay = newSameDay }, cmd )
+    else
+        ( document, Cmd.none )
+
+
+updateSameSubquota : Language -> Int -> RelatedTable.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
+updateSameSubquota lang target msg ( index, document ) =
+    if target == index then
+        let
+            updated =
+                RelatedTable.update msg document.sameSubquota
+
+            sameSubquota =
+                Tuple.first updated
+
+            newSameSubquota =
+                { sameSubquota | lang = lang }
+
+            cmd =
+                Tuple.second updated |> Cmd.map (SameSubquotaMsg target)
+        in
+            ( { document | sameSubquota = newSameSubquota }, cmd )
     else
         ( document, Cmd.none )
 

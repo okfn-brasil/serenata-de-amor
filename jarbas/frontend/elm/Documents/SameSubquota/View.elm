@@ -1,4 +1,4 @@
-module Documents.SameDay.View exposing (view)
+module Documents.SameSubquota.View exposing (view)
 
 import Documents.RelatedTable.Model exposing (Model)
 import Documents.RelatedTable.View as RelatedTable
@@ -9,6 +9,6 @@ import Internationalization exposing (TranslationId(..), translate)
 
 view : Model -> Html.Html Msg
 view model =
-    SameDayTitle
+    SameSubquotaTitle
         |> translate model.lang
         |> RelatedTable.view model

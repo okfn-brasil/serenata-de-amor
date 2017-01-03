@@ -1,14 +1,7 @@
-module Documents.SameDay.Model exposing (DocumentSummary, Model, Results, UniqueId, model)
+module Documents.RelatedTable.Model exposing (DocumentSummary, Model, Results, model)
 
 import Material
 import Internationalization exposing (Language(..))
-
-
-type alias UniqueId =
-    { applicantId : Int
-    , year : Int
-    , documentId : Int
-    }
 
 
 type alias DocumentSummary =

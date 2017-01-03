@@ -104,6 +104,7 @@ type TranslationId
     | PaginationOf
     | DocumentNotFound
     | SameDayTitle
+    | SameSubquotaTitle
     | BrazilianCurrency String
     | ThousandSeparator
     | DecimalSeparator
@@ -570,6 +571,11 @@ translate lang trans =
                     TranslationSet
                         "Other reimbursements from the same day"
                         "Outros reembolsos do mesmo dia"
+
+                SameSubquotaTitle ->
+                    TranslationSet
+                        "Other reimbursements from the same month & subquota"
+                        "Outros reembolsos do mesmo mês e subquota"
 
                 BrazilianCurrency value ->
                     TranslationSet
