@@ -469,7 +469,7 @@ viewCongressPersonDetails lang document =
             [ ( translate lang FieldCongresspersonId, viewMaybeIntButZero document.congresspersonId )
             , ( translate lang FieldCongresspersonDocument, viewMaybeIntButZero document.congresspersonDocument )
             , ( translate lang FieldTerm, toString document.term )
-            , ( translate lang FieldTermId, toString document.termId )
+            , ( translate lang FieldTermId, viewMaybeIntButZero document.termId )
             ]
                 |> List.filter (\( key, value ) -> String.isEmpty value |> not)
     in
