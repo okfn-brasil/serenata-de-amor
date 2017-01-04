@@ -23,7 +23,7 @@ type alias Document =
     , congresspersonDocument : Maybe Int
     , state : Maybe String
     , party : Maybe String
-    , termId : Int
+    , termId : Maybe Int
     , term : Int
     , subquotaId : Int
     , subquotaDescription : String

@@ -86,7 +86,7 @@ singleDecoder lang apiKey =
             |> required "congressperson_document" (nullable int)
             |> required "state" (nullable string)
             |> required "party" (nullable string)
-            |> required "term_id" int
+            |> required "term_id" (nullable int)
             |> required "term" int
             |> required "subquota_id" int
             |> required "subquota_description" string
