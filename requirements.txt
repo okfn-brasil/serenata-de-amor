@@ -1,4 +1,4 @@
-Django==1.10.4
+Django==1.10.5
 dj-database-url==0.4.1
 django-assets==0.12
 django-bulk-update==1.1.10
