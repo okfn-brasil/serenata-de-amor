@@ -80,7 +80,7 @@ class Reimbursement(models.Model):
         ordering = ['-issue_date']
         unique_together = ('year', 'applicant_id', 'document_id')
 
-    def get_receipt_url(self, force=False):
+    def get_receipt_url(self, force=False, bulk=False):
         if self.receipt_url:
             return self.receipt_url
 
@@ -91,8 +91,11 @@ class Reimbursement(models.Model):
         if receipt.exists:
             self.receipt_url = receipt.url
         self.receipt_fetched = True
-        self.save()
 
+        if bulk:
+            return self
+
+        self.save()
         return self.receipt_url
 
     @property
