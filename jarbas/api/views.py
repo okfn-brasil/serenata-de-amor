@@ -1,39 +1,14 @@
-import re
-from collections import namedtuple
-from functools import reduce
-
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
-from jarbas.api.serializers import (
-    ApplicantSerializer,
-    ReceiptSerializer,
-    ReimbursementSerializer,
-    SameDayReimbursementSerializer,
-    SubquotaSerializer,
-    CompanySerializer,
-    format_cnpj
-)
+from jarbas.api import serializers
 from jarbas.core.models import Reimbursement, Company
-
-
-Pair = namedtuple('Pair', ('key', 'values'))
-
-
-def get_distinct(field, order_by, query=None):
-    qs = Reimbursement.objects.all()
-    if query:
-        filter = {order_by + '__icontains': query}
-        qs = qs.filter(**filter)
-    return qs.values(field, order_by).order_by(order_by) .distinct()
 
 
 class MultipleFieldLookupMixin(object):
 
     def get_object(self):
-        queryset = self.get_queryset()
-        queryset = self.filter_queryset(queryset)
+        queryset = self.filter_queryset(self.get_queryset())
         filter = {k: self.kwargs[k] for k in self.lookup_fields}
         return get_object_or_404(queryset, **filter)
 
@@ -41,7 +16,7 @@ class MultipleFieldLookupMixin(object):
 class ReimbursementListView(ListAPIView):
 
     queryset = Reimbursement.objects.all()
-    serializer_class = ReimbursementSerializer
+    serializer_class = serializers.ReimbursementSerializer
 
     def get(self, request, year=None, applicant_id=None):
 
@@ -65,51 +40,28 @@ class ReimbursementListView(ListAPIView):
 
         # filter queryset
         if filters:
-            self.queryset = self.queryset.filter(self.big_q(filters))
+            self.queryset = self.queryset.tuple_filter(**filters)
 
         # change ordering if needed
         order_by = self.request.query_params.get('order_by')
         if order_by == 'probability':
-            kwargs = {
-                'select': {'probability_is_null': 'probability IS NULL'},
-                'order_by': ['probability_is_null', '-probability']
-            }
-            self.queryset = self.queryset.extra(**kwargs)
+            self.queryset = self.queryset.order_by_probability()
 
         return super().get(request)
-
-    def big_q(self, filters):
-        """
-        Gets filters (dict) and returns a sequence of Q objects with the AND
-        operator.
-        """
-        regex = re.compile('[ ,]+')
-        as_pairs = (Pair(k, regex.split(v)) for k, v in filters.items())
-        as_q = map(self.big_q_or, as_pairs)
-        return reduce(lambda q, new_q: q & (new_q), as_q, Q())
-
-    @staticmethod
-    def big_q_or(query):
-        """
-        Gets a Pair with a key and an iterable as values and returns a Q object
-        with the OR operator.
-        """
-        pairs = ({query.key: v} for v in query.values)
-        return reduce(lambda q, new_q: q | Q(**new_q), pairs, Q())
 
 
 class ReimbursementDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
 
     lookup_fields = ('year', 'applicant_id', 'document_id')
     queryset = Reimbursement.objects.all()
-    serializer_class = ReimbursementSerializer
+    serializer_class = serializers.ReimbursementSerializer
 
 
 class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
 
     lookup_fields = ('year', 'applicant_id', 'document_id')
     queryset = Reimbursement.objects.all()
-    serializer_class = ReceiptSerializer
+    serializer_class = serializers.ReceiptSerializer
 
     def get_object(self):
         obj = super().get_object()
@@ -120,7 +72,7 @@ class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
 
 class SameDayReimbursementListView(ListAPIView):
 
-    serializer_class = SameDayReimbursementSerializer
+    serializer_class = serializers.SameDayReimbursementSerializer
 
     def get_queryset(self):
         return Reimbursement.objects.same_day(**self.kwargs)
@@ -128,28 +80,30 @@ class SameDayReimbursementListView(ListAPIView):
 
 class ApplicantListView(ListAPIView):
 
-    serializer_class = ApplicantSerializer
+    serializer_class = serializers.ApplicantSerializer
 
     def get_queryset(self):
         query = self.request.query_params.get('q')
-        return get_distinct('applicant_id', 'congressperson_name', query)
+        args = ('applicant_id', 'congressperson_name', query)
+        return Reimbursement.objects.list_distinct(*args)
 
 
 class SubquotaListView(ListAPIView):
 
-    serializer_class = SubquotaSerializer
+    serializer_class = serializers.SubquotaSerializer
 
     def get_queryset(self):
         query = self.request.query_params.get('q')
-        return get_distinct('subquota_id', 'subquota_description', query)
+        args = ('subquota_id', 'subquota_description', query)
+        return Reimbursement.objects.list_distinct(*args)
 
 
 class CompanyDetailView(RetrieveAPIView):
 
     lookup_field = 'cnpj'
     queryset = Company.objects.all()
-    serializer_class = CompanySerializer
+    serializer_class = serializers.CompanySerializer
 
     def get_object(self):
         cnpj = self.kwargs.get(self.lookup_field, '00000000000000')
-        return get_object_or_404(Company, cnpj=format_cnpj(cnpj))
+        return get_object_or_404(Company, cnpj=serializers.format_cnpj(cnpj))

@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from requests import head
 
-from jarbas.core.querysets import SameDayQuerySet
+from jarbas.core.querysets import ReimbursementQuerySet
 
 
 class Receipt:
@@ -74,7 +74,7 @@ class Reimbursement(models.Model):
     receipt_fetched = models.BooleanField('Was the receipt URL fetched?', default=False, db_index=True)
     receipt_url = models.CharField('Receipt URL', max_length=140, blank=True, null=True)
 
-    objects = models.Manager.from_queryset(SameDayQuerySet)()
+    objects = models.Manager.from_queryset(ReimbursementQuerySet)()
 
     class Meta:
         ordering = ['-issue_date']
