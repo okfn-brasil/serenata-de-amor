@@ -19,6 +19,13 @@ class ReimbursementQuerySet(models.QuerySet):
             applicant_id=unique_id['applicant_id']
         )
 
+    def order_by_probability(self):
+        kwargs = {
+            'select': {'probability_is_null': 'probability IS NULL'},
+            'order_by': ['probability_is_null', '-probability']
+        }
+        return self.extra(**kwargs)
+
     def list_distinct(self, field, order_by_field, query=None):
         if query:
             filter = {order_by_field + '__icontains': query}

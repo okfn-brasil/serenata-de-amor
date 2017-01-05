@@ -40,16 +40,12 @@ class ReimbursementListView(ListAPIView):
 
         # filter queryset
         if filters:
-            self.queryset = Reimbursement.objects.tuple_filter(**filters)
+            self.queryset = self.queryset.tuple_filter(**filters)
 
         # change ordering if needed
         order_by = self.request.query_params.get('order_by')
         if order_by == 'probability':
-            kwargs = {
-                'select': {'probability_is_null': 'probability IS NULL'},
-                'order_by': ['probability_is_null', '-probability']
-            }
-            self.queryset = self.queryset.extra(**kwargs)
+            self.queryset = self.queryset.order_by_probability()
 
         return super().get(request)
 
