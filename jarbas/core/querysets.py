@@ -1,7 +1,11 @@
+import re
+from functools import reduce
+
 from django.db import models
+from django.db.models import Q
 
 
-class SameDayQuerySet(models.QuerySet):
+class ReimbursementQuerySet(models.QuerySet):
 
     def same_day(self, **kwargs):
         keys = ('year', 'applicant_id', 'document_id')
@@ -14,3 +18,15 @@ class SameDayQuerySet(models.QuerySet):
             issue_date=self.filter(**unique_id).values('issue_date'),
             applicant_id=unique_id['applicant_id']
         )
+
+    def tuple_filter(self, **kwargs):
+        filters = self._to_tuple_filter(kwargs)
+        for key, values in filters.items():
+            filter_ = reduce(lambda q, val: q | Q(**{key: val}), values, Q())
+            self = self.filter(filter_)
+        return self
+
+    @staticmethod
+    def _to_tuple_filter(filters):
+        rx = re.compile('[ ,]+')
+        return {k: tuple(rx.split(v)) for k, v in filters.items()}

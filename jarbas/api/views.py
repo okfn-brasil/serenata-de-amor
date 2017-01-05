@@ -1,9 +1,4 @@
-import re
-from collections import namedtuple
-from functools import reduce
-
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from jarbas.api.serializers import (
@@ -16,9 +11,6 @@ from jarbas.api.serializers import (
     format_cnpj
 )
 from jarbas.core.models import Reimbursement, Company
-
-
-Pair = namedtuple('Pair', ('key', 'values'))
 
 
 def get_distinct(field, order_by, query=None):
@@ -65,7 +57,7 @@ class ReimbursementListView(ListAPIView):
 
         # filter queryset
         if filters:
-            self.queryset = self.queryset.filter(self.big_q(filters))
+            self.queryset = Reimbursement.objects.tuple_filter(**filters)
 
         # change ordering if needed
         order_by = self.request.query_params.get('order_by')
@@ -77,25 +69,6 @@ class ReimbursementListView(ListAPIView):
             self.queryset = self.queryset.extra(**kwargs)
 
         return super().get(request)
-
-    def big_q(self, filters):
-        """
-        Gets filters (dict) and returns a sequence of Q objects with the AND
-        operator.
-        """
-        regex = re.compile('[ ,]+')
-        as_pairs = (Pair(k, regex.split(v)) for k, v in filters.items())
-        as_q = map(self.big_q_or, as_pairs)
-        return reduce(lambda q, new_q: q & (new_q), as_q, Q())
-
-    @staticmethod
-    def big_q_or(query):
-        """
-        Gets a Pair with a key and an iterable as values and returns a Q object
-        with the OR operator.
-        """
-        pairs = ({query.key: v} for v in query.values)
-        return reduce(lambda q, new_q: q | Q(**new_q), pairs, Q())
 
 
 class ReimbursementDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
