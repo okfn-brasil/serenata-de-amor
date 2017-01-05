@@ -1,7 +1,6 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from requests import head
-from requests.exceptions import ConnectionError
 
 from jarbas.core.querysets import SameDayQuerySet
 
@@ -12,7 +11,6 @@ class Receipt:
         self.year = year
         self.applicant_id = applicant_id
         self.document_id = document_id
-        self.exists_cache = None
 
     @property
     def url(self):
@@ -24,16 +22,8 @@ class Receipt:
 
     @property
     def exists(self):
-        if self.exists_cache is not None:  # False is a valid cached value
-            return self.exists_cache
-
-        try:
-            response = head(self.url)
-        except ConnectionError as error:
-            return error
-        else:
-            self.exists_cache = 200 <= response.status_code < 400
-            return self.exists_cache
+        status = head(self.url).status_code
+        return 200 <= status < 400
 
 
 class Reimbursement(models.Model):
@@ -98,21 +88,12 @@ class Reimbursement(models.Model):
             return None
 
         receipt = Receipt(self.year, self.applicant_id, self.document_id)
-        if isinstance(receipt.exists, ConnectionError):
-            self.receipt_url = None
-            self.receipt_fetched = False
-        elif receipt.exists:
+        if receipt.exists:
             self.receipt_url = receipt.url
-            self.receipt_fetched = True
-        else:
-            self.receipt_url = None
-            self.receipt_fetched = True
+        self.receipt_fetched = True
 
         if bulk:
             return self
-
-        if isinstance(receipt.exists, ConnectionError):
-            raise receipt.exists
 
         self.save()
         return self.receipt_url

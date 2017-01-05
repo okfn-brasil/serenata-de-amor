@@ -194,11 +194,3 @@ class TestReceipt(TestCase):
         self.assertIsInstance(updated, Reimbursement)
         self.assertIsInstance(updated.receipt_url, str)
         self.assertTrue(updated.receipt_fetched)
-
-    @patch('jarbas.core.models.head')
-    def test_bulk_get_receipt_url_with_error(self, mocked_head):
-        mocked_head.side_effect = ConnectionError
-        updated = self.obj.get_receipt_url(bulk=True)
-        self.assertIsInstance(updated, Reimbursement)
-        self.assertIsNone(updated.receipt_url)
-        self.assertFalse(updated.receipt_fetched)

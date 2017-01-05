@@ -29,4 +29,5 @@ class TestReceipt(TestCase):
     @patch('jarbas.core.models.head')
     def test_connection_error(self, mocked_head):
         mocked_head.side_effect = ConnectionError
-        self.assertIsInstance(self.receipt.exists, ConnectionError)
+        with self.assertRaises(ConnectionError):
+            self.receipt.exists

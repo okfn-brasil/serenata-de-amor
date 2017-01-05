@@ -3,6 +3,7 @@ from time import sleep
 
 from bulk_update.helper import bulk_update
 from django.core.management.base import BaseCommand
+from requests.exceptions import ConnectionError
 
 from jarbas.core.models import Reimbursement
 
@@ -58,7 +59,12 @@ class Command(BaseCommand):
         return Reimbursement.objects.filter(receipt_fetched=False)[:self.batch]
 
     def update(self, reimbursement):
-        self.queue.append(reimbursement.get_receipt_url(bulk=True))
+        try:
+            obj = reimbursement.get_receipt_url(bulk=True)
+        except ConnectionError:
+            pass
+        else:
+            self.queue.append(obj)
 
     @staticmethod
     def print_msg(msg, permanent=False):
