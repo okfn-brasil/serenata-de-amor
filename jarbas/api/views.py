@@ -13,19 +13,10 @@ from jarbas.api.serializers import (
 from jarbas.core.models import Reimbursement, Company
 
 
-def get_distinct(field, order_by, query=None):
-    qs = Reimbursement.objects.all()
-    if query:
-        filter = {order_by + '__icontains': query}
-        qs = qs.filter(**filter)
-    return qs.values(field, order_by).order_by(order_by) .distinct()
-
-
 class MultipleFieldLookupMixin(object):
 
     def get_object(self):
-        queryset = self.get_queryset()
-        queryset = self.filter_queryset(queryset)
+        queryset = self.filter_queryset(self.get_queryset())
         filter = {k: self.kwargs[k] for k in self.lookup_fields}
         return get_object_or_404(queryset, **filter)
 
@@ -105,7 +96,8 @@ class ApplicantListView(ListAPIView):
 
     def get_queryset(self):
         query = self.request.query_params.get('q')
-        return get_distinct('applicant_id', 'congressperson_name', query)
+        args = ('applicant_id', 'congressperson_name', query)
+        return Reimbursement.objects.list_distinct(*args)
 
 
 class SubquotaListView(ListAPIView):
@@ -114,7 +106,8 @@ class SubquotaListView(ListAPIView):
 
     def get_queryset(self):
         query = self.request.query_params.get('q')
-        return get_distinct('subquota_id', 'subquota_description', query)
+        args = ('subquota_id', 'subquota_description', query)
+        return Reimbursement.objects.list_distinct(*args)
 
 
 class CompanyDetailView(RetrieveAPIView):

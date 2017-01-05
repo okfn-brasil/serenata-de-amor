@@ -19,6 +19,14 @@ class ReimbursementQuerySet(models.QuerySet):
             applicant_id=unique_id['applicant_id']
         )
 
+    def list_distinct(self, field, order_by_field, query=None):
+        if query:
+            filter = {order_by_field + '__icontains': query}
+            self = self.filter(**filter)
+
+        self = self.values(field, order_by_field).order_by(order_by_field)
+        return self.distinct()
+
     def tuple_filter(self, **kwargs):
         filters = self._to_tuple_filter(kwargs)
         for key, values in filters.items():
