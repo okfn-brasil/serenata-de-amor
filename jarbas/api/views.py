@@ -1,15 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
-from jarbas.api.serializers import (
-    ApplicantSerializer,
-    ReceiptSerializer,
-    ReimbursementSerializer,
-    SameDayReimbursementSerializer,
-    SubquotaSerializer,
-    CompanySerializer,
-    format_cnpj
-)
+from jarbas.api import serializers
 from jarbas.core.models import Reimbursement, Company
 
 
@@ -24,7 +16,7 @@ class MultipleFieldLookupMixin(object):
 class ReimbursementListView(ListAPIView):
 
     queryset = Reimbursement.objects.all()
-    serializer_class = ReimbursementSerializer
+    serializer_class = serializers.ReimbursementSerializer
 
     def get(self, request, year=None, applicant_id=None):
 
@@ -66,14 +58,14 @@ class ReimbursementDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
 
     lookup_fields = ('year', 'applicant_id', 'document_id')
     queryset = Reimbursement.objects.all()
-    serializer_class = ReimbursementSerializer
+    serializer_class = serializers.ReimbursementSerializer
 
 
 class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
 
     lookup_fields = ('year', 'applicant_id', 'document_id')
     queryset = Reimbursement.objects.all()
-    serializer_class = ReceiptSerializer
+    serializer_class = serializers.ReceiptSerializer
 
     def get_object(self):
         obj = super().get_object()
@@ -84,7 +76,7 @@ class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
 
 class SameDayReimbursementListView(ListAPIView):
 
-    serializer_class = SameDayReimbursementSerializer
+    serializer_class = serializers.SameDayReimbursementSerializer
 
     def get_queryset(self):
         return Reimbursement.objects.same_day(**self.kwargs)
@@ -92,7 +84,7 @@ class SameDayReimbursementListView(ListAPIView):
 
 class ApplicantListView(ListAPIView):
 
-    serializer_class = ApplicantSerializer
+    serializer_class = serializers.ApplicantSerializer
 
     def get_queryset(self):
         query = self.request.query_params.get('q')
@@ -102,7 +94,7 @@ class ApplicantListView(ListAPIView):
 
 class SubquotaListView(ListAPIView):
 
-    serializer_class = SubquotaSerializer
+    serializer_class = serializers.SubquotaSerializer
 
     def get_queryset(self):
         query = self.request.query_params.get('q')
@@ -114,8 +106,8 @@ class CompanyDetailView(RetrieveAPIView):
 
     lookup_field = 'cnpj'
     queryset = Company.objects.all()
-    serializer_class = CompanySerializer
+    serializer_class = serializers.CompanySerializer
 
     def get_object(self):
         cnpj = self.kwargs.get(self.lookup_field, '00000000000000')
-        return get_object_or_404(Company, cnpj=format_cnpj(cnpj))
+        return get_object_or_404(Company, cnpj=serializers.format_cnpj(cnpj))
