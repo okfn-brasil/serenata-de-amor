@@ -2,6 +2,8 @@ from unittest.mock import patch
 
 from django.db.utils import IntegrityError
 from django.test import TestCase
+from requests.exceptions import ConnectionError
+
 from jarbas.core.models import Reimbursement
 from jarbas.core.tests import sample_reimbursement_data
 
@@ -144,6 +146,12 @@ class TestReceipt(TestCase):
         self.assertIsNone(self.obj.receipt_url)
         self.assertTrue(self.obj.receipt_fetched)
         mocked_head.assert_called_once_with(self.expected_receipt_url)
+
+    @patch('jarbas.core.models.head')
+    def test_get_non_existing_url_with_error(self, mocked_head):
+        mocked_head.side_effect = ConnectionError
+        with self.assertRaises(ConnectionError):
+            self.obj.get_receipt_url()
 
     @patch('jarbas.core.models.head')
     def test_get_fetched_existing_url(self, mocked_head):

@@ -2,6 +2,7 @@ from json import loads
 from unittest.mock import patch
 
 from django.test import TestCase
+from requests.exceptions import ConnectionError
 
 from jarbas.core.models import Receipt
 
@@ -24,3 +25,9 @@ class TestReceipt(TestCase):
     def test_no_existing_url(self, mocked_head):
         mocked_head.return_value.status_code = 404
         self.assertFalse(self.receipt.exists)
+
+    @patch('jarbas.core.models.head')
+    def test_connection_error(self, mocked_head):
+        mocked_head.side_effect = ConnectionError
+        with self.assertRaises(ConnectionError):
+            self.receipt.exists

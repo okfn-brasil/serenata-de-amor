@@ -2,6 +2,7 @@ from unittest.mock import Mock, call, patch
 
 from django.test import TestCase
 from django.db.models import QuerySet
+from requests.exceptions import ConnectionError
 
 from jarbas.core.management.commands.receipts import Command
 
@@ -83,6 +84,15 @@ class TestCommandMethods(TestCase):
         command.update(reimbursement)
         reimbursement.get_receipt_url.assert_called_once_with(bulk=True)
         self.assertEqual(1, len(command.queue))
+
+    def test_update_with_error(self):
+        reimbursement = Mock()
+        reimbursement.get_receipt_url.side_effect = ConnectionError()
+        command = Command()
+        command.queue = []
+        command.update(reimbursement)
+        reimbursement.get_receipt_url.assert_called_once_with(bulk=True)
+        self.assertEqual(0, len(command.queue))
 
     @patch('jarbas.core.management.commands.receipts.bulk_update')
     @patch('jarbas.core.management.commands.receipts.Command.print_saving')

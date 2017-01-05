@@ -11,9 +11,9 @@ class Receipt:
         self.year = year
         self.applicant_id = applicant_id
         self.document_id = document_id
-        self.url = self.get_url()
 
-    def get_url(self):
+    @property
+    def url(self):
         args = (self.applicant_id, self.year, self.document_id)
         return (
             'http://www.camara.gov.br/'
@@ -22,7 +22,7 @@ class Receipt:
 
     @property
     def exists(self):
-        status = head(self.get_url()).status_code
+        status = head(self.url).status_code
         return 200 <= status < 400
 
 
