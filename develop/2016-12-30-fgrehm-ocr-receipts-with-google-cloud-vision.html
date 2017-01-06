@@ -11783,8 +11783,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Setup">Setup<a class="anchor-link" href="#Setup">&#182;</a></h1><p>Get an API key from Google Cloud that is able to access the <a href="https://cloud.google.com/vision/">Vision API</a> and update the snippet below.</p>
-<p><strong>MAKE SURE YOU DON'T COMMIT IT TO VERSION CONTROL</strong></p>
+<h1 id="Setup">Setup<a class="anchor-link" href="#Setup">&#182;</a></h1><p><em>Make sure your <code>config.ini</code> has the Google APIKey set.</em></p>
 
 </div>
 </div>
@@ -11794,34 +11793,17 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">configparser</span>
 
-<span class="nv">KEY</span><span class="o">=</span><span class="s2">&quot;YOUR_KEY_HERE&quot;</span>
-<span class="nv">KEY_PATH</span><span class="o">=</span><span class="s2">&quot;/tmp/cloud-vision.key&quot;</span>
+<span class="n">settings</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;../config.ini&#39;</span><span class="p">)</span>
 
-<span class="k">if</span> ! <span class="o">[[</span> -f <span class="nv">$KEY_PATH</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
-  <span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">KEY</span><span class="si">}</span><span class="s2">&quot;</span> &gt; <span class="nv">$KEY_PATH</span>
-  <span class="nb">echo</span> <span class="s2">&quot;Writing key to </span><span class="si">${</span><span class="nv">KEY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="k">else</span>
-  <span class="nb">echo</span> <span class="s2">&quot;Reusing existing key at </span><span class="si">${</span><span class="nv">KEY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="k">fi</span>
+<span class="n">target</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/tmp/cloud-vision.key&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">target</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Google&#39;</span><span class="p">,</span> <span class="s1">&#39;APIKey&#39;</span><span class="p">))</span>
+<span class="n">target</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Reusing existing key at /tmp/cloud-vision.key
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -11896,7 +11878,7 @@ date
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Fri Dec 30 03:55:20 UTC 2016
+<pre>Fri Jan  6 13:33:26 UTC 2017
 ---&gt; 5631309
      Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631309.pdf&#39;...
      Generating PNGs...
@@ -11943,7 +11925,7 @@ date
      Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/2935/2016/6069360.pdf&#39;...
      Generating PNGs...
      OCRing page-1.png...
-Fri Dec 30 15:40:20 UTC 2016
+Fri Jan  6 13:35:50 UTC 2017
 </pre>
 </div>
 </div>
@@ -11957,7 +11939,7 @@ Fri Dec 30 15:40:20 UTC 2016
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>As we can see, it takes a while to process just 10 PDFs on a 60Mb connection (5 minutes), if we ever move on with this we should really look into parallelizing it from day 0 and / or sending receipts in batches as it is supported by the API.</p>
+<p>As we can see, it takes a while to process just 10 PDFs on a 60Mb connection (~2 minutes), if we ever move on with this we should really look into parallelizing it from day 0 and / or sending receipts in batches as it is supported by the API.</p>
 <h2 id="Document-5631309">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5631309">5631309</a><a class="anchor-link" href="#Document-5631309">&#182;</a></h2><p>A hotel receipt with lots of text in it. There is a lot of stuff on those JSON responses so we just extract the info for the piece that represents the whole text.</p>
 
 </div>
@@ -12052,6 +12034,39 @@ SERVICE REST
 64, 00
 
 --------------
+
+PREFEITURAMUNICIPAL DE POUSO ALEGRE
+Numero da
+NFS-e
+SECRETARIA DE FAZENDA
+NOTA FISCAL ELETRONICA DE SERVICO-NFS e
+1708
+291293991
+3/201
+1703/2015 17.02.04
+POU3O ALEGRE MG
+soc Nome CASTRO MARQUESHOTERELTDA.
+POUSO ALEGRE NG
+ta,623,063/B001-10
+E CEP Av. PREF, TUANY TOLEDO,80
+FATIMA il cap: 37550010.
+ssitvertoeritarquwsplaza.com.br
+353122-2020
+OLAwo BILAC PINTO
+BELOHORUZONTE MG
+455 616.996-87
+R FAUSTO NUNESVEIRA AFT 801 40- BELVEDERE CEP: 30320-590
+OSPEDE: Olavo pinto l checkin 1203/2015 /checkout THRO312015
+9.01 5510801 Hotéis.
+76340
+0.00
+0Nenhum
+2.00
+Sims PK) Nao
+5.2
+78340
+A aute MAridade detta Nota FiscaipoderARrr varificada
+Avisos
 
 </pre>
 </div>

@@ -30,13 +30,18 @@
 
 # # Setup
 # 
-# Get an API key from Google Cloud that is able to access the [Vision API](https://cloud.google.com/vision/) and update the snippet below.
-# 
-# **MAKE SURE YOU DON'T COMMIT IT TO VERSION CONTROL**
+# _Make sure your `config.ini` has the Google APIKey set._
 
 # In[1]:
 
-get_ipython().run_cell_magic('bash', '', '\nKEY="YOUR_KEY_HERE"\nKEY_PATH="/tmp/cloud-vision.key"\n\nif ! [[ -f $KEY_PATH ]]; then\n  echo "${KEY}" > $KEY_PATH\n  echo "Writing key to ${KEY_PATH}"\nelse\n  echo "Reusing existing key at ${KEY_PATH}"\nfi')
+import configparser
+
+settings = configparser.RawConfigParser()
+settings.read('../config.ini')
+
+target = open('/tmp/cloud-vision.key', 'w')
+target.write(settings.get('Google', 'APIKey'))
+target.close()
 
 
 # You'll also need the `pdftoppm` command to convert PDFs to PNGs and `jq` to pretty print the JSON output returned by Google's API.
@@ -54,7 +59,7 @@ get_ipython().run_cell_magic('bash', '', '\nKEY="YOUR_KEY_HERE"\nKEY_PATH="/tmp/
 get_ipython().run_cell_magic('bash', '', '\nocr() {\n  id="${1}"\n  url="${2}"\n  mkdir -p "/tmp/reimbursements/${id}"\n  cd "/tmp/reimbursements/${id}"\n  echo "---> $id"\n  echo "     Downloading PDF from \'$url\'..."\n  curl -s "${url}" > "document.pdf"\n  echo "     Generating PNGs..."\n  pdftoppm -rx 300 -ry 300 -png "document.pdf" page\n  \n  for img in page*.png; do\n    echo "     OCRing ${img}..."\n    payload="payload-${img%.*}.json"\n    response="response-${img%.*}.json"\n    echo -n \'{"requests": [ { "features": [ { "type": "TEXT_DETECTION" } ], "image": { "content": "\' > $payload\n    base64 -w 0 $img >> $payload\n    echo -n \'" } } ] }\' >> $payload\n    \n    curl -s "https://vision.clients6.google.com/v1/images:annotate?key=$(cat /tmp/cloud-vision.key)&alt=json" \\\n         --data-binary @$payload \\\n         -H \'Content-Type: application/json\' \\\n      > $response\n  done\n}\n\ndate\nocr 5631309 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631309.pdf\'\nocr 5631380 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631380.pdf\'\nocr 5928875 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/1564/2016/5928875.pdf\'\nocr 5768932 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/80/2015/5768932.pdf\'\nocr 5962849 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962849.pdf\'\nocr 5962903 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962903.pdf\'\nocr 5855221 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5855221.pdf\'\nocr 5856784 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5856784.pdf\'\nocr 5921187 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/2871/2016/5921187.pdf\'\nocr 6069360 \'http://www.camara.gov.br/cota-parlamentar/documentos/publ/2935/2016/6069360.pdf\'\ndate')
 
 
-# As we can see, it takes a while to process just 10 PDFs on a 60Mb connection (5 minutes), if we ever move on with this we should really look into parallelizing it from day 0 and / or sending receipts in batches as it is supported by the API.
+# As we can see, it takes a while to process just 10 PDFs on a 60Mb connection (~2 minutes), if we ever move on with this we should really look into parallelizing it from day 0 and / or sending receipts in batches as it is supported by the API.
 # 
 # ## Document [5631309](https://jarbas.datasciencebr.com/#/document_id/5631309)
 # 
