@@ -156,6 +156,8 @@ GOOGLE_STREET_VIEW_API_KEY = config('GOOGLE_STREET_VIEW_API_KEY', default='')
 # Server headers
 
 USE_X_FORWARDED_HOST = config('USE_X_FORWARDED_HOST', default=False, cast=bool)
+SECURE_PROXY_SSL_HEADER = config('SECURE_PROXY_SSL_HEADER', default='', cast=lambda x: tuple(Csv()(x)) or None)
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
 
