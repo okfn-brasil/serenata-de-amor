@@ -51,6 +51,9 @@ type TranslationId
     | FieldDocumentNumber
     | FieldDocumentValue
     | FieldIssueDate
+    | FieldIssueDateStart
+    | FieldIssueDateEnd
+    | FieldIssueDateValidation
     | FieldMonth
     | FieldClaimDate
     | FieldRemarkValue
@@ -306,6 +309,21 @@ translate lang trans =
                     TranslationSet
                         "Expense date"
                         "Data da despesa"
+
+                FieldIssueDateStart ->
+                    TranslationSet
+                        "Expense date (start)"
+                        "Data da despesa (início)"
+
+                FieldIssueDateEnd ->
+                    TranslationSet
+                        "Expense date (end)"
+                        "Data da despesa (fim)"
+
+                FieldIssueDateValidation ->
+                    TranslationSet
+                        "Please use the YYYY-MM-DD format"
+                        "Por favor, utilize o formato YYYY-MM-DD"
 
                 FieldClaimDate ->
                     TranslationSet

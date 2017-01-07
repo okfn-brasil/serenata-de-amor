@@ -30,6 +30,8 @@ names =
     , "documentNumber"
     , "documentValue"
     , "issueDate"
+    , "issueDateStart"
+    , "issueDateEnd"
     , "month"
     , "remarkValue"
     , "installment"
@@ -70,6 +72,8 @@ labels lang =
         , FieldDocumentNumber
         , FieldDocumentValue
         , FieldIssueDate
+        , FieldIssueDateStart
+        , FieldIssueDateEnd
         , FieldMonth
         , FieldRemarkValue
         , FieldInstallment
@@ -108,6 +112,8 @@ isSearchable ( field, label ) =
             [ "applicantId"
             , "cnpjCpf"
             , "documentId"
+            , "issueDateEnd"
+            , "issueDateStart"
             , "month"
             , "subquotaId"
             , "year"
@@ -119,7 +125,14 @@ sets lang =
     List.indexedMap
         (,)
         [ ( translate lang SearchFieldsetCongressperson
-          , [ "applicantId", "year", "month", "subquotaId", "cnpjCpf" ]
+          , [ "applicantId"
+            , "year"
+            , "month"
+            , "subquotaId"
+            , "cnpjCpf"
+            , "issueDateStart"
+            , "issueDateEnd"
+            ]
           )
         , ( translate lang SearchFieldsetReimbursement
           , [ "applicantId", "year", "documentId" ]
@@ -146,4 +159,12 @@ isNumeric field =
         , "month"
         , "subquotaId"
         , "year"
+        ]
+
+
+isDate : String -> Bool
+isDate field =
+    List.member field
+        [ "issueDateStart"
+        , "issueDateEnd"
         ]

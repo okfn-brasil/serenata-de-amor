@@ -25,12 +25,14 @@ class ReimbursementListView(ListAPIView):
             'applicant_id',
             'cnpj_cpf',
             'document_id',
+            'issue_date_end',
+            'issue_date_start',
             'month',
             'subquota_id',
             'year'
         )
         values = map(self.request.query_params.get, params)
-        filters = {k: v for k, v in zip(params, values) if v is not None}
+        filters = {k: v for k, v in zip(params, values) if v}
 
         # select year and applicant ID from the URL path (not query string)
         if year:

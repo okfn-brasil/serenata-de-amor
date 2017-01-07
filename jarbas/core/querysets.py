@@ -35,13 +35,36 @@ class ReimbursementQuerySet(models.QuerySet):
         return self.distinct()
 
     def tuple_filter(self, **kwargs):
-        filters = self._to_tuple_filter(kwargs)
+        filters = {_rename_key(k): v for k, v in _str_to_tuple(kwargs).items()}
         for key, values in filters.items():
             filter_ = reduce(lambda q, val: q | Q(**{key: val}), values, Q())
             self = self.filter(filter_)
         return self
 
-    @staticmethod
-    def _to_tuple_filter(filters):
-        rx = re.compile('[ ,]+')
-        return {k: tuple(rx.split(v)) for k, v in filters.items()}
+
+def _str_to_tuple(filters):
+    """
+    Transform string values form a dictionary in tuples. For example:
+            {
+            'document': '42,3',
+            'year': '1994,1996',
+            'applicant': '1'
+        }
+
+    Becomes:
+            {
+            'document': (42, 3),
+            'year': (1994, 1996),
+            'applicant': (1, ),
+        }
+    """
+    rx = re.compile('[ ,]+')
+    return {k: tuple(rx.split(v)) for k, v in filters.items()}
+
+
+def _rename_key(key):
+    mapping = dict(
+        issue_date_start='issue_date__gte',
+        issue_date_end='issue_date__lt'
+    )
+    return mapping.get(key, key)

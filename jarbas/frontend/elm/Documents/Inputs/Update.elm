@@ -14,6 +14,35 @@ type Msg
     | Mdl (Material.Msg Msg)
 
 
+formatDate : String -> String
+formatDate value =
+    let
+        onlyDigits : String
+        onlyDigits =
+            String.filter (\c -> Char.isDigit c || c == ' ') value
+
+        year : String
+        year =
+            onlyDigits
+                |> String.left 4
+
+        month : String
+        month =
+            onlyDigits
+                |> String.dropLeft 4
+                |> String.left 2
+
+        day : String
+        day =
+            onlyDigits
+                |> String.dropLeft 6
+                |> String.left 2
+    in
+        [ year, month, day ]
+            |> List.filter (\s -> not <| String.isEmpty s)
+            |> String.join "-"
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -34,6 +63,8 @@ updateField model ( name, value ) =
                         String.filter (\c -> Char.isDigit c || c == ' ') value
                     else if name == "state" then
                         String.map Char.toUpper value
+                    else if Fields.isDate name then
+                        formatDate value
                     else
                         String.trim value
 

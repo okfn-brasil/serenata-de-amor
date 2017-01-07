@@ -64,6 +64,8 @@ All these endpoints accepts any combination of these filtering parameters by:
 * `applicant_id`
 * `cnpj_cpf`
 * `document_id`
+* `issue_date_start` (inclusive)
+* `issue_date_end` (exclusive)
 * `month`
 * `subquota_id`
 * `year`

@@ -39,6 +39,7 @@ class TestListApi(TestCase):
         data[3]['probability'] = 0.9
         data[3]['subquota_id'] = 22
         data[3]['year'] = 1983
+        data[3]['issue_date'] = '1970-02-01'
 
         for d in data:
             Reimbursement.objects.create(**d)
@@ -82,6 +83,17 @@ class TestListApi(TestCase):
         self.assertEqual(0.9, content['results'][0]['probability'])
         self.assertEqual(0.1, content['results'][1]['probability'])
         self.assertEqual(None, content['results'][2]['probability'])
+
+    def test_content_with_date_filters(self):
+        url = self.all + (
+            '?issue_date_start=1970-01-01'
+            '&issue_date_end=1970-02-01'
+        )
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(2, len(content['results']))
+        self.assertEqual(0.5, content['results'][0]['probability'])
+        self.assertEqual(0.1, content['results'][1]['probability'])
 
     def test_more_than_one_document_query(self):
         extra = sample_reimbursement_data.copy()
