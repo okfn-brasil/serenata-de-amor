@@ -1,7 +1,9 @@
 import csv
 import lzma
 import os
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
+
+from bulk_update.helper import bulk_update
 
 from jarbas.core.management.commands import LoadCommand
 from jarbas.core.models import Reimbursement
@@ -14,9 +16,15 @@ class Command(LoadCommand):
 
     def add_arguments(self, parser):
         super().add_arguments(parser, add_drop_all=False)
+        parser.add_argument(
+            '--batch-size', '-b', dest='batch_size', type=int, default=4096,
+            help='Batch size for bulk update (default: 4096)'
+        )
 
     def handle(self, *args, **options):
+        self.queue = []
         self.path = options['dataset']
+        self.batch_size = options['batch_size']
         if not os.path.exists(self.path):
             raise FileNotFoundError(os.path.abspath(self.path))
 
@@ -24,11 +32,16 @@ class Command(LoadCommand):
         print('{:,} reimbursements updated.'.format(self.count))
 
     def irregularities(self):
-        """Returns a Generator with a irregularities for each reimbursement."""
-        print('Loading irregularities dataset…')
+        """Returns a Generator with bathces of irregularities."""
+        print('Loading irregularities dataset…', end='\r')
         with lzma.open(self.path, mode='rt') as file_handler:
+            batch = []
             for row in csv.DictReader(file_handler):
-                yield self.serialize(row)
+                batch.append(self.serialize(row))
+                if len(batch) >= self.batch_size:
+                    yield batch
+                    batch = []
+            yield batch
 
     def serialize(self, row):
         """
@@ -47,24 +60,38 @@ class Command(LoadCommand):
             probability = float(row['probability'])
             del row['probability']
 
-        suspicions = {k: self.to_bool(v) for k, v in row.items()}
+        suspicions = {k: self.bool(v) for k, v in row.items() if self.bool(v)}
+        if not suspicions:
+            suspicions = None
 
         return unique_id, dict(probability=probability, suspicions=suspicions)
 
+    def main(self):
+        for batch in self.irregularities():
+            with ThreadPoolExecutor(max_workers=32) as executor:
+                executor.map(self.schedule_update, batch)
+            self.update()
+
+    def schedule_update(self, unique_id_and_content):
+        unique_id, content = unique_id_and_content
+        try:
+            reimbursement = Reimbursement.objects.get(**unique_id)
+        except Reimbursement.DoesNotExist:
+            pass
+        else:
+            reimbursement.suspicions = content.get('suspicions')
+            reimbursement.probability = content.get('probability')
+            self.queue.append(reimbursement)
+
+    def update(self):
+        fields = ['probability', 'suspicions']
+        bulk_update(self.queue, update_fields=fields)
+        self.count += len(self.queue)
+        print('{:,} reimbursements updated.'.format(self.count), end='\r')
+        self.queue = []
+
     @staticmethod
-    def to_bool(string):
-        if string in ('False', '0'):
+    def bool(string):
+        if string.lower() in ('false', '0', '0.0', 'none', 'nil', 'null'):
             string = ''
         return bool(string)
-
-    def main(self):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
-            print('Preparing updates…', end='\r')
-            for result in executor.map(self.update, self.irregularities()):
-                self.count += 1
-                msg = '{:,} reimbursements updated.'
-                print(msg.format(self.count), end='\r')
-
-    def update(self, dict_tuple):
-        filters, content = dict_tuple
-        Reimbursement.objects.filter(**filters).update(**content)
