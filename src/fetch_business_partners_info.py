@@ -117,5 +117,3 @@ if __name__ == '__main__':
     print('Started at', str(datetime.datetime.now()))
     fetch_business_infos()
     print('Finished at', str(datetime.datetime.now()))
-
-# TODO: Gerar um arquivo csv no final com as informacoes (e nao um json)
