@@ -16,36 +16,78 @@ DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
 
 def selenium_webdriver():
     webdrivers = {
-        'linux_32bit': [{'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.CHROME, 'name': 'chrome',
-                         'object': webdriver.Chrome},
-                        {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.FIREFOX, 'name': 'firefox',
-                         'object': webdriver.Firefox},
-                        {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.OPERA, 'name': 'opera',
-                         'object': webdriver.Opera}],
-        'linux_64bit': [{'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.CHROME, 'name': 'chrome',
-                         'object': webdriver.Chrome},
-                        {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.OPERA, 'name': 'opera',
-                         'object': webdriver.Opera},
-                        {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.FIREFOX, 'name': 'firefox',
-                         'object': webdriver.Firefox}],
-        'Darwin_64bit': [{'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.OPERA, 'name': 'opera',
-                          'object': webdriver.Opera},
-                         {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.CHROME, 'name': 'chrome',
-                          'object': webdriver.Chrome},
-                         {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.FIREFOX, 'name': 'firefox',
-                          'object': webdriver.Firefox}],
-        'Windows_32bit': [{'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.CHROME, 'name': 'chrome',
-                           'object': webdriver.Chrome},
-                          {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.FIREFOX, 'name': 'firefox',
-                           'object': webdriver.Firefox},
-                          {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.OPERA, 'name': 'opera',
-                           'object': webdriver.Opera}],
-        'Windows_64bit': [{'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.CHROME, 'name': 'chrome',
-                           'object': webdriver.Chrome},
-                          {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.FIREFOX, 'name': 'firefox',
-                           'object': webdriver.Firefox},
-                          {'url': '', 'unpack': False, 'capabilities': DesiredCapabilities.OPERA, 'name': 'opera',
-                           'object': webdriver.Opera}]
+        'linux_32bit': [
+            {
+                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_linux32.zip',
+                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver.exe',
+                'object': webdriver.Chrome
+            },
+            {
+                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux32.tar.gz',
+                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver', 'object': webdriver.Firefox
+            },
+            {
+                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_linux32.zip',
+                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver', 'object': webdriver.Opera
+            }
+        ],
+        'linux_64bit': [
+            {
+                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_linux64.zip',
+                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver', 'object': webdriver.Chrome
+            },
+            {
+                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_linux64.zip',
+                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver', 'object': webdriver.Opera
+            },
+            {
+                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz',
+                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver', 'object': webdriver.Firefox
+            }
+        ],
+        'Darwin_64bit': [
+            {
+                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_mac64.zip',
+                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver', 'object': webdriver.Opera
+            },
+            {
+                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_mac64.zip',
+                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver', 'object': webdriver.Chrome
+            },
+            {
+                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-macos.tar.gz',
+                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver', 'object': webdriver.Firefox
+            }
+        ],
+        'Windows_32bit': [
+            {
+                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_win32.zip',
+                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver.exe',
+                'object': webdriver.Chrome
+            },
+            {
+                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-win32.zip',
+                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver.exe', 'object': webdriver.Firefox
+            },
+            {
+                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_win32.zip',
+                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver.exe', 'object': webdriver.Opera
+            }
+        ],
+        'Windows_64bit': [
+            {
+                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_win32.zip',
+                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver.exe', 'object': webdriver.Chrome
+            },
+            {
+                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-win64.zip',
+                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver.exe', 'object': webdriver.Firefox
+            },
+            {
+                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_win64.zip',
+                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver.exe', 'object': webdriver.Opera
+            }
+        ]
     }
 
     platform_name = '%s_%s' % (platform.system(), platform.architecture()[0])
@@ -54,9 +96,10 @@ def selenium_webdriver():
 
     for driver_info in driver_list:
         try:
+            executable_path = os.path.abspath(driver_info['file_name'])
             # TODO: Verificar se o arquivo existe, caso nao exista baixar o mesmo e descompactar se necessario colocando
             # no path local e no diretorio de destino (diretorio local)
-            return driver_info['object'](executable_path=os.path.abspath(driver_info['name']),
+            return driver_info['object'](executable_path=executable_path,
                                          desired_capabilities=driver_info['capabilities'])
         except WebDriverException:
             pass
