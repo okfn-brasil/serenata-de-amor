@@ -11771,14 +11771,15 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">amendments</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-22-amendments.xz&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;proposal_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                                                                   <span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                                                                   <span class="s1">&#39;amendment_program_code&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                                                                   <span class="s1">&#39;amendment_proposal_tranfer_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span>
-                                                                   <span class="s1">&#39;amendment_tranfer_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">amendments</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-22-amendments.xz&#39;</span><span class="p">,</span> 
+                         <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;proposal_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                               <span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                               <span class="s1">&#39;amendment_program_code&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                               <span class="s1">&#39;amendment_proposal_tranfer_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span>
+                               <span class="s1">&#39;amendment_tranfer_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">})</span>
 <span class="n">amendments</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">amendments</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -11791,7 +11792,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[50]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[2]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11806,7 +11807,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">amendments</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -11820,7 +11821,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[51]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[3]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11854,7 +11855,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[124]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-22-agreements.xz&#39;</span><span class="p">,</span> 
@@ -11877,11 +11878,45 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[124]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[4]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
 <pre>(105276, 5)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>agreement_number                                        782624
+proposal_id                                             716232
+date_signed                                2014-01-01 00:00:00
+situation             Prestação de Contas enviada para Análise
+agreement_end_date                         2014-01-09 00:00:00
+Name: 0, dtype: object</pre>
 </div>
 
 </div>
@@ -11895,21 +11930,24 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Agreements-related-to-amendments">Agreements related to amendments<a class="anchor-link" href="#Agreements-related-to-amendments">&#182;</a></h4>
+<h3 id="Agreements-related-to-amendments">Agreements related to amendments<a class="anchor-link" href="#Agreements-related-to-amendments">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[125]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_amendments</span> <span class="o">=</span> <span class="n">agreements</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">amendments</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;proposal_id&#39;</span><span class="p">)</span>
-<span class="n">agreements_with_amendments</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;amendment_number&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> 
-                                                                <span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span><span class="s1">&#39;date_signed&#39;</span><span class="p">,</span> 
-                                                                <span class="s1">&#39;agreement_end_date&#39;</span><span class="p">,</span> <span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span> 
+<span class="n">agreements_with_amendments</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;amendment_number&#39;</span><span class="p">,</span> 
+                                                                <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> 
+                                                                <span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span>
+                                                                <span class="s1">&#39;date_signed&#39;</span><span class="p">,</span> 
+                                                                <span class="s1">&#39;agreement_end_date&#39;</span><span class="p">,</span>
+                                                                <span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span> 
                                                                 <span class="s1">&#39;situation&#39;</span><span class="p">])</span>
-<span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
 </div>
@@ -11920,7 +11958,36 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[125]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(44072, 7)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11945,7 +12012,8 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Impeded-Non-Profit-Entities">Impeded Non-Profit Entities<a class="anchor-link" href="#Impeded-Non-Profit-Entities">&#182;</a></h3><p>This dataset gather Non-profit private entities that are prevented from entering into agreements, onlending agreements or terms of partnership with the federal public administration.</p>
+<hr>
+<h2 id="Impeded-Non-Profit-Entities---CEPIM">Impeded Non-Profit Entities - CEPIM<a class="anchor-link" href="#Impeded-Non-Profit-Entities---CEPIM">&#182;</a></h2><p>This dataset gather Non-profit entities that are prevented from entering into agreements, onlending agreements or terms of partnership with the federal public administration.</p>
 <p>Origin of the information: Controladoria-Geral da União - CGU (Comptroller General of the Union)</p>
 
 </div>
@@ -11953,7 +12021,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[57]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">impeded_non_profit_entities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-20-impeded-non-profit-entities.xz&#39;</span><span class="p">,</span> 
@@ -11970,7 +12038,7 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[57]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11985,7 +12053,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[58]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">impeded_non_profit_entities</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -11999,7 +12067,7 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[58]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12022,33 +12090,33 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="First-we-need-to-get-the-agreement-in-which-entities-were-impeded:">First we need to get the agreement in which entities were impeded:<a class="anchor-link" href="#First-we-need-to-get-the-agreement-in-which-entities-were-impeded:">&#182;</a></h4>
+<p>First we need to get the agreements in which entities were impeded:</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[126]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">impeded_entities_w_start_date</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span> 
-                                                                   <span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span> 
-                                                                   <span class="s1">&#39;agreement_end_date&#39;</span><span class="p">]</span>
-                                                                       <span class="p">)</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">impeded_non_profit_entities</span><span class="p">,</span> 
-                                                                               <span class="n">left_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span> 
-                                                                                         <span class="s1">&#39;agreement_number&#39;</span><span class="p">]),</span> 
-                                                                               <span class="n">right_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">,</span> 
-                                                                                          <span class="s1">&#39;agreement_number&#39;</span><span class="p">])</span>
-                                                                        <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">,</span>
-                                                                                 <span class="s1">&#39;compay_name&#39;</span><span class="p">,</span>
-                                                                                 <span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span>
-                                                                                 <span class="s1">&#39;agreement_end_date&#39;</span><span class="p">,</span>
-                                                                                 <span class="s1">&#39;grating_body&#39;</span><span class="p">,</span>
-                                                                                 <span class="s1">&#39;impediment_reason&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">impeded_entities_w_start_date</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                                    <span class="n">impeded_non_profit_entities</span><span class="p">,</span> 
+                                    <span class="n">left_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span> 
+                                              <span class="s1">&#39;agreement_number&#39;</span><span class="p">]),</span> 
+                                    <span class="n">right_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">,</span> 
+                                               <span class="s1">&#39;agreement_number&#39;</span><span class="p">]))</span>
+
+<span class="n">impeded_entities_w_start_date</span> <span class="o">=</span> <span class="n">impeded_entities_w_start_date</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">,</span>
+                                                                     <span class="s1">&#39;compay_name&#39;</span><span class="p">,</span>
+                                                                     <span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span>
+                                                                     <span class="s1">&#39;agreement_end_date&#39;</span><span class="p">,</span>
+                                                                     <span class="s1">&#39;grating_body&#39;</span><span class="p">,</span>
+                                                                     <span class="s1">&#39;impediment_reason&#39;</span><span class="p">])</span>
 
 <span class="n">impeded_entities_w_start_date</span> <span class="o">=</span> <span class="n">impeded_entities_w_start_date</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> 
-                                                                     <span class="p">{</span><span class="s1">&#39;agreement_end_date&#39;</span><span class="p">:</span><span class="s1">&#39;date_impended&#39;</span><span class="p">,</span> 
-                                                                      <span class="s1">&#39;agreement_number&#39;</span><span class="p">:</span> <span class="s1">&#39;impended_agreement&#39;</span><span class="p">})</span>
+                                             <span class="p">{</span><span class="s1">&#39;agreement_end_date&#39;</span><span class="p">:</span><span class="s1">&#39;date_impended&#39;</span><span class="p">,</span> 
+                                              <span class="s1">&#39;agreement_number&#39;</span><span class="p">:</span> <span class="s1">&#39;impended_agreement&#39;</span><span class="p">})</span>
 <span class="n">impeded_entities_w_start_date</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
@@ -12060,7 +12128,7 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[126]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12084,7 +12152,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Because the dataset doesn't gives the date when the entity becomes impended, we are are using the end date of the agreement where the entity was impended as a minimum date called here as <strong>date_impended</strong>.</p>
+<p>Because the dataset doesn't gives the date when the entity becomes impended, we are using the end date of the agreement where the entity was impended as a minimum date called here as <strong>date_impended</strong>.</p>
 <p>So <strong>date_impended</strong> means that we are concerned only with agreements signed after this date.</p>
 
 </div>
@@ -12092,12 +12160,13 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[130]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">impeded_entities_w_start_date</span><span class="p">,</span> 
-                                                                   <span class="n">left_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">]),</span> 
-                                                                   <span class="n">right_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">]))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                                        <span class="n">impeded_entities_w_start_date</span><span class="p">,</span> 
+                                        <span class="n">left_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">]),</span> 
+                                        <span class="n">right_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">]))</span>
 </pre></div>
 
 </div>
@@ -12110,14 +12179,45 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Now-we-can-query-the-agreements-signed-after-the-entities-were-impended">Now we can query the agreements signed after the entities were impended<a class="anchor-link" href="#Now-we-can-query-the-agreements-signed-after-the-entities-were-impended">&#182;</a></h4><p>Below we have a list of agreements that are still in execution and are related to the amendments that have as beneficiaries non-profit entities that are impeded. In addition, the difference between the date of signature of the agreements in execution and the date of entities disability is less than 2 years.</p>
+<h4 id="Querying-the-agreements-signed-after-the-entities-were-impended">Querying the agreements signed after the entities were impended<a class="anchor-link" href="#Querying-the-agreements-signed-after-the-entities-were-impended">&#182;</a></h4><p>Below we have a list of agreements that are still in execution and are related to the amendments that have as beneficiaries non-profit entities that are impeded. In addition, the difference between the date of signature of the agreements in execution and the date of entities disability is less than 2 years.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[131]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;situation == </span><span class="se">\&#39;</span><span class="s1">Em execução</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
+<span class="s1">                                 date_impended &lt; date_signed and </span><span class="se">\</span>
+<span class="s1">                                 date_signed.dt.year - date_impended.dt.year &lt; 2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(7, 13)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;situation == </span><span class="se">\&#39;</span><span class="s1">Em execução</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
@@ -12133,7 +12233,7 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[131]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12285,7 +12385,8 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Inident-and-Suspended-Companies">Inident and Suspended Companies<a class="anchor-link" href="#Inident-and-Suspended-Companies">&#182;</a></h3><p>This dataset gather companies and individuals who have suffered sanctions by the organs and entities of the public administration of the various federative spheres.</p>
+<hr>
+<h2 id="Inident-and-Suspended-Companies---CEIS">Inident and Suspended Companies - CEIS<a class="anchor-link" href="#Inident-and-Suspended-Companies---CEIS">&#182;</a></h2><p>This dataset gather companies and individuals who have suffered sanctions by the organs and entities of the public administration of the various federative spheres.</p>
 <p>Origin of the information: Controladoria-Geral da União - CGU (Comptroller General of the Union)</p>
 
 </div>
@@ -12293,18 +12394,24 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">inident_and_suspended_companies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-21-inident-and-suspended-companies.xz&#39;</span><span class="p">,</span>
                                               <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sanctioned_cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                                                      <span class="s1">&#39;process_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span>
-                                              <span class="n">parse_dates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sanction_start_date&#39;</span><span class="p">,</span><span class="s1">&#39;sanction_end_date&#39;</span><span class="p">,</span> 
-                                                             <span class="s1">&#39;data_source_date&#39;</span><span class="p">,</span> <span class="s1">&#39;published_date&#39;</span><span class="p">],</span> 
+                                              <span class="n">parse_dates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sanction_start_date&#39;</span><span class="p">,</span>
+                                                             <span class="s1">&#39;sanction_end_date&#39;</span><span class="p">,</span> 
+                                                             <span class="s1">&#39;data_source_date&#39;</span><span class="p">,</span>
+                                                             <span class="s1">&#39;published_date&#39;</span><span class="p">],</span> 
                                               <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">inident_and_suspended_companies</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">inident_and_suspended_companies</span><span class="p">[</span><span class="s1">&#39;sanction_start_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">inident_and_suspended_companies</span><span class="p">[</span><span class="s1">&#39;sanction_start_date&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">inident_and_suspended_companies</span><span class="p">[</span><span class="s1">&#39;sanction_end_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">inident_and_suspended_companies</span><span class="p">[</span><span class="s1">&#39;sanction_end_date&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">inident_and_suspended_companies</span><span class="p">[</span><span class="s1">&#39;sanction_start_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+                            <span class="n">inident_and_suspended_companies</span><span class="p">[</span><span class="s1">&#39;sanction_start_date&#39;</span><span class="p">],</span> 
+                            <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">inident_and_suspended_companies</span><span class="p">[</span><span class="s1">&#39;sanction_end_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+                            <span class="n">inident_and_suspended_companies</span><span class="p">[</span><span class="s1">&#39;sanction_end_date&#39;</span><span class="p">],</span>
+                            <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">inident_and_suspended_companies</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
@@ -12316,7 +12423,7 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[25]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[18]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12331,7 +12438,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">inident_and_suspended_companies</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -12345,12 +12452,12 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[37]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[19]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
 <pre>entity_type                                                                            Física
-sanctioned_cnpj_cpf                                                            00001540142817
+sanctioned_cnpj_cpf                                                                1540142817
 name_given_by_sanctioning_body                                                    01540142817
 company_name_receita_database                                               FAIAD HABIB ZAKIR
 trading_name_receita_database                                                                
@@ -12377,27 +12484,14 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[219]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">inident_and_suspended_companies</span><span class="p">,</span> 
-                                                                   <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span> 
-                                                                   <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;sanctioned_cnpj_cpf&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[229]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;SIT_CONVENIO == </span><span class="se">\&#39;</span><span class="s1">Em execução</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
-<span class="s1">                                            sanction_start_date &lt;= DIA_ASSIN_CONV and </span><span class="se">\</span>
-<span class="s1">                                            DIA_ASSIN_CONV &lt;= sanction_end_date&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                                        <span class="n">inident_and_suspended_companies</span><span class="p">,</span> 
+                                        <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span> 
+                                        <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;sanctioned_cnpj_cpf&#39;</span><span class="p">)</span>
+<span class="n">agreements_with_suspended_companies</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
 </div>
@@ -12408,7 +12502,113 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[229]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(24, 24)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Querying-the-agreements-still-running-after-entities-were-suspended">Querying the agreements still running after entities were suspended<a class="anchor-link" href="#Querying-the-agreements-still-running-after-entities-were-suspended">&#182;</a></h4><p>Below we have a list of agreements that are still in execution and which the signed date are between sanction's start and end date.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;entity_type == </span><span class="se">\&#39;</span><span class="s1">Juridica</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
+<span class="s1">                                           situation == </span><span class="se">\&#39;</span><span class="s1">Em execução</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
+<span class="s1">                                           sanction_start_date &lt;= date_signed and </span><span class="se">\</span>
+<span class="s1">                                           date_signed &lt;= sanction_end_date&#39;</span>
+                                         <span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(6, 24)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span> <span class="o">=</span> <span class="n">agreements_with_suspended_companies</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                                        <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;date_signed&#39;</span><span class="p">:</span><span class="s1">&#39;agreement_date_signed&#39;</span><span class="p">})</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;entity_type == </span><span class="se">\&#39;</span><span class="s1">Juridica</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
+<span class="s1">                                          situation == </span><span class="se">\&#39;</span><span class="s1">Em execução</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
+<span class="s1">                                          sanction_start_date &lt;= agreement_date_signed and </span><span class="se">\</span>
+<span class="s1">                                          agreement_date_signed &lt;= sanction_end_date&#39;</span>
+                                         <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;amendment_number&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sanctioned_cnpj_cpf&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;name_given_by_sanctioning_body&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;company_name_receita_database&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;trading_name_receita_database&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;process_number&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;agreement_date_signed&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sanction_start_date&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sanction_end_date&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sanction_type&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sanctioning_body&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;state_of_sanctioning_body&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;data_source&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;data_source_date&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;published_date&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[23]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12417,181 +12617,165 @@ Name: 0, dtype: object</pre>
     <tr style="text-align: right;">
       <th></th>
       <th>amendment_number</th>
+      <th>agreement_number</th>
       <th>congressperson_name</th>
-      <th>amendment_beneficiary</th>
-      <th>DIA_ASSIN_CONV</th>
-      <th>NR_CONVENIO</th>
-      <th>SIT_CONVENIO</th>
-      <th>entity_type</th>
       <th>sanctioned_cnpj_cpf</th>
       <th>name_given_by_sanctioning_body</th>
       <th>company_name_receita_database</th>
-      <th>...</th>
+      <th>trading_name_receita_database</th>
+      <th>process_number</th>
+      <th>agreement_date_signed</th>
       <th>sanction_start_date</th>
       <th>sanction_end_date</th>
+      <th>sanction_type</th>
       <th>sanctioning_body</th>
       <th>state_of_sanctioning_body</th>
       <th>data_source</th>
       <th>data_source_date</th>
       <th>published_date</th>
-      <th>publication</th>
-      <th>detailing</th>
-      <th>Abrangência definida em decisão judicial</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>28160003</td>
-      <td>ROBERTO DE LUCENA</td>
-      <td>67662437000161</td>
-      <td>2015-04-11</td>
       <td>819313</td>
-      <td>Em execução</td>
-      <td>Juridica</td>
+      <td>ROBERTO DE LUCENA</td>
       <td>67662437000161</td>
       <td>Jose Carlos Mendes</td>
       <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>...</td>
+      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
+      <td>62701200600070140000000000000</td>
+      <td>2015-04-11</td>
       <td>2010-11-11</td>
       <td>2020-11-11</td>
+      <td>Proibição - Lei de Improbidade</td>
       <td>Justiça Estadual</td>
       <td></td>
       <td>Conselho Nacional de Justiça</td>
       <td>2011-12-31 00:00:00</td>
-      <td></td>
-      <td></td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
       <th>1</th>
       <td>28070006</td>
-      <td>MARA GABRILLI</td>
-      <td>67662437000161</td>
-      <td>2014-07-16</td>
       <td>803313</td>
-      <td>Em execução</td>
-      <td>Juridica</td>
+      <td>MARA GABRILLI</td>
       <td>67662437000161</td>
       <td>Jose Carlos Mendes</td>
       <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>...</td>
+      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
+      <td>62701200600070140000000000000</td>
+      <td>2014-07-16</td>
       <td>2010-11-11</td>
       <td>2020-11-11</td>
+      <td>Proibição - Lei de Improbidade</td>
       <td>Justiça Estadual</td>
       <td></td>
       <td>Conselho Nacional de Justiça</td>
       <td>2011-12-31 00:00:00</td>
-      <td></td>
-      <td></td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
       <th>2</th>
       <td>33600004</td>
-      <td>SILVIO TORRES</td>
-      <td>67662437000161</td>
-      <td>2016-05-17</td>
       <td>831772</td>
-      <td>Em execução</td>
-      <td>Juridica</td>
+      <td>SILVIO TORRES</td>
       <td>67662437000161</td>
       <td>Jose Carlos Mendes</td>
       <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>...</td>
+      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
+      <td>62701200600070140000000000000</td>
+      <td>2016-05-17</td>
       <td>2010-11-11</td>
       <td>2020-11-11</td>
+      <td>Proibição - Lei de Improbidade</td>
       <td>Justiça Estadual</td>
       <td></td>
       <td>Conselho Nacional de Justiça</td>
       <td>2011-12-31 00:00:00</td>
-      <td></td>
-      <td></td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
       <th>4</th>
       <td>25410001</td>
-      <td>CANDIDO VACCAREZZA</td>
-      <td>67662437000161</td>
-      <td>2011-12-30</td>
       <td>765683</td>
-      <td>Em execução</td>
-      <td>Juridica</td>
+      <td>CANDIDO VACCAREZZA</td>
       <td>67662437000161</td>
       <td>Jose Carlos Mendes</td>
       <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>...</td>
+      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
+      <td>62701200600070140000000000000</td>
+      <td>2011-12-30</td>
       <td>2010-11-11</td>
       <td>2020-11-11</td>
+      <td>Proibição - Lei de Improbidade</td>
       <td>Justiça Estadual</td>
       <td></td>
       <td>Conselho Nacional de Justiça</td>
       <td>2011-12-31 00:00:00</td>
-      <td></td>
-      <td></td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
       <th>5</th>
       <td>18180001</td>
-      <td>NELSON MARQUEZELLI</td>
-      <td>67662437000161</td>
-      <td>2012-12-31</td>
       <td>781641</td>
-      <td>Em execução</td>
-      <td>Juridica</td>
+      <td>NELSON MARQUEZELLI</td>
       <td>67662437000161</td>
       <td>Jose Carlos Mendes</td>
       <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>...</td>
+      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
+      <td>62701200600070140000000000000</td>
+      <td>2012-12-31</td>
       <td>2010-11-11</td>
       <td>2020-11-11</td>
+      <td>Proibição - Lei de Improbidade</td>
       <td>Justiça Estadual</td>
       <td></td>
       <td>Conselho Nacional de Justiça</td>
       <td>2011-12-31 00:00:00</td>
       <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
     </tr>
     <tr>
-      <th>11</th>
+      <th>12</th>
       <td>25310017</td>
-      <td>PAULO MALUF</td>
-      <td>45131885000104</td>
-      <td>2016-11-24</td>
       <td>829062</td>
-      <td>Em execução</td>
-      <td>Juridica</td>
+      <td>PAULO MALUF</td>
       <td>45131885000104</td>
       <td>QUALITY SERVICE LIMPEZA E CONSERVAçãO</td>
       <td>MUNICIPIO DE JALES</td>
-      <td>...</td>
+      <td>JALES GABINETE PREFEITO</td>
+      <td>00073084619988260297</td>
+      <td>2016-11-24</td>
       <td>2015-09-24</td>
       <td>2020-09-24</td>
+      <td>Proibição - Lei de Improbidade</td>
       <td>Tribunal de Justiça do Estado de São Paulo / 1...</td>
       <td>SP</td>
       <td>Conselho Nacional de Justiça</td>
       <td>2015-11-17 00:00:00</td>
       <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
     </tr>
   </tbody>
 </table>
-<p>6 rows × 23 columns</p>
 </div>
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
 </div>
 </div>
 
