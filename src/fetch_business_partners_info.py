@@ -5,104 +5,10 @@ import time
 import re
 import pandas as pd
 from unicodedata import normalize
-from selenium import webdriver
 from bs4 import BeautifulSoup
-import platform
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.common.exceptions import WebDriverException
+import selenium_util
 
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
-
-
-def selenium_webdriver():
-    webdrivers = {
-        'linux_32bit': [
-            {
-                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_linux32.zip',
-                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver.exe',
-                'object': webdriver.Chrome
-            },
-            {
-                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux32.tar.gz',
-                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver', 'object': webdriver.Firefox
-            },
-            {
-                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_linux32.zip',
-                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver', 'object': webdriver.Opera
-            }
-        ],
-        'linux_64bit': [
-            {
-                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_linux64.zip',
-                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver', 'object': webdriver.Chrome
-            },
-            {
-                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_linux64.zip',
-                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver', 'object': webdriver.Opera
-            },
-            {
-                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-linux64.tar.gz',
-                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver', 'object': webdriver.Firefox
-            }
-        ],
-        'Darwin_64bit': [
-            {
-                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_mac64.zip',
-                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver', 'object': webdriver.Opera
-            },
-            {
-                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_mac64.zip',
-                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver', 'object': webdriver.Chrome
-            },
-            {
-                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-macos.tar.gz',
-                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver', 'object': webdriver.Firefox
-            }
-        ],
-        'Windows_32bit': [
-            {
-                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_win32.zip',
-                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver.exe',
-                'object': webdriver.Chrome
-            },
-            {
-                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-win32.zip',
-                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver.exe', 'object': webdriver.Firefox
-            },
-            {
-                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_win32.zip',
-                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver.exe', 'object': webdriver.Opera
-            }
-        ],
-        'Windows_64bit': [
-            {
-                'url': 'https://chromedriver.storage.googleapis.com/2.27/chromedriver_win32.zip',
-                'capabilities': DesiredCapabilities.CHROME, 'file_name': 'chromedriver.exe', 'object': webdriver.Chrome
-            },
-            {
-                'url': 'https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-win64.zip',
-                'capabilities': DesiredCapabilities.FIREFOX, 'file_name': 'geckodriver.exe', 'object': webdriver.Firefox
-            },
-            {
-                'url': 'https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_win64.zip',
-                'capabilities': DesiredCapabilities.OPERA, 'file_name': 'operadriver.exe', 'object': webdriver.Opera
-            }
-        ]
-    }
-
-    platform_name = '%s_%s' % (platform.system(), platform.architecture()[0])
-    assert platform_name in webdrivers, 'Your platform is not compatible with Selenium WebDrivers supported'
-    driver_list = webdrivers[platform_name]
-
-    for driver_info in driver_list:
-        try:
-            executable_path = os.path.abspath(driver_info['file_name'])
-            # TODO: Verificar se o arquivo existe, caso nao exista baixar o mesmo e descompactar se necessario colocando
-            # no path local e no diretorio de destino (diretorio local)
-            return driver_info['object'](executable_path=executable_path,
-                                         desired_capabilities=driver_info['capabilities'])
-        except WebDriverException:
-            pass
 
 
 def find_newest_file(data_dir, name):
@@ -144,7 +50,7 @@ def extract_info_from_page(url, driver, error_page_expected_title, origin):
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             time.sleep(1)
 
-    # Collect the information if there is no error
+    # Verify if there is any error or captcha from title text
     if error_page_expected_title.lower() not in soup.title.text.lower():
         info = {'partners': [], 'business': []}
 
@@ -174,7 +80,7 @@ def fetch_business_infos():
     # Collect the information from all congress person
     civil_names_df = pd.read_csv(find_newest_file(DATA_DIR, 'congressperson-civil-names.xz'))
 
-    driver = selenium_webdriver()
+    browser_automation = selenium_util.webdriver_from_system()
 
     original_site_blocked = False
     id = 0
@@ -189,17 +95,17 @@ def fetch_business_infos():
             collected_count += 1
         else:
             if not original_site_blocked:
-                info = extract_info_from_page(make_consulta_socio_url(name), driver, 'Uso — ConsultaSocio.com',
+                info = extract_info_from_page(make_consulta_socio_url(name), browser_automation, 'Uso — ConsultaSocio.com',
                                               'ConsultaSocio')
                 original_site_blocked = info is None
             if original_site_blocked:
-                info = extract_info_from_page(make_google_cache_url(name), driver, 'error', 'GoogleCache')
+                info = extract_info_from_page(make_google_cache_url(name), browser_automation, 'error', 'GoogleCache')
             if info:
                 result[name] = info
                 open(output_file_path, 'w').write(json.dumps(result))
                 collected_count += 1
         id += 1
-    driver.quit()
+    browser_automation.quit()
     print('%d informations collected from %d' % (collected_count, total_count))
     return result
 
