@@ -16,7 +16,7 @@ class InvalidCnpjCpfClassifier(TransformerMixin):
     def predict(self, X):
         self._X = X.copy()
         self._X['cnpj_cpf'] = self._X['cnpj_cpf'].astype(np.str)
-        return np.r_[self._X.apply(self.__is_valid, axis=1)]
+        return np.r_[self._X.apply(self.__is_invalid, axis=1)]
 
-    def __is_valid(self, row):
-        return (row['document_type'] == 2) | cpfcnpj.validate(row['cnpj_cpf'])
+    def __is_invalid(self, row):
+        return not ((row['document_type'] == 2) | cpfcnpj.validate(row['cnpj_cpf']))

@@ -14,25 +14,25 @@ class TestInvalidCnpjCpfClassifier(TestCase):
         self.subject = InvalidCnpjCpfClassifier()
 
     def test_is_valid_cnpj(self):
-        self.assertEqual(self.subject.predict(self.dataset)[0], True)
+        self.assertEqual(self.subject.predict(self.dataset)[0], False)
 
     def test_is_invalid_cnpj(self):
-        self.assertEqual(self.subject.predict(self.dataset)[1], False)
+        self.assertEqual(self.subject.predict(self.dataset)[1], True)
 
     def test_is_none(self):
-        self.assertEqual(self.subject.predict(self.dataset)[2], False)
+        self.assertEqual(self.subject.predict(self.dataset)[2], True)
 
     def test_none_cnpj_cpf_abroad_is_valid(self):
-        self.assertEqual(self.subject.predict(self.dataset)[3], True)
+        self.assertEqual(self.subject.predict(self.dataset)[3], False)
 
     def test_valid_cnpj_cpf_abroad_is_valid(self):
-        self.assertEqual(self.subject.predict(self.dataset)[4], True)
+        self.assertEqual(self.subject.predict(self.dataset)[4], False)
 
     def test_invalid_cnpj_cpf_abroad_is_valid(self):
-        self.assertEqual(self.subject.predict(self.dataset)[5], True)
+        self.assertEqual(self.subject.predict(self.dataset)[5], False)
 
     def test_is_valid_cpf(self):
-        self.assertEqual(self.subject.predict(self.dataset)[6], True)
+        self.assertEqual(self.subject.predict(self.dataset)[6], False)
 
     def test_is_invalid_cpf(self):
-        self.assertEqual(self.subject.predict(self.dataset)[7], False)
+        self.assertEqual(self.subject.predict(self.dataset)[7], True)
