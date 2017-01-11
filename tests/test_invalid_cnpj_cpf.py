@@ -36,3 +36,6 @@ class TestInvalidCnpjCpfClassifier(TestCase):
 
     def test_is_invalid_cpf(self):
         self.assertEqual(self.subject.predict(self.dataset)[7], True)
+
+    def test_invalid_document_type(self):
+        self.assertEqual(self.subject.predict(self.dataset)[8], False)
