@@ -14,33 +14,25 @@ class TestInvalidCnpjCpfClassifier(TestCase):
         self.subject = InvalidCnpjCpfClassifier()
 
     def test_is_valid_cnpj(self):
-        value = self.dataset.iloc[0]['cnpj_cpf']
-        validation = self.subject.validate_cnpj_cpf(value)
-        self.assertEqual(validation, True)
+        self.assertEqual(self.subject.predict(self.dataset)[0], True)
 
     def test_is_invalid_cnpj(self):
-        value = self.dataset.iloc[1]['cnpj_cpf']
-        validation = self.subject.validate_cnpj_cpf(value)
-        self.assertEqual(validation, False)
+        self.assertEqual(self.subject.predict(self.dataset)[1], False)
 
     def test_is_none(self):
-        value = self.dataset.iloc[2]['cnpj_cpf']
-        validation = self.subject.validate_cnpj_cpf(value)
-        self.assertEqual(validation, False)
+        self.assertEqual(self.subject.predict(self.dataset)[2], False)
 
-    def test_is_abroad(self):
-        value = self.dataset.iloc[3]['cnpj_cpf']
-        validation = self.subject.validate_cnpj_cpf(value)
-        if not validation:
-            document_type = self.dataset.iloc[3]['document_type']
-            self.assertEqual(document_type, 2)
+    def test_none_cnpj_cpf_abroad_is_valid(self):
+        self.assertEqual(self.subject.predict(self.dataset)[3], True)
+
+    def test_valid_cnpj_cpf_abroad_is_valid(self):
+        self.assertEqual(self.subject.predict(self.dataset)[4], True)
+
+    def test_invalid_cnpj_cpf_abroad_is_valid(self):
+        self.assertEqual(self.subject.predict(self.dataset)[5], True)
 
     def test_is_valid_cpf(self):
-        value = self.dataset.iloc[4]['cnpj_cpf']
-        validation = self.subject.validate_cnpj_cpf(value)
-        self.assertEqual(validation, True)
+        self.assertEqual(self.subject.predict(self.dataset)[6], True)
 
     def test_is_invalid_cpf(self):
-        value = self.dataset.iloc[1]['cnpj_cpf']
-        validation = self.subject.validate_cnpj_cpf(value)
-        self.assertEqual(validation, False)
+        self.assertEqual(self.subject.predict(self.dataset)[7], False)
