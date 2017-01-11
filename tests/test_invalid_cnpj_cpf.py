@@ -13,12 +13,12 @@ class TestInvalidCnpjCpfClassifier(TestCase):
                                    dtype={'cnpj_cpf': np.str})
         self.subject = InvalidCnpjCpfClassifier()
 
-    def test_is_valid_cnpj_or_cpf(self):
+    def test_is_valid_cnpj(self):
         value = self.dataset.iloc[0]['cnpj_cpf']
         validation = self.subject.validate_cnpj_cpf(value)
         self.assertEqual(validation, True)
 
-    def test_is_invalid_cnpj_or_cpf(self):
+    def test_is_invalid_cnpj(self):
         value = self.dataset.iloc[1]['cnpj_cpf']
         validation = self.subject.validate_cnpj_cpf(value)
         self.assertEqual(validation, False)
@@ -28,3 +28,19 @@ class TestInvalidCnpjCpfClassifier(TestCase):
         validation = self.subject.validate_cnpj_cpf(value)
         self.assertEqual(validation, False)
 
+    def test_is_abroad(self):
+        value = self.dataset.iloc[3]['cnpj_cpf']
+        validation = self.subject.validate_cnpj_cpf(value)
+        if not validation:
+            document_type = self.dataset.iloc[3]['document_type']
+            self.assertEqual(document_type, 2)
+
+    def test_is_valid_cpf(self):
+        value = self.dataset.iloc[4]['cnpj_cpf']
+        validation = self.subject.validate_cnpj_cpf(value)
+        self.assertEqual(validation, True)
+
+    def test_is_invalid_cpf(self):
+        value = self.dataset.iloc[1]['cnpj_cpf']
+        validation = self.subject.validate_cnpj_cpf(value)
+        self.assertEqual(validation, False)
