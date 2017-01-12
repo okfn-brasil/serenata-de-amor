@@ -12,3 +12,6 @@ seed: run.jarbas
 	docker-compose run --rm jarbas python manage.py irregularities /tmp/serenata-data/irregularities.xz
 
 run.devel: collectstatic
+
+build.elm:
+docker-compose run elm
