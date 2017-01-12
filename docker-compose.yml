@@ -29,7 +29,7 @@ services:
       dockerfile: Dockerfile-elm
     volumes:
       - "assets:/assets/"
-
+      - "./:/code"
   nginx:
     build:
       context: .
