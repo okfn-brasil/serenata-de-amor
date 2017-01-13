@@ -1,5 +1,5 @@
 FROM node:6.9.1
-RUN npm install -g yarn gulp
+RUN npm install -g yarn
 WORKDIR /code
 COPY elm-package.json elm-package.json
 COPY package.json package.json
