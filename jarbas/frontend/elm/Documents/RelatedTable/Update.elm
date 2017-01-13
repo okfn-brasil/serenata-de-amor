@@ -1,4 +1,4 @@
-module Documents.RelatedTable.Update exposing (Msg(..), getDocumentUrl, loadUrl, update)
+module Documents.RelatedTable.Update exposing (Msg(..), getDocumentUrl, loadUrl, update, updateParentId)
 
 import Documents.RelatedTable.Decoder exposing (decoder)
 import Documents.RelatedTable.Model exposing (Model, DocumentSummary, Results)
@@ -13,6 +13,11 @@ type Msg
     | Mdl (Material.Msg Msg)
 
 
+updateParentId : Int -> Model -> Model
+updateParentId parentId model =
+    { model | parentId = Just parentId }
+
+
 updateDocument : Int -> Bool -> ( Int, DocumentSummary ) -> DocumentSummary
 updateDocument target mouseOver ( index, document ) =
     if target == index then
@@ -21,13 +26,25 @@ updateDocument target mouseOver ( index, document ) =
         document
 
 
+isParent : Model -> DocumentSummary -> Bool
+isParent model result =
+    case model.parentId of
+        Just parentId ->
+            result.documentId == parentId
+
+        Nothing ->
+            False
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         LoadRelatedTable (Ok results) ->
             let
                 newDocuments =
-                    List.append model.results.documents results.documents
+                    results.documents
+                        |> List.filter (isParent model >> not)
+                        |> List.append model.results.documents
 
                 nextPageUrl =
                     results.nextPageUrl

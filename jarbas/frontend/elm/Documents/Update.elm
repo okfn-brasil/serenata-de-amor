@@ -136,9 +136,13 @@ update msg model =
                 current =
                     Maybe.withDefault 1 model.results.loadingPage
 
+                newResultDocuments =
+                    List.map updateRelatedTableParentId results.documents
+
                 newResults =
                     { results
-                        | loadingPage = Nothing
+                        | documents = newResultDocuments
+                        , loadingPage = Nothing
                         , pageLoaded = current
                         , jumpTo = toString current
                     }
@@ -256,6 +260,18 @@ updateReceipts lang target msg ( index, document ) =
         ( document, Cmd.none )
 
 
+updateRelatedTableParentId : Document -> Document
+updateRelatedTableParentId document =
+    let
+        updateModel =
+            RelatedTable.updateParentId document.documentId
+    in
+        { document
+            | sameDay = updateModel document.sameDay
+            , sameSubquota = updateModel document.sameSubquota
+        }
+
+
 updateSameDay : Language -> Int -> RelatedTable.Msg -> ( Int, Document ) -> ( Document, Cmd Msg )
 updateSameDay lang target msg ( index, document ) =
     if target == index then
@@ -342,10 +358,10 @@ getDocumentsAndCmd model index targetUpdate targetMsg =
             List.map (targetUpdate model.lang index targetMsg) indexedDocuments
 
         newDocuments =
-            List.map (\( doc, cmd ) -> doc) newDocumentsAndCommands
+            List.map Tuple.first newDocumentsAndCommands
 
         newCommands =
-            List.map (\( doc, cmd ) -> cmd) newDocumentsAndCommands
+            List.map Tuple.second newDocumentsAndCommands
 
         newResults =
             { results | documents = newDocuments }

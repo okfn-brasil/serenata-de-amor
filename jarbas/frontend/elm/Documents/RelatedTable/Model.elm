@@ -25,6 +25,7 @@ type alias Results =
 
 type alias Model =
     { results : Results
+    , parentId : Maybe Int
     , lang : Language
     , mdl : Material.Model
     }
@@ -37,4 +38,4 @@ results =
 
 model : Model
 model =
-    Model results English Material.model
+    Model results Nothing English Material.model
