@@ -14,4 +14,4 @@ seed: run.jarbas
 run.devel: collectstatic
 
 build.elm:
-docker-compose run elm
+	docker-compose run elm
