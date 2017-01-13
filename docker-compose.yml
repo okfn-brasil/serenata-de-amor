@@ -6,12 +6,13 @@ services:
       dockerfile: Dockerfile
     volumes:
        - "staticfiles:/code/staticfiles"
-       - "assets:/code/jarbas/frontend/static"
+       - "./:/code"
     environment:
        - SECRET_KEY=lets-rock
        - DATABASE_URL=postgres://jarbas:mysecretpassword@db/jarbas
        - CACHE_BACKEND=django.core.cache.backends.memcached.MemcachedCache
        - CACHE_LOCATION=cache:11211
+       - DEBUG=True
     depends_on:
        - elm
        - db
@@ -28,7 +29,6 @@ services:
       context: .
       dockerfile: Dockerfile-elm
     volumes:
-      - "assets:/assets/"
       - "./:/code"
   nginx:
     build:
