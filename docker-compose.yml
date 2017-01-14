@@ -30,6 +30,7 @@ services:
       dockerfile: Dockerfile-elm
     volumes:
       - "./:/code"
+    command: [npm, run, watch]
   nginx:
     build:
       context: .
