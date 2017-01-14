@@ -397,7 +397,7 @@ convertQuery query =
         |> List.map (\( key, value ) -> ( convertQueryKey key, value ))
 
 
-loadDocuments : Language -> String -> List ( String, String ) -> Cmd Msg
+loadDocuments : Language -> Maybe String -> List ( String, String ) -> Cmd Msg
 loadDocuments lang apiKey query =
     if List.isEmpty query then
         Cmd.none

@@ -58,8 +58,9 @@ updateFromFlags flags model =
             else
                 English
 
+        googleStreetViewApiKey : Maybe String
         googleStreetViewApiKey =
-            flags.googleStreetViewApiKey
+            Just flags.googleStreetViewApiKey
 
         newDocuments =
             Documents.Decoder.updateLanguage lang model.documents

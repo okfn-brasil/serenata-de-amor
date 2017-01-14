@@ -15,11 +15,13 @@ import Material.Typography as Typography
 
 {-| Generates a link to a Google Street View image:
 
-    >>> streetImageUrl "foobar" 42 3 "3.14" "1.99" 1
+    >>> streetImageUrl (Just "foobar") 42 3 "3.14" "1.99" 1
     "https://maps.googleapis.com/maps/api/streetview?size=42x3&location=3.14%2C1.99&fov=90&heading=1&pitch=10&key=foobar"
 
+    >>> streetImageUrl Nothing 42 3 "3.14" "1.99" 1
+    "https://maps.googleapis.com/maps/api/streetview?size=42x3&location=3.14%2C1.99&fov=90&heading=1&pitch=10&key="
 -}
-streetImageUrl : String -> Int -> Int -> String -> String -> Int -> String
+streetImageUrl : Maybe String -> Int -> Int -> String -> String -> Int -> String
 streetImageUrl apiKey width height latitude longitude heading =
     url
         "https://maps.googleapis.com/maps/api/streetview"
@@ -28,11 +30,11 @@ streetImageUrl apiKey width height latitude longitude heading =
         , ( "fov", "90" )
         , ( "heading", toString heading )
         , ( "pitch", "10" )
-        , ( "key", apiKey )
+        , ( "key", Maybe.withDefault "" apiKey )
         ]
 
 
-streetImageTag : String -> Maybe String -> Maybe String -> Int -> Html.Html Msg
+streetImageTag : Maybe String -> Maybe String -> Maybe String -> Int -> Html.Html Msg
 streetImageTag apiKey latitude longitude heading =
     case latitude of
         Just lat ->
@@ -59,7 +61,7 @@ streetImageTag apiKey latitude longitude heading =
             text ""
 
 
-viewImage : String -> Company -> Html.Html Msg
+viewImage : Maybe String -> Company -> Html.Html Msg
 viewImage apiKey company =
     let
         images =
@@ -80,7 +82,7 @@ viewDate lang maybeDate =
             ""
 
 
-viewCompany : Language -> String -> Company -> Html.Html Msg
+viewCompany : Language -> Maybe String -> Company -> Html.Html Msg
 viewCompany lang apiKey company =
     let
         labels =

@@ -68,7 +68,7 @@ type alias Model =
     , showForm : Bool
     , loading : Bool
     , error : Maybe Http.Error
-    , googleStreetViewApiKey : String
+    , googleStreetViewApiKey : Maybe String
     , lang : Language
     , mdl : Material.Model
     }
@@ -81,4 +81,4 @@ results =
 
 model : Model
 model =
-    Model results Inputs.model True False Nothing "" English Material.model
+    Model results Inputs.model True False Nothing Nothing English Material.model

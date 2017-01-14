@@ -9,7 +9,7 @@ import Material
 type alias Model =
     { documents : Documents.Model.Model
     , layout : Layout.Model
-    , googleStreetViewApiKey : String
+    , googleStreetViewApiKey : Maybe String
     , lang : Language
     , mdl : Material.Model
     }
@@ -17,4 +17,4 @@ type alias Model =
 
 model : Model
 model =
-    Model Documents.Model.model Layout.model "" English Material.model
+    Model Documents.Model.model Layout.model Nothing English Material.model

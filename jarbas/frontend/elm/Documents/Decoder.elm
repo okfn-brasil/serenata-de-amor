@@ -51,7 +51,7 @@ getPage query =
                 Nothing
 
 
-decoder : Language -> String -> List ( String, String ) -> Decoder Results
+decoder : Language -> Maybe String -> List ( String, String ) -> Decoder Results
 decoder lang apiKey query =
     let
         current =
@@ -67,7 +67,7 @@ decoder lang apiKey query =
             |> hardcoded ""
 
 
-singleDecoder : Language -> String -> Decoder Document
+singleDecoder : Language -> Maybe String -> Decoder Document
 singleDecoder lang apiKey =
     let
         supplier =
@@ -149,6 +149,6 @@ updateLanguage lang model =
         { model | lang = lang, inputs = newInputs, results = newResults }
 
 
-updateGoogleStreetViewApiKey : String -> Model -> Model
+updateGoogleStreetViewApiKey : Maybe String -> Model -> Model
 updateGoogleStreetViewApiKey key model =
     { model | googleStreetViewApiKey = key }

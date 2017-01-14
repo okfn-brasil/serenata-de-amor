@@ -48,7 +48,7 @@ type alias Model =
     , loading : Bool
     , loaded : Bool
     , error : Maybe Http.Error
-    , googleStreetViewApiKey : String
+    , googleStreetViewApiKey : Maybe String
     , lang : Language
     , mdl : Material.Model
     }
@@ -56,4 +56,4 @@ type alias Model =
 
 model : Model
 model =
-    Model Nothing False False Nothing "" English Material.model
+    Model Nothing False False Nothing Nothing English Material.model
