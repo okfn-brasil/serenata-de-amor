@@ -1,8 +1,8 @@
 module Update exposing (Flags, Msg(..), update, urlUpdate, updateFromFlags)
 
-import Documents.Decoder
-import Documents.Inputs.Update
-import Documents.Update
+import Reimbursement.Decoder
+import Reimbursement.Inputs.Update
+import Reimbursement.Update
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 import Model exposing (Model, model)
@@ -17,7 +17,7 @@ type alias Flags =
 
 
 type Msg
-    = DocumentsMsg Documents.Update.Msg
+    = ReimbursementMsg Reimbursement.Update.Msg
     | ChangeUrl Navigation.Location
     | LayoutMsg Msg
     | Mdl (Material.Msg Msg)
@@ -26,18 +26,18 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        DocumentsMsg msg ->
+        ReimbursementMsg msg ->
             let
                 updated =
-                    Documents.Update.update msg model.documents
+                    Reimbursement.Update.update msg model.reimbursements
 
-                documents =
+                reimbursements =
                     Tuple.first updated
 
                 cmd =
-                    Cmd.map DocumentsMsg <| Tuple.second updated
+                    Cmd.map ReimbursementMsg <| Tuple.second updated
             in
-                ( { model | documents = documents }, cmd )
+                ( { model | reimbursements = reimbursements }, cmd )
 
         ChangeUrl location ->
             urlUpdate location model
@@ -62,9 +62,9 @@ updateFromFlags flags model =
         googleStreetViewApiKey =
             Just flags.googleStreetViewApiKey
 
-        newDocuments =
-            Documents.Decoder.updateLanguage lang model.documents
-                |> Documents.Decoder.updateGoogleStreetViewApiKey googleStreetViewApiKey
+        newReimbursements =
+            Reimbursement.Decoder.updateLanguage lang model.reimbursements
+                |> Reimbursement.Decoder.updateGoogleStreetViewApiKey googleStreetViewApiKey
 
         layout =
             model.layout
@@ -73,7 +73,7 @@ updateFromFlags flags model =
             { layout | lang = lang }
     in
         { model
-            | documents = newDocuments
+            | reimbursements = newReimbursements
             , layout = newLayout
             , googleStreetViewApiKey = googleStreetViewApiKey
             , lang = lang
@@ -126,25 +126,25 @@ urlUpdate location model =
             else
                 True
 
-        documents =
+        reimbursements =
             if List.isEmpty query then
-                Documents.Update.newSearch model.documents
+                Reimbursement.Update.newSearch model.reimbursements
             else
-                model.documents
+                model.reimbursements
 
         inputs =
-            Documents.Inputs.Update.updateFromQuery documents.inputs query
+            Reimbursement.Inputs.Update.updateFromQuery reimbursements.inputs query
 
         results =
-            documents.results
+            reimbursements.results
 
         newResults =
-            { results | loadingPage = Documents.Decoder.getPage query }
+            { results | loadingPage = Reimbursement.Decoder.getPage query }
 
-        newDocuments =
-            { documents | inputs = inputs, results = newResults, loading = loading }
+        newReimbursements =
+            { reimbursements | inputs = inputs, results = newResults, loading = loading }
 
         cmd =
-            Documents.Update.loadDocuments model.lang model.googleStreetViewApiKey query
+            Reimbursement.Update.loadReimbursements model.lang model.googleStreetViewApiKey query
     in
-        ( { model | documents = newDocuments }, Cmd.map DocumentsMsg cmd )
+        ( { model | reimbursements = newReimbursements }, Cmd.map ReimbursementMsg cmd )

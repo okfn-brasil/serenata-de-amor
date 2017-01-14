@@ -64,8 +64,8 @@ type TranslationId
     | FieldLegOfTheTrip
     | FieldProbability
     | FieldSuspicions
-    | DocumentSource
-    | DocumentChamberOfDeputies
+    | ReimbursementSource
+    | ReimbursementChamberOfDeputies
     | ReceiptFetch
     | ReceiptAvailable
     | ReceiptNotAvailable
@@ -99,13 +99,13 @@ type TranslationId
     | CompanyFederalRevenue
     | ResultTitleSingular
     | ResultTitlePlural
-    | DocumentTitle
+    | ReimbursementTitle
     | Search
     | NewSearch
     | Loading
     | PaginationPage
     | PaginationOf
-    | DocumentNotFound
+    | ReimbursementNotFound
     | SameDayTitle
     | SameSubquotaTitle
     | BrazilianCurrency String
@@ -375,12 +375,12 @@ translate lang trans =
                         "Suspicions"
                         "Suspeitas"
 
-                DocumentSource ->
+                ReimbursementSource ->
                     TranslationSet
                         "Source: "
                         "Fonte: "
 
-                DocumentChamberOfDeputies ->
+                ReimbursementChamberOfDeputies ->
                     TranslationSet
                         "Chamber of Deputies"
                         "Câmara dos Deputados"
@@ -540,7 +540,7 @@ translate lang trans =
                         "Federal Revenue of Brazil"
                         "Receita Federal"
 
-                DocumentTitle ->
+                ReimbursementTitle ->
                     TranslationSet
                         "Document #"
                         "Documento nº"
@@ -580,7 +580,7 @@ translate lang trans =
                         " of "
                         " de "
 
-                DocumentNotFound ->
+                ReimbursementNotFound ->
                     TranslationSet
                         "Document not found."
                         "Documento não encontrado."
