@@ -123,7 +123,18 @@ viewCompany lang apiKey company =
             Icon.view "store" [ Options.css "transform" "translateY(0.4rem)" ]
 
         title =
-            " " ++ (Maybe.withDefault "" company.name)
+            " " ++ (Maybe.withDefault "" company.name) ++ " "
+
+        location =
+            Options.styled
+                span
+                [ Typography.caption ]
+                [ [ company.city, company.state ]
+                    |> List.map (Maybe.withDefault "")
+                    |> List.filter (String.isEmpty >> not)
+                    |> String.join "/"
+                    |> text
+                ]
 
         source =
             "http://www.receita.fazenda.gov.br/PessoaJuridica/CNPJ/cnpjreva/cnpjreva_solicitacao2.asp"
@@ -133,7 +144,11 @@ viewCompany lang apiKey company =
             [ Options.styled
                 p
                 [ Typography.subhead ]
-                [ icon, text title, viewImage apiKey company ]
+                [ icon
+                , text title
+                , location
+                , viewImage apiKey company
+                ]
             , Options.styled div [] (rows ++ activities)
             , Options.styled
                 p

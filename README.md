@@ -37,9 +37,9 @@ Details from a specific reimbursement. If `receipt_url` wasn't fecthed yet, the 
 
 URL of the digitalized version of the receipt of this specific reimbursement.
 
-If `receipt_url` wasn't fecthed yet, the server **will** try to fetche it.
+If `receipt_url` wasn't fecthed yet, the server **will** try to fetch it.
 
-If you append the parameter `force` (i.e. `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/receipt/?force`) server will re-fetch the receipt URL.
+If you append the parameter `force` (i.e. `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/receipt/?force`) the server will re-fetch the receipt URL.
 
 Not all receipts are available, so this URL can be `null`.
 
@@ -59,7 +59,7 @@ Lists all reimbursements from a specific `year` and `applicant_id`.
 
 ##### Filtering
 
-All these endpoints accepts any combination of these filtering parameters by:
+All these endpoints accepts any combination of the following parameters:
 
 * `applicant_id`
 * `cnpj_cpf`
