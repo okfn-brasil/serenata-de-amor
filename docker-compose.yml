@@ -38,7 +38,7 @@ services:
     volumes:
       - "assets:/opt/jarbas/staticfiles"
     ports:
-      - "8080:80"
+      - "8000:80"
     depends_on:
       - "jarbas"
     networks:
