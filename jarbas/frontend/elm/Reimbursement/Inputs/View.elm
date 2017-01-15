@@ -3,7 +3,6 @@ module Reimbursement.Inputs.View exposing (correctedFieldIndex, matchDate, view)
 import Dict
 import Reimbursement.Fields as Fields
 import Html exposing (br, p, span, text)
-import Material
 import Material.Grid exposing (grid, cell, size, Device(..))
 import Material.Options as Options
 import Material.Textfield as Textfield

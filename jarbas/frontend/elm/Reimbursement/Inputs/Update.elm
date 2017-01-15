@@ -78,20 +78,15 @@ updateField model ( name, value ) =
 
 
 updateFromQuery : Model -> List ( String, String ) -> Model
-updateFromQuery model queryList =
-    let
-        query =
-            List.head queryList
+updateFromQuery model query =
+    case List.head query of
+        Just q ->
+            query
+                |> List.drop 1
+                |> updateFromQuery (updateField model q)
 
-        remaining =
-            List.drop 1 queryList
-    in
-        case query of
-            Just q ->
-                updateFromQuery (updateField model q) remaining
-
-            Nothing ->
-                model
+        Nothing ->
+            model
 
 
 toQuery : Model -> List ( String, String )
