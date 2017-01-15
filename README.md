@@ -147,7 +147,7 @@ docker-compose run --rm jarbas python manage.py ceapdatasets
 docker-compose run --rm jarbas python manage.py collectstatic --no-input
 ```
 
-You can access it at [`localhost:80`](http://localhost:80/). However your database starts empty and you still have to collect your static files:
+You can access it at [`localhost:80`](http://localhost:8080/). However your database starts empty, but you can use sample data to development using this command:
 
 ```console
 make seed.sample
