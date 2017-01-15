@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>2016-12-12-marcusrehm-federal-budget-companies-with-sanctions</title>
+<title>2017-01-15-marcusrehm-congressperson-reimbursements-from-companies-with-sanctions</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -11765,7 +11765,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Amendments-with-Federal-Budget">Amendments with Federal Budget<a class="anchor-link" href="#Amendments-with-Federal-Budget">&#182;</a></h3>
+<h2 id="Reimbursements">Reimbursements<a class="anchor-link" href="#Reimbursements">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -11774,14 +11774,13 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">amendments</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-22-amendments.xz&#39;</span><span class="p">,</span> 
-                         <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;proposal_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                               <span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                               <span class="s1">&#39;amendment_program_code&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                               <span class="s1">&#39;amendment_proposal_tranfer_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span>
-                               <span class="s1">&#39;amendment_tranfer_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">})</span>
-<span class="n">amendments</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">amendments</span><span class="o">.</span><span class="n">shape</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">reimbursements</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-08-08-current-year.xz&#39;</span><span class="p">,</span>
+                                              <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                                                     <span class="s1">&#39;document_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                                                     <span class="s1">&#39;reimbursement_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">},</span>
+                                              <span class="n">parse_dates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">],</span> 
+                                              <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">reimbursements</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
 </div>
@@ -11796,7 +11795,7 @@ div#notebook {
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(81169, 10)</pre>
+<pre>(185459, 29)</pre>
 </div>
 
 </div>
@@ -11810,7 +11809,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">amendments</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">reimbursements</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -11825,553 +11824,36 @@ div#notebook {
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>proposal_id                                                      588275
-proponent_qualification             parliamentary amendment beneficiary
-amendment_program_code                                    5100020120077
-amendment_number                                               31250010
-congressperson_name                                    ANTONIO BALHMANN
-amendment_beneficiary                                    07535446000160
-tax_indicative                                                       no
-congressperson_type                                          individual
-amendment_proposal_tranfer_value                                 292500
-amendment_tranfer_value                                          292500
-Name: 0, dtype: object</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Agreements-made-with-Federal-Budget">Agreements made with Federal Budget<a class="anchor-link" href="#Agreements-made-with-Federal-Budget">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-22-agreements.xz&#39;</span><span class="p">,</span> 
-                         <span class="n">usecols</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span> <span class="s1">&#39;proposal_id&#39;</span><span class="p">,</span> 
-                                   <span class="s1">&#39;agreement_end_date&#39;</span><span class="p">,</span><span class="s1">&#39;date_signed&#39;</span><span class="p">,</span> <span class="s1">&#39;situation&#39;</span><span class="p">]),</span>
-                         <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;agreement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span> 
-                                <span class="s1">&#39;proposal_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                                <span class="s1">&#39;situation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span> 
-                         <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;agreement_end_date&#39;</span><span class="p">,</span> <span class="s1">&#39;date_signed&#39;</span><span class="p">],</span>
-                         <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">agreements</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">agreements</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[4]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(105276, 5)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>agreement_number                                        782624
-proposal_id                                             716232
-date_signed                                2014-01-01 00:00:00
-situation             Prestação de Contas enviada para Análise
-agreement_end_date                         2014-01-09 00:00:00
-Name: 0, dtype: object</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Agreements-related-to-amendments">Agreements related to amendments<a class="anchor-link" href="#Agreements-related-to-amendments">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_amendments</span> <span class="o">=</span> <span class="n">agreements</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">amendments</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;proposal_id&#39;</span><span class="p">)</span>
-<span class="n">agreements_with_amendments</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;amendment_number&#39;</span><span class="p">,</span> 
-                                                                <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> 
-                                                                <span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span>
-                                                                <span class="s1">&#39;date_signed&#39;</span><span class="p">,</span> 
-                                                                <span class="s1">&#39;agreement_end_date&#39;</span><span class="p">,</span>
-                                                                <span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span> 
-                                                                <span class="s1">&#39;situation&#39;</span><span class="p">])</span>
-<span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(44072, 7)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[7]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>amendment_number                                                  81001455
-congressperson_name      COMISSAO MISTA DE PLANOS, ORCAMENTOS PUBLICOS ...
-amendment_beneficiary                                       11354180000126
-date_signed                                            2016-01-02 00:00:00
-agreement_end_date                                     2018-09-29 00:00:00
-agreement_number                                                    818977
-situation                                                      Em execução
-Name: 0, dtype: object</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr>
-<h2 id="Impeded-Non-Profit-Entities---CEPIM">Impeded Non-Profit Entities - CEPIM<a class="anchor-link" href="#Impeded-Non-Profit-Entities---CEPIM">&#182;</a></h2><p>This dataset gather Non-profit entities that are prevented from entering into agreements, onlending agreements or terms of partnership with the federal public administration.</p>
-<p>Origin of the information: Controladoria-Geral da União - CGU (Comptroller General of the Union)</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">impeded_non_profit_entities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-20-impeded-non-profit-entities.xz&#39;</span><span class="p">,</span> 
-                                              <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                                                     <span class="s1">&#39;agreement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">})</span>
-<span class="n">impeded_non_profit_entities</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(4591, 5)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">impeded_non_profit_entities</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>company_cnpj                                            00002444000166
-compay_name          SINDICATO REGIONAL DOS TRABALHADORES E TRABALH...
-agreement_number                                                629097
-grating_body                     MINISTERIO DO DESENVOLVIMENTO AGRARIO
-impediment_reason              INEXECUÇÃO DO OBJETO (TOTAL OU PARCIAL)
-Name: 0, dtype: object</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>First we need to get the agreements in which entities were impeded:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">impeded_entities_w_start_date</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                                    <span class="n">impeded_non_profit_entities</span><span class="p">,</span> 
-                                    <span class="n">left_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span> 
-                                              <span class="s1">&#39;agreement_number&#39;</span><span class="p">]),</span> 
-                                    <span class="n">right_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">,</span> 
-                                               <span class="s1">&#39;agreement_number&#39;</span><span class="p">]))</span>
-
-<span class="n">impeded_entities_w_start_date</span> <span class="o">=</span> <span class="n">impeded_entities_w_start_date</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">,</span>
-                                                                     <span class="s1">&#39;compay_name&#39;</span><span class="p">,</span>
-                                                                     <span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span>
-                                                                     <span class="s1">&#39;agreement_end_date&#39;</span><span class="p">,</span>
-                                                                     <span class="s1">&#39;grating_body&#39;</span><span class="p">,</span>
-                                                                     <span class="s1">&#39;impediment_reason&#39;</span><span class="p">])</span>
-
-<span class="n">impeded_entities_w_start_date</span> <span class="o">=</span> <span class="n">impeded_entities_w_start_date</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> 
-                                             <span class="p">{</span><span class="s1">&#39;agreement_end_date&#39;</span><span class="p">:</span><span class="s1">&#39;date_impended&#39;</span><span class="p">,</span> 
-                                              <span class="s1">&#39;agreement_number&#39;</span><span class="p">:</span> <span class="s1">&#39;impended_agreement&#39;</span><span class="p">})</span>
-<span class="n">impeded_entities_w_start_date</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>company_cnpj                                          08366579000112
-compay_name           INSTITUTO CULTURAL AFRO-BRASILEIRO OLUFON DEYI
-impended_agreement                                            748628
-date_impended                                    2011-07-06 00:00:00
-grating_body                                PRESIDENCIA DA REPUBLICA
-impediment_reason                            MOTIVO NÃO ESPECIFICADO
-Name: 0, dtype: object</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Because the dataset doesn't gives the date when the entity becomes impended, we are using the end date of the agreement where the entity was impended as a minimum date called here as <strong>date_impended</strong>.</p>
-<p>So <strong>date_impended</strong> means that we are concerned only with agreements signed after this date.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                                        <span class="n">impeded_entities_w_start_date</span><span class="p">,</span> 
-                                        <span class="n">left_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">]),</span> 
-                                        <span class="n">right_on</span><span class="o">=</span><span class="p">([</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">]))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Querying-the-agreements-signed-after-the-entities-were-impended">Querying the agreements signed after the entities were impended<a class="anchor-link" href="#Querying-the-agreements-signed-after-the-entities-were-impended">&#182;</a></h4><p>Below we have a list of agreements that are still in execution and are related to the amendments that have as beneficiaries non-profit entities that are impeded. In addition, the difference between the date of signature of the agreements in execution and the date of entities disability is less than 2 years.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;situation == </span><span class="se">\&#39;</span><span class="s1">Em execução</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
-<span class="s1">                                 date_impended &lt; date_signed and </span><span class="se">\</span>
-<span class="s1">                                 date_signed.dt.year - date_impended.dt.year &lt; 2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(7, 13)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;situation == </span><span class="se">\&#39;</span><span class="s1">Em execução</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
-<span class="s1">                                 date_impended &lt; date_signed and </span><span class="se">\</span>
-<span class="s1">                                 date_signed.dt.year - date_impended.dt.year &lt; 2&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[13]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>amendment_number</th>
-      <th>congressperson_name</th>
-      <th>amendment_beneficiary</th>
-      <th>date_signed</th>
-      <th>agreement_end_date</th>
-      <th>agreement_number</th>
-      <th>situation</th>
-      <th>company_cnpj</th>
-      <th>compay_name</th>
-      <th>impended_agreement</th>
-      <th>date_impended</th>
-      <th>grating_body</th>
-      <th>impediment_reason</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>6</th>
-      <td>36500017</td>
-      <td>OSMAR SERRAGLIO</td>
-      <td>76575604000128</td>
-      <td>2011-12-29</td>
-      <td>2017-01-09</td>
-      <td>756696</td>
-      <td>Em execução</td>
-      <td>76575604000128</td>
-      <td>SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA</td>
-      <td>747398</td>
-      <td>2011-09-11</td>
-      <td>MINISTERIO DO TURISMO</td>
-      <td>MOTIVO NÃO ESPECIFICADO</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>33090023</td>
-      <td>NELSON MEURER</td>
-      <td>76575604000128</td>
-      <td>2011-12-29</td>
-      <td>2017-04-16</td>
-      <td>757799</td>
-      <td>Em execução</td>
-      <td>76575604000128</td>
-      <td>SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA</td>
-      <td>747398</td>
-      <td>2011-09-11</td>
-      <td>MINISTERIO DO TURISMO</td>
-      <td>MOTIVO NÃO ESPECIFICADO</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>24050011</td>
-      <td>LUIZ CARLOS SETIM</td>
-      <td>76575604000128</td>
-      <td>2011-12-29</td>
-      <td>2017-04-16</td>
-      <td>757828</td>
-      <td>Em execução</td>
-      <td>76575604000128</td>
-      <td>SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA</td>
-      <td>747398</td>
-      <td>2011-09-11</td>
-      <td>MINISTERIO DO TURISMO</td>
-      <td>MOTIVO NÃO ESPECIFICADO</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>10560010</td>
-      <td>SERGIO SOUZA</td>
-      <td>76575604000128</td>
-      <td>2011-12-29</td>
-      <td>2017-05-15</td>
-      <td>757915</td>
-      <td>Em execução</td>
-      <td>76575604000128</td>
-      <td>SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA</td>
-      <td>747398</td>
-      <td>2011-09-11</td>
-      <td>MINISTERIO DO TURISMO</td>
-      <td>MOTIVO NÃO ESPECIFICADO</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>33320012</td>
-      <td>RICARDO BARROS</td>
-      <td>76575604000128</td>
-      <td>2011-12-29</td>
-      <td>2017-05-20</td>
-      <td>758001</td>
-      <td>Em execução</td>
-      <td>76575604000128</td>
-      <td>SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA</td>
-      <td>747398</td>
-      <td>2011-09-11</td>
-      <td>MINISTERIO DO TURISMO</td>
-      <td>MOTIVO NÃO ESPECIFICADO</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>20380001</td>
-      <td>FLAVIO JOSE ARNS</td>
-      <td>76575604000128</td>
-      <td>2011-12-29</td>
-      <td>2017-04-16</td>
-      <td>758030</td>
-      <td>Em execução</td>
-      <td>76575604000128</td>
-      <td>SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA</td>
-      <td>747398</td>
-      <td>2011-09-11</td>
-      <td>MINISTERIO DO TURISMO</td>
-      <td>MOTIVO NÃO ESPECIFICADO</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>31760009</td>
-      <td>DILCEU SPERAFICO</td>
-      <td>76575604000128</td>
-      <td>2011-12-29</td>
-      <td>2017-03-31</td>
-      <td>760953</td>
-      <td>Em execução</td>
-      <td>76575604000128</td>
-      <td>SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA</td>
-      <td>747398</td>
-      <td>2011-09-11</td>
-      <td>MINISTERIO DO TURISMO</td>
-      <td>MOTIVO NÃO ESPECIFICADO</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+<pre>document_id                                                             5970849
+congressperson_name                                           ABEL MESQUITA JR.
+congressperson_id                                                        178957
+congressperson_document                                                       1
+term                                                                       2015
+state                                                                        RR
+party                                                                       DEM
+term_id                                                                      55
+subquota_number                                                               1
+subquota_description          Maintenance of office supporting parliamentary...
+subquota_group_id                                                             0
+subquota_group_description                                                  NaN
+supplier                                COMPANHIA DE AGUAS E ESGOTOS DE RORAIMA
+cnpj_cpf                                                         05939467000115
+document_number                                                          146439
+document_type                                                                 0
+issue_date                                                  2016-03-12 00:00:00
+document_value                                                            38.84
+remark_value                                                                1.6
+net_value                                                                 37.24
+month                                                                         3
+year                                                                       2016
+installment                                                                   0
+passenger                                                                   NaN
+leg_of_the_trip                                                             NaN
+batch_number                                                            1282185
+reimbursement_number                                                       5417
+reimbursement_value                                                         NaN
+applicant_id                                                               3074
+Name: 1, dtype: object</pre>
 </div>
 
 </div>
@@ -12394,7 +11876,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">inident_and_suspended_companies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-21-inident-and-suspended-companies.xz&#39;</span><span class="p">,</span>
@@ -12423,7 +11905,7 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[4]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12438,7 +11920,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">inident_and_suspended_companies</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -12452,7 +11934,7 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12482,16 +11964,26 @@ Name: 0, dtype: object</pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Querying-the-reimbursements-from-companies-suspended">Querying the reimbursements from companies suspended<a class="anchor-link" href="#Querying-the-reimbursements-from-companies-suspended">&#182;</a></h4><p>Below we have a list of reibursements from dates where the suplier is listed in CEIS dataset.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">reimbursements_from_inident_companies</span> <span class="o">=</span> <span class="n">reimbursements</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
                                         <span class="n">inident_and_suspended_companies</span><span class="p">,</span> 
-                                        <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span> 
+                                        <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> 
                                         <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;sanctioned_cnpj_cpf&#39;</span><span class="p">)</span>
-<span class="n">agreements_with_suspended_companies</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">reimbursements_from_inident_companies</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
 </div>
@@ -12502,11 +11994,11 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(24, 24)</pre>
+<pre>(44, 46)</pre>
 </div>
 
 </div>
@@ -12520,21 +12012,20 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Querying-the-agreements-still-running-after-entities-were-suspended">Querying the agreements still running after entities were suspended<a class="anchor-link" href="#Querying-the-agreements-still-running-after-entities-were-suspended">&#182;</a></h4><p>Below we have a list of agreements that are still in execution and which the signed date are between sanction's start and end date.</p>
+<p>Now from the selected reimbursements, we get only the ones made between time the saction is valid.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;entity_type == </span><span class="se">\&#39;</span><span class="s1">Juridica</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
-<span class="s1">                                           situation == </span><span class="se">\&#39;</span><span class="s1">Em execução</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
-<span class="s1">                                           sanction_start_date &lt;= date_signed and </span><span class="se">\</span>
-<span class="s1">                                           date_signed &lt;= sanction_end_date&#39;</span>
-                                         <span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">suspect_reimbursements</span> <span class="o">=</span> <span class="n">reimbursements_from_inident_companies</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+                                           <span class="s1">&#39;sanction_start_date &lt;= issue_date and </span><span class="se">\</span>
+<span class="s1">                                           issue_date &lt;= sanction_end_date&#39;</span><span class="p">)</span>
+<span class="n">suspect_reimbursements</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
 </div>
@@ -12545,11 +12036,11 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[7]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(6, 24)</pre>
+<pre>(16, 46)</pre>
 </div>
 
 </div>
@@ -12560,44 +12051,30 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span> <span class="o">=</span> <span class="n">agreements_with_suspended_companies</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-                                        <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;date_signed&#39;</span><span class="p">:</span><span class="s1">&#39;agreement_date_signed&#39;</span><span class="p">})</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_suspended_companies</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;entity_type == </span><span class="se">\&#39;</span><span class="s1">Juridica</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
-<span class="s1">                                          situation == </span><span class="se">\&#39;</span><span class="s1">Em execução</span><span class="se">\&#39;</span><span class="s1"> and </span><span class="se">\</span>
-<span class="s1">                                          sanction_start_date &lt;= agreement_date_signed and </span><span class="se">\</span>
-<span class="s1">                                          agreement_date_signed &lt;= sanction_end_date&#39;</span>
-                                         <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;amendment_number&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;agreement_number&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;sanctioned_cnpj_cpf&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;name_given_by_sanctioning_body&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;company_name_receita_database&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;trading_name_receita_database&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;process_number&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;agreement_date_signed&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;sanction_start_date&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;sanction_end_date&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;sanction_type&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;sanctioning_body&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;state_of_sanctioning_body&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;data_source&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;data_source_date&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;published_date&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">suspect_reimbursements</span><span class="o">.</span><span class="n">filter</span><span class="p">([</span> <span class="s1">&#39;document_id&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;congressperson_id&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;congressperson_document&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;term&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;subquota_description&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;subquota_group_description&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;supplier&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;document_number&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;document_type&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;document_value&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;name_given_by_sanctioning_body&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;company_name_receita_database&#39;</span><span class="p">,</span> 
+                                <span class="s1">&#39;trading_name_receita_database&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;process_number&#39;</span><span class="p">,</span> 
+                                <span class="s1">&#39;sanction_type&#39;</span><span class="p">,</span> 
+                                <span class="s1">&#39;sanction_start_date&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;sanction_end_date&#39;</span><span class="p">,</span> 
+                                <span class="s1">&#39;sanctioning_body&#39;</span><span class="p">])</span>
 </pre></div>
 
 </div>
@@ -12608,7 +12085,7 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[19]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12616,148 +12093,417 @@ Name: 0, dtype: object</pre>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>amendment_number</th>
-      <th>agreement_number</th>
+      <th>document_id</th>
       <th>congressperson_name</th>
-      <th>sanctioned_cnpj_cpf</th>
+      <th>congressperson_id</th>
+      <th>congressperson_document</th>
+      <th>term</th>
+      <th>subquota_description</th>
+      <th>subquota_group_description</th>
+      <th>supplier</th>
+      <th>cnpj_cpf</th>
+      <th>document_number</th>
+      <th>...</th>
+      <th>issue_date</th>
+      <th>document_value</th>
       <th>name_given_by_sanctioning_body</th>
       <th>company_name_receita_database</th>
       <th>trading_name_receita_database</th>
       <th>process_number</th>
-      <th>agreement_date_signed</th>
+      <th>sanction_type</th>
       <th>sanction_start_date</th>
       <th>sanction_end_date</th>
-      <th>sanction_type</th>
       <th>sanctioning_body</th>
-      <th>state_of_sanctioning_body</th>
-      <th>data_source</th>
-      <th>data_source_date</th>
-      <th>published_date</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>28160003</td>
-      <td>819313</td>
-      <td>ROBERTO DE LUCENA</td>
-      <td>67662437000161</td>
-      <td>Jose Carlos Mendes</td>
-      <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
-      <td>62701200600070140000000000000</td>
-      <td>2015-04-11</td>
-      <td>2010-11-11</td>
-      <td>2020-11-11</td>
-      <td>Proibição - Lei de Improbidade</td>
-      <td>Justiça Estadual</td>
-      <td></td>
-      <td>Conselho Nacional de Justiça</td>
-      <td>2011-12-31 00:00:00</td>
-      <td></td>
+      <td>5914601</td>
+      <td>ABEL MESQUITA JR.</td>
+      <td>178957.0</td>
+      <td>1.0</td>
+      <td>2015</td>
+      <td>Consultancy, research and technical work</td>
+      <td>NaN</td>
+      <td>EFZ COMERCIO E REPRESENTAÇÃO LTDA</td>
+      <td>16923719000134</td>
+      <td>2061</td>
+      <td>...</td>
+      <td>2016-02-17</td>
+      <td>20000.00</td>
+      <td>EFZ COMÉRCIO E REPRESENTAÇÕES LTDA</td>
+      <td>EFZ COMERCIO E REPRESENTACAO EIRELI - ME</td>
+      <td>A ! REPRESENTACOES</td>
+      <td>(não informado)</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2015-11-30</td>
+      <td>2017-11-29</td>
+      <td>FUNDAÇÃO UNIVERSIDADE DE BRASÍLIA</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>28070006</td>
-      <td>803313</td>
-      <td>MARA GABRILLI</td>
-      <td>67662437000161</td>
-      <td>Jose Carlos Mendes</td>
-      <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
-      <td>62701200600070140000000000000</td>
-      <td>2014-07-16</td>
-      <td>2010-11-11</td>
-      <td>2020-11-11</td>
-      <td>Proibição - Lei de Improbidade</td>
-      <td>Justiça Estadual</td>
-      <td></td>
-      <td>Conselho Nacional de Justiça</td>
-      <td>2011-12-31 00:00:00</td>
-      <td></td>
+      <td>5931084</td>
+      <td>REMÍDIO MONAI</td>
+      <td>178960.0</td>
+      <td>7.0</td>
+      <td>2015</td>
+      <td>Publicity of parliamentary activity</td>
+      <td>NaN</td>
+      <td>EFZ COMERCIO E REPRESENTAÇÃO LTDA</td>
+      <td>16923719000134</td>
+      <td>2076</td>
+      <td>...</td>
+      <td>2016-03-03</td>
+      <td>15000.00</td>
+      <td>EFZ COMÉRCIO E REPRESENTAÇÕES LTDA</td>
+      <td>EFZ COMERCIO E REPRESENTACAO EIRELI - ME</td>
+      <td>A ! REPRESENTACOES</td>
+      <td>(não informado)</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2015-11-30</td>
+      <td>2017-11-29</td>
+      <td>FUNDAÇÃO UNIVERSIDADE DE BRASÍLIA</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>33600004</td>
-      <td>831772</td>
-      <td>SILVIO TORRES</td>
-      <td>67662437000161</td>
-      <td>Jose Carlos Mendes</td>
-      <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
-      <td>62701200600070140000000000000</td>
-      <td>2016-05-17</td>
-      <td>2010-11-11</td>
-      <td>2020-11-11</td>
-      <td>Proibição - Lei de Improbidade</td>
-      <td>Justiça Estadual</td>
-      <td></td>
-      <td>Conselho Nacional de Justiça</td>
-      <td>2011-12-31 00:00:00</td>
-      <td></td>
+      <th>3</th>
+      <td>5982793</td>
+      <td>ADEMIR CAMILO</td>
+      <td>133374.0</td>
+      <td>520.0</td>
+      <td>2015</td>
+      <td>Congressperson meal</td>
+      <td>NaN</td>
+      <td>Reis &amp; Acquaviva Comércio Ltda.</td>
+      <td>14954288000148</td>
+      <td>224070</td>
+      <td>...</td>
+      <td>2016-03-12</td>
+      <td>28.00</td>
+      <td>POUSO ALEGRE FOODS LTDA. ME</td>
+      <td>POUSO ALEGRE FOODS LTDA  - ME</td>
+      <td>SUBWAY POUSO ALEGRE</td>
+      <td>10831.722122/2014-35</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2015-12-18</td>
+      <td>2017-12-17</td>
+      <td>Receita Federal do Brasil</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>25410001</td>
-      <td>765683</td>
-      <td>CANDIDO VACCAREZZA</td>
-      <td>67662437000161</td>
-      <td>Jose Carlos Mendes</td>
-      <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
-      <td>62701200600070140000000000000</td>
-      <td>2011-12-30</td>
-      <td>2010-11-11</td>
-      <td>2020-11-11</td>
-      <td>Proibição - Lei de Improbidade</td>
-      <td>Justiça Estadual</td>
-      <td></td>
-      <td>Conselho Nacional de Justiça</td>
-      <td>2011-12-31 00:00:00</td>
-      <td></td>
+      <td>5982793</td>
+      <td>ADEMIR CAMILO</td>
+      <td>133374.0</td>
+      <td>520.0</td>
+      <td>2015</td>
+      <td>Congressperson meal</td>
+      <td>NaN</td>
+      <td>Reis &amp; Acquaviva Comércio Ltda.</td>
+      <td>14954288000148</td>
+      <td>224070</td>
+      <td>...</td>
+      <td>2016-03-12</td>
+      <td>28.00</td>
+      <td>POUSO ALEGRE FOODS LTDA. ME</td>
+      <td>POUSO ALEGRE FOODS LTDA  - ME</td>
+      <td>SUBWAY POUSO ALEGRE</td>
+      <td>10814.729285/2014-57</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2015-01-23</td>
+      <td>2017-01-22</td>
+      <td>Receita Federal do Brasil</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>18180001</td>
-      <td>781641</td>
-      <td>NELSON MARQUEZELLI</td>
-      <td>67662437000161</td>
-      <td>Jose Carlos Mendes</td>
-      <td>MUNICIPIO DE EUCLIDES DA CUNHA PAULISTA</td>
-      <td>PREFEITURA MUNICIPAL DE EUCLIDES DA CUNHA PAUL...</td>
-      <td>62701200600070140000000000000</td>
-      <td>2012-12-31</td>
-      <td>2010-11-11</td>
-      <td>2020-11-11</td>
-      <td>Proibição - Lei de Improbidade</td>
-      <td>Justiça Estadual</td>
+      <td>6045571</td>
+      <td>ANGELA ALBINO</td>
+      <td>192120.0</td>
+      <td>559.0</td>
+      <td>2015</td>
+      <td>Terrestrial, maritime and fluvial tickets</td>
+      <td>NaN</td>
+      <td>REUNIDAS TRANSPORTES COLETIVOS</td>
+      <td>83054395000132</td>
+      <td>094743</td>
+      <td>...</td>
+      <td>2016-06-27</td>
+      <td>45.75</td>
+      <td>Reunidas S.A. Transportes de Coletivos</td>
+      <td>REUNIDAS S A TRANSPORTES COLETIVOS</td>
       <td></td>
-      <td>Conselho Nacional de Justiça</td>
-      <td>2011-12-31 00:00:00</td>
-      <td></td>
+      <td>50500.044460/2009-23</td>
+      <td>Inidoneidade - Lei da ANTT e ANTAQ</td>
+      <td>2014-10-15</td>
+      <td>2017-10-14</td>
+      <td>AGÊNCIA NACIONAL DE TRANSPORTES TERRESTRES</td>
     </tr>
     <tr>
-      <th>12</th>
-      <td>25310017</td>
-      <td>829062</td>
-      <td>PAULO MALUF</td>
-      <td>45131885000104</td>
-      <td>QUALITY SERVICE LIMPEZA E CONSERVAçãO</td>
-      <td>MUNICIPIO DE JALES</td>
-      <td>JALES GABINETE PREFEITO</td>
-      <td>00073084619988260297</td>
-      <td>2016-11-24</td>
-      <td>2015-09-24</td>
-      <td>2020-09-24</td>
-      <td>Proibição - Lei de Improbidade</td>
-      <td>Tribunal de Justiça do Estado de São Paulo / 1...</td>
-      <td>SP</td>
-      <td>Conselho Nacional de Justiça</td>
-      <td>2015-11-17 00:00:00</td>
+      <th>6</th>
+      <td>5972071</td>
+      <td>CELSO MALDANER</td>
+      <td>141405.0</td>
+      <td>472.0</td>
+      <td>2015</td>
+      <td>Watercraft renting or charter</td>
+      <td>NaN</td>
+      <td>REUNIDAS TRANSPORTES COLETIVOS</td>
+      <td>83054395000132</td>
+      <td>777393</td>
+      <td>...</td>
+      <td>2016-04-09</td>
+      <td>51.93</td>
+      <td>Reunidas S.A. Transportes de Coletivos</td>
+      <td>REUNIDAS S A TRANSPORTES COLETIVOS</td>
       <td></td>
+      <td>50500.044460/2009-23</td>
+      <td>Inidoneidade - Lei da ANTT e ANTAQ</td>
+      <td>2014-10-15</td>
+      <td>2017-10-14</td>
+      <td>AGÊNCIA NACIONAL DE TRANSPORTES TERRESTRES</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>5972059</td>
+      <td>CELSO MALDANER</td>
+      <td>141405.0</td>
+      <td>472.0</td>
+      <td>2015</td>
+      <td>Watercraft renting or charter</td>
+      <td>NaN</td>
+      <td>REUNIDAS TRANSPORTES COLETIVOS</td>
+      <td>83054395000132</td>
+      <td>777394</td>
+      <td>...</td>
+      <td>2016-04-10</td>
+      <td>111.35</td>
+      <td>Reunidas S.A. Transportes de Coletivos</td>
+      <td>REUNIDAS S A TRANSPORTES COLETIVOS</td>
+      <td></td>
+      <td>50500.044460/2009-23</td>
+      <td>Inidoneidade - Lei da ANTT e ANTAQ</td>
+      <td>2014-10-15</td>
+      <td>2017-10-14</td>
+      <td>AGÊNCIA NACIONAL DE TRANSPORTES TERRESTRES</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>5901395</td>
+      <td>MARCOS MONTES</td>
+      <td>141500.0</td>
+      <td>257.0</td>
+      <td>2015</td>
+      <td>Maintenance of office supporting parliamentary...</td>
+      <td>NaN</td>
+      <td>JEREMAIS RAIMUNDO VENANCIO</td>
+      <td>64183858615</td>
+      <td>01/2016</td>
+      <td>...</td>
+      <td>2016-02-01</td>
+      <td>1200.00</td>
+      <td>JEREMIAS RAIMUNDO VENâNCIO</td>
+      <td>JEREMIAS RAIMUNDO VENANCIO</td>
+      <td></td>
+      <td>0040090953387</td>
+      <td>Proibição - Lei de Improbidade</td>
+      <td>2015-12-16</td>
+      <td>2018-12-16</td>
+      <td>Tribunal de Justiça do Estado de Minas Gerais ...</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>5986940</td>
+      <td>MARCOS MONTES</td>
+      <td>141500.0</td>
+      <td>257.0</td>
+      <td>2015</td>
+      <td>Maintenance of office supporting parliamentary...</td>
+      <td>NaN</td>
+      <td>JEREMAIS RAIMUNDO VENANCIO</td>
+      <td>64183858615</td>
+      <td>sn</td>
+      <td>...</td>
+      <td>2016-05-02</td>
+      <td>1200.00</td>
+      <td>JEREMIAS RAIMUNDO VENâNCIO</td>
+      <td>JEREMIAS RAIMUNDO VENANCIO</td>
+      <td></td>
+      <td>0040090953387</td>
+      <td>Proibição - Lei de Improbidade</td>
+      <td>2015-12-16</td>
+      <td>2018-12-16</td>
+      <td>Tribunal de Justiça do Estado de Minas Gerais ...</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>6010353</td>
+      <td>MARCOS MONTES</td>
+      <td>141500.0</td>
+      <td>257.0</td>
+      <td>2015</td>
+      <td>Maintenance of office supporting parliamentary...</td>
+      <td>NaN</td>
+      <td>JEREMAIS RAIMUNDO VENANCIO</td>
+      <td>64183858615</td>
+      <td>sn</td>
+      <td>...</td>
+      <td>2016-05-31</td>
+      <td>1200.00</td>
+      <td>JEREMIAS RAIMUNDO VENâNCIO</td>
+      <td>JEREMIAS RAIMUNDO VENANCIO</td>
+      <td></td>
+      <td>0040090953387</td>
+      <td>Proibição - Lei de Improbidade</td>
+      <td>2015-12-16</td>
+      <td>2018-12-16</td>
+      <td>Tribunal de Justiça do Estado de Minas Gerais ...</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>6046147</td>
+      <td>ODELMO LEÃO</td>
+      <td>74752.0</td>
+      <td>248.0</td>
+      <td>2015</td>
+      <td>Maintenance of office supporting parliamentary...</td>
+      <td>NaN</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HS LTDA</td>
+      <td>14518825000107</td>
+      <td>00001586</td>
+      <td>...</td>
+      <td>2016-07-08</td>
+      <td>154.00</td>
+      <td>Ativa Alarmes e Monitoramento 24 hs. Ltda</td>
+      <td>ATIVA ALARMES E MONITORAMENTO 24 HRS LTDA - EPP</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HRS</td>
+      <td>17615-45.2015.4.01.8008</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2016-03-30</td>
+      <td>2018-03-29</td>
+      <td>Justiça Federal de Minas Gerais</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>5970425</td>
+      <td>ODELMO LEÃO</td>
+      <td>74752.0</td>
+      <td>248.0</td>
+      <td>2015</td>
+      <td>Security service provided by specialized company</td>
+      <td>NaN</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HS LTDA</td>
+      <td>14518825000107</td>
+      <td>00001483</td>
+      <td>...</td>
+      <td>2016-04-12</td>
+      <td>154.00</td>
+      <td>Ativa Alarmes e Monitoramento 24 hs. Ltda</td>
+      <td>ATIVA ALARMES E MONITORAMENTO 24 HRS LTDA - EPP</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HRS</td>
+      <td>17615-45.2015.4.01.8008</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2016-03-30</td>
+      <td>2018-03-29</td>
+      <td>Justiça Federal de Minas Gerais</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>5995066</td>
+      <td>ODELMO LEÃO</td>
+      <td>74752.0</td>
+      <td>248.0</td>
+      <td>2015</td>
+      <td>Security service provided by specialized company</td>
+      <td>NaN</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HS LTDA</td>
+      <td>14518825000107</td>
+      <td>00001529</td>
+      <td>...</td>
+      <td>2016-05-08</td>
+      <td>154.00</td>
+      <td>Ativa Alarmes e Monitoramento 24 hs. Ltda</td>
+      <td>ATIVA ALARMES E MONITORAMENTO 24 HRS LTDA - EPP</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HRS</td>
+      <td>17615-45.2015.4.01.8008</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2016-03-30</td>
+      <td>2018-03-29</td>
+      <td>Justiça Federal de Minas Gerais</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>6012145</td>
+      <td>ODELMO LEÃO</td>
+      <td>74752.0</td>
+      <td>248.0</td>
+      <td>2015</td>
+      <td>Security service provided by specialized company</td>
+      <td>NaN</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HS LTDA</td>
+      <td>14518825000107</td>
+      <td>00001537</td>
+      <td>...</td>
+      <td>2016-05-30</td>
+      <td>2527.00</td>
+      <td>Ativa Alarmes e Monitoramento 24 hs. Ltda</td>
+      <td>ATIVA ALARMES E MONITORAMENTO 24 HRS LTDA - EPP</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HRS</td>
+      <td>17615-45.2015.4.01.8008</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2016-03-30</td>
+      <td>2018-03-29</td>
+      <td>Justiça Federal de Minas Gerais</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>6021101</td>
+      <td>ODELMO LEÃO</td>
+      <td>74752.0</td>
+      <td>248.0</td>
+      <td>2015</td>
+      <td>Security service provided by specialized company</td>
+      <td>NaN</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HS LTDA</td>
+      <td>14518825000107</td>
+      <td>00001548</td>
+      <td>...</td>
+      <td>2016-05-06</td>
+      <td>154.00</td>
+      <td>Ativa Alarmes e Monitoramento 24 hs. Ltda</td>
+      <td>ATIVA ALARMES E MONITORAMENTO 24 HRS LTDA - EPP</td>
+      <td>ATIVA ALARMES MONITORAMENTO 24 HRS</td>
+      <td>17615-45.2015.4.01.8008</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2016-03-30</td>
+      <td>2018-03-29</td>
+      <td>Justiça Federal de Minas Gerais</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>5979304</td>
+      <td>ROGÉRIO PENINHA MENDONÇA</td>
+      <td>160651.0</td>
+      <td>483.0</td>
+      <td>2015</td>
+      <td>Maintenance of office supporting parliamentary...</td>
+      <td>NaN</td>
+      <td>ALIANÇA PAPELARIA E INFORMÁTICA</td>
+      <td>18960182000108</td>
+      <td>3298</td>
+      <td>...</td>
+      <td>2016-04-27</td>
+      <td>26.80</td>
+      <td>ALIANÇA COMÉRCIO DE PAPELARIA E INFORMÁTICA - ME</td>
+      <td>ALIANCA COMERCIO DE PAPELARIA EIRELI - ME</td>
+      <td>ALIANCA PAPELARIA</td>
+      <td>08190.047787/15-53</td>
+      <td>Suspensão - Lei de Licitações</td>
+      <td>2015-12-24</td>
+      <td>2016-12-23</td>
+      <td>MINISTÉRIO PÚBLICO DO DF E TERRITÓRIOS</td>
     </tr>
   </tbody>
 </table>
+<p>16 rows × 21 columns</p>
 </div>
 </div>
 
@@ -12772,185 +12518,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<hr>
-<h2 id="National-Registry-of-Punished-Companies---CNEP">National Registry of Punished Companies - CNEP<a class="anchor-link" href="#National-Registry-of-Punished-Companies---CNEP">&#182;</a></h2><p>The National Register of Punished Companies (CNEP) is an information bank maintained by the Federal Comptroller's Office (CGU), whose purpose is to consolidate the relationship of companies that have suffered any of the punishments provided in Law 12,846 / 2013 (Anti-Corruption Law).</p>
-<p>Origin of the information: Controladoria-Geral da União - CGU (Comptroller General of the Union)</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">punished_companies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-21-national-register-punished-companies.xz&#39;</span><span class="p">,</span>
-                                              <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sanctioned_cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                                                     <span class="s1">&#39;process_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span>
-                                              <span class="n">parse_dates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sanction_start_date&#39;</span><span class="p">,</span>
-                                                             <span class="s1">&#39;sanction_end_date&#39;</span><span class="p">,</span> 
-                                                             <span class="s1">&#39;data_source_date&#39;</span><span class="p">,</span>
-                                                             <span class="s1">&#39;published_date&#39;</span><span class="p">],</span> 
-                                              <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">punished_companies</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">punished_companies</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(9, 17)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">punished_companies</span><span class="p">[</span><span class="s1">&#39;sanctioned_cnpj_cpf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>8</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>As we can see above, this dataset has only 9 records listed and 8 companies.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">punished_companies</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[22]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>entity_type                                                                Juridica
-sanctioned_cnpj_cpf                                                  19823999000105
-name_given_by_sanctioning_body    ALIMENTARE SERVIÇOS DE RESTAURANTE E LANCHONET...
-company_name_receita_database     ALIMENTARE SERVICOS DE RESTAURANTE E LANCHONET...
-trading_name_receita_database                                                      
-process_number                                                        001/DFRC/2015
-sanction_type                                          Multa - Lei da Empresa Limpa
-sanction_start_date                                             2016-08-15 00:00:00
-sanction_end_date                                                                  
-sanctioning_body                  EMPRESA BRASILEIRA DE INFRA-ESTRUTURA AEROPORT...
-state_of_sanctioning_body                                                        DF
-data_source                       Empresa Brasileira de Infra-Estrutura Aeroport...
-data_source_date                                                2016-08-18 00:00:00
-published_date                                                  2016-08-15 00:00:00
-publication                              Diário Oficial da União Seção 3 Pagina 133
-detailing                                                                          
-Valor da Multa                                                              77556.8
-Name: 0, dtype: object</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Here we got the agreements related to these punished companies:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_punished_companies</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                                        <span class="n">punished_companies</span><span class="p">,</span> 
-                                        <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">,</span> 
-                                        <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;sanctioned_cnpj_cpf&#39;</span><span class="p">)</span>
-<span class="n">agreements_with_punished_companies</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[23]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(0, 24)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>As of 12/21/2016 there are no agreements related to these punished companies.</p>
+<p>The study above doesnt prove anything ilegal, but at least the congressperson should research about the company before use its services.</p>
 
 </div>
 </div>

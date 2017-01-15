@@ -49,7 +49,7 @@ agreements.iloc[0]
 
 # ### Agreements related to amendments
 
-# In[8]:
+# In[6]:
 
 agreements_with_amendments = agreements.merge(amendments, on='proposal_id')
 agreements_with_amendments = agreements_with_amendments.filter(['amendment_number', 
@@ -62,7 +62,7 @@ agreements_with_amendments = agreements_with_amendments.filter(['amendment_numbe
 agreements_with_amendments.shape
 
 
-# In[10]:
+# In[7]:
 
 agreements_with_amendments.iloc[0]
 
@@ -74,7 +74,7 @@ agreements_with_amendments.iloc[0]
 # 
 # Origin of the information: Controladoria-Geral da União - CGU (Comptroller General of the Union)
 
-# In[11]:
+# In[8]:
 
 impeded_non_profit_entities = pd.read_csv('../data/2016-12-20-impeded-non-profit-entities.xz', 
                                               dtype={'company_cnpj': np.str,
@@ -82,7 +82,7 @@ impeded_non_profit_entities = pd.read_csv('../data/2016-12-20-impeded-non-profit
 impeded_non_profit_entities.shape
 
 
-# In[12]:
+# In[9]:
 
 impeded_non_profit_entities.iloc[0]
 
@@ -90,7 +90,7 @@ impeded_non_profit_entities.iloc[0]
 # 
 # First we need to get the agreements in which entities were impeded:
 
-# In[14]:
+# In[10]:
 
 impeded_entities_w_start_date = agreements_with_amendments.merge(
                                     impeded_non_profit_entities, 
@@ -116,7 +116,7 @@ impeded_entities_w_start_date.iloc[0]
 # 
 # So **date_impended** means that we are concerned only with agreements signed after this date.
 
-# In[15]:
+# In[11]:
 
 agreements_after_impended = agreements_with_amendments.merge(
                                         impeded_entities_w_start_date, 
@@ -128,12 +128,12 @@ agreements_after_impended = agreements_with_amendments.merge(
 # 
 # Below we have a list of agreements that are still in execution and are related to the amendments that have as beneficiaries non-profit entities that are impeded. In addition, the difference between the date of signature of the agreements in execution and the date of entities disability is less than 2 years.
 
-# In[16]:
+# In[12]:
 
 agreements_after_impended.query('situation == \'Em execução\' and                                  date_impended < date_signed and                                  date_signed.dt.year - date_impended.dt.year < 2').shape
 
 
-# In[17]:
+# In[13]:
 
 agreements_after_impended.query('situation == \'Em execução\' and                                  date_impended < date_signed and                                  date_signed.dt.year - date_impended.dt.year < 2')
 
@@ -145,7 +145,7 @@ agreements_after_impended.query('situation == \'Em execução\' and             
 # 
 # Origin of the information: Controladoria-Geral da União - CGU (Comptroller General of the Union)
 
-# In[18]:
+# In[14]:
 
 inident_and_suspended_companies = pd.read_csv('../data/2016-12-21-inident-and-suspended-companies.xz',
                                               dtype={'sanctioned_cnpj_cpf': np.str,
@@ -165,12 +165,12 @@ inident_and_suspended_companies['sanction_end_date'] = pd.to_datetime(
 inident_and_suspended_companies.shape
 
 
-# In[19]:
+# In[15]:
 
 inident_and_suspended_companies.iloc[0]
 
 
-# In[20]:
+# In[16]:
 
 agreements_with_suspended_companies = agreements_with_amendments.merge(
                                         inident_and_suspended_companies, 
@@ -183,19 +183,19 @@ agreements_with_suspended_companies.shape
 # 
 # Below we have a list of agreements that are still in execution and which the signed date are between sanction's start and end date.
 
-# In[21]:
+# In[17]:
 
 agreements_with_suspended_companies.query('entity_type == \'Juridica\' and                                            situation == \'Em execução\' and                                            sanction_start_date <= date_signed and                                            date_signed <= sanction_end_date'
                                          ).shape
 
 
-# In[22]:
+# In[18]:
 
 agreements_with_suspended_companies = agreements_with_suspended_companies.rename(
                                         columns = {'date_signed':'agreement_date_signed'})
 
 
-# In[23]:
+# In[19]:
 
 agreements_with_suspended_companies.query('entity_type == \'Juridica\' and                                           situation == \'Em execução\' and                                           sanction_start_date <= agreement_date_signed and                                           agreement_date_signed <= sanction_end_date'
                                          ).filter(['amendment_number',
@@ -217,7 +217,48 @@ agreements_with_suspended_companies.query('entity_type == \'Juridica\' and      
                                                    'published_date'])
 
 
-# In[ ]:
+# ---
+# ## National Registry of Punished Companies - CNEP
+# 
+# The National Register of Punished Companies (CNEP) is an information bank maintained by the Federal Comptroller's Office (CGU), whose purpose is to consolidate the relationship of companies that have suffered any of the punishments provided in Law 12,846 / 2013 (Anti-Corruption Law).
+# 
+# Origin of the information: Controladoria-Geral da União - CGU (Comptroller General of the Union)
+
+# In[20]:
+
+punished_companies = pd.read_csv('../data/2016-12-21-national-register-punished-companies.xz',
+                                              dtype={'sanctioned_cnpj_cpf': np.str,
+                                                     'process_number': np.str},
+                                              parse_dates = ['sanction_start_date',
+                                                             'sanction_end_date', 
+                                                             'data_source_date',
+                                                             'published_date'], 
+                                              low_memory=False)
+punished_companies.fillna('', inplace=True)
+punished_companies.shape
 
 
+# In[21]:
 
+len(punished_companies['sanctioned_cnpj_cpf'].unique())
+
+
+# As we can see above, this dataset has only 9 records listed and 8 companies. 
+
+# In[22]:
+
+punished_companies.iloc[0]
+
+
+# Here we got the agreements related to these punished companies:
+
+# In[23]:
+
+agreements_with_punished_companies = agreements_with_amendments.merge(
+                                        punished_companies, 
+                                        left_on='amendment_beneficiary', 
+                                        right_on='sanctioned_cnpj_cpf')
+agreements_with_punished_companies.shape
+
+
+# As of 12/21/2016 there are no agreements related to these punished companies.

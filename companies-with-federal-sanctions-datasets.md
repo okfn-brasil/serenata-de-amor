@@ -40,7 +40,7 @@ This dataset is avaiable as **YYYY-MM-DD-impeded-non-profit-entities.xz**
 
 The National Register of Punished Companies (CNEP) is an information bank maintained by the Federal Comptroller's Office
  (CGU), whose purpose is to consolidate the relationship of companies that have suffered any of the punishments provided
-  for in Law 12,846 / 2013 (Anti-Corruption Law).
+  in Law 12,846 / 2013 (Anti-Corruption Law).
 
 The [Law 12.846/2013 (Anti-Corruption Law)](http://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12846.htm)
 created the CNEP and brought the obligation of the public entities, of all the Powers and Spheres of Government, to keep
