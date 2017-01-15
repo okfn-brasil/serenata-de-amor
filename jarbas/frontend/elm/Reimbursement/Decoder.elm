@@ -1,12 +1,13 @@
 module Reimbursement.Decoder exposing (..)
 
+import Array exposing (Array, fromList)
 import Reimbursement.Company.Model as CompanyModel
 import Reimbursement.Inputs.Update as InputsUpdate
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
 import Reimbursement.Receipt.Decoder as ReceiptDecoder
 import Reimbursement.RelatedTable.Model as RelatedTable
 import Internationalization exposing (Language)
-import Json.Decode exposing (Decoder, bool, float, int, keyValuePairs, list, nullable, string)
+import Json.Decode exposing (Decoder, array, bool, float, int, keyValuePairs, list, nullable, string)
 import Json.Decode.Extra exposing (date)
 import Json.Decode.Pipeline exposing (decode, hardcoded, required)
 import String
@@ -53,18 +54,14 @@ getPage query =
 
 decoder : Language -> Maybe String -> List ( String, String ) -> Decoder Results
 decoder lang apiKey query =
-    let
-        current =
-            Maybe.withDefault 1 (getPage query)
-    in
-        decode Results
-            |> required "results" (list <| singleDecoder lang apiKey)
-            |> required "count" (nullable int)
-            |> required "previous" (nullable string)
-            |> required "next" (nullable string)
-            |> hardcoded Nothing
-            |> hardcoded current
-            |> hardcoded ""
+    decode Results
+        |> required "results" (array <| singleDecoder lang apiKey)
+        |> required "count" (nullable int)
+        |> required "previous" (nullable string)
+        |> required "next" (nullable string)
+        |> hardcoded Nothing
+        |> hardcoded (getPage query |> Maybe.withDefault 1)
+        |> hardcoded ""
 
 
 singleDecoder : Language -> Maybe String -> Decoder Reimbursement
@@ -138,7 +135,7 @@ updateLanguage lang model =
             model.results
 
         newReimbursements =
-            List.map (updateReimbursementLanguage lang) model.results.reimbursements
+            Array.map (updateReimbursementLanguage lang) model.results.reimbursements
 
         newResults =
             { results | reimbursements = newReimbursements }

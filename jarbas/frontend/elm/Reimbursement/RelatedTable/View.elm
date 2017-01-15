@@ -1,5 +1,6 @@
 module Reimbursement.RelatedTable.View exposing (view)
 
+import Array
 import Reimbursement.RelatedTable.Model exposing (ReimbursementSummary, Model)
 import Reimbursement.RelatedTable.Update exposing (Msg(..), getReimbursementUrl)
 import Format.Price exposing (formatPrice)
@@ -82,7 +83,7 @@ viewReimbursement lang mdl ( index, reimbursement ) =
 
 view : Model -> String -> Html.Html Msg
 view model title =
-    if List.isEmpty model.results.reimbursements then
+    if Array.isEmpty model.results.reimbursements then
         text ""
     else
         div []
@@ -97,7 +98,7 @@ view model title =
                 , text title
                 ]
             , model.results.reimbursements
-                |> List.indexedMap (,)
+                |> Array.toIndexedList
                 |> List.map (viewReimbursement model.lang model.mdl)
                 |> Options.styled div []
             ]

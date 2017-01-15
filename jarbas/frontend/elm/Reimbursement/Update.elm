@@ -1,5 +1,6 @@
 module Reimbursement.Update exposing (..)
 
+import Array exposing (Array)
 import Char
 import Reimbursement.Company.Update as Company
 import Reimbursement.Decoder exposing (decoder)
@@ -21,21 +22,6 @@ import Regex exposing (regex, replace)
 import String
 
 
-type Msg
-    = Submit
-    | ToggleForm
-    | Update String
-    | Page Int
-    | LoadReimbursements (Result Http.Error Results)
-    | InputsMsg Inputs.Msg
-    | ReceiptMsg Int Receipt.Msg
-    | CompanyMsg Int Company.Msg
-    | SameDayMsg Int RelatedTable.Msg
-    | SameSubquotaMsg Int RelatedTable.Msg
-    | MapMsg
-    | Mdl (Material.Msg Msg)
-
-
 {-| Give the total page number based on the number of reimbursement found:
 
     >>> totalPages 3
@@ -49,7 +35,9 @@ type Msg
 -}
 totalPages : Int -> Int
 totalPages results =
-    toFloat results / 7.0 |> ceiling
+    7.0
+        |> (/) (toFloat results)
+        |> ceiling
 
 
 {-| Clean up a numbers only input field:
@@ -59,12 +47,15 @@ totalPages results =
 -}
 onlyDigits : String -> String
 onlyDigits value =
-    String.filter (\c -> Char.isDigit c) value
+    String.filter Char.isDigit value
 
 
 toUniqueId : Reimbursement -> SameDay.UniqueId
 toUniqueId reimbursement =
-    SameDay.UniqueId reimbursement.applicantId reimbursement.year reimbursement.documentId
+    SameDay.UniqueId
+        reimbursement.applicantId
+        reimbursement.year
+        reimbursement.documentId
 
 
 toSameSubquotaFilter : Reimbursement -> SameSubquota.Filter
@@ -84,6 +75,44 @@ newSearch model =
         , loading = False
         , inputs = Inputs.updateLanguage model.lang Reimbursement.Inputs.Model.model
     }
+
+
+{-| Given a page and the total pages, return if the
+
+    >>> isValidPage 1 42
+    True
+
+    >>> isValidPage 42 42
+    True
+
+    >>> isValidPage 3 42
+    True
+
+    >>> isValidPage 0 42
+    False
+
+    >>> isValidPage 100 42
+    False
+
+-}
+isValidPage : Int -> Int -> Bool
+isValidPage page total =
+    page >= 1 && page <= total
+
+
+type Msg
+    = Submit
+    | ToggleForm
+    | Update String
+    | Page Int
+    | LoadReimbursements (Result Http.Error Results)
+    | InputsMsg Inputs.Msg
+    | ReceiptMsg Int Receipt.Msg
+    | CompanyMsg Int Company.Msg
+    | SameDayMsg Int RelatedTable.Msg
+    | SameSubquotaMsg Int RelatedTable.Msg
+    | MapMsg
+    | Mdl (Material.Msg Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -112,13 +141,15 @@ update msg model =
         Page page ->
             let
                 total =
-                    Maybe.withDefault 0 model.results.total |> totalPages
+                    model.results.total
+                        |> Maybe.withDefault 0
+                        |> totalPages
 
                 query =
                     ( "page", toString page ) :: Inputs.toQuery model.inputs
 
                 cmd =
-                    if List.member page (List.range 1 total) then
+                    if isValidPage page total then
                         Navigation.newUrl (toUrl query)
                     else
                         Cmd.none
@@ -127,26 +158,31 @@ update msg model =
 
         LoadReimbursements (Ok results) ->
             let
+                showForm : Bool
                 showForm =
                     if (Maybe.withDefault 0 results.total) > 0 then
                         False
                     else
                         True
 
+                current : Int
                 current =
                     Maybe.withDefault 1 model.results.loadingPage
 
-                newResultReimbursements =
-                    List.map updateRelatedTableParentId results.reimbursements
+                newResultsReimbursements : Array Reimbursement
+                newResultsReimbursements =
+                    Array.map updateRelatedTableParentId results.reimbursements
 
+                newResults : Results
                 newResults =
                     { results
-                        | reimbursements = newResultReimbursements
+                        | reimbursements = newResultsReimbursements
                         , loadingPage = Nothing
                         , pageLoaded = current
                         , jumpTo = toString current
                     }
 
+                newModel : Model
                 newModel =
                     { model
                         | results = newResults
@@ -155,29 +191,36 @@ update msg model =
                         , error = Nothing
                     }
 
-                indexedReimbursements =
-                    getIndexedReimbursements newModel
+                companyCmds : List (Cmd Msg)
+                companyCmds =
+                    Array.map
+                        (.cnpjCpf >> Company.load)
+                        newModel.results.reimbursements
+                        |> Array.toIndexedList
+                        |> List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd)
 
-                indexedCompanyCmds =
-                    List.map
-                        (\( idx, doc ) -> ( idx, Maybe.withDefault "" doc.cnpjCpf |> Company.load ))
-                        indexedReimbursements
+                sameDayCmds : List (Cmd Msg)
+                sameDayCmds =
+                    Array.map
+                        (toUniqueId >> SameDay.load)
+                        newModel.results.reimbursements
+                        |> Array.toIndexedList
+                        |> List.map (\( idx, cmd ) -> Cmd.map (SameDayMsg idx) cmd)
 
-                indexedSameDayCmds =
-                    List.map
-                        (\( idx, doc ) -> ( idx, doc |> toUniqueId |> SameDay.load ))
-                        indexedReimbursements
+                sameSubquotaCmds : List (Cmd Msg)
+                sameSubquotaCmds =
+                    Array.map
+                        (toSameSubquotaFilter >> SameSubquota.load)
+                        newModel.results.reimbursements
+                        |> Array.toIndexedList
+                        |> List.map (\( idx, cmd ) -> Cmd.map (SameSubquotaMsg idx) cmd)
 
-                indexedSameSubquotaCmds =
-                    List.map
-                        (\( idx, doc ) -> ( idx, doc |> toSameSubquotaFilter |> SameSubquota.load ))
-                        indexedReimbursements
-
+                cmds : List (Cmd Msg)
                 cmds =
                     List.concat
-                        [ (List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd) indexedCompanyCmds)
-                        , (List.map (\( idx, cmd ) -> Cmd.map (SameDayMsg idx) cmd) indexedSameDayCmds)
-                        , (List.map (\( idx, cmd ) -> Cmd.map (SameSubquotaMsg idx) cmd) indexedSameSubquotaCmds)
+                        [ companyCmds
+                        , sameDayCmds
+                        , sameSubquotaCmds
                         ]
             in
                 ( newModel, Cmd.batch cmds )
@@ -196,17 +239,17 @@ update msg model =
             in
                 ( { model | inputs = inputs }, Cmd.none )
 
-        ReceiptMsg index receiptMsg ->
-            getReimbursementsAndCmd model index updateReceipts receiptMsg
-
         CompanyMsg index companyMsg ->
-            getReimbursementsAndCmd model index updateCompanys companyMsg
+            subModuleUpdate index msg model
+
+        ReceiptMsg index receiptMsg ->
+            subModuleUpdate index msg model
 
         SameDayMsg index sameDayMsg ->
-            getReimbursementsAndCmd model index updateSameDay sameDayMsg
+            subModuleUpdate index msg model
 
         SameSubquotaMsg index sameSubquotaMsg ->
-            getReimbursementsAndCmd model index updateSameSubquota sameSubquotaMsg
+            subModuleUpdate index msg model
 
         MapMsg ->
             ( model, Cmd.none )
@@ -215,52 +258,105 @@ update msg model =
             Material.update mdlMsg model
 
 
-updateCompanys : Language -> Int -> Company.Msg -> ( Int, Reimbursement ) -> ( Reimbursement, Cmd Msg )
-updateCompanys lang target msg ( index, reimbursement ) =
-    if target == index then
-        let
-            updated =
-                Company.update msg reimbursement.supplierInfo
 
-            newCompany =
-                Tuple.first updated
-
-            newCmd =
-                Cmd.map (CompanyMsg target) (Tuple.second updated)
-        in
-            ( { reimbursement | supplierInfo = { newCompany | lang = lang } }, newCmd )
-    else
-        ( reimbursement, Cmd.none )
+--
+-- Update helpers
+--
 
 
-updateReceipts : Language -> Int -> Receipt.Msg -> ( Int, Reimbursement ) -> ( Reimbursement, Cmd Msg )
-updateReceipts lang target msg ( index, reimbursement ) =
-    if target == index then
-        let
-            updated =
-                Receipt.update msg reimbursement.receipt
+subModuleUpdate : Int -> Msg -> Model -> ( Model, Cmd Msg )
+subModuleUpdate target msg model =
+    case Array.get target model.results.reimbursements of
+        Just reimbursement ->
+            let
+                updated : ( Reimbursement, Cmd Msg )
+                updated =
+                    getUpdatedSubModule model.lang msg reimbursement
 
-            updatedReceipt =
-                Tuple.first updated
+                results : Results
+                results =
+                    model.results
 
-            newCmd =
-                Tuple.second updated |> Cmd.map (ReceiptMsg target)
+                newReimbursement : Reimbursement
+                newReimbursement =
+                    Tuple.first updated
 
-            reimbursementId =
-                ReimbursementId
-                    reimbursement.year
-                    reimbursement.applicantId
-                    reimbursement.documentId
+                newReimbursements : Array Reimbursement
+                newReimbursements =
+                    Array.set target newReimbursement model.results.reimbursements
 
-            newReceipt =
-                { updatedReceipt
-                    | lang = lang
-                    , reimbursement = Just reimbursementId
-                }
-        in
-            ( { reimbursement | receipt = newReceipt }, newCmd )
-    else
-        ( reimbursement, Cmd.none )
+                newResults : Results
+                newResults =
+                    { results | reimbursements = newReimbursements }
+            in
+                ( { model | results = newResults }, Tuple.second updated )
+
+        Nothing ->
+            ( model, Cmd.none )
+
+
+getUpdatedSubModule : Language -> Msg -> Reimbursement -> ( Reimbursement, Cmd Msg )
+getUpdatedSubModule lang msg reimbursement =
+    case msg of
+        CompanyMsg target companyMsg ->
+            updateCompany lang target companyMsg reimbursement
+
+        ReceiptMsg target receiptMsg ->
+            updateReceipt lang target receiptMsg reimbursement
+
+        SameDayMsg target sameDayMsg ->
+            updateSameDay lang target sameDayMsg reimbursement
+
+        SameSubquotaMsg target sameSubquotaMsg ->
+            updateSameSubquota lang target sameSubquotaMsg reimbursement
+
+        _ ->
+            ( reimbursement, Cmd.none )
+
+
+updateCompany : Language -> Int -> Company.Msg -> Reimbursement -> ( Reimbursement, Cmd Msg )
+updateCompany lang target msg reimbursement =
+    reimbursement.supplierInfo
+        |> Company.update msg
+        |> Tuple.mapFirst (\c -> { c | lang = lang })
+        |> Tuple.mapFirst (\c -> { reimbursement | supplierInfo = c })
+        |> Tuple.mapSecond (Cmd.map (CompanyMsg target))
+
+
+updateReceipt : Language -> Int -> Receipt.Msg -> Reimbursement -> ( Reimbursement, Cmd Msg )
+updateReceipt lang target msg reimbursement =
+    let
+        reimbursementId : Maybe ReimbursementId
+        reimbursementId =
+            ReimbursementId
+                reimbursement.year
+                reimbursement.applicantId
+                reimbursement.documentId
+                |> Just
+    in
+        reimbursement.receipt
+            |> Receipt.update msg
+            |> Tuple.mapFirst (\r -> { r | reimbursement = reimbursementId, lang = lang })
+            |> Tuple.mapFirst (\r -> { reimbursement | receipt = r })
+            |> Tuple.mapSecond (Cmd.map (ReceiptMsg target))
+
+
+updateSameDay : Language -> Int -> RelatedTable.Msg -> Reimbursement -> ( Reimbursement, Cmd Msg )
+updateSameDay lang target msg reimbursement =
+    reimbursement.sameDay
+        |> RelatedTable.update msg
+        |> Tuple.mapFirst (\c -> { c | lang = lang })
+        |> Tuple.mapFirst (\c -> { reimbursement | sameDay = c })
+        |> Tuple.mapSecond (Cmd.map (SameDayMsg target))
+
+
+updateSameSubquota : Language -> Int -> RelatedTable.Msg -> Reimbursement -> ( Reimbursement, Cmd Msg )
+updateSameSubquota lang target msg reimbursement =
+    reimbursement.sameSubquota
+        |> RelatedTable.update msg
+        |> Tuple.mapFirst (\c -> { c | lang = lang })
+        |> Tuple.mapFirst (\c -> { reimbursement | sameSubquota = c })
+        |> Tuple.mapSecond (Cmd.map (SameSubquotaMsg target))
 
 
 updateRelatedTableParentId : Reimbursement -> Reimbursement
@@ -273,103 +369,6 @@ updateRelatedTableParentId reimbursement =
             | sameDay = updateModel reimbursement.sameDay
             , sameSubquota = updateModel reimbursement.sameSubquota
         }
-
-
-updateSameDay : Language -> Int -> RelatedTable.Msg -> ( Int, Reimbursement ) -> ( Reimbursement, Cmd Msg )
-updateSameDay lang target msg ( index, reimbursement ) =
-    if target == index then
-        let
-            updated =
-                RelatedTable.update msg reimbursement.sameDay
-
-            sameDay =
-                Tuple.first updated
-
-            newSameDay =
-                { sameDay | lang = lang }
-
-            cmd =
-                Tuple.second updated |> Cmd.map (SameDayMsg target)
-        in
-            ( { reimbursement | sameDay = newSameDay }, cmd )
-    else
-        ( reimbursement, Cmd.none )
-
-
-updateSameSubquota : Language -> Int -> RelatedTable.Msg -> ( Int, Reimbursement ) -> ( Reimbursement, Cmd Msg )
-updateSameSubquota lang target msg ( index, reimbursement ) =
-    if target == index then
-        let
-            updated =
-                RelatedTable.update msg reimbursement.sameSubquota
-
-            sameSubquota =
-                Tuple.first updated
-
-            newSameSubquota =
-                { sameSubquota | lang = lang }
-
-            cmd =
-                Tuple.second updated |> Cmd.map (SameSubquotaMsg target)
-        in
-            ( { reimbursement | sameSubquota = newSameSubquota }, cmd )
-    else
-        ( reimbursement, Cmd.none )
-
-
-getIndexedReimbursements : Model -> List ( Int, Reimbursement )
-getIndexedReimbursements model =
-    let
-        results =
-            model.results
-
-        reimbursements =
-            results.reimbursements
-    in
-        List.indexedMap (,) results.reimbursements
-
-
-
-{-
-   This type signature is terrible, but it is a flexible function to update
-   Companys and Receipts.
-
-   It returns a new model with the reimbursements field updated, and the list of
-   commands already mapped to the current module (i.e.  it returns what the
-   general update function is expecting).
-
-   The arguments it expects:
-       * (Model) current model
-       * (Int) index of the object (Company or Receipt) being updated
-       * (Int -> a -> ( Int, Reimbursement ) -> ( Reimbursement, Cmd Msg )) this is
-         a function such as updateCompanys or updateReceipts
-       * (a) The kind of message inside the former argument, i.e. Company.Msg
-         or Receipt.Msg
--}
-
-
-getReimbursementsAndCmd : Model -> Int -> (Language -> Int -> a -> ( Int, Reimbursement ) -> ( Reimbursement, Cmd Msg )) -> a -> ( Model, Cmd Msg )
-getReimbursementsAndCmd model index targetUpdate targetMsg =
-    let
-        results =
-            model.results
-
-        indexedReimbursements =
-            getIndexedReimbursements model
-
-        newReimbursementsAndCommands =
-            List.map (targetUpdate model.lang index targetMsg) indexedReimbursements
-
-        newReimbursements =
-            List.map Tuple.first newReimbursementsAndCommands
-
-        newCommands =
-            List.map Tuple.second newReimbursementsAndCommands
-
-        newResults =
-            { results | reimbursements = newReimbursements }
-    in
-        ( { model | results = newResults }, Cmd.batch newCommands )
 
 
 {-| Convert from camelCase to underscore:

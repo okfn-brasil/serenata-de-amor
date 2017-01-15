@@ -1,11 +1,11 @@
 module Reimbursement.RelatedTable.Decoder exposing (decoder)
 
 import Reimbursement.RelatedTable.Model exposing (Results, ReimbursementSummary)
-import Json.Decode exposing (float, int, list, nullable, string)
+import Json.Decode exposing (array, float, int, nullable, string)
 import Json.Decode.Pipeline exposing (decode, hardcoded, optional, required)
 
 
-reimbursementSummaryDecoder : Json.Decode.Decoder (List ReimbursementSummary)
+reimbursementSummaryDecoder : Json.Decode.Decoder ReimbursementSummary
 reimbursementSummaryDecoder =
     decode ReimbursementSummary
         |> required "applicant_id" int
@@ -17,11 +17,10 @@ reimbursementSummaryDecoder =
         |> required "total_net_value" float
         |> required "year" int
         |> hardcoded False
-        |> list
 
 
 decoder : Json.Decode.Decoder Results
 decoder =
     decode Results
-        |> required "results" reimbursementSummaryDecoder
+        |> required "results" (array reimbursementSummaryDecoder)
         |> required "next" (nullable string)

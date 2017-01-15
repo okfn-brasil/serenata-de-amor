@@ -1,5 +1,6 @@
 module Reimbursement.RelatedTable.Update exposing (Msg(..), getReimbursementUrl, loadUrl, update, updateParentId)
 
+import Array exposing (Array)
 import Reimbursement.RelatedTable.Decoder exposing (decoder)
 import Reimbursement.RelatedTable.Model exposing (Model, ReimbursementSummary, Results)
 import Http
@@ -18,12 +19,14 @@ updateParentId parentId model =
     { model | parentId = Just parentId }
 
 
-updateReimbursements : Int -> Bool -> ( Int, ReimbursementSummary ) -> ReimbursementSummary
-updateReimbursements target mouseOver ( index, reimbursement ) =
-    if target == index then
-        { reimbursement | over = mouseOver }
-    else
-        reimbursement
+updateReimbursements : Int -> Bool -> Array ReimbursementSummary -> Array ReimbursementSummary
+updateReimbursements target mouseOver reimbursements =
+    case Array.get target reimbursements of
+        Just reimbursement ->
+            Array.set target { reimbursement | over = mouseOver } reimbursements
+
+        Nothing ->
+            reimbursements
 
 
 isParent : Model -> ReimbursementSummary -> Bool
@@ -41,17 +44,21 @@ update msg model =
     case msg of
         LoadRelatedTable (Ok results) ->
             let
+                newReimbursements : Array ReimbursementSummary
                 newReimbursements =
                     results.reimbursements
-                        |> List.filter (isParent model >> not)
-                        |> List.append model.results.reimbursements
+                        |> Array.filter (isParent model >> not)
+                        |> Array.append model.results.reimbursements
 
+                nextPageUrl : Maybe String
                 nextPageUrl =
                     results.nextPageUrl
 
+                newResults : Results
                 newResults =
                     { reimbursements = newReimbursements, nextPageUrl = nextPageUrl }
 
+                cmd : Cmd Msg
                 cmd =
                     case nextPageUrl of
                         Just url ->
@@ -71,14 +78,15 @@ update msg model =
 
         MouseOver target mouseOver ->
             let
+                newReimbursements : Array ReimbursementSummary
                 newReimbursements =
-                    model.results.reimbursements
-                        |> List.indexedMap (,)
-                        |> List.map (updateReimbursements target mouseOver)
+                    updateReimbursements target mouseOver model.results.reimbursements
 
+                results : Results
                 results =
                     model.results
 
+                newResults : Results
                 newResults =
                     { results | reimbursements = newReimbursements }
             in

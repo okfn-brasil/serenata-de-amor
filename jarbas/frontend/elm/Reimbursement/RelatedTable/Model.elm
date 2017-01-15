@@ -1,5 +1,6 @@
 module Reimbursement.RelatedTable.Model exposing (ReimbursementSummary, Model, Results, model)
 
+import Array exposing (Array)
 import Material
 import Internationalization exposing (Language(..))
 
@@ -18,7 +19,7 @@ type alias ReimbursementSummary =
 
 
 type alias Results =
-    { reimbursements : List ReimbursementSummary
+    { reimbursements : Array ReimbursementSummary
     , nextPageUrl : Maybe String
     }
 
@@ -33,7 +34,7 @@ type alias Model =
 
 results : Results
 results =
-    Results [] Nothing
+    Results Array.empty Nothing
 
 
 model : Model

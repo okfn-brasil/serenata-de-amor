@@ -10,35 +10,39 @@ import String
 
 
 type Msg
-    = SearchCompany String
-    | LoadCompany (Result Http.Error Company)
+    = LoadCompany (Result Http.Error Company)
     | Mdl (Material.Msg Msg)
 
 
 {-| Cleans up a CNPJ field allowing numbers only:
 
-    >>> cleanUp "12.345.678/9012-34"
+    >>> cleanUp (Just "12.345.678/9012-34")
     "12345678901234"
 
 -}
-cleanUp : String -> String
+cleanUp : Maybe String -> String
 cleanUp cnpj =
-    String.filter Char.isDigit cnpj
+    cnpj
+        |> Maybe.withDefault ""
+        |> String.filter Char.isDigit
 
 
 {-| CNPJ validator:
 
-    >>> isValid "12.345.678/9012-34"
+    >>> isValid (Just "12.345.678/9012-34")
     True
 
-    >>> isValid "12345678901234"
+    >>> isValid (Just "12345678901234")
     True
 
-    >>> isValid "123.456.789-01"
+    >>> isValid (Just "123.456.789-01")
+    False
+
+    >>> isValid Nothing
     False
 
 -}
-isValid : String -> Bool
+isValid : Maybe String -> Bool
 isValid cnpj =
     if String.length (cleanUp cnpj) == 14 then
         True
@@ -49,12 +53,6 @@ isValid cnpj =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SearchCompany cnpj ->
-            if isValid cnpj then
-                ( { model | loading = True }, load cnpj )
-            else
-                ( { model | loaded = True, company = Nothing }, Cmd.none )
-
         LoadCompany (Ok company) ->
             ( { model | company = Just company, loading = False, loaded = True }, Cmd.none )
 
@@ -69,7 +67,7 @@ update msg model =
             Material.update mdlMsg model
 
 
-load : String -> Cmd Msg
+load : Maybe String -> Cmd Msg
 load cnpj =
     if isValid cnpj then
         let

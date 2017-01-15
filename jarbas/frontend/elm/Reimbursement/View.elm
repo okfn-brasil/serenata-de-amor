@@ -1,5 +1,6 @@
 module Reimbursement.View exposing (..)
 
+import Array
 import Date.Extra.Format exposing (utcIsoDateString)
 import Reimbursement.Company.View as CompanyView
 import Reimbursement.Inputs.Update as InputsUpdate
@@ -15,7 +16,7 @@ import Format.CnpjCpf exposing (formatCnpjCpf)
 import Format.Date exposing (formatDate)
 import Format.Price exposing (..)
 import Format.Url exposing (url)
-import Html exposing (a, div, form, p, span, text)
+import Html exposing (Html, a, div, form, p, span, text)
 import Html.Attributes exposing (class, href, target)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
@@ -36,7 +37,7 @@ import String
 --
 
 
-viewButton : Model -> Int -> List (Button.Property Msg) -> TranslationId -> Html.Html Msg
+viewButton : Model -> Int -> List (Button.Property Msg) -> TranslationId -> Html Msg
 viewButton model index defaultAttr defaultLabel =
     let
         label =
@@ -69,7 +70,7 @@ viewButton model index defaultAttr defaultLabel =
             ]
 
 
-viewForm : Model -> Html.Html Msg
+viewForm : Model -> Html Msg
 viewForm model =
     let
         inputs =
@@ -125,7 +126,7 @@ jumpToWidth value =
         (toString width) ++ "em"
 
 
-viewJumpTo : Model -> Html.Html Msg
+viewJumpTo : Model -> Html Msg
 viewJumpTo model =
     let
         cleaned =
@@ -157,7 +158,7 @@ viewJumpTo model =
             ]
 
 
-viewPaginationButton : Model -> Int -> Int -> String -> Html.Html Msg
+viewPaginationButton : Model -> Int -> Int -> String -> Html Msg
 viewPaginationButton model page index icon =
     div
         []
@@ -296,7 +297,7 @@ viewMaybeIntButZero maybeInt =
             ""
 
 
-viewError : Language -> Maybe Http.Error -> Html.Html Msg
+viewError : Language -> Maybe Http.Error -> Html Msg
 viewError lang error =
     case error of
         Just _ ->
@@ -309,7 +310,7 @@ viewError lang error =
             text ""
 
 
-viewReimbursementBlockLine : ( String, String ) -> Html.Html Msg
+viewReimbursementBlockLine : ( String, String ) -> Html Msg
 viewReimbursementBlockLine ( label, value ) =
     let
         styles =
@@ -330,7 +331,7 @@ viewReimbursementBlockLine ( label, value ) =
             ]
 
 
-viewPs : Language -> Reimbursement -> Html.Html Msg
+viewPs : Language -> Reimbursement -> Html Msg
 viewPs lang reimbursement =
     let
         currencyUrl =
@@ -367,7 +368,7 @@ viewPs lang reimbursement =
             ]
 
 
-viewReimbursementBlock : Language -> Reimbursement -> ( String, String, List ( String, String ) ) -> Html.Html Msg
+viewReimbursementBlock : Language -> Reimbursement -> ( String, String, List ( String, String ) ) -> Html Msg
 viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
     let
         iconTag =
@@ -390,7 +391,7 @@ viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
             ]
 
 
-viewSummaryBlock : Language -> Reimbursement -> Html.Html Msg
+viewSummaryBlock : Language -> Reimbursement -> Html Msg
 viewSummaryBlock lang reimbursement =
     let
         congressperson =
@@ -434,7 +435,7 @@ viewSummaryBlock lang reimbursement =
         viewReimbursementBlock lang reimbursement ( translate lang FieldsetSummary, "list", fields )
 
 
-viewReimbursementDetails : Language -> Reimbursement -> Html.Html Msg
+viewReimbursementDetails : Language -> Reimbursement -> Html Msg
 viewReimbursementDetails lang reimbursement =
     let
         reimbursements =
@@ -462,7 +463,7 @@ viewReimbursementDetails lang reimbursement =
         viewReimbursementBlock lang reimbursement ( translate lang FieldsetReimbursement, "folder", fields )
 
 
-viewCongressPersonDetails : Language -> Reimbursement -> Html.Html Msg
+viewCongressPersonDetails : Language -> Reimbursement -> Html Msg
 viewCongressPersonDetails lang reimbursement =
     let
         fields =
@@ -476,7 +477,7 @@ viewCongressPersonDetails lang reimbursement =
         viewReimbursementBlock lang reimbursement ( translate lang FieldsetCongressperson, "face", fields )
 
 
-viewTrip : Language -> Reimbursement -> Html.Html Msg
+viewTrip : Language -> Reimbursement -> Html Msg
 viewTrip lang reimbursement =
     let
         fields =
@@ -528,12 +529,12 @@ viewReimbursement lang index reimbursement =
                 [ Typography.headline ]
                 [ text "" ]
 
-        sameDay : Html.Html Msg
+        sameDay : Html Msg
         sameDay =
             SameDay.view reimbursement.sameDay
                 |> Html.map (SameDayMsg index)
 
-        sameSubquota : Html.Html Msg
+        sameSubquota : Html Msg
         sameSubquota =
             SameSubquota.view reimbursement.sameSubquota
                 |> Html.map (SameSubquotaMsg index)
@@ -568,27 +569,32 @@ viewReimbursement lang index reimbursement =
         ]
 
 
-viewReimbursements : Model -> Html.Html Msg
+viewReimbursements : Model -> Html Msg
 viewReimbursements model =
     let
+        reimbursements : List (Material.Grid.Cell Msg)
         reimbursements =
-            List.concat <|
-                List.indexedMap
-                    (\idx doc -> (viewReimbursement model.lang idx doc))
-                    model.results.reimbursements
+            model.results.reimbursements
+                |> Array.toIndexedList
+                |> List.map (\( idx, reimb ) -> viewReimbursement model.lang idx reimb)
+                |> List.concat
 
+        total : Int
         total =
             Maybe.withDefault 0 model.results.total
 
+        searched : Bool
         searched =
             InputsUpdate.toQuery model.inputs |> List.isEmpty |> not
 
+        results : String
         results =
             if total == 1 then
                 (toString total) ++ (translate model.lang ResultTitleSingular)
             else
                 (toString total) ++ (translate model.lang ResultTitlePlural)
 
+        title : Material.Grid.Cell Msg
         title =
             cell
                 [ size Desktop 12, size Tablet 8, size Phone 4 ]
@@ -598,9 +604,11 @@ viewReimbursements model =
                     [ results |> text ]
                 ]
 
+        pagination : List (Material.Grid.Cell Msg)
         pagination =
             viewPagination model
 
+        cells : List (Material.Grid.Cell Msg)
         cells =
             List.concat [ pagination, reimbursements, pagination ]
     in
@@ -616,7 +624,7 @@ viewReimbursements model =
 --
 
 
-view : Model -> Html.Html Msg
+view : Model -> Html Msg
 view model =
     div []
         [ viewForm model
