@@ -23,20 +23,20 @@ services:
         aliases:
           - apps
 
-
   elm:
     build:
       context: .
       dockerfile: Dockerfile-elm
     volumes:
       - "./:/code"
+      - "assets:/code/jarbas/frontend/static"
     command: [npm, run, watch]
   nginx:
     build:
       context: .
       dockerfile: Dockerfile-nginx
     volumes:
-      - "staticfiles:/opt/jarbas/staticfiles"
+      - "assets:/opt/jarbas/staticfiles"
     ports:
       - "80:80"
     depends_on:
