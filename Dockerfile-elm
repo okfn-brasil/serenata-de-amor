@@ -5,6 +5,5 @@ COPY package.json package.json
 COPY gulpfile.js gulpfile.js
 RUN yarn install
 COPY jarbas jarbas
-WORKDIR /code
 VOLUME /assets
 CMD yarn assets
