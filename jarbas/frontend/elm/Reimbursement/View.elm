@@ -129,32 +129,37 @@ jumpToWidth value =
 viewJumpTo : Model -> Html Msg
 viewJumpTo model =
     let
-        cleaned =
-            onlyDigits model.results.jumpTo
+        jumpTo : String
+        jumpTo =
+            model.results.jumpTo
+                |> Maybe.map toString
+                |> Maybe.withDefault ""
 
+        input : Html Msg
         input =
             Textfield.render
                 Mdl
                 [ 0 ]
                 model.mdl
-                [ Textfield.onInput Update
-                , Textfield.value cleaned
-                , Options.css "width" (jumpToWidth cleaned)
+                [ Textfield.onInput UpdateJumpTo
+                , Textfield.onBlur RecoverJumpTo
+                , Textfield.value jumpTo
+                , jumpTo |> jumpToWidth |> Options.css "width"
                 , Textfield.style [ (Options.css "text-align" "center") ]
                 ]
 
-        page =
-            Result.withDefault 0 (String.toInt model.results.jumpTo)
-
+        total : Int
         total =
-            Maybe.withDefault 0 model.results.total |> totalPages
+            model.results.total
+                |> Maybe.withDefault 1
+                |> totalPages
     in
         form
-            [ onSubmit (Page page) ]
-            [ text (translate model.lang PaginationPage)
+            [ onSubmit (Page model.results.jumpTo) ]
+            [ PaginationPage |> translate model.lang |> text
             , input
-            , text (translate model.lang PaginationOf)
-            , text (toString total)
+            , PaginationOf |> translate model.lang |> text
+            , total |> toString |> text
             ]
 
 
@@ -167,7 +172,7 @@ viewPaginationButton model page index icon =
             [ index ]
             model.mdl
             [ Button.minifab
-            , Button.onClick <| Page page
+            , page |> Just |> Page |> Button.onClick
             ]
             [ Icon.i icon ]
         ]

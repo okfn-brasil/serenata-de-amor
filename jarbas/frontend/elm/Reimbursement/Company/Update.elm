@@ -71,9 +71,15 @@ load : Maybe String -> Cmd Msg
 load cnpj =
     if isValid cnpj then
         let
+            path : String
             path =
-                "/api/company/" ++ (cleanUp cnpj) ++ "/"
+                String.concat
+                    [ "/api/company/"
+                    , cleanUp cnpj
+                    , "/"
+                    ]
 
+            query : List ( String, String )
             query =
                 [ ( "format", "json" ) ]
         in

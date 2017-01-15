@@ -1,6 +1,6 @@
 module Reimbursement.Model exposing (..)
 
-import Array exposing (Array, fromList)
+import Array exposing (Array)
 import Date
 import Reimbursement.Company.Model as Company
 import Reimbursement.Inputs.Model as Inputs
@@ -59,7 +59,7 @@ type alias Results =
     , next : Maybe String
     , loadingPage : Maybe Int
     , pageLoaded : Int
-    , jumpTo : String
+    , jumpTo : Maybe Int
     }
 
 
@@ -78,13 +78,13 @@ type alias Model =
 results : Results
 results =
     Results
-        (fromList [])
+        Array.empty
         Nothing
         Nothing
         Nothing
         Nothing
         1
-        "1"
+        (Just 1)
 
 
 model : Model

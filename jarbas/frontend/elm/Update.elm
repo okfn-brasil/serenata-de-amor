@@ -1,5 +1,6 @@
-module Update exposing (Flags, Msg(..), update, urlUpdate, updateFromFlags)
+module Update exposing (Flags, Msg(..), isValidKeyValue, pair, toTuples, update, updateFromFlags, urlUpdate)
 
+import Dict exposing (Dict)
 import Reimbursement.Decoder
 import Reimbursement.Inputs.Update
 import Reimbursement.Update
@@ -80,6 +81,82 @@ updateFromFlags flags model =
         }
 
 
+{-| Group a list of strings in a list of string pairs:
+
+    >>> pair ["a", "b", "c", "d", "e"]
+    [["a", "b"], ["c", "d"], ["e"]]
+
+-}
+pair : List String -> List (List String)
+pair query =
+    case List.take 2 query of
+        [] ->
+            []
+
+        keyValue ->
+            keyValue :: pair (List.drop 2 query)
+
+
+{-| Convert a list of lists of strings in a list of key/value tuples:
+
+    >>> toTuples ["foo", "bar"]
+    ( "foo", "bar" )
+
+    >>> toTuples ["foo", ""]
+    ( "foo", "" )
+
+    >>> toTuples ["", "bar"]
+    ( "", "bar" )
+
+    >>> toTuples ["foobar"]
+    ( "foobar", "" )
+
+    >>> toTuples ["fo", "ob", "ar"]
+    ( "fo", "ob" )
+
+-}
+toTuples : List String -> ( String, String )
+toTuples query =
+    let
+        key : String
+        key =
+            query
+                |> List.head
+                |> Maybe.withDefault ""
+
+        value : String
+        value =
+            query
+                |> List.drop 1
+                |> List.head
+                |> Maybe.withDefault ""
+    in
+        ( key, value )
+
+
+{-| Filter tuples to make sure they have two strings:
+
+    >>> isValidKeyValue ("foo", "bar")
+    True
+
+    >>> isValidKeyValue ("", "bar")
+    False
+
+    >>> isValidKeyValue ("foo", "")
+    False
+
+    >>> isValidKeyValue ("", "")
+    False
+
+-}
+isValidKeyValue : ( String, String ) -> Bool
+isValidKeyValue ( key, value ) =
+    if String.isEmpty key || String.isEmpty value then
+        False
+    else
+        True
+
+
 {-| Generates a list of URL paramenters (query string) from a URL hash:
 
    >>> fromHash "#/year/2016/document/42/"
@@ -89,29 +166,28 @@ updateFromFlags flags model =
 fromHash : String -> List ( String, String )
 fromHash hash =
     let
-        indexedList =
-            String.split "/" hash |> List.drop 1 |> List.indexedMap (,)
+        query : Dict String String
+        query =
+            hash
+                |> String.split "/"
+                |> List.drop 1
+                |> pair
+                |> List.map toTuples
+                |> List.filter isValidKeyValue
+                |> Dict.fromList
 
-        headersAndValues =
-            List.partition (\( i, v ) -> rem i 2 == 0) indexedList
+        retroCompatibleQuery : Dict String String
+        retroCompatibleQuery =
+            case Dict.get "document" query of
+                Just documentId ->
+                    query
+                        |> Dict.insert "documentId" documentId
+                        |> Dict.remove "document"
 
-        headers =
-            Tuple.first headersAndValues |> List.map (\( i, v ) -> v)
-
-        retroCompatibileHeaders =
-            List.map
-                (\header ->
-                    if header == "document" then
-                        "documentId"
-                    else
-                        header
-                )
-                headers
-
-        values =
-            Tuple.second headersAndValues |> List.map (\( i, v ) -> v)
+                Nothing ->
+                    query
     in
-        List.map2 (,) retroCompatibileHeaders values
+        Dict.toList query
 
 
 urlUpdate : Navigation.Location -> Model -> ( Model, Cmd Msg )

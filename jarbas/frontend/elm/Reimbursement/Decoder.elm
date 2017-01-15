@@ -1,10 +1,13 @@
 module Reimbursement.Decoder exposing (..)
 
+import Dict
 import Array exposing (Array, fromList)
 import Reimbursement.Company.Model as CompanyModel
 import Reimbursement.Inputs.Update as InputsUpdate
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
 import Reimbursement.Receipt.Decoder as ReceiptDecoder
+import Reimbursement.Receipt.Model as ReceiptModel
+import Reimbursement.Inputs.Model as InputsModel
 import Reimbursement.RelatedTable.Model as RelatedTable
 import Internationalization exposing (Language)
 import Json.Decode exposing (Decoder, array, bool, float, int, keyValuePairs, list, nullable, string)
@@ -27,46 +30,35 @@ import String
 -}
 getPage : List ( String, String ) -> Maybe Int
 getPage query =
-    let
-        tuple =
-            List.head <|
-                List.filter
-                    (\( name, value ) ->
-                        if name == "page" then
-                            True
-                        else
-                            False
-                    )
-                    query
-    in
-        case tuple of
-            Just ( name, value ) ->
-                case String.toInt value of
-                    Ok num ->
-                        Just num
-
-                    Err e ->
-                        Nothing
-
-            Nothing ->
-                Nothing
+    query
+        |> Dict.fromList
+        |> Dict.get "page"
+        |> Maybe.andThen (String.toInt >> Result.toMaybe)
 
 
 decoder : Language -> Maybe String -> List ( String, String ) -> Decoder Results
 decoder lang apiKey query =
-    decode Results
-        |> required "results" (array <| singleDecoder lang apiKey)
-        |> required "count" (nullable int)
-        |> required "previous" (nullable string)
-        |> required "next" (nullable string)
-        |> hardcoded Nothing
-        |> hardcoded (getPage query |> Maybe.withDefault 1)
-        |> hardcoded ""
+    let
+        currentPage : Int
+        currentPage =
+            query
+                |> getPage
+                |> Maybe.withDefault 1
+    in
+        decode Results
+            |> required "results" (array <| singleDecoder lang apiKey)
+            |> required "count" (nullable int)
+            |> required "previous" (nullable string)
+            |> required "next" (nullable string)
+            |> hardcoded Nothing
+            |> hardcoded currentPage
+            |> hardcoded (Just currentPage)
 
 
 singleDecoder : Language -> Maybe String -> Decoder Reimbursement
 singleDecoder lang apiKey =
     let
+        supplier : CompanyModel.Model
         supplier =
             CompanyModel.model
     in
@@ -113,15 +105,19 @@ singleDecoder lang apiKey =
 updateReimbursementLanguage : Language -> Reimbursement -> Reimbursement
 updateReimbursementLanguage lang reimbursement =
     let
+        receipt : ReceiptModel.Model
         receipt =
             reimbursement.receipt
 
+        newReceipt : ReceiptModel.Model
         newReceipt =
             { receipt | lang = lang }
 
+        supplier : CompanyModel.Model
         supplier =
             reimbursement.supplierInfo
 
+        newCompany : CompanyModel.Model
         newCompany =
             { supplier | lang = lang }
     in
@@ -131,15 +127,19 @@ updateReimbursementLanguage lang reimbursement =
 updateLanguage : Language -> Model -> Model
 updateLanguage lang model =
     let
+        results : Results
         results =
             model.results
 
+        newReimbursements : Array Reimbursement
         newReimbursements =
             Array.map (updateReimbursementLanguage lang) model.results.reimbursements
 
+        newResults : Results
         newResults =
             { results | reimbursements = newReimbursements }
 
+        newInputs : InputsModel.Model
         newInputs =
             InputsUpdate.updateLanguage lang model.inputs
     in

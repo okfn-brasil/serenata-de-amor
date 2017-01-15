@@ -103,8 +103,9 @@ isValidPage page total =
 type Msg
     = Submit
     | ToggleForm
-    | Update String
-    | Page Int
+    | UpdateJumpTo String
+    | RecoverJumpTo
+    | Page (Maybe Int)
     | LoadReimbursements (Result Http.Error Results)
     | InputsMsg Inputs.Msg
     | ReceiptMsg Int Receipt.Msg
@@ -120,6 +121,7 @@ update msg model =
     case msg of
         Submit ->
             let
+                url : String
                 url =
                     toUrl (Inputs.toQuery model.inputs)
             in
@@ -128,17 +130,18 @@ update msg model =
         ToggleForm ->
             ( { model | showForm = not model.showForm }, Cmd.none )
 
-        Update value ->
-            let
-                results =
-                    model.results
+        UpdateJumpTo value ->
+            value
+                |> String.toInt
+                |> Result.toMaybe
+                |> updateJumpTo model
 
-                newResults =
-                    { results | jumpTo = onlyDigits value }
-            in
-                ( { model | results = newResults }, Cmd.none )
+        RecoverJumpTo ->
+            model.results.pageLoaded
+                |> Just
+                |> updateJumpTo model
 
-        Page page ->
+        Page (Just page) ->
             let
                 total =
                     model.results.total
@@ -155,6 +158,9 @@ update msg model =
                         Cmd.none
             in
                 ( model, cmd )
+
+        Page Nothing ->
+            ( model, Cmd.none )
 
         LoadReimbursements (Ok results) ->
             let
@@ -179,7 +185,7 @@ update msg model =
                         | reimbursements = newResultsReimbursements
                         , loadingPage = Nothing
                         , pageLoaded = current
-                        , jumpTo = toString current
+                        , jumpTo = Just current
                     }
 
                 newModel : Model
@@ -436,3 +442,13 @@ toUrl query =
                 |> List.map (\( index, value ) -> index ++ "/" ++ value)
                 |> String.join "/"
                 |> (++) "#/"
+
+
+updateJumpTo : Model -> Maybe Int -> ( Model, Cmd Msg )
+updateJumpTo model page =
+    let
+        results : Results
+        results =
+            model.results
+    in
+        ( { model | results = { results | jumpTo = page } }, Cmd.none )
