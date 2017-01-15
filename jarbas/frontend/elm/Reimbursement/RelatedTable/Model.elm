@@ -1,8 +1,8 @@
 module Reimbursement.RelatedTable.Model exposing (ReimbursementSummary, Model, Results, model)
 
 import Array exposing (Array)
-import Material
 import Internationalization exposing (Language(..))
+import Material
 
 
 type alias ReimbursementSummary =

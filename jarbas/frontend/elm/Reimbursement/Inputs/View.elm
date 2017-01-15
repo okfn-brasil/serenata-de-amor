@@ -1,16 +1,16 @@
 module Reimbursement.Inputs.View exposing (correctedFieldIndex, matchDate, view)
 
 import Dict
-import Reimbursement.Fields as Fields
 import Html exposing (br, p, span, text)
-import Material.Grid exposing (grid, cell, size, Device(..))
+import Internationalization exposing (TranslationId(..), translate)
+import Material.Grid exposing (Device(..), cell, grid, size)
 import Material.Options as Options
 import Material.Textfield as Textfield
 import Material.Typography as Typography
-import Reimbursement.Inputs.Model exposing (Model, Field, model)
-import Reimbursement.Inputs.Update exposing (Msg(..), update)
-import Internationalization exposing (TranslationId(..), translate)
 import Regex
+import Reimbursement.Fields as Fields
+import Reimbursement.Inputs.Model exposing (Field, Model, model)
+import Reimbursement.Inputs.Update exposing (Msg(..), update)
 
 
 {-| Matches a date un the YYYY-MM-DD format

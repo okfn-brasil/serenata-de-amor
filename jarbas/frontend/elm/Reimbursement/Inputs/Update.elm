@@ -2,11 +2,11 @@ module Reimbursement.Inputs.Update exposing (Msg(..), toQuery, update, updateFro
 
 import Char
 import Dict
-import Reimbursement.Fields as Fields
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
+import Reimbursement.Fields as Fields
+import Reimbursement.Inputs.Model exposing (Field, Model)
 import String
-import Reimbursement.Inputs.Model exposing (Model, Field)
 
 
 type Msg

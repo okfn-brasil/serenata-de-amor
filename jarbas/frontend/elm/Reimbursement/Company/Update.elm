@@ -1,11 +1,11 @@
 module Reimbursement.Company.Update exposing (..)
 
 import Char
-import Reimbursement.Company.Decoder exposing (decoder)
-import Reimbursement.Company.Model exposing (Model, Company)
 import Format.Url exposing (url)
 import Http
 import Material
+import Reimbursement.Company.Decoder exposing (decoder)
+import Reimbursement.Company.Model exposing (Company, Model)
 import String
 
 

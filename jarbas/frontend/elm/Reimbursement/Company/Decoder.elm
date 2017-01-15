@@ -3,7 +3,7 @@ module Reimbursement.Company.Decoder exposing (decoder)
 import Json.Decode exposing (nullable, string)
 import Json.Decode.Extra exposing (date)
 import Json.Decode.Pipeline exposing (decode, required)
-import Reimbursement.Company.Model exposing (Company, Activity)
+import Reimbursement.Company.Model exposing (Activity, Company)
 
 
 decoder : Json.Decode.Decoder Company

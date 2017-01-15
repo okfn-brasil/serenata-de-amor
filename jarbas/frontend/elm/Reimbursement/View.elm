@@ -2,16 +2,6 @@ module Reimbursement.View exposing (..)
 
 import Array
 import Date.Extra.Format exposing (utcIsoDateString)
-import Reimbursement.Company.View as CompanyView
-import Reimbursement.Inputs.Update as InputsUpdate
-import Reimbursement.Inputs.View as InputsView
-import Reimbursement.Map.Model as MapModel
-import Reimbursement.Map.View as MapView
-import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
-import Reimbursement.Receipt.View as ReceiptView
-import Reimbursement.SameDay.View as SameDay
-import Reimbursement.SameSubquota.View as SameSubquota
-import Reimbursement.Update exposing (Msg(..), onlyDigits, totalPages)
 import Format.CnpjCpf exposing (formatCnpjCpf)
 import Format.Date exposing (formatDate)
 import Format.Price exposing (..)
@@ -23,12 +13,22 @@ import Http
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material.Button as Button
 import Material.Color as Color
-import Material.Grid exposing (grid, cell, size, Device(..))
+import Material.Grid exposing (Device(..), cell, grid, size)
 import Material.Icon as Icon
 import Material.List as List
 import Material.Options as Options
 import Material.Textfield as Textfield
 import Material.Typography as Typography
+import Reimbursement.Company.View as CompanyView
+import Reimbursement.Inputs.Update as InputsUpdate
+import Reimbursement.Inputs.View as InputsView
+import Reimbursement.Map.Model as MapModel
+import Reimbursement.Map.View as MapView
+import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
+import Reimbursement.Receipt.View as ReceiptView
+import Reimbursement.SameDay.View as SameDay
+import Reimbursement.SameSubquota.View as SameSubquota
+import Reimbursement.Update exposing (Msg(..), onlyDigits, totalPages)
 import String
 
 

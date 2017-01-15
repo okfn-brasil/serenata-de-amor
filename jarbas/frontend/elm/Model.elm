@@ -1,9 +1,9 @@
 module Model exposing (Model, model)
 
-import Reimbursement.Model as Reimbursement
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Layout
 import Material
+import Reimbursement.Model as Reimbursement
 
 
 type alias Model =

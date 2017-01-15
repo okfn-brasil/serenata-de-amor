@@ -1,9 +1,9 @@
 module Reimbursement.Inputs.Model exposing (Model, Field, model)
 
 import Dict
-import Reimbursement.Fields as Fields
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
+import Reimbursement.Fields as Fields
 
 
 type alias Field =

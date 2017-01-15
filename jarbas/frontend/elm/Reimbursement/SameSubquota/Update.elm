@@ -1,7 +1,7 @@
 module Reimbursement.SameSubquota.Update exposing (..)
 
-import Reimbursement.RelatedTable.Update exposing (Msg, loadUrl)
 import Format.Url exposing (url)
+import Reimbursement.RelatedTable.Update exposing (Msg, loadUrl)
 
 
 type alias Filter =

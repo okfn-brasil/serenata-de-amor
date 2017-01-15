@@ -1,8 +1,6 @@
 module Reimbursement.Company.View exposing (streetImageUrl, view)
 
 import Date
-import Reimbursement.Company.Model exposing (Model, Company, Activity)
-import Reimbursement.Company.Update exposing (Msg)
 import Format.Date exposing (formatDate)
 import Format.Url exposing (url)
 import Html exposing (a, br, div, img, p, span, text)
@@ -11,6 +9,8 @@ import Internationalization exposing (Language(..), TranslationId(..), translate
 import Material.Icon as Icon
 import Material.Options as Options
 import Material.Typography as Typography
+import Reimbursement.Company.Model exposing (Activity, Company, Model)
+import Reimbursement.Company.Update exposing (Msg)
 
 
 {-| Generates a link to a Google Street View image:

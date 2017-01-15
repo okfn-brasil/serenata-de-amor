@@ -1,7 +1,7 @@
 module Reimbursement.Receipt.View exposing (view)
 
 import Html exposing (a, div, text)
-import Html.Attributes exposing (href, target, class)
+import Html.Attributes exposing (class, href, target)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material.Button as Button
 import Material.Icon as Icon

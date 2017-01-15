@@ -1,8 +1,8 @@
 module Reimbursement.RelatedTable.Decoder exposing (decoder)
 
-import Reimbursement.RelatedTable.Model exposing (Results, ReimbursementSummary)
 import Json.Decode exposing (array, float, int, nullable, string)
 import Json.Decode.Pipeline exposing (decode, hardcoded, optional, required)
+import Reimbursement.RelatedTable.Model exposing (ReimbursementSummary, Results)
 
 
 reimbursementSummaryDecoder : Json.Decode.Decoder ReimbursementSummary

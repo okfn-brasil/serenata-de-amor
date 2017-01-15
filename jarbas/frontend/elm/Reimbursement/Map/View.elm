@@ -1,13 +1,13 @@
 module Reimbursement.Map.View exposing (view)
 
-import Material.Button as Button
-import Material.Icon as Icon
 import Html exposing (a, text)
 import Html.Attributes exposing (href, target)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
-import String
+import Material.Button as Button
+import Material.Icon as Icon
 import Reimbursement.Map.Model exposing (Model)
 import Reimbursement.Map.Update exposing (Msg(Mdl))
+import String
 
 
 view : Model -> Html.Html Msg

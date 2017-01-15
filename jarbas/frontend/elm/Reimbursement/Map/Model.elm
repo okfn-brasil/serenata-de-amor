@@ -1,8 +1,8 @@
 module Reimbursement.Map.Model exposing (Model, modelFrom)
 
-import Reimbursement.Company.Model as Company
-import Material
 import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Material
+import Reimbursement.Company.Model as Company
 
 
 type alias GeoCoord =

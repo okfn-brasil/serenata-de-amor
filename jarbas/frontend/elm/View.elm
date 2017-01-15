@@ -1,10 +1,10 @@
 module View exposing (view)
 
-import Reimbursement.View
 import Html
 import Layout
 import Material.Layout
 import Model exposing (Model)
+import Reimbursement.View
 import Update exposing (Msg(..))
 
 

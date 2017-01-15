@@ -1,18 +1,18 @@
 module Reimbursement.Decoder exposing (..)
 
-import Dict
 import Array exposing (Array, fromList)
-import Reimbursement.Company.Model as CompanyModel
-import Reimbursement.Inputs.Update as InputsUpdate
-import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
-import Reimbursement.Receipt.Decoder as ReceiptDecoder
-import Reimbursement.Receipt.Model as ReceiptModel
-import Reimbursement.Inputs.Model as InputsModel
-import Reimbursement.RelatedTable.Model as RelatedTable
+import Dict
 import Internationalization exposing (Language)
 import Json.Decode exposing (Decoder, array, bool, float, int, keyValuePairs, list, nullable, string)
 import Json.Decode.Extra exposing (date)
 import Json.Decode.Pipeline exposing (decode, hardcoded, required)
+import Reimbursement.Company.Model as CompanyModel
+import Reimbursement.Inputs.Model as InputsModel
+import Reimbursement.Inputs.Update as InputsUpdate
+import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
+import Reimbursement.Receipt.Decoder as ReceiptDecoder
+import Reimbursement.Receipt.Model as ReceiptModel
+import Reimbursement.RelatedTable.Model as RelatedTable
 import String
 
 
