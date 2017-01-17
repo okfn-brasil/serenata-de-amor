@@ -4,7 +4,6 @@ WORKDIR /code
 COPY elm-package.json elm-package.json
 COPY package.json package.json
 COPY gulpfile.js gulpfile.js
-COPY jarbas jarbas
 RUN yarn install
-VOLUME /assets
+COPY jarbas jarbas
 CMD yarn assets
