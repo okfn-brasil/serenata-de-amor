@@ -28,7 +28,7 @@ class Command(LoadCommand):
         Receives path to the dataset file and create a Company object for
         each row of each file. It creates the related activity when needed.
         """
-        skip = ('main_activity', 'secondary_activty')
+        skip = ('main_activity', 'secondary_activity')
         keys = list(f.name for f in Company._meta.fields if f not in skip)
         with lzma.open(self.path, mode='rt') as file_handler:
             for row in csv.DictReader(file_handler):
