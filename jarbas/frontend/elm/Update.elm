@@ -1,12 +1,13 @@
-module Update exposing (Flags, Msg(..), update, urlUpdate, updateFromFlags)
+module Update exposing (Flags, Msg(..), isValidKeyValue, pair, toTuples, update, updateFromFlags, urlUpdate)
 
-import Documents.Decoder
-import Documents.Inputs.Update
-import Documents.Update
+import Dict exposing (Dict)
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 import Model exposing (Model, model)
 import Navigation
+import Reimbursement.Decoder
+import Reimbursement.Inputs.Update
+import Reimbursement.Update
 import String
 
 
@@ -17,7 +18,7 @@ type alias Flags =
 
 
 type Msg
-    = DocumentsMsg Documents.Update.Msg
+    = ReimbursementMsg Reimbursement.Update.Msg
     | ChangeUrl Navigation.Location
     | LayoutMsg Msg
     | Mdl (Material.Msg Msg)
@@ -26,18 +27,18 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        DocumentsMsg msg ->
+        ReimbursementMsg msg ->
             let
                 updated =
-                    Documents.Update.update msg model.documents
+                    Reimbursement.Update.update msg model.reimbursements
 
-                documents =
+                reimbursements =
                     Tuple.first updated
 
                 cmd =
-                    Cmd.map DocumentsMsg <| Tuple.second updated
+                    Cmd.map ReimbursementMsg <| Tuple.second updated
             in
-                ( { model | documents = documents }, cmd )
+                ( { model | reimbursements = reimbursements }, cmd )
 
         ChangeUrl location ->
             urlUpdate location model
@@ -58,12 +59,13 @@ updateFromFlags flags model =
             else
                 English
 
+        googleStreetViewApiKey : Maybe String
         googleStreetViewApiKey =
-            flags.googleStreetViewApiKey
+            Just flags.googleStreetViewApiKey
 
-        newDocuments =
-            Documents.Decoder.updateLanguage lang model.documents
-                |> Documents.Decoder.updateGoogleStreetViewApiKey googleStreetViewApiKey
+        newReimbursements =
+            Reimbursement.Decoder.updateLanguage lang model.reimbursements
+                |> Reimbursement.Decoder.updateGoogleStreetViewApiKey googleStreetViewApiKey
 
         layout =
             model.layout
@@ -72,11 +74,87 @@ updateFromFlags flags model =
             { layout | lang = lang }
     in
         { model
-            | documents = newDocuments
+            | reimbursements = newReimbursements
             , layout = newLayout
             , googleStreetViewApiKey = googleStreetViewApiKey
             , lang = lang
         }
+
+
+{-| Group a list of strings in a list of string pairs:
+
+    >>> pair ["a", "b", "c", "d", "e"]
+    [["a", "b"], ["c", "d"], ["e"]]
+
+-}
+pair : List String -> List (List String)
+pair query =
+    case List.take 2 query of
+        [] ->
+            []
+
+        keyValue ->
+            keyValue :: pair (List.drop 2 query)
+
+
+{-| Convert a list of lists of strings in a list of key/value tuples:
+
+    >>> toTuples ["foo", "bar"]
+    ( "foo", "bar" )
+
+    >>> toTuples ["foo", ""]
+    ( "foo", "" )
+
+    >>> toTuples ["", "bar"]
+    ( "", "bar" )
+
+    >>> toTuples ["foobar"]
+    ( "foobar", "" )
+
+    >>> toTuples ["fo", "ob", "ar"]
+    ( "fo", "ob" )
+
+-}
+toTuples : List String -> ( String, String )
+toTuples query =
+    let
+        key : String
+        key =
+            query
+                |> List.head
+                |> Maybe.withDefault ""
+
+        value : String
+        value =
+            query
+                |> List.drop 1
+                |> List.head
+                |> Maybe.withDefault ""
+    in
+        ( key, value )
+
+
+{-| Filter tuples to make sure they have two strings:
+
+    >>> isValidKeyValue ("foo", "bar")
+    True
+
+    >>> isValidKeyValue ("", "bar")
+    False
+
+    >>> isValidKeyValue ("foo", "")
+    False
+
+    >>> isValidKeyValue ("", "")
+    False
+
+-}
+isValidKeyValue : ( String, String ) -> Bool
+isValidKeyValue ( key, value ) =
+    if String.isEmpty key || String.isEmpty value then
+        False
+    else
+        True
 
 
 {-| Generates a list of URL paramenters (query string) from a URL hash:
@@ -88,29 +166,28 @@ updateFromFlags flags model =
 fromHash : String -> List ( String, String )
 fromHash hash =
     let
-        indexedList =
-            String.split "/" hash |> List.drop 1 |> List.indexedMap (,)
+        query : Dict String String
+        query =
+            hash
+                |> String.split "/"
+                |> List.drop 1
+                |> pair
+                |> List.map toTuples
+                |> List.filter isValidKeyValue
+                |> Dict.fromList
 
-        headersAndValues =
-            List.partition (\( i, v ) -> rem i 2 == 0) indexedList
+        retroCompatibleQuery : Dict String String
+        retroCompatibleQuery =
+            case Dict.get "document" query of
+                Just documentId ->
+                    query
+                        |> Dict.insert "documentId" documentId
+                        |> Dict.remove "document"
 
-        headers =
-            Tuple.first headersAndValues |> List.map (\( i, v ) -> v)
-
-        retroCompatibileHeaders =
-            List.map
-                (\header ->
-                    if header == "document" then
-                        "documentId"
-                    else
-                        header
-                )
-                headers
-
-        values =
-            Tuple.second headersAndValues |> List.map (\( i, v ) -> v)
+                Nothing ->
+                    query
     in
-        List.map2 (,) retroCompatibileHeaders values
+        Dict.toList query
 
 
 urlUpdate : Navigation.Location -> Model -> ( Model, Cmd Msg )
@@ -125,25 +202,25 @@ urlUpdate location model =
             else
                 True
 
-        documents =
+        reimbursements =
             if List.isEmpty query then
-                Documents.Update.newSearch model.documents
+                Reimbursement.Update.newSearch model.reimbursements
             else
-                model.documents
+                model.reimbursements
 
         inputs =
-            Documents.Inputs.Update.updateFromQuery documents.inputs query
+            Reimbursement.Inputs.Update.updateFromQuery reimbursements.inputs query
 
         results =
-            documents.results
+            reimbursements.results
 
         newResults =
-            { results | loadingPage = Documents.Decoder.getPage query }
+            { results | loadingPage = Reimbursement.Decoder.getPage query }
 
-        newDocuments =
-            { documents | inputs = inputs, results = newResults, loading = loading }
+        newReimbursements =
+            { reimbursements | inputs = inputs, results = newResults, loading = loading }
 
         cmd =
-            Documents.Update.loadDocuments model.lang model.googleStreetViewApiKey query
+            Reimbursement.Update.loadReimbursements model.lang model.googleStreetViewApiKey query
     in
-        ( { model | documents = newDocuments }, Cmd.map DocumentsMsg cmd )
+        ( { model | reimbursements = newReimbursements }, Cmd.map ReimbursementMsg cmd )

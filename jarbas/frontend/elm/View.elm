@@ -1,10 +1,10 @@
 module View exposing (view)
 
-import Documents.View
 import Html
 import Layout
 import Material.Layout
 import Model exposing (Model)
+import Reimbursement.View
 import Update exposing (Msg(..))
 
 
@@ -17,8 +17,8 @@ view model =
         drawer =
             List.map (\x -> Html.map LayoutMsg x) (Layout.drawer model.layout)
 
-        documents =
-            Html.map DocumentsMsg <| Documents.View.view model.documents
+        reimbursements =
+            Html.map ReimbursementMsg <| Reimbursement.View.view model.reimbursements
     in
         Material.Layout.render
             Mdl
@@ -27,5 +27,5 @@ view model =
             { header = [ header ]
             , drawer = drawer
             , tabs = ( [], [] )
-            , main = [ documents ]
+            , main = [ reimbursements ]
             }

@@ -6,7 +6,7 @@ var rename = require('gulp-rename');
 
 gulp.task('elm', function () {
   return gulp.src('jarbas/frontend/elm/Main.elm')
-    .pipe(elm())
+    .pipe(elm({warn: true}))
     .on('error', onError)
     .pipe(uglify())
     .pipe(rename('jarbas/frontend/static/app.js'))

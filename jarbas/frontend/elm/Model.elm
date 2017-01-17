@@ -1,15 +1,15 @@
 module Model exposing (Model, model)
 
-import Documents.Model
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Layout
 import Material
+import Reimbursement.Model as Reimbursement
 
 
 type alias Model =
-    { documents : Documents.Model.Model
+    { reimbursements : Reimbursement.Model
     , layout : Layout.Model
-    , googleStreetViewApiKey : String
+    , googleStreetViewApiKey : Maybe String
     , lang : Language
     , mdl : Material.Model
     }
@@ -17,4 +17,9 @@ type alias Model =
 
 model : Model
 model =
-    Model Documents.Model.model Layout.model "" English Material.model
+    Model
+        Reimbursement.model
+        Layout.model
+        Nothing
+        English
+        Material.model

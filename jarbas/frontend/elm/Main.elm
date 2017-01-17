@@ -1,8 +1,8 @@
 module Main exposing (..)
 
-import Navigation
 import Model exposing (Model, model)
-import Update exposing (Flags, Msg(..), update, urlUpdate, updateFromFlags)
+import Navigation
+import Update exposing (Flags, Msg(..), update, updateFromFlags, urlUpdate)
 import View exposing (view)
 
 
