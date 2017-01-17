@@ -130,6 +130,13 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 
 ## Installing
 
+If you have some issues with settings, maybe [this section can be helpful](#settings).
+The best way to get started is by copying the `contrib/.env.sample` as `.env`:
+
+```console
+cp contrib/.env.sample .env
+```
+
 ### Using Docker
 
 If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and make, just run:
@@ -147,7 +154,7 @@ docker-compose run --rm jarbas python manage.py ceapdatasets
 docker-compose run --rm jarbas python manage.py collectstatic --no-input
 ```
 
-You can access it at [`localhost:80`](http://localhost:8080/). However your database starts empty, but you can use sample data to development using this command:
+You can access it at [`localhost:8000`](http://localhost:8000/). However your database starts empty, but you can use sample data to development using this command:
 
 ```console
 make seed.sample
@@ -163,7 +170,6 @@ docker-compose run --rm jarbas python manage.py irregularities contrib/sample-da
 
 You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
 
-If you have some issues with settings, maybe [this section can be helpful](#settings).
 
 ### Local install
 
