@@ -1,6 +1,5 @@
 module Reimbursement.Fields exposing (..)
 
-import Dict
 import Internationalization exposing (Language(..), TranslationId(..), translate)
 
 
@@ -44,54 +43,44 @@ names =
     ]
 
 
-labels : Language -> List String
-labels lang =
-    List.map
-        (\f -> translate lang f)
-        [ FieldYear
-        , FieldDocumentId
-        , FieldApplicantId
-        , FieldTotalReimbursementValue
-        , FieldTotalNetValue
-        , FieldReimbursementNumbers
-        , FieldNetValues
-        , FieldCongresspersonId
-        , FieldCongresspersonName
-        , FieldCongresspersonDocument
-        , FieldState
-        , FieldParty
-        , FieldTermId
-        , FieldTerm
-        , FieldSubquotaId
-        , FieldSubquotaDescription
-        , FieldSubquotaGroupId
-        , FieldSubquotaGroupDescription
-        , FieldCompany
-        , FieldCnpjCpf
-        , FieldDocumentType
-        , FieldDocumentNumber
-        , FieldDocumentValue
-        , FieldIssueDate
-        , FieldIssueDateStart
-        , FieldIssueDateEnd
-        , FieldMonth
-        , FieldRemarkValue
-        , FieldInstallment
-        , FieldBatchNumber
-        , FieldReimbursementValues
-        , FieldPassenger
-        , FieldLegOfTheTrip
-        , FieldProbability
-        , FieldSuspicions
-        ]
-
-
-getLabel : Language -> String -> String
-getLabel lang name =
-    List.map2 (,) names (labels lang)
-        |> Dict.fromList
-        |> Dict.get name
-        |> Maybe.withDefault ""
+labels : List TranslationId
+labels =
+    [ FieldYear
+    , FieldDocumentId
+    , FieldApplicantId
+    , FieldTotalReimbursementValue
+    , FieldTotalNetValue
+    , FieldReimbursementNumbers
+    , FieldNetValues
+    , FieldCongresspersonId
+    , FieldCongresspersonName
+    , FieldCongresspersonDocument
+    , FieldState
+    , FieldParty
+    , FieldTermId
+    , FieldTerm
+    , FieldSubquotaId
+    , FieldSubquotaDescription
+    , FieldSubquotaGroupId
+    , FieldSubquotaGroupDescription
+    , FieldCompany
+    , FieldCnpjCpf
+    , FieldDocumentType
+    , FieldDocumentNumber
+    , FieldDocumentValue
+    , FieldIssueDate
+    , FieldIssueDateStart
+    , FieldIssueDateEnd
+    , FieldMonth
+    , FieldRemarkValue
+    , FieldInstallment
+    , FieldBatchNumber
+    , FieldReimbursementValues
+    , FieldPassenger
+    , FieldLegOfTheTrip
+    , FieldProbability
+    , FieldSuspicions
+    ]
 
 
 {-| Filter to get searchable fields:
@@ -103,8 +92,8 @@ getLabel lang name =
     False
 
 -}
-isSearchable : ( String, String ) -> Bool
-isSearchable ( field, label ) =
+isSearchable : ( String, a ) -> Bool
+isSearchable ( field, _ ) =
     if field == "page" then
         True
     else
@@ -120,11 +109,10 @@ isSearchable ( field, label ) =
             ]
 
 
-sets : Language -> List ( Int, ( String, List String ) )
-sets lang =
-    List.indexedMap
-        (,)
-        [ ( translate lang SearchFieldsetCongressperson
+sets : List ( Int, ( TranslationId, List String ) )
+sets =
+    List.indexedMap (,)
+        [ ( SearchFieldsetCongressperson
           , [ "applicantId"
             , "year"
             , "month"
@@ -134,7 +122,7 @@ sets lang =
             , "issueDateEnd"
             ]
           )
-        , ( translate lang SearchFieldsetReimbursement
+        , ( SearchFieldsetReimbursement
           , [ "applicantId", "year", "documentId" ]
           )
         ]

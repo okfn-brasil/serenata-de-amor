@@ -7,19 +7,18 @@ import Reimbursement.Fields as Fields
 
 
 type alias Field =
-    { label : String
+    { label : TranslationId
     , value : String
     }
 
 
 type alias Model =
     { inputs : Dict.Dict String Field
-    , lang : Language
     , mdl : Material.Model
     }
 
 
-toFormField : ( String, String ) -> ( String, Field )
+toFormField : ( String, TranslationId ) -> ( String, Field )
 toFormField ( name, label ) =
     ( name, Field label "" )
 
@@ -28,11 +27,13 @@ model : Model
 model =
     let
         pairs =
-            List.map2 (,) Fields.names (Fields.labels English)
+            List.map2 (,) Fields.names (Fields.labels)
 
         inputs =
             List.filter Fields.isSearchable pairs
                 |> List.map toFormField
                 |> Dict.fromList
     in
-        Model inputs English Material.model
+        { inputs = inputs
+        , mdl = Material.model
+        }

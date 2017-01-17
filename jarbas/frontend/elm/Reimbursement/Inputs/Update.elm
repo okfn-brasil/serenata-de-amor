@@ -1,8 +1,7 @@
-module Reimbursement.Inputs.Update exposing (Msg(..), toQuery, update, updateFromQuery, updateLanguage)
+module Reimbursement.Inputs.Update exposing (Msg(..), toQuery, update, updateFromQuery)
 
 import Char
 import Dict
-import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
 import Reimbursement.Fields as Fields
 import Reimbursement.Inputs.Model exposing (Field, Model)
@@ -95,17 +94,3 @@ toQuery model =
         |> Dict.filter (\index field -> field.value |> String.trim |> String.isEmpty |> not)
         |> Dict.map (\index field -> String.trim field.value)
         |> Dict.toList
-
-
-updateFieldLanguage : Language -> String -> Field -> Field
-updateFieldLanguage lang key field =
-    { field | label = Fields.getLabel lang key }
-
-
-updateLanguage : Language -> Model -> Model
-updateLanguage lang model =
-    let
-        inputs =
-            Dict.map (updateFieldLanguage lang) model.inputs
-    in
-        { model | inputs = inputs, lang = lang }

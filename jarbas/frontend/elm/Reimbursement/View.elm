@@ -52,15 +52,11 @@ viewButton model index defaultAttr defaultLabel =
             else
                 defaultAttr
     in
-        grid
-            []
-            [ cell
-                [ size Desktop 12, size Tablet 8, size Phone 4 ]
-                [ Options.styled
-                    div
+        grid []
+            [ cell [ size Desktop 12, size Tablet 8, size Phone 4 ]
+                [ Options.styled div
                     [ Typography.center ]
-                    [ Button.render
-                        Mdl
+                    [ Button.render Mdl
                         [ index ]
                         model.mdl
                         attr
@@ -74,18 +70,16 @@ viewForm : Model -> Html Msg
 viewForm model =
     let
         inputs =
-            InputsView.view model.loading model.inputs |> Html.map InputsMsg
+            InputsView.view model.loading model.inputs model.lang |> Html.map InputsMsg
 
         send =
-            viewButton
-                model
+            viewButton model
                 0
                 [ Button.raised, Button.colored, Button.type_ "submit" ]
                 Search
 
         showForm =
-            viewButton
-                model
+            viewButton model
                 1
                 [ Button.raised, Button.onClick ToggleForm ]
                 NewSearch
@@ -137,8 +131,7 @@ viewJumpTo model =
 
         input : Html Msg
         input =
-            Textfield.render
-                Mdl
+            Textfield.render Mdl
                 [ 0 ]
                 model.mdl
                 [ Textfield.onInput UpdateJumpTo
@@ -154,8 +147,7 @@ viewJumpTo model =
                 |> Maybe.withDefault 1
                 |> totalPages
     in
-        form
-            [ onSubmit (Page model.results.jumpTo) ]
+        form [ onSubmit (Page model.results.jumpTo) ]
             [ PaginationPage |> translate model.lang |> text
             , input
             , PaginationOf |> translate model.lang |> text
@@ -165,10 +157,8 @@ viewJumpTo model =
 
 viewPaginationButton : Model -> Int -> Int -> String -> Html Msg
 viewPaginationButton model page index icon =
-    div
-        []
-        [ Button.render
-            Mdl
+    div []
+        [ Button.render Mdl
             [ index ]
             model.mdl
             [ Button.minifab
@@ -206,24 +196,18 @@ viewPagination model =
         if current >= total then
             []
         else
-            [ cell
-                [ size Desktop 4, size Tablet 2, size Phone 1 ]
-                [ Options.styled
-                    div
+            [ cell [ size Desktop 4, size Tablet 2, size Phone 1 ]
+                [ Options.styled div
                     [ Typography.right ]
                     [ previous ]
                 ]
-            , cell
-                [ size Desktop 4, size Tablet 4, size Phone 2 ]
-                [ Options.styled
-                    div
+            , cell [ size Desktop 4, size Tablet 4, size Phone 2 ]
+                [ Options.styled div
                     [ Typography.center ]
                     [ viewJumpTo model ]
                 ]
-            , cell
-                [ size Desktop 4, size Tablet 2, size Phone 1 ]
-                [ Options.styled
-                    div
+            , cell [ size Desktop 4, size Tablet 2, size Phone 1 ]
+                [ Options.styled div
                     [ Typography.left ]
                     [ next ]
                 ]
@@ -238,8 +222,7 @@ viewPagination model =
 
 sourceUrl : Reimbursement -> String
 sourceUrl reimbursement =
-    url
-        "http://www.camara.gov.br/cota-parlamentar/documento"
+    url "http://www.camara.gov.br/cota-parlamentar/documento"
         [ ( "nuDeputadoId", toString reimbursement.applicantId )
         , ( "numMes", toString reimbursement.month )
         , ( "numAno", toString reimbursement.year )
@@ -306,8 +289,7 @@ viewError : Language -> Maybe Http.Error -> Html Msg
 viewError lang error =
     case error of
         Just _ ->
-            Options.styled
-                p
+            Options.styled p
                 [ Typography.title ]
                 [ text (translate lang ReimbursementNotFound) ]
 
@@ -349,12 +331,10 @@ viewPs lang reimbursement =
 
         currency =
             if reimbursement.documentType == 2 then
-                Options.styled
-                    p
+                Options.styled p
                     [ Typography.caption ]
                     [ translate lang FieldsetCurrencyDetails |> text
-                    , a
-                        [ href currencyUrl, target "_blank", class "currency" ]
+                    , a [ href currencyUrl, target "_blank", class "currency" ]
                         [ translate lang FieldsetCurrencyDetailsLink |> text
                         , formatDate lang reimbursement.issueDate |> text
                         ]
@@ -363,11 +343,9 @@ viewPs lang reimbursement =
             else
                 text ""
     in
-        div
-            []
+        div []
             [ currency
-            , Options.styled
-                p
+            , Options.styled p
                 [ Typography.caption ]
                 [ text (translate lang FieldsetCompanyDetails) ]
             ]
@@ -385,10 +363,8 @@ viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
             else
                 text ""
     in
-        div
-            []
-            [ Options.styled
-                p
+        div []
+            [ Options.styled p
                 [ Typography.subhead ]
                 [ iconTag, text (" " ++ title) ]
             , List.ul [] (List.map viewReimbursementBlockLine fields)
@@ -519,8 +495,7 @@ viewReimbursement lang index reimbursement =
                 |> Html.map (\_ -> MapMsg)
 
         title =
-            Options.styled
-                p
+            Options.styled p
                 [ Typography.headline, Color.text Color.primary ]
                 [ (translate lang ReimbursementTitle) ++ (toString reimbursement.documentId) |> text ]
 
@@ -529,8 +504,7 @@ viewReimbursement lang index reimbursement =
                 |> Html.map (CompanyMsg index)
 
         supplierTitle =
-            Options.styled
-                p
+            Options.styled p
                 [ Typography.headline ]
                 [ text "" ]
 
@@ -544,32 +518,25 @@ viewReimbursement lang index reimbursement =
             SameSubquota.view reimbursement.sameSubquota
                 |> Html.map (SameSubquotaMsg index)
     in
-        [ cell
-            [ size Desktop 6, size Tablet 4, size Phone 2 ]
+        [ cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
             [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title ] ]
-        , cell
-            [ size Desktop 6, size Tablet 4, size Phone 2 ]
-            [ Options.styled
-                div
+        , cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
+            [ Options.styled div
                 [ Options.css "margin-top" "3rem", Typography.right ]
                 [ receipt, mapButton ]
             ]
-        , cell
-            [ size Desktop 6, size Tablet 8, size Phone 4 ]
+        , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] blocks
-            , Options.styled
-                p
+            , Options.styled p
                 [ Typography.caption, Options.css "margin-top" "1rem" ]
                 [ text (translate lang ReimbursementSource)
-                , a
-                    [ href (sourceUrl reimbursement), class "chamber-of-deputies-source" ]
+                , a [ href (sourceUrl reimbursement), class "chamber-of-deputies-source" ]
                     [ text (translate lang ReimbursementChamberOfDeputies) ]
                 ]
             , sameDay
             , sameSubquota
             ]
-        , cell
-            [ size Desktop 6, size Tablet 8, size Phone 4 ]
+        , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] [ supplierTitle, supplier ] ]
         ]
 
@@ -601,10 +568,8 @@ viewReimbursements model =
 
         title : Material.Grid.Cell Msg
         title =
-            cell
-                [ size Desktop 12, size Tablet 8, size Phone 4 ]
-                [ Options.styled
-                    div
+            cell [ size Desktop 12, size Tablet 8, size Phone 4 ]
+                [ Options.styled div
                     [ Typography.center, Typography.display1 ]
                     [ results |> text ]
                 ]

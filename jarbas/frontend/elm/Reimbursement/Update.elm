@@ -4,7 +4,7 @@ import Array exposing (Array)
 import Char
 import Format.Url exposing (url)
 import Http
-import Internationalization exposing (Language)
+import Internationalization exposing (Language, TranslationId(..))
 import Material
 import Navigation
 import Regex exposing (regex, replace)
@@ -52,16 +52,14 @@ onlyDigits value =
 
 toUniqueId : Reimbursement -> SameDay.UniqueId
 toUniqueId reimbursement =
-    SameDay.UniqueId
-        reimbursement.applicantId
+    SameDay.UniqueId reimbursement.applicantId
         reimbursement.year
         reimbursement.documentId
 
 
 toSameSubquotaFilter : Reimbursement -> SameSubquota.Filter
 toSameSubquotaFilter reimbursement =
-    SameSubquota.Filter
-        reimbursement.applicantId
+    SameSubquota.Filter reimbursement.applicantId
         reimbursement.year
         reimbursement.month
         reimbursement.subquotaId
@@ -73,7 +71,7 @@ newSearch model =
         | results = results
         , showForm = True
         , loading = False
-        , inputs = Inputs.updateLanguage model.lang Reimbursement.Inputs.Model.model
+        , inputs = Reimbursement.Inputs.Model.model
     }
 
 
@@ -199,24 +197,21 @@ update msg model =
 
                 companyCmds : List (Cmd Msg)
                 companyCmds =
-                    Array.map
-                        (.cnpjCpf >> Company.load)
+                    Array.map (.cnpjCpf >> Company.load)
                         newModel.results.reimbursements
                         |> Array.toIndexedList
                         |> List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd)
 
                 sameDayCmds : List (Cmd Msg)
                 sameDayCmds =
-                    Array.map
-                        (toUniqueId >> SameDay.load)
+                    Array.map (toUniqueId >> SameDay.load)
                         newModel.results.reimbursements
                         |> Array.toIndexedList
                         |> List.map (\( idx, cmd ) -> Cmd.map (SameDayMsg idx) cmd)
 
                 sameSubquotaCmds : List (Cmd Msg)
                 sameSubquotaCmds =
-                    Array.map
-                        (toSameSubquotaFilter >> SameSubquota.load)
+                    Array.map (toSameSubquotaFilter >> SameSubquota.load)
                         newModel.results.reimbursements
                         |> Array.toIndexedList
                         |> List.map (\( idx, cmd ) -> Cmd.map (SameSubquotaMsg idx) cmd)
@@ -334,8 +329,7 @@ updateReceipt lang target msg reimbursement =
     let
         reimbursementId : Maybe ReimbursementId
         reimbursementId =
-            ReimbursementId
-                reimbursement.year
+            ReimbursementId reimbursement.year
                 reimbursement.applicantId
                 reimbursement.documentId
                 |> Just
@@ -414,8 +408,7 @@ loadReimbursements lang apiKey query =
             jsonQuery =
                 ( "format", "json" ) :: convertQuery query
         in
-            Http.get
-                (url "/api/reimbursement/" jsonQuery)
+            Http.get (url "/api/reimbursement/" jsonQuery)
                 (decoder lang apiKey jsonQuery)
                 |> Http.send LoadReimbursements
 
