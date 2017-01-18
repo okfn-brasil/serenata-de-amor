@@ -1,8 +1,8 @@
-module Reimbursement.Inputs.Update exposing (Msg(..), toQuery, update, updateFromQuery)
+module Reimbursement.Search.Update exposing (Msg(..), toQuery, update, updateFromQuery)
 
 import Char
 import Reimbursement.Fields as Fields exposing (Field(..), Label(..))
-import Reimbursement.Inputs.Model exposing (Model)
+import Reimbursement.Search.Model exposing (Model)
 import String
 import List.Extra exposing (updateIf)
 

@@ -6,7 +6,7 @@ import Material
 import Model exposing (Model, model)
 import Navigation
 import Reimbursement.Decoder
-import Reimbursement.Inputs.Update
+import Reimbursement.Search.Update
 import Reimbursement.Update
 import String
 
@@ -208,8 +208,8 @@ urlUpdate location model =
             else
                 model.reimbursements
 
-        inputs =
-            Reimbursement.Inputs.Update.updateFromQuery reimbursements.inputs query
+        searchFields =
+            Reimbursement.Search.Update.updateFromQuery reimbursements.searchFields query
 
         results =
             reimbursements.results
@@ -218,7 +218,7 @@ urlUpdate location model =
             { results | loadingPage = Reimbursement.Decoder.getPage query }
 
         newReimbursements =
-            { reimbursements | inputs = inputs, results = newResults, loading = loading }
+            { reimbursements | searchFields = searchFields, results = newResults, loading = loading }
 
         cmd =
             Reimbursement.Update.loadReimbursements model.lang model.googleStreetViewApiKey query

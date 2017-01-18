@@ -1,4 +1,4 @@
-module Reimbursement.Inputs.View exposing (correctedFieldIndex, matchDate, view)
+module Reimbursement.Search.View exposing (correctedFieldIndex, matchDate, view)
 
 import Html exposing (br, p, span, text)
 import Internationalization exposing (TranslationId(..), Language, translate)
@@ -8,7 +8,7 @@ import Material.Textfield as Textfield
 import Material.Typography as Typography
 import Regex
 import Reimbursement.Fields as Fields exposing (Field(..), Label(..))
-import Reimbursement.Inputs.Update exposing (Msg(..), update)
+import Reimbursement.Search.Update exposing (Msg(..), update)
 import Reimbursement.Update as RootMsg exposing (Msg(..))
 import Reimbursement.Model as RootModel exposing (Model)
 import List.Extra
@@ -41,7 +41,7 @@ matchDate value =
 
 getField : RootModel.Model -> String -> Field
 getField model name =
-    List.Extra.find (Fields.getName >> (==) name) model.inputs
+    List.Extra.find (Fields.getName >> (==) name) model.searchFields
         |> Maybe.withDefault (Field (Label EmptyField "") "")
 
 
@@ -52,7 +52,7 @@ viewField model ( index, ( name, field ) ) =
             Fields.getValue field
 
         base =
-            [ Textfield.onInput (Update name >> RootMsg.InputsMsg)
+            [ Textfield.onInput (Update name >> RootMsg.SearchMsg)
             , Textfield.value value
             , Options.css "width" "100%"
             ]
@@ -98,11 +98,11 @@ viewFieldset model ( index, ( title, names ) ) =
         heading =
             [ Options.styled p [ Typography.title ] [ text <| translate model.lang title ] ]
 
-        inputs =
+        searchFields =
             List.map (viewField model) indexedNamesAndFields
     in
         cell [ size Desktop 6, size Tablet 6, size Phone 6 ]
-            (List.append heading inputs)
+            (List.append heading searchFields)
 
 
 {-| Creates an unique index for each field, using the hundreds for the

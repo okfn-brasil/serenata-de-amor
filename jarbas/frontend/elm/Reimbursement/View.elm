@@ -20,8 +20,8 @@ import Material.Options as Options
 import Material.Textfield as Textfield
 import Material.Typography as Typography
 import Reimbursement.Company.View as CompanyView
-import Reimbursement.Inputs.Update as InputsUpdate
-import Reimbursement.Inputs.View as InputsView
+import Reimbursement.Search.Update as SearchUpdate
+import Reimbursement.Search.View as SearchView
 import Reimbursement.Map.Model as MapModel
 import Reimbursement.Map.View as MapView
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
@@ -69,8 +69,8 @@ viewButton model index defaultAttr defaultLabel =
 viewForm : Model -> Html Msg
 viewForm model =
     let
-        inputs =
-            InputsView.view model
+        searchFields =
+            SearchView.view model
 
         send =
             viewButton model
@@ -85,7 +85,7 @@ viewForm model =
                 NewSearch
     in
         if model.showForm then
-            form [ onSubmit Submit ] [ inputs, send ]
+            form [ onSubmit Submit ] [ searchFields, send ]
         else
             showForm
 
@@ -557,7 +557,7 @@ viewReimbursements model =
 
         searched : Bool
         searched =
-            InputsUpdate.toQuery model.inputs |> List.isEmpty |> not
+            SearchUpdate.toQuery model.searchFields |> List.isEmpty |> not
 
         results : String
         results =

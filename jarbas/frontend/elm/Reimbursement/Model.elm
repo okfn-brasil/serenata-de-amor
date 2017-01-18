@@ -6,7 +6,7 @@ import Http
 import Internationalization exposing (Language(..))
 import Material
 import Reimbursement.Company.Model as Company
-import Reimbursement.Inputs.Model as Inputs
+import Reimbursement.Search.Model as Search
 import Reimbursement.Receipt.Model as Receipt
 import Reimbursement.RelatedTable.Model as RelatedTable
 
@@ -65,7 +65,7 @@ type alias Results =
 
 type alias Model =
     { results : Results
-    , inputs : Inputs.Model
+    , searchFields : Search.Model
     , showForm : Bool
     , loading : Bool
     , error : Maybe Http.Error
@@ -91,7 +91,7 @@ model : Model
 model =
     Model
         results
-        Inputs.model
+        Search.model
         True
         False
         Nothing

@@ -1,4 +1,4 @@
-module Reimbursement.Inputs.Model exposing (Model, model)
+module Reimbursement.Search.Model exposing (Model, model)
 
 import Reimbursement.Fields as Fields exposing (Field(..), Label(..), labels)
 

@@ -11,8 +11,8 @@ import Regex exposing (regex, replace)
 import Reimbursement.Company.Update as Company
 import Reimbursement.Decoder exposing (decoder)
 import Reimbursement.Fields as Fields
-import Reimbursement.Inputs.Model
-import Reimbursement.Inputs.Update as Inputs
+import Reimbursement.Search.Model
+import Reimbursement.Search.Update as Search
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
 import Reimbursement.Receipt.Model exposing (ReimbursementId)
 import Reimbursement.Receipt.Update as Receipt
@@ -71,7 +71,7 @@ newSearch model =
         | results = results
         , showForm = True
         , loading = False
-        , inputs = Reimbursement.Inputs.Model.model
+        , searchFields = Reimbursement.Search.Model.model
     }
 
 
@@ -105,7 +105,7 @@ type Msg
     | RecoverJumpTo
     | Page (Maybe Int)
     | LoadReimbursements (Result Http.Error Results)
-    | InputsMsg Inputs.Msg
+    | SearchMsg Search.Msg
     | ReceiptMsg Int Receipt.Msg
     | CompanyMsg Int Company.Msg
     | SameDayMsg Int RelatedTable.Msg
@@ -121,7 +121,7 @@ update msg model =
             let
                 url : String
                 url =
-                    toUrl (Inputs.toQuery model.inputs)
+                    toUrl (Search.toQuery model.searchFields)
             in
                 ( { model | loading = True }, Navigation.newUrl url )
 
@@ -147,7 +147,7 @@ update msg model =
                         |> totalPages
 
                 query =
-                    ( "page", toString page ) :: Inputs.toQuery model.inputs
+                    ( "page", toString page ) :: Search.toQuery model.searchFields
 
                 cmd =
                     if isValidPage page total then
@@ -233,12 +233,12 @@ update msg model =
             in
                 ( { model | results = results, error = Just error, loading = False }, Cmd.none )
 
-        InputsMsg msg ->
+        SearchMsg msg ->
             let
-                inputs =
-                    Inputs.update msg model.inputs |> Tuple.first
+                searchFields =
+                    Search.update msg model.searchFields |> Tuple.first
             in
-                ( { model | inputs = inputs }, Cmd.none )
+                ( { model | searchFields = searchFields }, Cmd.none )
 
         CompanyMsg index companyMsg ->
             subModuleUpdate index msg model
