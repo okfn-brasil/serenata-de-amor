@@ -426,7 +426,7 @@ toUrl : List ( String, String ) -> String
 toUrl query =
     let
         validQueries =
-            List.filter Fields.isSearchable query
+            List.filter (Tuple.first >> Fields.isSearchable) query
     in
         if List.isEmpty validQueries then
             ""

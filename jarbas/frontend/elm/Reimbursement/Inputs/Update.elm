@@ -1,11 +1,11 @@
 module Reimbursement.Inputs.Update exposing (Msg(..), toQuery, update, updateFromQuery)
 
 import Char
-import Dict
 import Material
-import Reimbursement.Fields as Fields
-import Reimbursement.Inputs.Model exposing (Field, Model)
+import Reimbursement.Fields as Fields exposing (Field(..), Label(..))
+import Reimbursement.Inputs.Model exposing (Model)
 import String
+import List.Extra exposing (updateIf)
 
 
 type Msg
@@ -54,35 +54,37 @@ update msg model =
 
 updateField : Model -> ( String, String ) -> Model
 updateField model ( name, value ) =
-    case (Dict.get name model.inputs) of
-        Just field ->
-            let
-                cleaned =
-                    if Fields.isNumeric name then
-                        String.filter (\c -> Char.isDigit c || c == ' ') value
-                    else if name == "state" then
-                        String.map Char.toUpper value
-                    else if Fields.isDate name then
-                        formatDate value
-                    else
-                        String.trim value
+    let
+        fieldMatches (Field (Label _ foundName) _) =
+            name == foundName
 
-                inputs =
-                    Dict.insert name { field | value = cleaned } model.inputs
-            in
-                { model | inputs = inputs }
+        formatValue value =
+            if Fields.isNumeric name then
+                String.filter (\c -> Char.isDigit c || c == ' ') value
+            else if name == "state" then
+                String.map Char.toUpper value
+            else if Fields.isDate name then
+                formatDate value
+            else
+                String.trim value
 
-        Nothing ->
-            model
+        formatField (Field label value) =
+            Field label (formatValue value)
+
+        inputs =
+            model.inputs
+                |> updateIf fieldMatches formatField
+    in
+        { model | inputs = inputs }
 
 
 updateFromQuery : Model -> List ( String, String ) -> Model
 updateFromQuery model query =
     case List.head query of
-        Just q ->
+        Just param ->
             query
                 |> List.drop 1
-                |> updateFromQuery (updateField model q)
+                |> updateFromQuery (updateField model param)
 
         Nothing ->
             model
@@ -91,6 +93,5 @@ updateFromQuery model query =
 toQuery : Model -> List ( String, String )
 toQuery model =
     model.inputs
-        |> Dict.filter (\index field -> field.value |> String.trim |> String.isEmpty |> not)
-        |> Dict.map (\index field -> String.trim field.value)
-        |> Dict.toList
+        |> List.filter (\(Field _ value) -> value |> String.trim |> String.isEmpty |> not)
+        |> List.map (\(Field (Label _ name) value) -> ( name, String.trim value ))

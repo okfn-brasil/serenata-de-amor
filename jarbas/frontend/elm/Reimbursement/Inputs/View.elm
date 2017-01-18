@@ -1,6 +1,5 @@
 module Reimbursement.Inputs.View exposing (correctedFieldIndex, matchDate, view)
 
-import Dict
 import Html exposing (br, p, span, text)
 import Internationalization exposing (TranslationId(..), Language, translate)
 import Material.Grid exposing (Device(..), cell, grid, size)
@@ -8,9 +7,10 @@ import Material.Options as Options
 import Material.Textfield as Textfield
 import Material.Typography as Typography
 import Regex
-import Reimbursement.Fields as Fields
-import Reimbursement.Inputs.Model exposing (Field, Model, model)
+import Reimbursement.Fields as Fields exposing (Field(..), Label(..))
+import Reimbursement.Inputs.Model exposing (Model, model)
 import Reimbursement.Inputs.Update exposing (Msg(..), update)
+import List.Extra
 
 
 {-| Matches a date un the YYYY-MM-DD format
@@ -38,29 +38,21 @@ matchDate value =
                 |> not
 
 
-getValue : Model -> String -> String
-getValue model name =
-    model.inputs
-        |> Dict.get name
-        |> Maybe.withDefault (Field EmptyField "")
-        |> .value
-
-
 getField : Model -> String -> Field
 getField model name =
-    Maybe.withDefault (Field EmptyField "")
-        (Dict.get name model.inputs)
+    List.Extra.find (Fields.getName >> (==) name) model.inputs
+        |> Maybe.withDefault (Field (Label EmptyField "") "")
 
 
 viewField : Model -> Language -> Bool -> ( Int, ( String, Field ) ) -> Html.Html Msg
 viewField model language loading ( index, ( name, field ) ) =
     let
         value =
-            getValue model name
+            Fields.getValue field
 
         base =
             [ Textfield.onInput (Update name)
-            , Textfield.value field.value
+            , Textfield.value value
             , Options.css "width" "100%"
             ]
 
@@ -83,7 +75,7 @@ viewField model language loading ( index, ( name, field ) ) =
             List.concat [ base, disabled, dateValidation ]
     in
         p []
-            [ Options.styled span [ Typography.caption ] [ text <| translate language field.label ]
+            [ Options.styled span [ Typography.caption ] [ text <| Fields.getLabelTranslation language field ]
             , br [] []
             , Textfield.render Mdl [ index ] model.mdl attrs
             ]

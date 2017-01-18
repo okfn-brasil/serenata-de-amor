@@ -1,38 +1,24 @@
-module Reimbursement.Inputs.Model exposing (Model, Field, model)
+module Reimbursement.Inputs.Model exposing (Model, model)
 
-import Dict
-import Internationalization exposing (Language(..), TranslationId(..), translate)
 import Material
-import Reimbursement.Fields as Fields
-
-
-type alias Field =
-    { label : TranslationId
-    , value : String
-    }
+import Reimbursement.Fields as Fields exposing (Field(..), Label(..), labels)
 
 
 type alias Model =
-    { inputs : Dict.Dict String Field
+    { inputs : List Field
     , mdl : Material.Model
     }
-
-
-toFormField : ( String, TranslationId ) -> ( String, Field )
-toFormField ( name, label ) =
-    ( name, Field label "" )
 
 
 model : Model
 model =
     let
-        pairs =
-            List.map2 (,) Fields.names (Fields.labels)
+        toFormField label =
+            Field label ""
 
         inputs =
-            List.filter Fields.isSearchable pairs
+            List.filter (\(Label _ name) -> Fields.isSearchable name) labels
                 |> List.map toFormField
-                |> Dict.fromList
     in
         { inputs = inputs
         , mdl = Material.model
