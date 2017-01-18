@@ -8,8 +8,9 @@ import Material.Textfield as Textfield
 import Material.Typography as Typography
 import Regex
 import Reimbursement.Fields as Fields exposing (Field(..), Label(..))
-import Reimbursement.Inputs.Model exposing (Model, model)
 import Reimbursement.Inputs.Update exposing (Msg(..), update)
+import Reimbursement.Update as RootMsg exposing (Msg(..))
+import Reimbursement.Model as RootModel exposing (Model)
 import List.Extra
 
 
@@ -38,32 +39,32 @@ matchDate value =
                 |> not
 
 
-getField : Model -> String -> Field
+getField : RootModel.Model -> String -> Field
 getField model name =
     List.Extra.find (Fields.getName >> (==) name) model.inputs
         |> Maybe.withDefault (Field (Label EmptyField "") "")
 
 
-viewField : Model -> Language -> Bool -> ( Int, ( String, Field ) ) -> Html.Html Msg
-viewField model language loading ( index, ( name, field ) ) =
+viewField : RootModel.Model -> ( Int, ( String, Field ) ) -> Html.Html RootMsg.Msg
+viewField model ( index, ( name, field ) ) =
     let
         value =
             Fields.getValue field
 
         base =
-            [ Textfield.onInput (Update name)
+            [ Textfield.onInput (Update name >> RootMsg.InputsMsg)
             , Textfield.value value
             , Options.css "width" "100%"
             ]
 
         disabled =
-            if loading then
+            if model.loading then
                 [ Textfield.disabled ]
             else
                 []
 
         validationMsg =
-            translate language FieldIssueDateValidation
+            translate model.lang FieldIssueDateValidation
 
         dateValidation =
             if Fields.isDate name then
@@ -75,14 +76,14 @@ viewField model language loading ( index, ( name, field ) ) =
             List.concat [ base, disabled, dateValidation ]
     in
         p []
-            [ Options.styled span [ Typography.caption ] [ text <| Fields.getLabelTranslation language field ]
+            [ Options.styled span [ Typography.caption ] [ text <| Fields.getLabelTranslation model.lang field ]
             , br [] []
-            , Textfield.render Mdl [ index ] model.mdl attrs
+            , Textfield.render RootMsg.Mdl [ index ] model.mdl attrs
             ]
 
 
-viewFieldset : Bool -> Model -> Language -> ( Int, ( TranslationId, List String ) ) -> Material.Grid.Cell Msg
-viewFieldset loading model language ( index, ( title, names ) ) =
+viewFieldset : RootModel.Model -> ( Int, ( TranslationId, List String ) ) -> Material.Grid.Cell RootMsg.Msg
+viewFieldset model ( index, ( title, names ) ) =
     let
         fields =
             List.map (getField model) names
@@ -95,10 +96,10 @@ viewFieldset loading model language ( index, ( title, names ) ) =
                 |> List.map (\( idx, field ) -> ( correctedFieldIndex index idx, field ))
 
         heading =
-            [ Options.styled p [ Typography.title ] [ text <| translate language title ] ]
+            [ Options.styled p [ Typography.title ] [ text <| translate model.lang title ] ]
 
         inputs =
-            List.map (viewField model language loading) indexedNamesAndFields
+            List.map (viewField model) indexedNamesAndFields
     in
         cell [ size Desktop 6, size Tablet 6, size Phone 6 ]
             (List.append heading inputs)
@@ -119,6 +120,6 @@ correctedFieldIndex fieldset field =
     ((fieldset + 1) * 100) + field
 
 
-view : Bool -> Model -> Language -> Html.Html Msg
-view loading model language =
-    grid [] <| List.map (viewFieldset loading model language) Fields.sets
+view : RootModel.Model -> Html.Html RootMsg.Msg
+view model =
+    grid [] <| List.map (viewFieldset model) Fields.sets

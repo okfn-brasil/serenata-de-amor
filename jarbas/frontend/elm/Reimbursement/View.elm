@@ -70,7 +70,7 @@ viewForm : Model -> Html Msg
 viewForm model =
     let
         inputs =
-            InputsView.view model.loading model.inputs model.lang |> Html.map InputsMsg
+            InputsView.view model
 
         send =
             viewButton model

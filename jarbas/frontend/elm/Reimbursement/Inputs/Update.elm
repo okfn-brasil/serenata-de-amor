@@ -1,7 +1,6 @@
 module Reimbursement.Inputs.Update exposing (Msg(..), toQuery, update, updateFromQuery)
 
 import Char
-import Material
 import Reimbursement.Fields as Fields exposing (Field(..), Label(..))
 import Reimbursement.Inputs.Model exposing (Model)
 import String
@@ -10,7 +9,6 @@ import List.Extra exposing (updateIf)
 
 type Msg
     = Update String String
-    | Mdl (Material.Msg Msg)
 
 
 formatDate : String -> String
@@ -48,15 +46,12 @@ update msg model =
         Update name value ->
             ( updateField model ( name, value ), Cmd.none )
 
-        Mdl mdlMsg ->
-            Material.update mdlMsg model
-
 
 updateField : Model -> ( String, String ) -> Model
 updateField model ( name, value ) =
     let
-        fieldMatches (Field (Label _ foundName) _) =
-            name == foundName
+        fieldMatches field =
+            Fields.getName field == name
 
         formatValue value =
             if Fields.isNumeric name then
@@ -70,12 +65,9 @@ updateField model ( name, value ) =
 
         formatField (Field label value) =
             Field label (formatValue value)
-
-        inputs =
-            model.inputs
-                |> updateIf fieldMatches formatField
     in
-        { model | inputs = inputs }
+        model
+            |> updateIf fieldMatches formatField
 
 
 updateFromQuery : Model -> List ( String, String ) -> Model
@@ -92,6 +84,6 @@ updateFromQuery model query =
 
 toQuery : Model -> List ( String, String )
 toQuery model =
-    model.inputs
-        |> List.filter (\(Field _ value) -> value |> String.trim |> String.isEmpty |> not)
-        |> List.map (\(Field (Label _ name) value) -> ( name, String.trim value ))
+    model
+        |> List.filter (Fields.getValue >> String.trim >> String.isEmpty >> not)
+        |> List.map (\field -> ( Fields.getName field, Fields.getValue field |> String.trim ))
