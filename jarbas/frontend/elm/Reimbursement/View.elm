@@ -33,65 +33,6 @@ import String
 
 
 --
--- Form
---
-
-
-viewButton : Model -> Int -> List (Button.Property Msg) -> TranslationId -> Html Msg
-viewButton model index defaultAttr defaultLabel =
-    let
-        label =
-            if model.loading then
-                translate model.lang Loading
-            else
-                translate model.lang defaultLabel
-
-        attr =
-            if model.loading then
-                Button.disabled :: defaultAttr
-            else
-                defaultAttr
-    in
-        grid []
-            [ cell [ size Desktop 12, size Tablet 8, size Phone 4 ]
-                [ Options.styled div
-                    [ Typography.center ]
-                    [ Button.render Mdl
-                        [ index ]
-                        model.mdl
-                        attr
-                        [ text label ]
-                    ]
-                ]
-            ]
-
-
-viewForm : Model -> Html Msg
-viewForm model =
-    let
-        searchFields =
-            SearchView.view model
-
-        send =
-            viewButton model
-                0
-                [ Button.raised, Button.colored, Button.type_ "submit" ]
-                Search
-
-        showForm =
-            viewButton model
-                1
-                [ Button.raised, Button.onClick ToggleForm ]
-                NewSearch
-    in
-        if model.showForm then
-            form [ onSubmit Submit ] [ searchFields, send ]
-        else
-            showForm
-
-
-
---
 -- Pagination
 --
 
@@ -597,6 +538,6 @@ viewReimbursements model =
 view : Model -> Html Msg
 view model =
     div []
-        [ viewForm model
+        [ SearchView.view model
         , viewReimbursements model
         ]

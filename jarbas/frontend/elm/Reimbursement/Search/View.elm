@@ -1,7 +1,9 @@
 module Reimbursement.Search.View exposing (correctedFieldIndex, matchDate, view)
 
-import Html exposing (br, p, span, text)
+import Html exposing (Html, br, p, span, text, form, div)
+import Html.Events exposing (onSubmit)
 import Internationalization exposing (TranslationId(..), Language, translate)
+import Material.Button as Button
 import Material.Grid exposing (Device(..), cell, grid, size)
 import Material.Options as Options
 import Material.Textfield as Textfield
@@ -9,8 +11,8 @@ import Material.Typography as Typography
 import Regex
 import Reimbursement.Fields as Fields exposing (Field(..), Label(..))
 import Reimbursement.Search.Update exposing (Msg(..), update)
-import Reimbursement.Update as RootMsg exposing (Msg(..))
-import Reimbursement.Model as RootModel exposing (Model)
+import Reimbursement.Update as ParentMsg exposing (Msg(..))
+import Reimbursement.Model as ParentModel exposing (Model)
 import List.Extra
 
 
@@ -39,20 +41,20 @@ matchDate value =
                 |> not
 
 
-getField : RootModel.Model -> String -> Field
+getField : ParentModel.Model -> String -> Field
 getField model name =
     List.Extra.find (Fields.getName >> (==) name) model.searchFields
         |> Maybe.withDefault (Field (Label EmptyField "") "")
 
 
-viewField : RootModel.Model -> ( Int, ( String, Field ) ) -> Html.Html RootMsg.Msg
+viewField : ParentModel.Model -> ( Int, ( String, Field ) ) -> Html ParentMsg.Msg
 viewField model ( index, ( name, field ) ) =
     let
         value =
             Fields.getValue field
 
         base =
-            [ Textfield.onInput (Update name >> RootMsg.SearchMsg)
+            [ Textfield.onInput (Update name >> ParentMsg.SearchMsg)
             , Textfield.value value
             , Options.css "width" "100%"
             ]
@@ -78,11 +80,11 @@ viewField model ( index, ( name, field ) ) =
         p []
             [ Options.styled span [ Typography.caption ] [ text <| Fields.getLabelTranslation model.lang field ]
             , br [] []
-            , Textfield.render RootMsg.Mdl [ index ] model.mdl attrs
+            , Textfield.render ParentMsg.Mdl [ index ] model.mdl attrs
             ]
 
 
-viewFieldset : RootModel.Model -> ( Int, ( TranslationId, List String ) ) -> Material.Grid.Cell RootMsg.Msg
+viewFieldset : ParentModel.Model -> ( Int, ( TranslationId, List String ) ) -> Material.Grid.Cell ParentMsg.Msg
 viewFieldset model ( index, ( title, names ) ) =
     let
         fields =
@@ -120,6 +122,54 @@ correctedFieldIndex fieldset field =
     ((fieldset + 1) * 100) + field
 
 
-view : RootModel.Model -> Html.Html RootMsg.Msg
+view : ParentModel.Model -> Html ParentMsg.Msg
 view model =
-    grid [] <| List.map (viewFieldset model) Fields.sets
+    let
+        searchFields =
+            grid [] <| List.map (viewFieldset model) Fields.sets
+
+        send =
+            searchButton model
+                0
+                [ Button.raised, Button.colored, Button.type_ "submit" ]
+                Search
+
+        showFormButton =
+            searchButton model
+                1
+                [ Button.raised, Button.onClick ToggleForm ]
+                NewSearch
+    in
+        if model.showForm then
+            form [ onSubmit Submit ] [ searchFields, send ]
+        else
+            showFormButton
+
+
+searchButton : ParentModel.Model -> Int -> List (Button.Property ParentMsg.Msg) -> TranslationId -> Html ParentMsg.Msg
+searchButton model index defaultAttr defaultLabel =
+    let
+        label =
+            if model.loading then
+                translate model.lang Loading
+            else
+                translate model.lang defaultLabel
+
+        attr =
+            if model.loading then
+                Button.disabled :: defaultAttr
+            else
+                defaultAttr
+    in
+        grid []
+            [ cell [ size Desktop 12, size Tablet 8, size Phone 4 ]
+                [ Options.styled div
+                    [ Typography.center ]
+                    [ Button.render Mdl
+                        [ index ]
+                        model.mdl
+                        attr
+                        [ text label ]
+                    ]
+                ]
+            ]
