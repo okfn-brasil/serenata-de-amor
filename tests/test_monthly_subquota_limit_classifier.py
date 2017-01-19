@@ -39,3 +39,6 @@ class TestMonthlySubquotaLimitClassifier(TestCase):
                            self.prediction[[33, 34, 35]])
         assert_array_equal(np.r_[[False, True, True]],
                            self.prediction[[42, 43, 44]])
+
+    def test_predict_proba(self):
+        self.assertEqual(self.subject.predict_proba(), 1)
