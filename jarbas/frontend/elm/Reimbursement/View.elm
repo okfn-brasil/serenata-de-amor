@@ -29,6 +29,7 @@ import Reimbursement.Receipt.View as ReceiptView
 import Reimbursement.SameDay.View as SameDay
 import Reimbursement.SameSubquota.View as SameSubquota
 import Reimbursement.Update exposing (Msg(..), onlyDigits, totalPages)
+import Reimbursement.Fields as Fields exposing (Field(..), Label(..), getLabelTranslation)
 import String
 
 
@@ -238,8 +239,8 @@ viewError lang error =
             text ""
 
 
-viewReimbursementBlockLine : ( String, String ) -> Html Msg
-viewReimbursementBlockLine ( label, value ) =
+viewReimbursementBlockLine : Language -> Field -> Html Msg
+viewReimbursementBlockLine lang field =
     let
         styles =
             [ Options.css "display" "flex"
@@ -254,8 +255,8 @@ viewReimbursementBlockLine ( label, value ) =
             [ Options.css "display" "flex"
             , Options.css "flex-direction" "row"
             ]
-            [ Options.styled span (Typography.body2 :: labelStyles) [ text label ]
-            , Options.styled span (Typography.body1 :: styles) [ text value ]
+            [ Options.styled span (Typography.body2 :: labelStyles) [ text <| Fields.getLabelTranslation lang field ]
+            , Options.styled span (Typography.body1 :: styles) [ text <| Fields.getValue field ]
             ]
 
 
@@ -292,7 +293,7 @@ viewPs lang reimbursement =
             ]
 
 
-viewReimbursementBlock : Language -> Reimbursement -> ( String, String, List ( String, String ) ) -> Html Msg
+viewReimbursementBlock : Language -> Reimbursement -> ( String, String, List Field ) -> Html Msg
 viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
     let
         iconTag =
@@ -308,7 +309,7 @@ viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
             [ Options.styled p
                 [ Typography.subhead ]
                 [ iconTag, text (" " ++ title) ]
-            , List.ul [] (List.map viewReimbursementBlockLine fields)
+            , List.ul [] (List.map (viewReimbursementBlockLine lang) fields)
             , ps
             ]
 
@@ -340,19 +341,19 @@ viewSummaryBlock lang reimbursement =
                 ]
 
         fields =
-            [ ( translate lang FieldCongressperson, congressperson )
-            , ( translate lang FieldIssueDate, formatDate lang reimbursement.issueDate )
-            , ( translate lang FieldClaimDate, claimedDate )
-            , ( translate lang FieldSubquotaDescription, subquota )
-            , ( translate lang FieldSubquotaGroupDescription, Maybe.withDefault "" reimbursement.subquotaGroupDescription )
-            , ( translate lang FieldCompany, viewCompany reimbursement )
-            , ( translate lang FieldDocumentValue, formatPrice lang reimbursement.documentValue )
-            , ( translate lang FieldRemarkValue, maybeFormatPrice lang reimbursement.remarkValue )
-            , ( translate lang FieldTotalNetValue, formatPrice lang reimbursement.totalNetValue )
-            , ( translate lang FieldTotalReimbursementValue, maybeFormatPrice lang reimbursement.totalReimbursementValue )
-            , ( translate lang FieldSuspicions, viewSuspicions lang reimbursement.suspicions )
+            [ Field Congressperson <| congressperson
+            , Field IssueDate <| formatDate lang reimbursement.issueDate
+            , Field ClaimDate <| claimedDate
+            , Field SubquotaDescription <| subquota
+            , Field SubquotaGroupDescription <| Maybe.withDefault "" reimbursement.subquotaGroupDescription
+            , Field Company <| viewCompany reimbursement
+            , Field DocumentValue <| formatPrice lang reimbursement.documentValue
+            , Field RemarkValue <| maybeFormatPrice lang reimbursement.remarkValue
+            , Field TotalNetValue <| formatPrice lang reimbursement.totalNetValue
+            , Field TotalReimbursementValue <| maybeFormatPrice lang reimbursement.totalReimbursementValue
+            , Field Suspicions <| viewSuspicions lang reimbursement.suspicions
             ]
-                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+                |> List.filter (Fields.getValue >> String.isEmpty >> not)
     in
         viewReimbursementBlock lang reimbursement ( translate lang FieldsetSummary, "list", fields )
 
@@ -366,21 +367,21 @@ viewReimbursementDetails lang reimbursement =
                 |> String.join ", "
 
         documentType =
-            DocumentType reimbursement.documentType
+            Internationalization.DocumentType reimbursement.documentType
                 |> translate lang
 
         fields =
-            [ ( translate lang FieldApplicantId, toString reimbursement.applicantId )
-            , ( translate lang FieldDocumentId, toString reimbursement.documentId )
-            , ( translate lang FieldNetValues, formatPrices lang reimbursement.netValues )
-            , ( translate lang FieldReimbursementValues, maybeFormatPrices lang reimbursement.reimbursementValues )
-            , ( translate lang FieldReimbursementNumbers, reimbursements )
-            , ( translate lang FieldDocumentType, documentType )
-            , ( translate lang FieldDocumentNumber, Maybe.withDefault "" reimbursement.documentNumber )
-            , ( translate lang FieldInstallment, viewMaybeIntButZero reimbursement.installment )
-            , ( translate lang FieldBatchNumber, viewMaybeIntButZero reimbursement.batchNumber )
+            [ Field ApplicantId <| toString reimbursement.applicantId
+            , Field DocumentId <| toString reimbursement.documentId
+            , Field NetValues <| formatPrices lang reimbursement.netValues
+            , Field ReimbursementValues <| maybeFormatPrices lang reimbursement.reimbursementValues
+            , Field ReimbursementNumbers <| reimbursements
+            , Field Fields.DocumentType <| documentType
+            , Field DocumentNumber <| Maybe.withDefault "" reimbursement.documentNumber
+            , Field Installment <| viewMaybeIntButZero reimbursement.installment
+            , Field BatchNumber <| viewMaybeIntButZero reimbursement.batchNumber
             ]
-                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+                |> List.filter (Fields.getValue >> String.isEmpty >> not)
     in
         viewReimbursementBlock lang reimbursement ( translate lang FieldsetReimbursement, "folder", fields )
 
@@ -389,12 +390,12 @@ viewCongressPersonDetails : Language -> Reimbursement -> Html Msg
 viewCongressPersonDetails lang reimbursement =
     let
         fields =
-            [ ( translate lang FieldCongresspersonId, viewMaybeIntButZero reimbursement.congresspersonId )
-            , ( translate lang FieldCongresspersonDocument, viewMaybeIntButZero reimbursement.congresspersonDocument )
-            , ( translate lang FieldTerm, toString reimbursement.term )
-            , ( translate lang FieldTermId, viewMaybeIntButZero reimbursement.termId )
+            [ Field CongresspersonId <| viewMaybeIntButZero reimbursement.congresspersonId
+            , Field CongresspersonDocument <| viewMaybeIntButZero reimbursement.congresspersonDocument
+            , Field Term <| toString reimbursement.term
+            , Field TermId <| viewMaybeIntButZero reimbursement.termId
             ]
-                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+                |> List.filter (Fields.getValue >> String.isEmpty >> not)
     in
         viewReimbursementBlock lang reimbursement ( translate lang FieldsetCongressperson, "face", fields )
 
@@ -403,10 +404,10 @@ viewTrip : Language -> Reimbursement -> Html Msg
 viewTrip lang reimbursement =
     let
         fields =
-            [ ( translate lang FieldPassenger, Maybe.withDefault "" reimbursement.passenger )
-            , ( translate lang FieldLegOfTheTrip, Maybe.withDefault "" reimbursement.legOfTheTrip )
+            [ Field Passenger <| Maybe.withDefault "" reimbursement.passenger
+            , Field LegOfTheTrip <| Maybe.withDefault "" reimbursement.legOfTheTrip
             ]
-                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+                |> List.filter (Fields.getValue >> String.isEmpty >> not)
     in
         if List.isEmpty fields then
             text ""
