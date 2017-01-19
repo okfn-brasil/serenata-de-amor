@@ -2,6 +2,8 @@ from unittest import TestCase
 
 import numpy as np
 import pandas as pd
+from numpy.testing import assert_array_equal
+
 from rosie.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 
 
@@ -15,20 +17,19 @@ class TestMonthlySubquotaLimitClassifier(TestCase):
         self.prediction = self.subject.predict(self.dataset)
 
     def test_predict_false_when_not_in_date_range(self):
-        self.assertEqual(False, self.prediction[0])
-        self.assertEqual(False, self.prediction[1])
-        self.assertEqual(False, self.prediction[9])
-        self.assertEqual(False, self.prediction[10])
+        assert_array_equal(np.repeat(False, 4),
+                           self.prediction[[0, 1, 9, 10]])
 
     def test_predict_false_when_under_the_limit(self):
-        self.assertEqual(False, self.prediction[2])
-        self.assertEqual(False, self.prediction[3])
+        assert_array_equal(np.repeat(False, 4),
+                           self.prediction[[2, 3, 11, 12]])
 
     def test_predict_false_when_exactly_on_the_limit(self):
-        self.assertEqual(False, self.prediction[4])
-        self.assertEqual(False, self.prediction[5])
+        assert_array_equal(np.repeat(False, 4),
+                           self.prediction[[4, 5, 13, 14]])
 
     def test_predict_true_when_over_the_limit(self):
-        self.assertEqual(False, self.prediction[6])
-        self.assertEqual(True, self.prediction[7])
-        self.assertEqual(True, self.prediction[8])
+        assert_array_equal(np.r_[[False, True, True]],
+                           self.prediction[[6, 7, 8]])
+        assert_array_equal(np.r_[[False, True, True]],
+                           self.prediction[[15, 16, 17]])

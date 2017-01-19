@@ -66,7 +66,7 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
 
         self._X['coerced_issue_date'] = \
             pd.to_datetime(self._X['issue_date'], errors='coerce')
-        self._X.sort_values('coerced_issue_date', inplace=True)
+        self._X.sort_values('coerced_issue_date', kind='mergesort', inplace=True)
 
         reimbursement_month = self._X[['year', 'month']].copy()
         reimbursement_month['day'] = 1
