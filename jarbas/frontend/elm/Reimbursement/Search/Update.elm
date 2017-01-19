@@ -53,7 +53,7 @@ updateField model label value =
         fieldMatches field =
             Fields.getLabel field == label
 
-        formatValue value =
+        formattedValue =
             if Fields.isNumeric label then
                 String.filter (\c -> Char.isDigit c || c == ' ') value
             else if label == State then
@@ -64,7 +64,7 @@ updateField model label value =
                 String.trim value
 
         formatField (Field label value) =
-            Field label (formatValue value)
+            Field label formattedValue
     in
         model
             |> updateIf fieldMatches formatField

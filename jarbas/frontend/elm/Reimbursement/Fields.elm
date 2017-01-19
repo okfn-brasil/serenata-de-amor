@@ -51,14 +51,14 @@ type Label
 
 searchableLabels : List ( Label, String )
 searchableLabels =
-    [ ( ApplicantId, "ApplicantId" )
-    , ( CnpjCpf, "CnpjCpf" )
-    , ( DocumentId, "DocumentId" )
-    , ( IssueDateEnd, "IssueDateEnd" )
-    , ( IssueDateStart, "IssueDateStart" )
-    , ( Month, "Month" )
-    , ( SubquotaId, "SubquotaId" )
-    , ( Year, "Year" )
+    [ ( ApplicantId, "applicantId" )
+    , ( CnpjCpf, "cnpjCpf" )
+    , ( DocumentId, "documentId" )
+    , ( IssueDateEnd, "issueDateEnd" )
+    , ( IssueDateStart, "issueDateStart" )
+    , ( Month, "month" )
+    , ( SubquotaId, "subquotaId" )
+    , ( Year, "year" )
     ]
 
 
