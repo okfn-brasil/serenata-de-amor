@@ -1,6 +1,7 @@
 module Reimbursement.Fields exposing (..)
 
 import Internationalization exposing (Language(..), TranslationId(..), translate)
+import List.Extra
 
 
 type Field
@@ -8,90 +9,91 @@ type Field
 
 
 type Label
-    = Label TranslationId String
+    = Year
+    | DocumentId
+    | ApplicantId
+    | TotalReimbursementValue
+    | TotalNetValue
+    | ReimbursementNumbers
+    | NetValues
+    | CongresspersonId
+    | CongresspersonName
+    | CongresspersonDocument
+    | State
+    | Party
+    | TermId
+    | Term
+    | SubquotaId
+    | SubquotaDescription
+    | SubquotaGroupId
+    | SubquotaGroupDescription
+    | Company
+    | CnpjCpf
+    | DocumentType
+    | DocumentNumber
+    | DocumentValue
+    | IssueDate
+    | IssueDateStart
+    | IssueDateEnd
+    | Month
+    | RemarkValue
+    | Installment
+    | BatchNumber
+    | ReimbursementValues
+    | Passenger
+    | LegOfTheTrip
+    | Probability
+    | Suspicions
+    | Empty
 
 
-labels : List Label
-labels =
-    [ Label FieldYear "year"
-    , Label FieldDocumentId "documentId"
-    , Label FieldApplicantId "applicantId"
-    , Label FieldTotalReimbursementValue "totalReimbursementValue"
-    , Label FieldTotalNetValue "totalNetValue"
-    , Label FieldReimbursementNumbers "reimbursementNumbers"
-    , Label FieldNetValues "netValues"
-    , Label FieldCongresspersonId "congresspersonId"
-    , Label FieldCongresspersonName "congresspersonName"
-    , Label FieldCongresspersonDocument "congresspersonDocument"
-    , Label FieldState "state"
-    , Label FieldParty "party"
-    , Label FieldTermId "termId"
-    , Label FieldTerm "term"
-    , Label FieldSubquotaId "subquotaId"
-    , Label FieldSubquotaDescription "subquotaDescription"
-    , Label FieldSubquotaGroupId "subquotaGroupId"
-    , Label FieldSubquotaGroupDescription "subquotaGroupDescription"
-    , Label FieldCompany "supplier"
-    , Label FieldCnpjCpf "cnpjCpf"
-    , Label FieldDocumentType "documentType"
-    , Label FieldDocumentNumber "documentNumber"
-    , Label FieldDocumentValue "documentValue"
-    , Label FieldIssueDate "issueDate"
-    , Label FieldIssueDateStart "issueDateStart"
-    , Label FieldIssueDateEnd "issueDateEnd"
-    , Label FieldMonth "month"
-    , Label FieldRemarkValue "remarkValue"
-    , Label FieldInstallment "installment"
-    , Label FieldBatchNumber "batchNumber"
-    , Label FieldReimbursementValues "reimbursementValues"
-    , Label FieldPassenger "passenger"
-    , Label FieldLegOfTheTrip "legOfTheTrip"
-    , Label FieldProbability "probability"
-    , Label FieldSuspicions "suspicions"
+searchableLabels : List ( Label, String )
+searchableLabels =
+    [ ( ApplicantId, "ApplicantId" )
+    , ( CnpjCpf, "CnpjCpf" )
+    , ( DocumentId, "DocumentId" )
+    , ( IssueDateEnd, "IssueDateEnd" )
+    , ( IssueDateStart, "IssueDateStart" )
+    , ( Month, "Month" )
+    , ( SubquotaId, "SubquotaId" )
+    , ( Year, "Year" )
     ]
 
 
-{-| Filter to get searchable fields:
-
-    >>> isSearchable ( "year", "2016" )
-    True
-
-    >>> isSearchable ( "format", "json" )
-    False
-
--}
-isSearchable : String -> Bool
-isSearchable name =
-    if name == "page" then
-        True
-    else
-        List.member name
-            [ "applicantId"
-            , "cnpjCpf"
-            , "documentId"
-            , "issueDateEnd"
-            , "issueDateStart"
-            , "month"
-            , "subquotaId"
-            , "year"
-            ]
+allLabels : List Label
+allLabels =
+    [ Year, DocumentId, ApplicantId, TotalReimbursementValue, TotalNetValue, ReimbursementNumbers, NetValues, CongresspersonId, CongresspersonName, CongresspersonDocument, State, Party, TermId, Term, SubquotaId, SubquotaDescription, SubquotaGroupId, SubquotaGroupDescription, Company, CnpjCpf, DocumentType, DocumentNumber, DocumentValue, IssueDate, IssueDateStart, IssueDateEnd, Month, RemarkValue, Installment, BatchNumber, ReimbursementValues, Passenger, LegOfTheTrip, Probability, Suspicions ]
 
 
-sets : List ( Int, ( TranslationId, List String ) )
+labelToUrl : Label -> String
+labelToUrl label =
+    List.Extra.find (Tuple.first >> (==) label) searchableLabels
+        |> Maybe.map (Tuple.second)
+        |> Maybe.withDefault ""
+
+
+urlToLabel : String -> Label
+urlToLabel url =
+    List.Extra.find (Tuple.second >> (==) url) searchableLabels
+        |> Maybe.map (Tuple.first)
+        |> Maybe.withDefault Empty
+
+
+sets : List ( Int, ( TranslationId, List Label ) )
 sets =
     List.indexedMap (,)
         [ ( SearchFieldsetCongressperson
-          , [ "applicantId"
-            , "year"
-            , "month"
-            , "subquotaId"
-            , "cnpjCpf"
-            , "issueDateStart"
-            , "issueDateEnd"
+          , [ ApplicantId
+            , Year
+            , Month
+            , SubquotaId
+            , CnpjCpf
+            , IssueDateStart
+            , IssueDateEnd
             ]
           )
         , ( SearchFieldsetReimbursement
-          , [ "applicantId", "year", "documentId" ]
+          , [ ApplicantId, Year, DocumentId ]
           )
         ]
 
@@ -105,25 +107,45 @@ sets =
     False
 
 -}
-isNumeric : String -> Bool
-isNumeric name =
-    List.member name
-        [ "applicantId"
-        , "cnpjCpf"
-        , "congresspersonId"
-        , "documentId"
-        , "month"
-        , "subquotaId"
-        , "year"
-        ]
+isNumeric : Label -> Bool
+isNumeric label =
+    case label of
+        ApplicantId ->
+            True
+
+        CnpjCpf ->
+            True
+
+        CongresspersonId ->
+            True
+
+        DocumentId ->
+            True
+
+        Month ->
+            True
+
+        SubquotaId ->
+            True
+
+        Year ->
+            True
+
+        _ ->
+            False
 
 
-isDate : String -> Bool
-isDate name =
-    List.member name
-        [ "issueDateStart"
-        , "issueDateEnd"
-        ]
+isDate : Label -> Bool
+isDate label =
+    case label of
+        IssueDateStart ->
+            True
+
+        IssueDateEnd ->
+            True
+
+        _ ->
+            False
 
 
 getValue : Field -> String
@@ -131,11 +153,122 @@ getValue (Field _ value) =
     value
 
 
-getName : Field -> String
-getName (Field (Label _ name) _) =
-    name
+getLabel : Field -> Label
+getLabel (Field label _) =
+    label
 
 
 getLabelTranslation : Language -> Field -> String
-getLabelTranslation language (Field (Label translationId _) _) =
-    translate language translationId
+getLabelTranslation language (Field label _) =
+    let
+        translationId =
+            case label of
+                Year ->
+                    FieldYear
+
+                DocumentId ->
+                    FieldDocumentId
+
+                ApplicantId ->
+                    FieldApplicantId
+
+                TotalReimbursementValue ->
+                    FieldTotalReimbursementValue
+
+                TotalNetValue ->
+                    FieldTotalNetValue
+
+                ReimbursementNumbers ->
+                    FieldReimbursementNumbers
+
+                NetValues ->
+                    FieldNetValues
+
+                CongresspersonId ->
+                    FieldCongresspersonId
+
+                CongresspersonName ->
+                    FieldCongresspersonName
+
+                CongresspersonDocument ->
+                    FieldCongresspersonDocument
+
+                State ->
+                    FieldState
+
+                Party ->
+                    FieldParty
+
+                TermId ->
+                    FieldTermId
+
+                Term ->
+                    FieldTerm
+
+                SubquotaId ->
+                    FieldSubquotaId
+
+                SubquotaDescription ->
+                    FieldSubquotaDescription
+
+                SubquotaGroupId ->
+                    FieldSubquotaGroupId
+
+                SubquotaGroupDescription ->
+                    FieldSubquotaGroupDescription
+
+                Company ->
+                    FieldCompany
+
+                CnpjCpf ->
+                    FieldCnpjCpf
+
+                DocumentType ->
+                    FieldDocumentType
+
+                DocumentNumber ->
+                    FieldDocumentNumber
+
+                DocumentValue ->
+                    FieldDocumentValue
+
+                IssueDate ->
+                    FieldIssueDate
+
+                IssueDateStart ->
+                    FieldIssueDateStart
+
+                IssueDateEnd ->
+                    FieldIssueDateEnd
+
+                Month ->
+                    FieldMonth
+
+                RemarkValue ->
+                    FieldRemarkValue
+
+                Installment ->
+                    FieldInstallment
+
+                BatchNumber ->
+                    FieldBatchNumber
+
+                ReimbursementValues ->
+                    FieldReimbursementValues
+
+                Passenger ->
+                    FieldPassenger
+
+                LegOfTheTrip ->
+                    FieldLegOfTheTrip
+
+                Probability ->
+                    FieldProbability
+
+                Suspicions ->
+                    FieldSuspicions
+
+                Empty ->
+                    EmptyField
+    in
+        translate language translationId

@@ -8,7 +8,7 @@ import List.Extra exposing (updateIf)
 
 
 type Msg
-    = Update String String
+    = Update Label String
 
 
 formatDate : String -> String
@@ -43,22 +43,22 @@ formatDate value =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Update name value ->
-            ( updateField model ( name, value ), Cmd.none )
+        Update label value ->
+            ( updateField model label value, Cmd.none )
 
 
-updateField : Model -> ( String, String ) -> Model
-updateField model ( name, value ) =
+updateField : Model -> Label -> String -> Model
+updateField model label value =
     let
         fieldMatches field =
-            Fields.getName field == name
+            Fields.getLabel field == label
 
         formatValue value =
-            if Fields.isNumeric name then
+            if Fields.isNumeric label then
                 String.filter (\c -> Char.isDigit c || c == ' ') value
-            else if name == "state" then
+            else if label == State then
                 String.map Char.toUpper value
-            else if Fields.isDate name then
+            else if Fields.isDate label then
                 formatDate value
             else
                 String.trim value
@@ -74,9 +74,16 @@ updateFromQuery : Model -> List ( String, String ) -> Model
 updateFromQuery model query =
     case List.head query of
         Just param ->
-            query
-                |> List.drop 1
-                |> updateFromQuery (updateField model param)
+            let
+                label =
+                    (Fields.urlToLabel (Tuple.first param))
+
+                value =
+                    (Tuple.second param)
+            in
+                query
+                    |> List.drop 1
+                    |> updateFromQuery (updateField model label value)
 
         Nothing ->
             model
@@ -86,4 +93,4 @@ toQuery : Model -> List ( String, String )
 toQuery model =
     model
         |> List.filter (Fields.getValue >> String.trim >> String.isEmpty >> not)
-        |> List.map (\field -> ( Fields.getName field, Fields.getValue field |> String.trim ))
+        |> List.map (\(Field label value) -> ( Fields.labelToUrl label, value |> String.trim ))

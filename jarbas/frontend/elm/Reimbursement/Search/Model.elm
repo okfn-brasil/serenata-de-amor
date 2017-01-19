@@ -1,6 +1,6 @@
 module Reimbursement.Search.Model exposing (Model, model)
 
-import Reimbursement.Fields as Fields exposing (Field(..), Label(..), labels)
+import Reimbursement.Fields as Fields exposing (Field(..), Label(..), searchableLabels)
 
 
 type alias Model =
@@ -11,7 +11,6 @@ model : Model
 model =
     let
         toFormField label =
-            Field label ""
+            Field (Tuple.first label) ""
     in
-        List.filter (\(Label _ name) -> Fields.isSearchable name) labels
-            |> List.map toFormField
+        List.map toFormField searchableLabels

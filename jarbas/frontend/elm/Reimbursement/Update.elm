@@ -10,7 +10,6 @@ import Navigation
 import Regex exposing (regex, replace)
 import Reimbursement.Company.Update as Company
 import Reimbursement.Decoder exposing (decoder)
-import Reimbursement.Fields as Fields
 import Reimbursement.Search.Model
 import Reimbursement.Search.Update as Search
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
@@ -426,13 +425,13 @@ toUrl : List ( String, String ) -> String
 toUrl query =
     let
         validQueries =
-            List.filter (Tuple.first >> Fields.isSearchable) query
+            List.filter (Tuple.first >> String.isEmpty >> not) query
     in
         if List.isEmpty validQueries then
             ""
         else
             validQueries
-                |> List.map (\( index, value ) -> index ++ "/" ++ value)
+                |> List.map (\( key, value ) -> key ++ "/" ++ value)
                 |> String.join "/"
                 |> (++) "#/"
 

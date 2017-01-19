@@ -41,20 +41,20 @@ matchDate value =
                 |> not
 
 
-getField : ParentModel.Model -> String -> Field
-getField model name =
-    List.Extra.find (Fields.getName >> (==) name) model.searchFields
-        |> Maybe.withDefault (Field (Label EmptyField "") "")
+getField : ParentModel.Model -> Label -> Field
+getField model label =
+    List.Extra.find (Fields.getLabel >> (==) label) model.searchFields
+        |> Maybe.withDefault (Field Empty "")
 
 
-viewField : ParentModel.Model -> ( Int, ( String, Field ) ) -> Html ParentMsg.Msg
-viewField model ( index, ( name, field ) ) =
+viewField : ParentModel.Model -> ( Int, ( Label, Field ) ) -> Html ParentMsg.Msg
+viewField model ( index, ( label, field ) ) =
     let
         value =
             Fields.getValue field
 
         base =
-            [ Textfield.onInput (Update name >> ParentMsg.SearchMsg)
+            [ Textfield.onInput (Update label >> ParentMsg.SearchMsg)
             , Textfield.value value
             , Options.css "width" "100%"
             ]
@@ -69,7 +69,7 @@ viewField model ( index, ( name, field ) ) =
             translate model.lang FieldIssueDateValidation
 
         dateValidation =
-            if Fields.isDate name then
+            if Fields.isDate label then
                 [ Options.when (Textfield.error validationMsg) (not <| matchDate value) ]
             else
                 []
@@ -84,14 +84,14 @@ viewField model ( index, ( name, field ) ) =
             ]
 
 
-viewFieldset : ParentModel.Model -> ( Int, ( TranslationId, List String ) ) -> Material.Grid.Cell ParentMsg.Msg
-viewFieldset model ( index, ( title, names ) ) =
+viewFieldset : ParentModel.Model -> ( Int, ( TranslationId, List Label ) ) -> Material.Grid.Cell ParentMsg.Msg
+viewFieldset model ( index, ( title, labels ) ) =
     let
         fields =
-            List.map (getField model) names
+            List.map (getField model) labels
 
         namesAndFields =
-            List.map2 (,) names fields
+            List.map2 (,) labels fields
 
         indexedNamesAndFields =
             List.indexedMap (,) namesAndFields
