@@ -17,6 +17,8 @@ class TestMonthlySubquotaLimitClassifier(TestCase):
     def test_predict_false_when_not_in_date_range(self):
         self.assertEqual(False, self.prediction[0])
         self.assertEqual(False, self.prediction[1])
+        self.assertEqual(False, self.prediction[9])
+        self.assertEqual(False, self.prediction[10])
 
     def test_predict_false_when_under_the_limit(self):
         self.assertEqual(False, self.prediction[2])
