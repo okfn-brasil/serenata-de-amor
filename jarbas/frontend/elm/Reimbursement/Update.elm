@@ -414,26 +414,19 @@ loadReimbursements lang apiKey query =
 
 {-| Convert a list of key/value query pairs to a valid URL:
 
-    >>> toUrl [ ( "year", "2016" ), ( "foo", "bar" ) ]
-    "#/year/2016"
-
-    >>> toUrl [ ( "foo", "bar" ) ]
-    ""
+    >>> toUrl [ ( "year", "2016" ), ( "month", "10" ) ]
+    "#/year/2016/month/10"
 
 -}
 toUrl : List ( String, String ) -> String
 toUrl query =
-    let
-        validQueries =
-            List.filter (Tuple.first >> String.isEmpty >> not) query
-    in
-        if List.isEmpty validQueries then
-            ""
-        else
-            validQueries
-                |> List.map (\( key, value ) -> key ++ "/" ++ value)
-                |> String.join "/"
-                |> (++) "#/"
+    if List.isEmpty query then
+        ""
+    else
+        query
+            |> List.map (\( key, value ) -> key ++ "/" ++ value)
+            |> String.join "/"
+            |> (++) "#/"
 
 
 updateJumpTo : Model -> Maybe Int -> ( Model, Cmd Msg )

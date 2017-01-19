@@ -89,8 +89,22 @@ updateFromQuery model query =
             model
 
 
+{-| Convert a list of non-empty, searchable fields into a pair of key/value:
+    >>> import Reimbursement.Fields exposing (Field(..), Label(..))
+
+    >>> toQuery [ Field Year "2016" ]
+    [ ( "year", "2016" ) ]
+
+    >>> toQuery [ Field LegOfTheTrip "any" ]
+    []
+
+    >>> toQuery [ Field Year "" ]
+    []
+
+-}
 toQuery : Model -> List ( String, String )
 toQuery model =
     model
-        |> List.filter (Fields.getValue >> String.trim >> String.isEmpty >> not)
         |> List.map (\(Field label value) -> ( Fields.labelToUrl label, value |> String.trim ))
+        |> List.filter (Tuple.first >> String.isEmpty >> not)
+        |> List.filter (Tuple.second >> String.isEmpty >> not)

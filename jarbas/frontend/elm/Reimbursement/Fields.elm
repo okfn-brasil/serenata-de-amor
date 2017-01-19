@@ -102,10 +102,10 @@ sets =
 
 {-| Filter to get numbers only fields:
 
-    >>> isNumeric "year"
+    >>> isNumeric Year
     True
 
-    >>> isNumeric "format"
+    >>> isNumeric Company
     False
 
 -}
