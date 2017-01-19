@@ -49,9 +49,10 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
         self._X['is_over_monthly_subquota_limit'] = False
         for metadata in self.limits:
             data, monthly_limit = metadata['data'], metadata['monthly_limit']
-            surplus_reimbursements = self.__find_surplus_reimbursements(data, monthly_limit)
-            self._X.loc[surplus_reimbursements.index,
-                        'is_over_monthly_subquota_limit'] = True
+            if len(data):
+                surplus_reimbursements = self.__find_surplus_reimbursements(data, monthly_limit)
+                self._X.loc[surplus_reimbursements.index,
+                            'is_over_monthly_subquota_limit'] = True
         results = self._X.loc[self.X.index, 'is_over_monthly_subquota_limit']
         return np.r_[results]
 
