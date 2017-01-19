@@ -17,27 +17,27 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
     def transform(self, X=None):
         self.limits = [
             {
-                'subquota': 'Automotive vehicle renting or watercraft charter',
+                # Automotive vehicle renting or charter
                 'data': self._X.query('(subquota_number == "120") & (reimbursement_month >= datetime(2015, 4, 1))'),
                 'monthly_limit': 1090000,
             },
             {
-                'subquota': 'Taxi, toll and parking',
+                # Taxi, toll and parking
                 'data': self._X.query('(subquota_number == "122") & (reimbursement_month >= datetime(2015, 4, 1))'),
                 'monthly_limit': 270000,
             },
             {
-                'subquota': 'Fuels and lubricants',
+                # Fuels and lubricants
                 'data': self._X.query('(subquota_number == "3") & (reimbursement_month >= datetime(2015, 10, 1))'),
                 'monthly_limit': 600000,
             },
             {
-                'subquota': 'Security service provided by specialized company',
+                # Security service provided by specialized company
                 'data': self._X.query('(subquota_number == "8") & (reimbursement_month >= datetime(2015, 4, 1))'),
                 'monthly_limit': 870000,
             },
             {
-                'subquota': 'Participation in course, talk or similar event',
+                # Participation in course, talk or similar event
                 'data': self._X.query('(subquota_number == "137") & (reimbursement_month >= datetime(2015, 11, 1))'),
                 'monthly_limit': 769716,
             },
@@ -49,9 +49,10 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
         self._X['is_over_monthly_subquota_limit'] = False
         for metadata in self.limits:
             data, monthly_limit = metadata['data'], metadata['monthly_limit']
-            surplus_reimbursements = self.__find_surplus_reimbursements(data, monthly_limit)
-            self._X.loc[surplus_reimbursements.index,
-                        'is_over_monthly_subquota_limit'] = True
+            if len(data):
+                surplus_reimbursements = self.__find_surplus_reimbursements(data, monthly_limit)
+                self._X.loc[surplus_reimbursements.index,
+                            'is_over_monthly_subquota_limit'] = True
         results = self._X.loc[self.X.index, 'is_over_monthly_subquota_limit']
         return np.r_[results]
 
@@ -65,7 +66,7 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
 
         self._X['coerced_issue_date'] = \
             pd.to_datetime(self._X['issue_date'], errors='coerce')
-        self._X.sort_values('coerced_issue_date', inplace=True)
+        self._X.sort_values('coerced_issue_date', kind='mergesort', inplace=True)
 
         reimbursement_month = self._X[['year', 'month']].copy()
         reimbursement_month['day'] = 1
