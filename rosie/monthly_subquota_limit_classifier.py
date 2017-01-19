@@ -17,27 +17,27 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
     def transform(self, X=None):
         self.limits = [
             {
-                'subquota': 'Automotive vehicle renting or watercraft charter',
+                # Automotive vehicle renting or charter
                 'data': self._X.query('(subquota_number == "120") & (reimbursement_month >= datetime(2015, 4, 1))'),
                 'monthly_limit': 1090000,
             },
             {
-                'subquota': 'Taxi, toll and parking',
+                # Taxi, toll and parking
                 'data': self._X.query('(subquota_number == "122") & (reimbursement_month >= datetime(2015, 4, 1))'),
                 'monthly_limit': 270000,
             },
             {
-                'subquota': 'Fuels and lubricants',
+                # Fuels and lubricants
                 'data': self._X.query('(subquota_number == "3") & (reimbursement_month >= datetime(2015, 10, 1))'),
                 'monthly_limit': 600000,
             },
             {
-                'subquota': 'Security service provided by specialized company',
+                # Security service provided by specialized company
                 'data': self._X.query('(subquota_number == "8") & (reimbursement_month >= datetime(2015, 4, 1))'),
                 'monthly_limit': 870000,
             },
             {
-                'subquota': 'Participation in course, talk or similar event',
+                # Participation in course, talk or similar event
                 'data': self._X.query('(subquota_number == "137") & (reimbursement_month >= datetime(2015, 11, 1))'),
                 'monthly_limit': 769716,
             },
