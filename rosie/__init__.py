@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.externals import joblib
 
 from rosie.dataset import Dataset
+from rosie.election_expenses_classifier import ElectionExpensesClassifier
 from rosie.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
 from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 from rosie.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
@@ -16,6 +17,7 @@ class Rosie:
         MonthlySubquotaLimitClassifier: 'over_monthly_subquota_limit',
         TraveledSpeedsClassifier: 'suspicious_traveled_speed_day',
         InvalidCnpjCpfClassifier: 'invalid_cnpj_cpf',
+        ElectionExpensesClassifier: 'election_expenses'
     }
     DATASET_KEYS = ['applicant_id', 'year', 'document_id']
 
