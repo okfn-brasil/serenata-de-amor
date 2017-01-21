@@ -19,7 +19,8 @@ class TestElectionExpensesClassifier(TestCase):
     def test_is_not_election_company(self):
         self.assertEqual(self.subject.predict(self.dataset)[1], False)
 
-    def test_is_not_election_company_blabs(self):
-        self.assertEqual(self.subject.predict(self.dataset)[1], False)
-    # def test_is_valid_cnpj(self):
-    #     self.assertEqual(self.subject.predict(self.dataset)[0], False)
+    def test_fit(self):
+        self.assertEqual(self.subject.fit(self.dataset), self.subject)
+
+    def test_tranform(self):
+        self.assertEqual(self.subject.transform(), self.subject)
