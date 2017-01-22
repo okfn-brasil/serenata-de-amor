@@ -8,6 +8,8 @@ import numpy as np
 
 
 # ## Reimbursements
+# 
+# This notebook crosses the **CEIS** dataset which gather companies with some type of problem with Federal spheres and reimbursements related to **CEAP**.
 
 # In[2]:
 
@@ -105,4 +107,4 @@ suspect_reimbursements.filter([ 'document_id',
                                 'sanctioning_body'])
 
 
-# The study above doesnt prove anything ilegal, but at least the congressperson should research about the company before use its services.
+# The study above doesnt prove anything ilegal, but at least the congressperson should have research about the company before use its services.

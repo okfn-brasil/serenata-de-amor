@@ -165,6 +165,17 @@ If you read Portuguese there is [the official page](http://www2.camara.leg.br/pa
 
 Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` if you have run [our scripts](#quota-for-exercising-arliamentary-activity-ceap).
 
+## Federal Budget
+
+As a secondary goal, some datasets related to Federal Budget and its uses were analyzed crossing them with datasets of inident and suspect companies that have suffered some sanction by Federal Government and are suspended from entering into any type of contract with Federal Government during sactions.
+
+You can read more about these datasets at:
+- [federal-budget-agreements-datasets.md](federal-budget-agreements-datasets.md)
+- [companies-with-federal-sanctions-datasets.md](companies-with-federal-sanctions-datasets.md)
+
+The notebook with the analysis are:
+- 2016-12-12-marcusrehm-federal-budget-companies-with-sanctions.ipynb
+- 2017-01-15-marcusrehm-congressperson-reimbursements-from-companies-with-sanctions.ipynb
 
 ## Jarbas
 
