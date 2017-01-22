@@ -169,6 +169,8 @@ Also you can find more about the dataset variables [in Jarbas](http://jarbas.dat
 
 As a secondary goal, some datasets related to Federal Budget and its uses were analyzed crossing them with datasets of inident and suspect companies that have suffered some sanction by Federal Government and are suspended from entering into any type of contract with Federal Government during sactions.
 
+It is a work in progress as other datasets can be downloaded from [SICONV](http://portal.convenios.gov.br/download-de-dados) and documentation can also be improved.
+
 You can read more about these datasets at:
 - [federal-budget-agreements-datasets.md](federal-budget-agreements-datasets.md)
 - [companies-with-federal-sanctions-datasets.md](companies-with-federal-sanctions-datasets.md)
