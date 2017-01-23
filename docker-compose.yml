@@ -29,6 +29,7 @@ services:
       dockerfile: Dockerfile-elm
     volumes:
       - "./:/code"
+      - "/code/node_modules"
       - "assets:/code/jarbas/frontend/static"
     command: [npm, run, watch]
   nginx:
