@@ -14,4 +14,8 @@ if which('unzip') == None:
     print('The following executables are needed and were not found: unzip')
 
 print('Downloading datasets (this might take several minutes depending on your internet connection)')
-subprocess.call(['python', 'src/fetch_datasets.py'])
+
+
+# This is imported here because serenata_toolbox is only installed when pip.main is called (line 9)
+from serenata_toolbox.datasets import fetch_latest_backup
+fetch_latest_backup('data/')

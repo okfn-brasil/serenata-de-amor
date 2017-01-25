@@ -4,6 +4,9 @@
 
 If you work with statistics but are not a coder or a developer used to the routine below, or you are just willing to learn, share ideas and catch-up, join us in the [Telegram Open Group](http://bit.ly/2cUBFr6). This group keeps its language in English in order to be internationally open and we make Telegram the official channel to make it easy for non-developers to reach the technical group.
 
+
+Also you should read [this article](https://datasciencebr.com/how-does-one-contribute-to-serenata-de-amor-operation-36e3e7b38207#.uoghp3dop), it explains how each part of Serenata de Amor works and how they all come together as whole. After reading it, you'll have a pretty good understanding of all the tools ([Jarbas](https://github.com/datasciencebr/jarbas), [Rosie](https://github.com/datasciencebr/rosie) and the [toolbox](https://github.com/datasciencebr/serenata-toolbox/)) that we use — we’ll refer to them below, so it’s nice to have an idea about what we’re talking about ;-)
+
 ## The basics
 
 A lot of discussions about ideas take place in the [Issues](https://github.com/datasciencebr/serenata-de-amor/issues) section. There you can catch up with what's going on and also suggest new ideas.
@@ -105,26 +108,27 @@ Beyond that we have four big directories with different purposes:
 | **`src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
 
-### Source files (`src/`)
+### The toolbox and our the source files (`src/`)
 
-Here we explain what each script from `src/` does for you:
+Here we explain what each script from `src/` and the `serenata_toolbox` do for you:
 
-##### One script to rule them all
+##### One toolbox to rule them all
 
-1. `src/fetch_datasets.py` downloads all the available datasets to `data/` in `.xz` compressed CSV format with headers translated to English.
+With the [toolbox](https://github.com/datasciencebr/serenata-toolbox) you can download, translate and convert the dataset from XML to CSV. You can chec the [toolbox docs](http://serenata-toolbox.readthedocs.io/en/latest/) too.
 
+
+When you run our setup, the toolbox is installed and all our datasets are downloaded to your `data/` directory. This is handled by these two single lines:
+```python
+from serenata_toolbox.datasets import fetch_latest_backup
+fetch_latest_backup('data/')
+```
 
 ##### Quota for Exercising Parliamentary Activity (CEAP)
-
-1. `src/fetch_datasets.py --from-source` downloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
 1. `src/group_receipts.py` creates a `data/YYYY-MM-DD-reimbursements.xz` file with grouped data from all of the available datasets (`data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`)
-1. `src/fetch_datasets.py` downloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
-1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
-1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
 
-##### Suppliers information (CNPJ)
 
+##### Suppliers information (CNPJ)
 1. `src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info.
 1. `src/clean_cnpj_info_dataset.py` clean up and translate the supplier info dataset.
 1. `src/geocode_addresses.py` iterates over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
@@ -138,7 +142,7 @@ Here we explain what each script from `src/` does for you:
 
 ### Datasets (`data/`)
 
-Here we explain what are the datasets inside `data/`. They are not part of this repository, but downloaded with the scripts from `src/`. Most files are `.xz` compressed CSV.
+Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with the [toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
 All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
 
 1. `data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `data/YYYY-MM-DD-ceap-datasets.md`.
@@ -163,11 +167,4 @@ The project basically happens in four moments, and contributions are welcomed in
 
 If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](CEAP.md) we made.
 
-Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` if you have run [our scripts](#quota-for-exercising-arliamentary-activity-ceap).
-
-
-## Jarbas
-
-As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browse our data and refer to documents we analyze. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
-
-If you fancy web development, feel free to check Jarbas' source code, to check [Jarbas' own Issues](https://github.com/datasciencebr/jarbas/issues) and to contribute there too.
+Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` that was downloaded when you [ran the setup](#one-toolbox-to-rule-them-all).
