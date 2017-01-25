@@ -113,7 +113,7 @@ Here we explain what each script from `src/` and `serenata_toolbox` does for you
 With [serenata-toolbox](https://github.com/datasciencebr/serenata-toolbox) you can download, translate and convert from XML to CSV all datasets. The toolbox documentation can be found [here](http://serenata-toolbox.readthedocs.io/en/latest/).
 
 
-After installing serenata-toolbox you can run the following from a python console to download our datasets:
+When you run our setup, serenata-toolbox is installed and all our datasets are downloaded to your `data/` directory. This is handled by these two single lines:
 ```python
 from serenata_toolbox.datasets import fetch_latest_backup
 fetch_latest_backup('data/')
@@ -122,7 +122,7 @@ fetch_latest_backup('data/')
 ##### Quota for Exercising Parliamentary Activity (CEAP)
 1. `src/group_receipts.py` creates a `data/YYYY-MM-DD-reimbursements.xz` file with grouped data from all of the available datasets (`data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`)
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
-1. `src/fetch_datasets.py`, `src/translate_datasets.py` and `src/xml2csv.py` no longer exist but the same results we used to achieve with them can be achieved through [serenata_toolbox](https://github.com/datasciencebr/serenata-toolbox).
+
 
 ##### Suppliers information (CNPJ)
 1. `src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info.
@@ -163,7 +163,7 @@ The project basically happens in four moments, and contributions are welcomed in
 
 If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](CEAP.md) we made.
 
-Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` if you have [downloaded it with serenata-toolbox](#one-toolbox-to-rule-them-all).
+Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` that was downloaded when you [ran the setup](#one-toolbox-to-rule-them-all).
 
 
 ## Jarbas
