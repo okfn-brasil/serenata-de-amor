@@ -7,4 +7,3 @@ pandas>=0.18.1
 scikit-learn==0.18.1
 seaborn==0.7.1
 ipython==5.1.0
-ipykernel==4.5.2
