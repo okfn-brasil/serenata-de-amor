@@ -105,18 +105,26 @@ Beyond that we have four big directories with different purposes:
 | **`src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
 
-### Source files (`src/`)
+### Source files (`src/`) and serenata_toolbox
 
-Here we explain what each script from `src/` does for you:
+Here we explain what each script from `src/` and `serenata_toolbox` does for you:
+
+##### One toolbox to rule them all
+With [serenata-toolbox](https://github.com/datasciencebr/serenata-toolbox) you can download, translate and convert from XML to CSV all datasets. The toolbox documentation can be found [here](http://serenata-toolbox.readthedocs.io/en/latest/).
+
+
+After installing serenata-toolbox you can run the following from a python console to download our datasets:
+```python
+from serenata_toolbox.datasets import fetch_latest_backup
+fetch_latest_backup('data/')
+```
 
 ##### Quota for Exercising Parliamentary Activity (CEAP)
-
 1. `src/group_receipts.py` creates a `data/YYYY-MM-DD-reimbursements.xz` file with grouped data from all of the available datasets (`data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`)
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
-1. `src/fetch_datasets.py`, `src/translate_datasets.py` and `src/xml2csv.py` no longer exists but the same results we used to achieve with them can be achieved through [serenata_toolbox](https://github.com/datasciencebr/serenata-toolbox).
+1. `src/fetch_datasets.py`, `src/translate_datasets.py` and `src/xml2csv.py` no longer exist but the same results we used to achieve with them can be achieved through [serenata_toolbox](https://github.com/datasciencebr/serenata-toolbox).
 
 ##### Suppliers information (CNPJ)
-
 1. `src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info.
 1. `src/clean_cnpj_info_dataset.py` clean up and translate the supplier info dataset.
 1. `src/geocode_addresses.py` iterates over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
@@ -155,7 +163,7 @@ The project basically happens in four moments, and contributions are welcomed in
 
 If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](CEAP.md) we made.
 
-Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` if you have run [our scripts](#quota-for-exercising-arliamentary-activity-ceap).
+Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` if you have [downloaded it with serenata-toolbox](#one-toolbox-to-rule-them-all).
 
 
 ## Jarbas
