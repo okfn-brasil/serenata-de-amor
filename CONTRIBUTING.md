@@ -109,19 +109,11 @@ Beyond that we have four big directories with different purposes:
 
 Here we explain what each script from `src/` does for you:
 
-##### One script to rule them all
-
-1. `src/fetch_datasets.py` downloads all the available datasets to `data/` in `.xz` compressed CSV format with headers translated to English.
-
-
 ##### Quota for Exercising Parliamentary Activity (CEAP)
 
-1. `src/fetch_datasets.py --from-source` downloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
 1. `src/group_receipts.py` creates a `data/YYYY-MM-DD-reimbursements.xz` file with grouped data from all of the available datasets (`data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`)
-1. `src/fetch_datasets.py` downloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
-1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
-1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
+1. `src/fetch_datasets.py`, `src/translate_datasets.py` and `src/xml2csv.py` no longer exists but the same results we used to achieve with them can be achieved through [serenata_toolbox](https://github.com/datasciencebr/serenata-toolbox).
 
 ##### Suppliers information (CNPJ)
 
@@ -138,7 +130,7 @@ Here we explain what each script from `src/` does for you:
 
 ### Datasets (`data/`)
 
-Here we explain what are the datasets inside `data/`. They are not part of this repository, but downloaded with the scripts from `src/`. Most files are `.xz` compressed CSV.
+Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with [serenata_toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
 All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
 
 1. `data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `data/YYYY-MM-DD-ceap-datasets.md`.
