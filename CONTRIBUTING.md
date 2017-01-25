@@ -5,7 +5,7 @@
 If you work with statistics but are not a coder or a developer used to the routine below, or you are just willing to learn, share ideas and catch-up, join us in the [Telegram Open Group](http://bit.ly/2cUBFr6). This group keeps its language in English in order to be internationally open and we make Telegram the official channel to make it easy for non-developers to reach the technical group.
 
 
-Also you should read [this article](https://datasciencebr.com/how-does-one-contribute-to-serenata-de-amor-operation-36e3e7b38207#.uoghp3dop), it explains how each part of Serenata de Amor works and how they all come together as whole. After reading it, you'll have a pretty good understanding of all the tools (Jarbas, Rosie and serenata-toolbox) that we use — we’ll refer to them below, so it’s nice to have an idea about what we’re talking about ;-)
+Also you should read [this article](https://datasciencebr.com/how-does-one-contribute-to-serenata-de-amor-operation-36e3e7b38207#.uoghp3dop), it explains how each part of Serenata de Amor works and how they all come together as whole. After reading it, you'll have a pretty good understanding of all the tools ([Jarbas](https://github.com/datasciencebr/jarbas), [Rosie](https://github.com/datasciencebr/rosie) and [serenata\_toolbox](https://github.com/datasciencebr/serenata-toolbox/)) that we use — we’ll refer to them below, so it’s nice to have an idea about what we’re talking about ;-)
 
 ## The basics
 
@@ -108,15 +108,15 @@ Beyond that we have four big directories with different purposes:
 | **`src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
 
-### Source files (`src/`) and serenata_toolbox
+### Source files (`src/`) and serenata\_toolbox
 
 Here we explain what each script from `src/` and `serenata_toolbox` does for you:
 
 ##### One toolbox to rule them all
-With [serenata-toolbox](https://github.com/datasciencebr/serenata-toolbox) you can download, translate and convert from XML to CSV all datasets. The toolbox documentation can be found [here](http://serenata-toolbox.readthedocs.io/en/latest/).
+With [serenata\_toolbox](https://github.com/datasciencebr/serenata-toolbox) you can download, translate and convert from XML to CSV all datasets. The toolbox documentation can be found [here](http://serenata_toolbox.readthedocs.io/en/latest/).
 
 
-When you run our setup, serenata-toolbox is installed and all our datasets are downloaded to your `data/` directory. This is handled by these two single lines:
+When you run our setup, serenata\_toolbox is installed and all our datasets are downloaded to your `data/` directory. This is handled by these two single lines:
 ```python
 from serenata_toolbox.datasets import fetch_latest_backup
 fetch_latest_backup('data/')
@@ -141,7 +141,7 @@ fetch_latest_backup('data/')
 
 ### Datasets (`data/`)
 
-Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with [serenata_toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
+Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with [serenata\_toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
 All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
 
 1. `data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `data/YYYY-MM-DD-ceap-datasets.md`.
