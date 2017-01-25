@@ -4,6 +4,9 @@
 
 If you work with statistics but are not a coder or a developer used to the routine below, or you are just willing to learn, share ideas and catch-up, join us in the [Telegram Open Group](http://bit.ly/2cUBFr6). This group keeps its language in English in order to be internationally open and we make Telegram the official channel to make it easy for non-developers to reach the technical group.
 
+
+Also you should read [this article](https://datasciencebr.com/how-does-one-contribute-to-serenata-de-amor-operation-36e3e7b38207#.uoghp3dop), it explains how each part of Serenata de Amor works and how they all come together as whole. After reading it, you'll have a pretty good understanding of all the tools (Jarbas, Rosie and serenata-toolbox) that we use — we’ll refer to them below, so it’s nice to have an idea about what we’re talking about ;-)
+
 ## The basics
 
 A lot of discussions about ideas take place in the [Issues](https://github.com/datasciencebr/serenata-de-amor/issues) section. There you can catch up with what's going on and also suggest new ideas.
@@ -164,10 +167,3 @@ The project basically happens in four moments, and contributions are welcomed in
 If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](CEAP.md) we made.
 
 Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` that was downloaded when you [ran the setup](#one-toolbox-to-rule-them-all).
-
-
-## Jarbas
-
-As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browse our data and refer to documents we analyze. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
-
-If you fancy web development, feel free to check Jarbas' source code, to check [Jarbas' own Issues](https://github.com/datasciencebr/jarbas/issues) and to contribute there too.
