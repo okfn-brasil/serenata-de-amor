@@ -26,7 +26,6 @@ type TranslationId
     | FieldsetCompanyDetails
     | FieldsetCurrencyDetails
     | FieldsetCurrencyDetailsLink
-    | FieldIssueDateValidation
     | FieldYear
     | FieldDocumentId
     | FieldApplicantId
@@ -54,6 +53,7 @@ type TranslationId
     | FieldIssueDate
     | FieldIssueDateStart
     | FieldIssueDateEnd
+    | FieldIssueDateValidation
     | FieldClaimDate
     | FieldMonth
     | FieldRemarkValue
@@ -122,434 +122,542 @@ translate lang trans =
         translationSet =
             case trans of
                 About ->
-                    TranslationSet "About"
+                    TranslationSet
+                        "About"
                         "Sobre"
 
                 AboutJarbas ->
-                    TranslationSet "About Jarbas"
+                    TranslationSet
+                        "About Jarbas"
                         "Sobre o Jarbas"
 
                 AboutSerenata ->
-                    TranslationSet "About Serenata de Amor"
+                    TranslationSet
+                        "About Serenata de Amor"
                         "Sobre a Serenata de Amor"
 
                 AboutDatasets ->
-                    TranslationSet "About the dataset"
+                    TranslationSet
+                        "About the dataset"
                         "Sobre a base de dados"
 
                 SearchFieldsetReimbursement ->
-                    TranslationSet "Reimbursement data"
+                    TranslationSet
+                        "Reimbursement data"
                         "Dados do reembolso"
 
                 SearchFieldsetCongressperson ->
-                    TranslationSet "Congressperson & expense data"
+                    TranslationSet
+                        "Congressperson & expense data"
                         "Dados do(a) deputado(a) e da despesa"
 
                 FieldsetSummary ->
-                    TranslationSet "Summary"
+                    TranslationSet
+                        "Summary"
                         "Resumo"
 
                 FieldsetTrip ->
-                    TranslationSet "Ticket details"
+                    TranslationSet
+                        "Ticket details"
                         "Detalhes da passagem"
 
                 FieldsetCongressperson ->
-                    TranslationSet "Congressperson details"
+                    TranslationSet
+                        "Congressperson details"
                         "Detalhes do(a) deputado(a)"
 
                 FieldsetReimbursement ->
-                    TranslationSet "Reimbursement details"
+                    TranslationSet
+                        "Reimbursement details"
                         "Detalhes do reembolso"
 
                 FieldsetCompanyDetails ->
-                    TranslationSet "If we can find the CNPJ of this supplier in our database more info will be available in the sidebar."
+                    TranslationSet
+                        "If we can find the CNPJ of this supplier in our database more info will be available in the sidebar."
                         "Se o CNPJ estiver no nosso banco de dados mais detalhes sobre o fornecedor aparecerão ao lado."
 
                 FieldsetCurrencyDetails ->
-                    TranslationSet "Expense made abroad: "
+                    TranslationSet
+                        "Expense made abroad: "
                         "Despesa feita no exterior "
 
                 FieldsetCurrencyDetailsLink ->
-                    TranslationSet "check the currency rate on "
+                    TranslationSet
+                        "check the currency rate on "
                         "veja a cotação em "
 
-                FieldIssueDateValidation ->
-                    TranslationSet "Please use the YYYY-MM-DD format"
-                        "Por favor, utilize o formato YYYY-MM-DD"
-
                 FieldYear ->
-                    TranslationSet "Year"
+                    TranslationSet
+                        "Year"
                         "Ano"
 
                 FieldDocumentId ->
-                    TranslationSet "Document ID"
+                    TranslationSet
+                        "Document ID"
                         "ID do documento"
 
                 FieldApplicantId ->
-                    TranslationSet "Applicant ID"
+                    TranslationSet
+                        "Applicant ID"
                         "Identificador do Solicitante"
 
                 FieldTotalReimbursementValue ->
-                    TranslationSet "Total reimbursement value"
+                    TranslationSet
+                        "Total reimbursement value"
                         "Valor total dos reembolsos"
 
                 FieldTotalNetValue ->
-                    TranslationSet "Total net value"
+                    TranslationSet
+                        "Total net value"
                         "Valor líquido total"
 
                 FieldReimbursementNumbers ->
-                    TranslationSet "Reimbursement number"
+                    TranslationSet
+                        "Reimbursement number"
                         "Número dos reembolsos"
 
                 FieldNetValues ->
-                    TranslationSet "Net values"
+                    TranslationSet
+                        "Net values"
                         "Valores líquidos"
 
                 FieldCongresspersonId ->
-                    TranslationSet "Congressperson ID"
+                    TranslationSet
+                        "Congressperson ID"
                         "Cadastro do Parlamentar"
 
                 FieldCongressperson ->
-                    TranslationSet "Congressperson"
+                    TranslationSet
+                        "Congressperson"
                         "Deputado(a)"
 
                 FieldCongresspersonName ->
-                    TranslationSet "Congressperson nome"
+                    TranslationSet
+                        "Congressperson nome"
                         "Nome do(a) deputado(a)"
 
                 FieldCongresspersonDocument ->
-                    TranslationSet "Congressperson document"
+                    TranslationSet
+                        "Congressperson document"
                         "Número da Carteira Parlamentar"
 
                 FieldState ->
-                    TranslationSet "State"
+                    TranslationSet
+                        "State"
                         "UF"
 
                 FieldParty ->
-                    TranslationSet "Party"
+                    TranslationSet
+                        "Party"
                         "Partido"
 
                 FieldTermId ->
-                    TranslationSet "Term ID"
+                    TranslationSet
+                        "Term ID"
                         "Código da legislatura"
 
                 FieldTerm ->
-                    TranslationSet "Term"
+                    TranslationSet
+                        "Term"
                         "Número da legislatura"
 
                 FieldSubquotaId ->
-                    TranslationSet "Subquota number"
+                    TranslationSet
+                        "Subquota number"
                         "Número da Subcota"
 
                 FieldSubquotaDescription ->
-                    TranslationSet "Subquota"
+                    TranslationSet
+                        "Subquota"
                         "Subquota"
 
                 FieldSubquotaGroupId ->
-                    TranslationSet "Subquota group number"
+                    TranslationSet
+                        "Subquota group number"
                         "Número da especificação da subcota"
 
                 FieldSubquotaGroupDescription ->
-                    TranslationSet "Subquota group"
+                    TranslationSet
+                        "Subquota group"
                         "Especificação da subcota"
 
                 FieldCompany ->
-                    TranslationSet "Company"
+                    TranslationSet
+                        "Company"
                         "Fornecedor"
 
                 FieldCnpjCpf ->
-                    TranslationSet "CNPJ or CPF"
+                    TranslationSet
+                        "CNPJ or CPF"
                         "CNPJ ou CPF"
 
                 FieldDocumentType ->
-                    TranslationSet "Document type"
+                    TranslationSet
+                        "Document type"
                         "Tipo do documento"
 
                 FieldDocumentNumber ->
-                    TranslationSet "Document number"
+                    TranslationSet
+                        "Document number"
                         "Número do documento"
 
                 FieldDocumentValue ->
-                    TranslationSet "Expense value"
+                    TranslationSet
+                        "Expense value"
                         "Valor da despesa"
 
                 FieldIssueDate ->
-                    TranslationSet "Expense date"
+                    TranslationSet
+                        "Expense date"
                         "Data da despesa"
 
                 FieldIssueDateStart ->
-                    TranslationSet "Expense date (start)"
+                    TranslationSet
+                        "Expense date (start)"
                         "Data da despesa (início)"
 
                 FieldIssueDateEnd ->
-                    TranslationSet "Expense date (end)"
+                    TranslationSet
+                        "Expense date (end)"
                         "Data da despesa (fim)"
 
+                FieldIssueDateValidation ->
+                    TranslationSet
+                        "Please use the YYYY-MM-DD format"
+                        "Por favor, utilize o formato YYYY-MM-DD"
+
                 FieldClaimDate ->
-                    TranslationSet "Claim date"
+                    TranslationSet
+                        "Claim date"
                         "Data do pedido de reembolso"
 
                 FieldMonth ->
-                    TranslationSet "Month"
+                    TranslationSet
+                        "Month"
                         "Mês"
 
                 FieldRemarkValue ->
-                    TranslationSet "Remark value"
+                    TranslationSet
+                        "Remark value"
                         "Valor da glosa"
 
                 FieldInstallment ->
-                    TranslationSet "Installment"
+                    TranslationSet
+                        "Installment"
                         "Número da parcela"
 
                 FieldBatchNumber ->
-                    TranslationSet "Batch number"
+                    TranslationSet
+                        "Batch number"
                         "Número do lote"
 
                 FieldReimbursementValues ->
-                    TranslationSet "Reimbursement values"
+                    TranslationSet
+                        "Reimbursement values"
                         "Valor dos reembolsos"
 
                 FieldPassenger ->
-                    TranslationSet "Passenger"
+                    TranslationSet
+                        "Passenger"
                         "Passageiro"
 
                 FieldLegOfTheTrip ->
-                    TranslationSet "Leg of the trip"
+                    TranslationSet
+                        "Leg of the trip"
                         "Trecho"
 
                 FieldProbability ->
-                    TranslationSet "Probability"
+                    TranslationSet
+                        "Probability"
                         "Probabilidade"
 
                 FieldSuspicions ->
-                    TranslationSet "Suspicions"
+                    TranslationSet
+                        "Suspicions"
                         "Suspeitas"
 
                 FieldEmpty ->
-                    TranslationSet "" ""
+                    TranslationSet
+                        ""
+                        ""
 
                 ReimbursementSource ->
-                    TranslationSet "Source: "
+                    TranslationSet
+                        "Source: "
                         "Fonte: "
 
                 ReimbursementChamberOfDeputies ->
-                    TranslationSet "Chamber of Deputies"
+                    TranslationSet
+                        "Chamber of Deputies"
                         "Câmara dos Deputados"
 
                 ReceiptFetch ->
-                    TranslationSet " Fetch receipt"
+                    TranslationSet
+                        " Fetch receipt"
                         " Buscar recibo"
 
                 ReceiptAvailable ->
-                    TranslationSet " View receipt"
+                    TranslationSet
+                        " View receipt"
                         " Ver recibo"
 
                 ReceiptNotAvailable ->
-                    TranslationSet " Digitalized receipt not available."
+                    TranslationSet
+                        " Digitalized receipt not available."
                         " Recibo não disponível."
 
                 Map ->
-                    TranslationSet " Company on Maps"
+                    TranslationSet
+                        " Company on Maps"
                         " Ver no Google Maps"
 
                 CompanyCNPJ ->
-                    TranslationSet "CNPJ"
+                    TranslationSet
+                        "CNPJ"
                         "CNPJ"
 
                 CompanyTradeName ->
-                    TranslationSet "Trade name"
+                    TranslationSet
+                        "Trade name"
                         "Nome fantasia"
 
                 CompanyName ->
-                    TranslationSet "Name"
+                    TranslationSet
+                        "Name"
                         "Razão social"
 
                 CompanyOpeningDate ->
-                    TranslationSet "Opening date"
+                    TranslationSet
+                        "Opening date"
                         "Data de abertura"
 
                 CompanyLegalEntity ->
-                    TranslationSet "Legal entity"
+                    TranslationSet
+                        "Legal entity"
                         "Natureza jurídica"
 
                 CompanyType ->
-                    TranslationSet "Type"
+                    TranslationSet
+                        "Type"
                         "Tipo"
 
                 CompanyStatus ->
-                    TranslationSet "Status"
+                    TranslationSet
+                        "Status"
                         "Status"
 
                 CompanySituation ->
-                    TranslationSet "Situation"
+                    TranslationSet
+                        "Situation"
                         "Situação"
 
                 CompanySituationReason ->
-                    TranslationSet "Situation Reason"
+                    TranslationSet
+                        "Situation Reason"
                         "Motivo situação"
 
                 CompanySituationDate ->
-                    TranslationSet "Situation Date"
+                    TranslationSet
+                        "Situation Date"
                         "Data situação"
 
                 CompanySpecialSituation ->
-                    TranslationSet "Special Situation"
+                    TranslationSet
+                        "Special Situation"
                         "Situação especial"
 
                 CompanySpecialSituationDate ->
-                    TranslationSet "Special Situation Date"
+                    TranslationSet
+                        "Special Situation Date"
                         "Data situação especial"
 
                 CompanyResponsibleFederativeEntity ->
-                    TranslationSet "Responsible Federative Entity"
+                    TranslationSet
+                        "Responsible Federative Entity"
                         "EFR"
 
                 CompanyAddress ->
-                    TranslationSet "Address"
+                    TranslationSet
+                        "Address"
                         "Endereço"
 
                 CompanyNumber ->
-                    TranslationSet "Number"
+                    TranslationSet
+                        "Number"
                         "Número"
 
                 CompanyAdditionalAddressDetails ->
-                    TranslationSet "Additional Address Details"
+                    TranslationSet
+                        "Additional Address Details"
                         "Complemento"
 
                 CompanyNeighborhood ->
-                    TranslationSet "Neighborhood"
+                    TranslationSet
+                        "Neighborhood"
                         "Bairro"
 
                 CompanyZipCode ->
-                    TranslationSet "Zip Code"
+                    TranslationSet
+                        "Zip Code"
                         "CEP"
 
                 CompanyCity ->
-                    TranslationSet "City"
+                    TranslationSet
+                        "City"
                         "Cidade"
 
                 CompanyState ->
-                    TranslationSet "State"
+                    TranslationSet
+                        "State"
                         "Estado"
 
                 CompanyEmail ->
-                    TranslationSet "Email"
+                    TranslationSet
+                        "Email"
                         "Email"
 
                 CompanyPhone ->
-                    TranslationSet "Telephone"
+                    TranslationSet
+                        "Telephone"
                         "Telefone"
 
                 CompanyLastUpdated ->
-                    TranslationSet "Last Updated"
+                    TranslationSet
+                        "Last Updated"
                         "Última atualização"
 
                 CompanyMainActivity ->
-                    TranslationSet "Main Activity"
+                    TranslationSet
+                        "Main Activity"
                         "Atividade principal"
 
                 CompanySecondaryActivity ->
-                    TranslationSet "Secondary Activity"
+                    TranslationSet
+                        "Secondary Activity"
                         "Atividades secundárias"
 
                 CompanySource ->
-                    TranslationSet "Source: "
+                    TranslationSet
+                        "Source: "
                         "Fonte: "
 
                 CompanyFederalRevenue ->
-                    TranslationSet "Federal Revenue of Brazil"
+                    TranslationSet
+                        "Federal Revenue of Brazil"
                         "Receita Federal"
 
                 ReimbursementTitle ->
-                    TranslationSet "Document #"
+                    TranslationSet
+                        "Document #"
                         "Documento nº"
 
                 ResultTitleSingular ->
-                    TranslationSet " document found."
+                    TranslationSet
+                        " document found."
                         " documento encontrado."
 
                 ResultTitlePlural ->
-                    TranslationSet " documents found."
+                    TranslationSet
+                        " documents found."
                         " documentos encontrados."
 
                 Search ->
-                    TranslationSet "Search"
+                    TranslationSet
+                        "Search"
                         "Buscar"
 
                 NewSearch ->
-                    TranslationSet "New search"
+                    TranslationSet
+                        "New search"
                         "Nova busca"
 
                 Loading ->
-                    TranslationSet "Loading…"
+                    TranslationSet
+                        "Loading…"
                         "Carregando…"
 
                 PaginationPage ->
-                    TranslationSet "Page "
+                    TranslationSet
+                        "Page "
                         "Página "
 
                 PaginationOf ->
-                    TranslationSet " of "
+                    TranslationSet
+                        " of "
                         " de "
 
                 ReimbursementNotFound ->
-                    TranslationSet "Document not found."
+                    TranslationSet
+                        "Document not found."
                         "Documento não encontrado."
 
                 SameDayTitle ->
-                    TranslationSet "Other reimbursements from the same day"
+                    TranslationSet
+                        "Other reimbursements from the same day"
                         "Outros reembolsos do mesmo dia"
 
                 SameSubquotaTitle ->
-                    TranslationSet "Other reimbursements from the same month & subquota"
+                    TranslationSet
+                        "Other reimbursements from the same month & subquota"
                         "Outros reembolsos do mesmo mês e subquota"
 
                 BrazilianCurrency value ->
-                    TranslationSet (value ++ " BRL")
+                    TranslationSet
+                        (value ++ " BRL")
                         ("R$ " ++ value)
 
                 ThousandSeparator ->
-                    TranslationSet ","
+                    TranslationSet
+                        ","
                         "."
 
                 DecimalSeparator ->
-                    TranslationSet "."
+                    TranslationSet
+                        "."
                         ","
 
                 Suspicion suspicion ->
                     case suspicion of
                         "meal_price_outlier" ->
-                            TranslationSet "Meal price is an outlier"
+                            TranslationSet
+                                "Meal price is an outlier"
                                 "Preço de refeição muito incomum"
 
                         "over_monthly_subquota_limit" ->
-                            TranslationSet "Expenses over the (sub)quota limit"
+                            TranslationSet
+                                "Expenses over the (sub)quota limit"
                                 "Extrapolou limita da (sub)quota"
 
                         "suspicious_traveled_speed_day" ->
-                            TranslationSet "Many expenses in different cities at the same day"
+                            TranslationSet
+                                "Many expenses in different cities at the same day"
                                 "Muitas despesas em diferentes cidades no mesmo dia"
 
                         _ ->
-                            TranslationSet suspicion
+                            TranslationSet
+                                suspicion
                                 suspicion
 
                 DocumentType value ->
                     case value of
                         0 ->
-                            TranslationSet "Bill of sale"
+                            TranslationSet
+                                "Bill of sale"
                                 "Nota fiscal"
 
                         1 ->
-                            TranslationSet "Simple receipt"
+                            TranslationSet
+                                "Simple receipt"
                                 "Recibo simples"
 
                         2 ->
-                            TranslationSet "Expense made abroad"
+                            TranslationSet
+                                "Expense made abroad"
                                 "Despesa no exterior"
 
                         _ ->
-                            TranslationSet ""
+                            TranslationSet
+                                ""
                                 ""
     in
         case lang of
