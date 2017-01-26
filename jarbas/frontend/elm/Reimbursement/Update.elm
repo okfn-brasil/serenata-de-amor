@@ -120,7 +120,8 @@ update msg model =
             let
                 url : String
                 url =
-                    toUrl (Search.toQuery model.searchFields)
+                    Search.toUrl model.searchFields
+                        |> appendUrlHash
             in
                 ( { model | loading = True }, Navigation.newUrl url )
 
@@ -145,12 +146,12 @@ update msg model =
                         |> Maybe.withDefault 0
                         |> totalPages
 
-                query =
-                    ( "page", toString page ) :: Search.toQuery model.searchFields
+                url =
+                    appendUrlHash <| "page/" ++ toString page ++ "/" ++ Search.toUrl model.searchFields
 
                 cmd =
                     if isValidPage page total then
-                        Navigation.newUrl (toUrl query)
+                        Navigation.newUrl url
                     else
                         Cmd.none
             in
@@ -412,23 +413,6 @@ loadReimbursements lang apiKey query =
                 |> Http.send LoadReimbursements
 
 
-{-| Convert a list of key/value query pairs to a valid URL:
-
-    >>> toUrl [ ( "year", "2016" ), ( "month", "10" ) ]
-    "#/year/2016/month/10"
-
--}
-toUrl : List ( String, String ) -> String
-toUrl query =
-    if List.isEmpty query then
-        ""
-    else
-        query
-            |> List.map (\( key, value ) -> key ++ "/" ++ value)
-            |> String.join "/"
-            |> (++) "#/"
-
-
 updateJumpTo : Model -> Maybe Int -> ( Model, Cmd Msg )
 updateJumpTo model page =
     let
@@ -437,3 +421,11 @@ updateJumpTo model page =
             model.results
     in
         ( { model | results = { results | jumpTo = page } }, Cmd.none )
+
+
+appendUrlHash : String -> String
+appendUrlHash url =
+    if String.isEmpty url then
+        ""
+    else
+        "#/" ++ url

@@ -1,4 +1,4 @@
-module Reimbursement.Search.Update exposing (Msg(..), toQuery, update, updateFromQuery)
+module Reimbursement.Search.Update exposing (Msg(..), toUrl, update, updateFromQuery)
 
 import Char
 import Reimbursement.Fields as Fields exposing (Field(..), Label(..))
@@ -89,22 +89,25 @@ updateFromQuery model query =
             model
 
 
-{-| Convert a list of non-empty, searchable fields into a pair of key/value:
+{-| Convert a list of non-empty, searchable fields into a url:
     >>> import Reimbursement.Fields exposing (Field(..), Label(..))
 
-    >>> toQuery [ Field Year "2016" ]
-    [ ( "year", "2016" ) ]
+    >>> toUrl [ Field Year "2016" ]
+    "year/2016"
 
-    >>> toQuery [ Field LegOfTheTrip "any" ]
-    []
+    >>> toUrl [ Field Year "2016", Field Month "10" ]
+    "year/2016/month/10"
 
-    >>> toQuery [ Field Year "" ]
-    []
+    >>> toUrl [ Field LegOfTheTrip "any" ]
+    ""
+
+    >>> toUrl [ Field Year "" ]
+    ""
 
 -}
-toQuery : Model -> List ( String, String )
-toQuery model =
+toUrl : Model -> String
+toUrl model =
     model
-        |> List.map (\(Field label value) -> ( Fields.labelToUrl label, value |> String.trim ))
-        |> List.filter (Tuple.first >> String.isEmpty >> not)
-        |> List.filter (Tuple.second >> String.isEmpty >> not)
+        |> List.filterMap Fields.toQuery
+        |> List.concatMap (\( label, value ) -> [ label, value ])
+        |> String.join "/"

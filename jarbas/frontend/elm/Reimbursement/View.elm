@@ -499,7 +499,7 @@ viewReimbursements model =
 
         searched : Bool
         searched =
-            SearchUpdate.toQuery model.searchFields |> List.isEmpty |> not
+            SearchUpdate.toUrl model.searchFields |> String.isEmpty |> not
 
         results : String
         results =

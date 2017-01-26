@@ -160,6 +160,28 @@ getLabel (Field label _) =
     label
 
 
+{-| Convert a field into what may be a search query:
+    >>> toQuery ( Field Year "2016" )
+    Just ( "year", "2016" )
+
+    >>> toQuery ( Field Year "" )
+    Nothing
+
+    >>> toQuery ( Field LegOfTheTrip "any" )
+    Nothing
+-}
+toQuery : Field -> Maybe ( String, String )
+toQuery (Field label value) =
+    let
+        notEmpty =
+            String.trim >> String.isEmpty >> not
+    in
+        if (notEmpty <| labelToUrl label) && (notEmpty value) then
+            Just ( labelToUrl label, String.trim value )
+        else
+            Nothing
+
+
 getLabelTranslation : Language -> Field -> String
 getLabelTranslation language (Field label _) =
     let
