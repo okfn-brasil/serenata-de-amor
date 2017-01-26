@@ -1,4 +1,4 @@
-module Internationalization exposing (Language(..), TranslationId(..), translate)
+module Internationalization exposing (Language(..), TranslationId(..), TranslationSet, translate)
 
 
 type alias TranslationSet =
@@ -54,8 +54,8 @@ type TranslationId
     | FieldIssueDateStart
     | FieldIssueDateEnd
     | FieldIssueDateValidation
-    | FieldMonth
     | FieldClaimDate
+    | FieldMonth
     | FieldRemarkValue
     | FieldInstallment
     | FieldBatchNumber
@@ -64,6 +64,7 @@ type TranslationId
     | FieldLegOfTheTrip
     | FieldProbability
     | FieldSuspicions
+    | FieldEmpty
     | ReimbursementSource
     | ReimbursementChamberOfDeputies
     | ReceiptFetch
@@ -374,6 +375,11 @@ translate lang trans =
                     TranslationSet
                         "Suspicions"
                         "Suspeitas"
+
+                FieldEmpty ->
+                    TranslationSet
+                        ""
+                        ""
 
                 ReimbursementSource ->
                     TranslationSet

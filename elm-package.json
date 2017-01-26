@@ -14,6 +14,7 @@
         "cuducos/elm-format-number": "2.0.0 <= v < 3.0.0",
         "elm-community/elm-test": "3.1.0 <= v < 4.0.0",
         "elm-community/json-extra": "2.1.0 <= v < 3.0.0",
+        "elm-community/list-extra": "5.0.1 <= v < 6.0.0",
         "elm-lang/core": "5.0.0 <= v < 6.0.0",
         "elm-lang/html": "2.0.0 <= v < 3.0.0",
         "elm-lang/http": "1.0.0 <= v < 2.0.0",

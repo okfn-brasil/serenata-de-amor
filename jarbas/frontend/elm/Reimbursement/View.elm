@@ -20,8 +20,8 @@ import Material.Options as Options
 import Material.Textfield as Textfield
 import Material.Typography as Typography
 import Reimbursement.Company.View as CompanyView
-import Reimbursement.Inputs.Update as InputsUpdate
-import Reimbursement.Inputs.View as InputsView
+import Reimbursement.Search.Update as SearchUpdate
+import Reimbursement.Search.View as SearchView
 import Reimbursement.Map.Model as MapModel
 import Reimbursement.Map.View as MapView
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
@@ -29,72 +29,8 @@ import Reimbursement.Receipt.View as ReceiptView
 import Reimbursement.SameDay.View as SameDay
 import Reimbursement.SameSubquota.View as SameSubquota
 import Reimbursement.Update exposing (Msg(..), onlyDigits, totalPages)
+import Reimbursement.Fields as Fields exposing (Field(..), Label(..), getLabelTranslation)
 import String
-
-
---
--- Form
---
-
-
-viewButton : Model -> Int -> List (Button.Property Msg) -> TranslationId -> Html Msg
-viewButton model index defaultAttr defaultLabel =
-    let
-        label =
-            if model.loading then
-                translate model.lang Loading
-            else
-                translate model.lang defaultLabel
-
-        attr =
-            if model.loading then
-                Button.disabled :: defaultAttr
-            else
-                defaultAttr
-    in
-        grid
-            []
-            [ cell
-                [ size Desktop 12, size Tablet 8, size Phone 4 ]
-                [ Options.styled
-                    div
-                    [ Typography.center ]
-                    [ Button.render
-                        Mdl
-                        [ index ]
-                        model.mdl
-                        attr
-                        [ text label ]
-                    ]
-                ]
-            ]
-
-
-viewForm : Model -> Html Msg
-viewForm model =
-    let
-        inputs =
-            InputsView.view model.loading model.inputs |> Html.map InputsMsg
-
-        send =
-            viewButton
-                model
-                0
-                [ Button.raised, Button.colored, Button.type_ "submit" ]
-                Search
-
-        showForm =
-            viewButton
-                model
-                1
-                [ Button.raised, Button.onClick ToggleForm ]
-                NewSearch
-    in
-        if model.showForm then
-            form [ onSubmit Submit ] [ inputs, send ]
-        else
-            showForm
-
 
 
 --
@@ -137,8 +73,7 @@ viewJumpTo model =
 
         input : Html Msg
         input =
-            Textfield.render
-                Mdl
+            Textfield.render Mdl
                 [ 0 ]
                 model.mdl
                 [ Textfield.onInput UpdateJumpTo
@@ -154,8 +89,7 @@ viewJumpTo model =
                 |> Maybe.withDefault 1
                 |> totalPages
     in
-        form
-            [ onSubmit (Page model.results.jumpTo) ]
+        form [ onSubmit (Page model.results.jumpTo) ]
             [ PaginationPage |> translate model.lang |> text
             , input
             , PaginationOf |> translate model.lang |> text
@@ -165,10 +99,8 @@ viewJumpTo model =
 
 viewPaginationButton : Model -> Int -> Int -> String -> Html Msg
 viewPaginationButton model page index icon =
-    div
-        []
-        [ Button.render
-            Mdl
+    div []
+        [ Button.render Mdl
             [ index ]
             model.mdl
             [ Button.minifab
@@ -206,24 +138,18 @@ viewPagination model =
         if current >= total then
             []
         else
-            [ cell
-                [ size Desktop 4, size Tablet 2, size Phone 1 ]
-                [ Options.styled
-                    div
+            [ cell [ size Desktop 4, size Tablet 2, size Phone 1 ]
+                [ Options.styled div
                     [ Typography.right ]
                     [ previous ]
                 ]
-            , cell
-                [ size Desktop 4, size Tablet 4, size Phone 2 ]
-                [ Options.styled
-                    div
+            , cell [ size Desktop 4, size Tablet 4, size Phone 2 ]
+                [ Options.styled div
                     [ Typography.center ]
                     [ viewJumpTo model ]
                 ]
-            , cell
-                [ size Desktop 4, size Tablet 2, size Phone 1 ]
-                [ Options.styled
-                    div
+            , cell [ size Desktop 4, size Tablet 2, size Phone 1 ]
+                [ Options.styled div
                     [ Typography.left ]
                     [ next ]
                 ]
@@ -238,8 +164,7 @@ viewPagination model =
 
 sourceUrl : Reimbursement -> String
 sourceUrl reimbursement =
-    url
-        "http://www.camara.gov.br/cota-parlamentar/documento"
+    url "http://www.camara.gov.br/cota-parlamentar/documento"
         [ ( "nuDeputadoId", toString reimbursement.applicantId )
         , ( "numMes", toString reimbursement.month )
         , ( "numAno", toString reimbursement.year )
@@ -306,8 +231,7 @@ viewError : Language -> Maybe Http.Error -> Html Msg
 viewError lang error =
     case error of
         Just _ ->
-            Options.styled
-                p
+            Options.styled p
                 [ Typography.title ]
                 [ text (translate lang ReimbursementNotFound) ]
 
@@ -315,8 +239,8 @@ viewError lang error =
             text ""
 
 
-viewReimbursementBlockLine : ( String, String ) -> Html Msg
-viewReimbursementBlockLine ( label, value ) =
+viewReimbursementBlockLine : Language -> Field -> Html Msg
+viewReimbursementBlockLine lang field =
     let
         styles =
             [ Options.css "display" "flex"
@@ -331,8 +255,8 @@ viewReimbursementBlockLine ( label, value ) =
             [ Options.css "display" "flex"
             , Options.css "flex-direction" "row"
             ]
-            [ Options.styled span (Typography.body2 :: labelStyles) [ text label ]
-            , Options.styled span (Typography.body1 :: styles) [ text value ]
+            [ Options.styled span (Typography.body2 :: labelStyles) [ text <| Fields.getLabelTranslation lang field ]
+            , Options.styled span (Typography.body1 :: styles) [ text <| Fields.getValue field ]
             ]
 
 
@@ -349,12 +273,10 @@ viewPs lang reimbursement =
 
         currency =
             if reimbursement.documentType == 2 then
-                Options.styled
-                    p
+                Options.styled p
                     [ Typography.caption ]
                     [ translate lang FieldsetCurrencyDetails |> text
-                    , a
-                        [ href currencyUrl, target "_blank", class "currency" ]
+                    , a [ href currencyUrl, target "_blank", class "currency" ]
                         [ translate lang FieldsetCurrencyDetailsLink |> text
                         , formatDate lang reimbursement.issueDate |> text
                         ]
@@ -363,17 +285,15 @@ viewPs lang reimbursement =
             else
                 text ""
     in
-        div
-            []
+        div []
             [ currency
-            , Options.styled
-                p
+            , Options.styled p
                 [ Typography.caption ]
                 [ text (translate lang FieldsetCompanyDetails) ]
             ]
 
 
-viewReimbursementBlock : Language -> Reimbursement -> ( String, String, List ( String, String ) ) -> Html Msg
+viewReimbursementBlock : Language -> Reimbursement -> ( String, String, List Field ) -> Html Msg
 viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
     let
         iconTag =
@@ -385,13 +305,11 @@ viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
             else
                 text ""
     in
-        div
-            []
-            [ Options.styled
-                p
+        div []
+            [ Options.styled p
                 [ Typography.subhead ]
                 [ iconTag, text (" " ++ title) ]
-            , List.ul [] (List.map viewReimbursementBlockLine fields)
+            , List.ul [] (List.map (viewReimbursementBlockLine lang) fields)
             , ps
             ]
 
@@ -423,19 +341,19 @@ viewSummaryBlock lang reimbursement =
                 ]
 
         fields =
-            [ ( translate lang FieldCongressperson, congressperson )
-            , ( translate lang FieldIssueDate, formatDate lang reimbursement.issueDate )
-            , ( translate lang FieldClaimDate, claimedDate )
-            , ( translate lang FieldSubquotaDescription, subquota )
-            , ( translate lang FieldSubquotaGroupDescription, Maybe.withDefault "" reimbursement.subquotaGroupDescription )
-            , ( translate lang FieldCompany, viewCompany reimbursement )
-            , ( translate lang FieldDocumentValue, formatPrice lang reimbursement.documentValue )
-            , ( translate lang FieldRemarkValue, maybeFormatPrice lang reimbursement.remarkValue )
-            , ( translate lang FieldTotalNetValue, formatPrice lang reimbursement.totalNetValue )
-            , ( translate lang FieldTotalReimbursementValue, maybeFormatPrice lang reimbursement.totalReimbursementValue )
-            , ( translate lang FieldSuspicions, viewSuspicions lang reimbursement.suspicions )
+            [ Field Congressperson <| congressperson
+            , Field IssueDate <| formatDate lang reimbursement.issueDate
+            , Field ClaimDate <| claimedDate
+            , Field SubquotaDescription <| subquota
+            , Field SubquotaGroupDescription <| Maybe.withDefault "" reimbursement.subquotaGroupDescription
+            , Field Company <| viewCompany reimbursement
+            , Field DocumentValue <| formatPrice lang reimbursement.documentValue
+            , Field RemarkValue <| maybeFormatPrice lang reimbursement.remarkValue
+            , Field TotalNetValue <| formatPrice lang reimbursement.totalNetValue
+            , Field TotalReimbursementValue <| maybeFormatPrice lang reimbursement.totalReimbursementValue
+            , Field Suspicions <| viewSuspicions lang reimbursement.suspicions
             ]
-                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+                |> List.filter (Fields.getValue >> String.isEmpty >> not)
     in
         viewReimbursementBlock lang reimbursement ( translate lang FieldsetSummary, "list", fields )
 
@@ -449,21 +367,21 @@ viewReimbursementDetails lang reimbursement =
                 |> String.join ", "
 
         documentType =
-            DocumentType reimbursement.documentType
+            Internationalization.DocumentType reimbursement.documentType
                 |> translate lang
 
         fields =
-            [ ( translate lang FieldApplicantId, toString reimbursement.applicantId )
-            , ( translate lang FieldDocumentId, toString reimbursement.documentId )
-            , ( translate lang FieldNetValues, formatPrices lang reimbursement.netValues )
-            , ( translate lang FieldReimbursementValues, maybeFormatPrices lang reimbursement.reimbursementValues )
-            , ( translate lang FieldReimbursementNumbers, reimbursements )
-            , ( translate lang FieldDocumentType, documentType )
-            , ( translate lang FieldDocumentNumber, Maybe.withDefault "" reimbursement.documentNumber )
-            , ( translate lang FieldInstallment, viewMaybeIntButZero reimbursement.installment )
-            , ( translate lang FieldBatchNumber, viewMaybeIntButZero reimbursement.batchNumber )
+            [ Field ApplicantId <| toString reimbursement.applicantId
+            , Field DocumentId <| toString reimbursement.documentId
+            , Field NetValues <| formatPrices lang reimbursement.netValues
+            , Field ReimbursementValues <| maybeFormatPrices lang reimbursement.reimbursementValues
+            , Field ReimbursementNumbers <| reimbursements
+            , Field Fields.DocumentType <| documentType
+            , Field DocumentNumber <| Maybe.withDefault "" reimbursement.documentNumber
+            , Field Installment <| viewMaybeIntButZero reimbursement.installment
+            , Field BatchNumber <| viewMaybeIntButZero reimbursement.batchNumber
             ]
-                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+                |> List.filter (Fields.getValue >> String.isEmpty >> not)
     in
         viewReimbursementBlock lang reimbursement ( translate lang FieldsetReimbursement, "folder", fields )
 
@@ -472,12 +390,12 @@ viewCongressPersonDetails : Language -> Reimbursement -> Html Msg
 viewCongressPersonDetails lang reimbursement =
     let
         fields =
-            [ ( translate lang FieldCongresspersonId, viewMaybeIntButZero reimbursement.congresspersonId )
-            , ( translate lang FieldCongresspersonDocument, viewMaybeIntButZero reimbursement.congresspersonDocument )
-            , ( translate lang FieldTerm, toString reimbursement.term )
-            , ( translate lang FieldTermId, viewMaybeIntButZero reimbursement.termId )
+            [ Field CongresspersonId <| viewMaybeIntButZero reimbursement.congresspersonId
+            , Field CongresspersonDocument <| viewMaybeIntButZero reimbursement.congresspersonDocument
+            , Field Term <| toString reimbursement.term
+            , Field TermId <| viewMaybeIntButZero reimbursement.termId
             ]
-                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+                |> List.filter (Fields.getValue >> String.isEmpty >> not)
     in
         viewReimbursementBlock lang reimbursement ( translate lang FieldsetCongressperson, "face", fields )
 
@@ -486,10 +404,10 @@ viewTrip : Language -> Reimbursement -> Html Msg
 viewTrip lang reimbursement =
     let
         fields =
-            [ ( translate lang FieldPassenger, Maybe.withDefault "" reimbursement.passenger )
-            , ( translate lang FieldLegOfTheTrip, Maybe.withDefault "" reimbursement.legOfTheTrip )
+            [ Field Passenger <| Maybe.withDefault "" reimbursement.passenger
+            , Field LegOfTheTrip <| Maybe.withDefault "" reimbursement.legOfTheTrip
             ]
-                |> List.filter (\( key, value ) -> String.isEmpty value |> not)
+                |> List.filter (Fields.getValue >> String.isEmpty >> not)
     in
         if List.isEmpty fields then
             text ""
@@ -519,8 +437,7 @@ viewReimbursement lang index reimbursement =
                 |> Html.map (\_ -> MapMsg)
 
         title =
-            Options.styled
-                p
+            Options.styled p
                 [ Typography.headline, Color.text Color.primary ]
                 [ (translate lang ReimbursementTitle) ++ (toString reimbursement.documentId) |> text ]
 
@@ -529,8 +446,7 @@ viewReimbursement lang index reimbursement =
                 |> Html.map (CompanyMsg index)
 
         supplierTitle =
-            Options.styled
-                p
+            Options.styled p
                 [ Typography.headline ]
                 [ text "" ]
 
@@ -544,32 +460,25 @@ viewReimbursement lang index reimbursement =
             SameSubquota.view reimbursement.sameSubquota
                 |> Html.map (SameSubquotaMsg index)
     in
-        [ cell
-            [ size Desktop 6, size Tablet 4, size Phone 2 ]
+        [ cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
             [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title ] ]
-        , cell
-            [ size Desktop 6, size Tablet 4, size Phone 2 ]
-            [ Options.styled
-                div
+        , cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
+            [ Options.styled div
                 [ Options.css "margin-top" "3rem", Typography.right ]
                 [ receipt, mapButton ]
             ]
-        , cell
-            [ size Desktop 6, size Tablet 8, size Phone 4 ]
+        , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] blocks
-            , Options.styled
-                p
+            , Options.styled p
                 [ Typography.caption, Options.css "margin-top" "1rem" ]
                 [ text (translate lang ReimbursementSource)
-                , a
-                    [ href (sourceUrl reimbursement), class "chamber-of-deputies-source" ]
+                , a [ href (sourceUrl reimbursement), class "chamber-of-deputies-source" ]
                     [ text (translate lang ReimbursementChamberOfDeputies) ]
                 ]
             , sameDay
             , sameSubquota
             ]
-        , cell
-            [ size Desktop 6, size Tablet 8, size Phone 4 ]
+        , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] [ supplierTitle, supplier ] ]
         ]
 
@@ -590,7 +499,7 @@ viewReimbursements model =
 
         searched : Bool
         searched =
-            InputsUpdate.toQuery model.inputs |> List.isEmpty |> not
+            SearchUpdate.toUrl model.searchFields |> String.isEmpty |> not
 
         results : String
         results =
@@ -601,10 +510,8 @@ viewReimbursements model =
 
         title : Material.Grid.Cell Msg
         title =
-            cell
-                [ size Desktop 12, size Tablet 8, size Phone 4 ]
-                [ Options.styled
-                    div
+            cell [ size Desktop 12, size Tablet 8, size Phone 4 ]
+                [ Options.styled div
                     [ Typography.center, Typography.display1 ]
                     [ results |> text ]
                 ]
@@ -632,6 +539,6 @@ viewReimbursements model =
 view : Model -> Html Msg
 view model =
     div []
-        [ viewForm model
+        [ SearchView.view model
         , viewReimbursements model
         ]

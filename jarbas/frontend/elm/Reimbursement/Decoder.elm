@@ -7,8 +7,6 @@ import Json.Decode exposing (Decoder, array, bool, float, int, keyValuePairs, li
 import Json.Decode.Extra exposing (date)
 import Json.Decode.Pipeline exposing (decode, hardcoded, required)
 import Reimbursement.Company.Model as CompanyModel
-import Reimbursement.Inputs.Model as InputsModel
-import Reimbursement.Inputs.Update as InputsUpdate
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
 import Reimbursement.Receipt.Decoder as ReceiptDecoder
 import Reimbursement.Receipt.Model as ReceiptModel
@@ -138,12 +136,8 @@ updateLanguage lang model =
         newResults : Results
         newResults =
             { results | reimbursements = newReimbursements }
-
-        newInputs : InputsModel.Model
-        newInputs =
-            InputsUpdate.updateLanguage lang model.inputs
     in
-        { model | lang = lang, inputs = newInputs, results = newResults }
+        { model | lang = lang, results = newResults }
 
 
 updateGoogleStreetViewApiKey : Maybe String -> Model -> Model

@@ -17,9 +17,9 @@ type alias Model =
 
 model : Model
 model =
-    Model
-        Reimbursement.model
-        Layout.model
-        Nothing
-        English
-        Material.model
+    { reimbursements = Reimbursement.model
+    , layout = Layout.model
+    , googleStreetViewApiKey = Nothing
+    , lang = English
+    , mdl = Material.model
+    }

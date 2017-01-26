@@ -4,15 +4,14 @@ import Array exposing (Array)
 import Char
 import Format.Url exposing (url)
 import Http
-import Internationalization exposing (Language)
+import Internationalization exposing (Language, TranslationId(..))
 import Material
 import Navigation
 import Regex exposing (regex, replace)
 import Reimbursement.Company.Update as Company
 import Reimbursement.Decoder exposing (decoder)
-import Reimbursement.Fields as Fields
-import Reimbursement.Inputs.Model
-import Reimbursement.Inputs.Update as Inputs
+import Reimbursement.Search.Model
+import Reimbursement.Search.Update as Search
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
 import Reimbursement.Receipt.Model exposing (ReimbursementId)
 import Reimbursement.Receipt.Update as Receipt
@@ -52,16 +51,14 @@ onlyDigits value =
 
 toUniqueId : Reimbursement -> SameDay.UniqueId
 toUniqueId reimbursement =
-    SameDay.UniqueId
-        reimbursement.applicantId
+    SameDay.UniqueId reimbursement.applicantId
         reimbursement.year
         reimbursement.documentId
 
 
 toSameSubquotaFilter : Reimbursement -> SameSubquota.Filter
 toSameSubquotaFilter reimbursement =
-    SameSubquota.Filter
-        reimbursement.applicantId
+    SameSubquota.Filter reimbursement.applicantId
         reimbursement.year
         reimbursement.month
         reimbursement.subquotaId
@@ -73,7 +70,7 @@ newSearch model =
         | results = results
         , showForm = True
         , loading = False
-        , inputs = Inputs.updateLanguage model.lang Reimbursement.Inputs.Model.model
+        , searchFields = Reimbursement.Search.Model.model
     }
 
 
@@ -107,7 +104,7 @@ type Msg
     | RecoverJumpTo
     | Page (Maybe Int)
     | LoadReimbursements (Result Http.Error Results)
-    | InputsMsg Inputs.Msg
+    | SearchMsg Search.Msg
     | ReceiptMsg Int Receipt.Msg
     | CompanyMsg Int Company.Msg
     | SameDayMsg Int RelatedTable.Msg
@@ -123,7 +120,8 @@ update msg model =
             let
                 url : String
                 url =
-                    toUrl (Inputs.toQuery model.inputs)
+                    Search.toUrl model.searchFields
+                        |> appendUrlHash
             in
                 ( { model | loading = True }, Navigation.newUrl url )
 
@@ -148,12 +146,12 @@ update msg model =
                         |> Maybe.withDefault 0
                         |> totalPages
 
-                query =
-                    ( "page", toString page ) :: Inputs.toQuery model.inputs
+                url =
+                    appendUrlHash <| "page/" ++ toString page ++ "/" ++ Search.toUrl model.searchFields
 
                 cmd =
                     if isValidPage page total then
-                        Navigation.newUrl (toUrl query)
+                        Navigation.newUrl url
                     else
                         Cmd.none
             in
@@ -199,24 +197,21 @@ update msg model =
 
                 companyCmds : List (Cmd Msg)
                 companyCmds =
-                    Array.map
-                        (.cnpjCpf >> Company.load)
+                    Array.map (.cnpjCpf >> Company.load)
                         newModel.results.reimbursements
                         |> Array.toIndexedList
                         |> List.map (\( idx, cmd ) -> Cmd.map (CompanyMsg idx) cmd)
 
                 sameDayCmds : List (Cmd Msg)
                 sameDayCmds =
-                    Array.map
-                        (toUniqueId >> SameDay.load)
+                    Array.map (toUniqueId >> SameDay.load)
                         newModel.results.reimbursements
                         |> Array.toIndexedList
                         |> List.map (\( idx, cmd ) -> Cmd.map (SameDayMsg idx) cmd)
 
                 sameSubquotaCmds : List (Cmd Msg)
                 sameSubquotaCmds =
-                    Array.map
-                        (toSameSubquotaFilter >> SameSubquota.load)
+                    Array.map (toSameSubquotaFilter >> SameSubquota.load)
                         newModel.results.reimbursements
                         |> Array.toIndexedList
                         |> List.map (\( idx, cmd ) -> Cmd.map (SameSubquotaMsg idx) cmd)
@@ -238,12 +233,12 @@ update msg model =
             in
                 ( { model | results = results, error = Just error, loading = False }, Cmd.none )
 
-        InputsMsg msg ->
+        SearchMsg msg ->
             let
-                inputs =
-                    Inputs.update msg model.inputs |> Tuple.first
+                searchFields =
+                    Search.update msg model.searchFields |> Tuple.first
             in
-                ( { model | inputs = inputs }, Cmd.none )
+                ( { model | searchFields = searchFields }, Cmd.none )
 
         CompanyMsg index companyMsg ->
             subModuleUpdate index msg model
@@ -334,8 +329,7 @@ updateReceipt lang target msg reimbursement =
     let
         reimbursementId : Maybe ReimbursementId
         reimbursementId =
-            ReimbursementId
-                reimbursement.year
+            ReimbursementId reimbursement.year
                 reimbursement.applicantId
                 reimbursement.documentId
                 |> Just
@@ -414,34 +408,9 @@ loadReimbursements lang apiKey query =
             jsonQuery =
                 ( "format", "json" ) :: convertQuery query
         in
-            Http.get
-                (url "/api/reimbursement/" jsonQuery)
+            Http.get (url "/api/reimbursement/" jsonQuery)
                 (decoder lang apiKey jsonQuery)
                 |> Http.send LoadReimbursements
-
-
-{-| Convert a list of key/value query pairs to a valid URL:
-
-    >>> toUrl [ ( "year", "2016" ), ( "foo", "bar" ) ]
-    "#/year/2016"
-
-    >>> toUrl [ ( "foo", "bar" ) ]
-    ""
-
--}
-toUrl : List ( String, String ) -> String
-toUrl query =
-    let
-        validQueries =
-            List.filter Fields.isSearchable query
-    in
-        if List.isEmpty validQueries then
-            ""
-        else
-            validQueries
-                |> List.map (\( index, value ) -> index ++ "/" ++ value)
-                |> String.join "/"
-                |> (++) "#/"
 
 
 updateJumpTo : Model -> Maybe Int -> ( Model, Cmd Msg )
@@ -452,3 +421,11 @@ updateJumpTo model page =
             model.results
     in
         ( { model | results = { results | jumpTo = page } }, Cmd.none )
+
+
+appendUrlHash : String -> String
+appendUrlHash url =
+    if String.isEmpty url then
+        ""
+    else
+        "#/" ++ url
