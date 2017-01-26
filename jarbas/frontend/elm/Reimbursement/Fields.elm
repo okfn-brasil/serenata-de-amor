@@ -1,6 +1,6 @@
 module Reimbursement.Fields exposing (..)
 
-import Internationalization exposing (Language(..), TranslationId(..), TranslationSet, translateSet)
+import Internationalization exposing (Language(..), TranslationId(..), TranslationSet, translate)
 import List.Extra
 
 
@@ -163,157 +163,120 @@ getLabel (Field label _) =
 getLabelTranslation : Language -> Field -> String
 getLabelTranslation language (Field label _) =
     let
-        translationSet =
+        translationId =
             case label of
                 Year ->
-                    TranslationSet "Year"
-                        "Ano"
+                    FieldYear
 
                 DocumentId ->
-                    TranslationSet "Document ID"
-                        "ID do documento"
+                    FieldDocumentId
 
                 ApplicantId ->
-                    TranslationSet "Applicant ID"
-                        "Identificador do Solicitante"
+                    FieldApplicantId
 
                 TotalReimbursementValue ->
-                    TranslationSet "Total reimbursement value"
-                        "Valor total dos reembolsos"
+                    FieldTotalReimbursementValue
 
                 TotalNetValue ->
-                    TranslationSet "Total net value"
-                        "Valor líquido total"
+                    FieldTotalNetValue
 
                 ReimbursementNumbers ->
-                    TranslationSet "Reimbursement number"
-                        "Número dos reembolsos"
+                    FieldReimbursementNumbers
 
                 NetValues ->
-                    TranslationSet "Net values"
-                        "Valores líquidos"
+                    FieldNetValues
 
                 CongresspersonId ->
-                    TranslationSet "Congressperson ID"
-                        "Cadastro do Parlamentar"
+                    FieldCongresspersonId
 
                 Congressperson ->
-                    TranslationSet "Congressperson"
-                        "Deputado(a)"
+                    FieldCongressperson
 
                 CongresspersonName ->
-                    TranslationSet "Congressperson nome"
-                        "Nome do(a) deputado(a)"
+                    FieldCongresspersonName
 
                 CongresspersonDocument ->
-                    TranslationSet "Congressperson document"
-                        "Número da Carteira Parlamentar"
+                    FieldCongresspersonDocument
 
                 State ->
-                    TranslationSet "State"
-                        "UF"
+                    FieldState
 
                 Party ->
-                    TranslationSet "Party"
-                        "Partido"
+                    FieldParty
 
                 TermId ->
-                    TranslationSet "Term ID"
-                        "Código da legislatura"
+                    FieldTermId
 
                 Term ->
-                    TranslationSet "Term"
-                        "Número da legislatura"
+                    FieldTerm
 
                 SubquotaId ->
-                    TranslationSet "Subquota number"
-                        "Número da Subcota"
+                    FieldSubquotaId
 
                 SubquotaDescription ->
-                    TranslationSet "Subquota"
-                        "Subquota"
+                    FieldSubquotaDescription
 
                 SubquotaGroupId ->
-                    TranslationSet "Subquota group number"
-                        "Número da especificação da subcota"
+                    FieldSubquotaGroupId
 
                 SubquotaGroupDescription ->
-                    TranslationSet "Subquota group"
-                        "Especificação da subcota"
+                    FieldSubquotaGroupDescription
 
                 Company ->
-                    TranslationSet "Company"
-                        "Fornecedor"
+                    FieldCompany
 
                 CnpjCpf ->
-                    TranslationSet "CNPJ or CPF"
-                        "CNPJ ou CPF"
+                    FieldCnpjCpf
 
                 DocumentType ->
-                    TranslationSet "Document type"
-                        "Tipo do documento"
+                    FieldDocumentType
 
                 DocumentNumber ->
-                    TranslationSet "Document number"
-                        "Número do documento"
+                    FieldDocumentNumber
 
                 DocumentValue ->
-                    TranslationSet "Expense value"
-                        "Valor da despesa"
+                    FieldDocumentValue
 
                 IssueDate ->
-                    TranslationSet "Expense date"
-                        "Data da despesa"
+                    FieldIssueDate
 
                 IssueDateStart ->
-                    TranslationSet "Expense date (start)"
-                        "Data da despesa (início)"
+                    FieldIssueDateStart
 
                 IssueDateEnd ->
-                    TranslationSet "Expense date (end)"
-                        "Data da despesa (fim)"
+                    FieldIssueDateEnd
 
                 ClaimDate ->
-                    TranslationSet "Claim date"
-                        "Data do pedido de reembolso"
+                    FieldClaimDate
 
                 Month ->
-                    TranslationSet "Month"
-                        "Mês"
+                    FieldMonth
 
                 RemarkValue ->
-                    TranslationSet "Remark value"
-                        "Valor da glosa"
+                    FieldRemarkValue
 
                 Installment ->
-                    TranslationSet "Installment"
-                        "Número da parcela"
+                    FieldInstallment
 
                 BatchNumber ->
-                    TranslationSet "Batch number"
-                        "Número do lote"
+                    FieldBatchNumber
 
                 ReimbursementValues ->
-                    TranslationSet "Reimbursement values"
-                        "Valor dos reembolsos"
+                    FieldReimbursementValues
 
                 Passenger ->
-                    TranslationSet "Passenger"
-                        "Passageiro"
+                    FieldPassenger
 
                 LegOfTheTrip ->
-                    TranslationSet "Leg of the trip"
-                        "Trecho"
+                    FieldLegOfTheTrip
 
                 Probability ->
-                    TranslationSet "Probability"
-                        "Probabilidade"
+                    FieldProbability
 
                 Suspicions ->
-                    TranslationSet "Suspicions"
-                        "Suspeitas"
+                    FieldSuspicions
 
                 Empty ->
-                    TranslationSet "" ""
+                    FieldEmpty
     in
-        translateSet language translationSet
+        translate language translationId
