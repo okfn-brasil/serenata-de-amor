@@ -136,6 +136,19 @@ Here we explain what each script from `src/` does for you:
 
 1. `src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
 
+##### Federal Budget
+
+1. `src\fetch_federal_budget_datasets.py` downloads datasets files of agreements made with Federal Budget and their related amendments.  The script gets the lastest version available for each dataset, unpacks, translates columns and saves them into `data/`. The files are named as follows:
+ - Agreements:  `YYYY-MM-DD-agreements.xz`
+ - Amendments: `YYYY-MM-DD-amendments.xz`
+
+##### Companies and Non-Profit Entities with sanctions (CEIS, CEPIM and CNEP).
+
+1. `src\fetch_federal_sanctions.py` downloads all three datasets files (CEIS, CEPIM and CNEP) from official source. The script gets the lastest version available for each dataset, unpacks, translates columns and saves them into `data/`. The files are named as follows:
+ - CEIS: `YYYY-MM-DD-inident-and-suspended-companies.xz`
+ - CEPIM:  `YYYY-MM-DD-impeded-non-profit-entities.xz`
+ - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
+
 ### Datasets (`data/`)
 
 Here we explain what are the datasets inside `data/`. They are not part of this repository, but downloaded with the scripts from `src/`. Most files are `.xz` compressed CSV.
@@ -150,7 +163,7 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 
 ## Four moments
 
-The project basically happens in four moments, and contributions are welcomed in all of them:
+The project basically happens in five moments, and contributions are welcomed in all of them:
 
 | Moment | Description | Focus | Target |
 |--------|-------------|-------|--------|
@@ -158,10 +171,11 @@ The project basically happens in four moments, and contributions are welcomed in
 | **Data collection** | Once one agrees that a certain _possibility_ is worth it, one might want to start writing code to get the data (these scripts go into `src/`). | Technical skills in scrapping data and using APIs. | `src/` and `data/` |
 | **Exploring** | Once data is ready to be used, one might want to start exploring and analyzing it. | Here what matters is mostly data science skills. | `develop/` |
 | **Reporting** | Once a relevant finding emerges from the previous stages, this finding might be gathered with other similar findings (e.g. put together explorations on airline tickets, car rentals and geolocation under a report on transportation) on a report. | Contributions here require good communication skills and very basic understanding of quantitative methods. | `report/` |
+| **Documentation** | Once a new subject, theme or datset is added to project, would be nice to have some documentation describing these items and how others can use them. | Here is where all documentation goes. Everything that could help others understand subjects, like what is [CEAP](docs/CEAP.md) and datasets specifications should goes in this folder. | `docs/` |
 
 ## More about the Quota for Exercising Parliamentary Activity (CEAP)
 
-If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](CEAP.md) we made.
+If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](docs/CEAP.md) we made.
 
 Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` if you have run [our scripts](#quota-for-exercising-arliamentary-activity-ceap).
 
@@ -172,15 +186,9 @@ As a secondary goal, some datasets related to Federal Budget and its uses were a
 It is a work in progress as other datasets can be downloaded from [SICONV](http://portal.convenios.gov.br/download-de-dados) and documentation can also be improved.
 
 You can read more about these datasets at:
-- [federal-budget-agreements-datasets.md](federal-budget-agreements-datasets.md)
-- [companies-with-federal-sanctions-datasets.md](companies-with-federal-sanctions-datasets.md)
+- [federal-budget-agreements-datasets.md](docs/federal-budget-agreements-datasets.md)
+- [companies-with-federal-sanctions-datasets.md](docs/companies-with-federal-sanctions-datasets.md)
 
 The notebook with the analysis are:
 - 2016-12-12-marcusrehm-federal-budget-companies-with-sanctions.ipynb
 - 2017-01-15-marcusrehm-congressperson-reimbursements-from-companies-with-sanctions.ipynb
-
-## Jarbas
-
-As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browse our data and refer to documents we analyze. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
-
-If you fancy web development, feel free to check Jarbas' source code, to check [Jarbas' own Issues](https://github.com/datasciencebr/jarbas/issues) and to contribute there too.
