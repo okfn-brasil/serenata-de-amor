@@ -107,7 +107,7 @@ Beyond that we have five big directories with different purposes:
 |**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
 | **`src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
-| `docs/` | Once a new subject, theme or datset is added to project, would be nice to have some documentation describing these items and how others can use them. | Small caps whenever possible, no special character, `-` instead of spaces, preference for `.md` Markdown files. |  |
+| **`docs/`** | Once a new subject, theme or datset is added to project, would be nice to have some documentation describing these items and how others can use them. | Small caps whenever possible, no special character, `-` instead of spaces, preference for `.md` Markdown files. |  |
 
 ### The toolbox and our the source files (`src/`)
 
@@ -143,13 +143,13 @@ fetch_latest_backup('data/')
 
 ##### Federal Budget
 
-1. `src\fetch_federal_budget_datasets.py` downloads datasets files of agreements made with Federal Budget and their related amendments.  The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
+1. `src/fetch_federal_budget_datasets.py` downloads datasets files of agreements made with Federal Budget and their related amendments.  The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
  - Agreements:  `YYYY-MM-DD-agreements.xz`
  - Amendments: `YYYY-MM-DD-amendments.xz`
 
 ##### Companies and Non-Profit Entities with sanctions (CEIS, CEPIM and CNEP).
 
-1. `src\fetch_federal_sanctions.py` downloads all three datasets files (CEIS, CEPIM and CNEP) from official source. The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
+1. `src/fetch_federal_sanctions.py` downloads all three datasets files (CEIS, CEPIM and CNEP) from official source. The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
  - CEIS: `YYYY-MM-DD-inident-and-suspended-companies.xz`
  - CEPIM:  `YYYY-MM-DD-impeded-non-profit-entities.xz`
  - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
