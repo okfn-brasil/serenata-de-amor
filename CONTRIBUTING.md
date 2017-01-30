@@ -99,7 +99,7 @@ def post_save(model, os_path, contents_manager):
 c.FileContentsManager.post_save_hook = post_save
 ```
 
-Beyond that we have four big directories with different purposes:
+Beyond that we have five big directories with different purposes:
 
 | Directory | Purpose | File naming |
 |-----------|---------|-------------|
@@ -107,6 +107,7 @@ Beyond that we have four big directories with different purposes:
 |**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
 | **`src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
+| **`docs/`** | Once a new subject, theme or datset is added to project, would be nice to have some documentation describing these items and how others can use them. | Small caps whenever possible, no special character, `-` instead of spaces, preference for `.md` Markdown files. |  |
 
 ### The toolbox and our the source files (`src/`)
 
@@ -140,6 +141,19 @@ fetch_latest_backup('data/')
 
 1. `src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
 
+##### Federal Budget
+
+1. `src/fetch_federal_budget_datasets.py` downloads datasets files of agreements made with Federal Budget and their related amendments.  The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
+ - Agreements:  `YYYY-MM-DD-agreements.xz`
+ - Amendments: `YYYY-MM-DD-amendments.xz`
+
+##### Companies and Non-Profit Entities with sanctions (CEIS, CEPIM and CNEP).
+
+1. `src/fetch_federal_sanctions.py` downloads all three datasets files (CEIS, CEPIM and CNEP) from official source. The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
+ - CEIS: `YYYY-MM-DD-inident-and-suspended-companies.xz`
+ - CEPIM:  `YYYY-MM-DD-impeded-non-profit-entities.xz`
+ - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
+
 ### Datasets (`data/`)
 
 Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with the [toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
@@ -159,12 +173,26 @@ The project basically happens in four moments, and contributions are welcomed in
 | Moment | Description | Focus | Target |
 |--------|-------------|-------|--------|
 | **Possibilities** | To structure hypotheses and strategies taking into account (a) the source of the data, (b) how feasible it is to get this data, and (c) what is the purpose of bringing this data into the project.| Contributions here require more sagacity than technical skills.| [GitHub Issues](https://github.com/codelandev/serenata-de-amor/issues) |
-| **Data collection** | Once one agrees that a certain _possibility_ is worth it, one might want to start writing code to get the data (these scripts go into `src/`). | Technical skills in scrapping data and using APIs. | `src/` and `data/` |
+| **Data collection** | Once one agrees that a certain _possibility_ is worth it, one might want to start writing code to get the data (these scripts go into `src/`). | Technical skills in scrapping data and using APIs. | `src/`, `data/` and `docs/` |
 | **Exploring** | Once data is ready to be used, one might want to start exploring and analyzing it. | Here what matters is mostly data science skills. | `develop/` |
 | **Reporting** | Once a relevant finding emerges from the previous stages, this finding might be gathered with other similar findings (e.g. put together explorations on airline tickets, car rentals and geolocation under a report on transportation) on a report. | Contributions here require good communication skills and very basic understanding of quantitative methods. | `report/` |
 
 ## More about the Quota for Exercising Parliamentary Activity (CEAP)
 
-If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](CEAP.md) we made.
+If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](docs/CEAP.md) we made.
 
 Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` that was downloaded when you [ran the setup](#one-toolbox-to-rule-them-all).
+
+## More about Federal Budget
+
+As a secondary goal, some datasets related to Federal Budget and its uses were analyzed crossing them with datasets of inident and suspect companies that have suffered some sanction by Federal Government and are suspended from entering into any type of contract with Federal Government during sactions.
+
+It is a work in progress as other datasets can be downloaded from [SICONV](http://portal.convenios.gov.br/download-de-dados) and documentation can also be improved.
+
+You can read more about these datasets at:
+- [federal-budget-agreements-datasets.md](docs/federal-budget-agreements-datasets.md)
+- [companies-with-federal-sanctions-datasets.md](docs/companies-with-federal-sanctions-datasets.md)
+
+The notebook with the analysis are:
+- 2016-12-12-marcusrehm-federal-budget-companies-with-sanctions.ipynb
+- 2017-01-15-marcusrehm-congressperson-reimbursements-from-companies-with-sanctions.ipynb
