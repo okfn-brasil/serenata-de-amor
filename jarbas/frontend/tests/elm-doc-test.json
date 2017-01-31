@@ -3,8 +3,6 @@
   "tests": [
     "Format.CnpjCpf",
     "Format.Date",
-    "Format.Date.Config.Config_pt_br",
-    "Format.Date.I18n.I_pt_br",
     "Format.Price",
     "Format.Url",
     "Internationalization",
