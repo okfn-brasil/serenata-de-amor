@@ -175,7 +175,7 @@ You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie)
 
 #### Requirements
 
-Jarbas requires [Python 3.5](http://python.org), [Node.js 6](http://nodejs.org) with [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org).
+Jarbas requires [Python 3.5](http://python.org), [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org).
 
 Once you have `pip` and `yarn` available install the dependencies:
 
