@@ -1,8 +1,8 @@
 server {
     listen              443 ssl;
-    server_name         jarbas.datasciencebr.com;
-    ssl_certificate     /etc/letsencrypt/live/jarbas.datasciencebr.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/jarbas.datasciencebr.com/privkey.pem;
+    server_name         jarbas.serenatadeamor.org;
+    ssl_certificate     /etc/letsencrypt/live/jarbas.serenatadeamor.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/jarbas.serenatadeamor.org/privkey.pem;
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers         HIGH:!aNULL:!MD5;
     access_log          on;
@@ -35,7 +35,7 @@ server {
 
 server {
     listen      80;
-    server_name jarbas.datasciencebr.com;
-    return      301 https://jarbas.datasciencebr.com$request_uri;
+    server_name jarbas.serenatadeamor.org;
+    return      301 https://jarbas.serenatadeamor.org$request_uri;
 }
 
