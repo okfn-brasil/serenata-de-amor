@@ -17,7 +17,7 @@ def urls():
 
                 # looks like some devs are not familiar with 404 status
                 if req.headers.get('Content-Type') == 'application/x-download':
-                    yield url
+                    yield (url,year,month)
 
                 else:
                     msg = 'Data from {:02d}/{} could not be located at: {}'
