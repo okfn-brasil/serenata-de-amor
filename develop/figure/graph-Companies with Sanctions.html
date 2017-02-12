@@ -1,0 +1,51 @@
+
+    <html>
+    <head>
+      <script type="text/javascript" src="../lib/vis/dist/vis.js"></script>
+      <link href="../lib/vis/dist/vis.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+
+    <div id="Companies with Sanctions"></div>
+
+    <script type="text/javascript">
+      var nodes = [{"id": 11807, "group": "Entity", "title": "{'name': 'SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA', 'cnpj': '76575604000128'}", "label": "SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA"}, {"id": 11804, "group": "Congressperson", "title": "{'name': 'RICARDO BARROS'}", "label": "RICARDO BARROS"}, {"id": 11800, "group": "Congressperson", "title": "{'name': 'OSMAR SERRAGLIO'}", "label": "OSMAR SERRAGLIO"}, {"id": 11803, "group": "Congressperson", "title": "{'name': 'SERGIO SOUZA'}", "label": "SERGIO SOUZA"}, {"id": 11802, "group": "Congressperson", "title": "{'name': 'LUIZ CARLOS SETIM'}", "label": "LUIZ CARLOS SETIM"}, {"id": 11805, "group": "Congressperson", "title": "{'name': 'FLAVIO JOSE ARNS'}", "label": "FLAVIO JOSE ARNS"}, {"id": 11806, "group": "Congressperson", "title": "{'name': 'DILCEU SPERAFICO'}", "label": "DILCEU SPERAFICO"}, {"id": 11801, "group": "Congressperson", "title": "{'name': 'NELSON MEURER'}", "label": "NELSON MEURER"}];
+      var edges = [{"from": 11804, "label": "benefited", "to": 11807}, {"from": 11800, "label": "benefited", "to": 11807}, {"from": 11803, "label": "benefited", "to": 11807}, {"from": 11802, "label": "benefited", "to": 11807}, {"from": 11805, "label": "benefited", "to": 11807}, {"from": 11806, "label": "benefited", "to": 11807}, {"from": 11801, "label": "benefited", "to": 11807}];
+
+      var container = document.getElementById("Companies with Sanctions");
+
+      var data = {
+        nodes: nodes,
+        edges: edges
+      };
+
+      var options = {
+          nodes: {
+              shape: 'dot',
+              size: 25,
+              font: {
+                  size: 14
+              }
+          },
+          edges: {
+              font: {
+                  size: 14,
+                  align: 'middle'
+              },
+              color: 'gray',
+              arrows: {
+                  to: {enabled: true, scaleFactor: 0.5}
+              },
+              smooth: {enabled: false}
+          },
+          physics: {
+              enabled: false
+          }
+      };
+
+      var network = new vis.Network(container, data, options);
+
+    </script>
+    </body>
+    </html>
+    

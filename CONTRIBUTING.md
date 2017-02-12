@@ -76,6 +76,38 @@ If you want to access the console:
 $ docker-compose run --rm jupyter bash
 ```
 
+### Using Neo4j in graph analysis
+
+If you plan to use [Neo4j](https://neo4j.com/) in your analysis and if you don't have Neo4j installed, the easiest way to put it running is using its `Docker` image.
+
+Assuming you already have Docker installed, you just need to grab Neo4j image using:
+
+```console
+$ docker pull neo4j
+```
+Once Neo4j is installed, you can start it with the command below.
+```console
+$ docker run
+    --publish=7474:7474 --publish=7687:7687
+    --volume=$HOME/serenata-de-amor-/data/neo4j/data:/data
+    --env=NEO4J_AUTH=none neo4j
+```
+The options to run Neo4j are:
+- `--publish=7474:7474`: Starts neo4j using port 7474.
+- `--volume=$HOME/serenata-de-amor-/data/neo4j/data`: Stores data into `$HOME/serenata-de-amor-/data/neo4j/data`. You may change it to suit your Serenata de Amor installation path.
+- `--env=NEO4J_AUTH=none`: Disable authentication.
+
+After install Neo4j, you need to install the packages required to run the integration. To do so, just execute:
+```console
+$ pip install neo4j_requirements.txt
+```
+Make sure that you are using the python environment created for Serenata de Amor.
+
+To use it inside notebooks you need to start Jupyter inside `/develop` folder. A `figure` folder will be created inside `/develop` folder in order to store graphs figures and htmls.
+
+Neo4j integration in Jupyter notebooks is totaly based on Nichole White's work. It can be found [here](https://github.com/nicolewhite/neo4j-jupyter).
+
+
 ## Best practices
 
 In order to avoid tons of conflicts when trying to merge [Jupyter Notebooks](http://jupyter.org), there are some [guidelines we follow](http://www.svds.com/jupyter-notebook-best-practices-for-data-science/).
