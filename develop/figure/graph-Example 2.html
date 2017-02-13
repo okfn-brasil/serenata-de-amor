@@ -1,16 +1,16 @@
 
     <html>
     <head>
-      <script type="text/javascript" src="../lib/vis/dist/vis.js"></script>
-      <link href="../lib/vis/dist/vis.css" rel="stylesheet" type="text/css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.min.js"></script>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.css" rel="stylesheet" type="text/css">
     </head>
     <body>
 
     <div id="Example 2"></div>
 
     <script type="text/javascript">
-      var nodes = [{"title": "{'calories': 0, 'name': 'Coke Zero'}", "label": "Coke Zero", "group": "Drink", "id": 11795}, {"title": "{'name': 'Nicole', 'age': 24}", "label": "Nicole", "group": "Person", "id": 11797}, {"title": "{'calories': 9000, 'name': 'Mountain Dew'}", "label": "Mountain Dew", "group": "Drink", "id": 11794}, {"title": "{'name': 'Pepsi'}", "label": "Pepsi", "group": "Manufacturer", "id": 11798}, {"title": "{'name': 'Coca Cola'}", "label": "Coca Cola", "group": "Manufacturer", "id": 11796}, {"title": "{'name': 'Drew', 'age': 20}", "label": "Drew", "group": "Person", "id": 11799}];
-      var edges = [{"to": 11794, "from": 11797, "label": "LIKES"}, {"to": 11795, "from": 11797, "label": "LIKES"}, {"to": 11794, "from": 11798, "label": "MAKES"}, {"to": 11795, "from": 11796, "label": "MAKES"}, {"to": 11794, "from": 11799, "label": "LIKES"}];
+      var nodes = [{"label": "Pepsi", "title": "{'name': 'Pepsi'}", "group": "Manufacturer", "id": 149}, {"label": "Mountain Dew", "title": "{'calories': 9000, 'name': 'Mountain Dew'}", "group": "Drink", "id": 145}, {"label": "Nicole", "title": "{'name': 'Nicole', 'age': 24}", "group": "Person", "id": 146}, {"label": "Coke Zero", "title": "{'calories': 0, 'name': 'Coke Zero'}", "group": "Drink", "id": 147}, {"label": "Coca Cola", "title": "{'name': 'Coca Cola'}", "group": "Manufacturer", "id": 148}, {"label": "Drew", "title": "{'name': 'Drew', 'age': 20}", "group": "Person", "id": 144}];
+      var edges = [{"from": 149, "label": "MAKES", "to": 145}, {"from": 146, "label": "LIKES", "to": 145}, {"from": 146, "label": "LIKES", "to": 147}, {"from": 148, "label": "MAKES", "to": 147}, {"from": 144, "label": "LIKES", "to": 145}];
 
       var container = document.getElementById("Example 2");
 

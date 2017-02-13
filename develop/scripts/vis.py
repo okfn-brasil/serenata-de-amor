@@ -9,7 +9,7 @@ def vis_network(nodes, edges, physics=False, graph_name=None):
     <html>
     <head>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.min.js"></script>
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.min.js" rel="stylesheet" type="text/css">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.css" rel="stylesheet" type="text/css">
     </head>
     <body>
 
