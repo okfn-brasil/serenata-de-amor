@@ -1,4 +1,3 @@
-git+https://github.com/datasciencebr/serenata-toolbox.git@6126436#egg=serenata-toolbox
-
+git+https://github.com/datasciencebr/serenata-toolbox.git#egg=serenata-toolbox
 pycpfcnpj==1.0.2
 tinys3==0.1.11

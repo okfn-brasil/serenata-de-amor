@@ -4,6 +4,9 @@
 
 If you work with statistics but are not a coder or a developer used to the routine below, or you are just willing to learn, share ideas and catch-up, join us in the [Telegram Open Group](http://bit.ly/2cUBFr6). This group keeps its language in English in order to be internationally open and we make Telegram the official channel to make it easy for non-developers to reach the technical group.
 
+
+Also you should read [this article](https://datasciencebr.com/how-does-one-contribute-to-serenata-de-amor-operation-36e3e7b38207#.uoghp3dop), it explains how each part of Serenata de Amor works and how they all come together as whole. After reading it, you'll have a pretty good understanding of all the tools ([Jarbas](https://github.com/datasciencebr/jarbas), [Rosie](https://github.com/datasciencebr/rosie) and the [toolbox](https://github.com/datasciencebr/serenata-toolbox/)) that we use — we’ll refer to them below, so it’s nice to have an idea about what we’re talking about ;-)
+
 ## The basics
 
 A lot of discussions about ideas take place in the [Issues](https://github.com/datasciencebr/serenata-de-amor/issues) section. There you can catch up with what's going on and also suggest new ideas.
@@ -62,7 +65,7 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
-1. Start the environment (it might take a while, the base image has 5.3GB and we also pull in lots of dependencies): `$ docker-compose up -d`
+1. Start the environment (it might take a while, the base image has 5.8GB and we also pull in lots of dependencies): `$ docker-compose up -d`
 1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
 1. Run the script to download data and other useful files: `$ docker-compose run --rm jupyter python src/fetch_datasets.py`
 1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm jupyter jupyter notebook`
@@ -96,7 +99,7 @@ def post_save(model, os_path, contents_manager):
 c.FileContentsManager.post_save_hook = post_save
 ```
 
-Beyond that we have four big directories with different purposes:
+Beyond that we have five big directories with different purposes:
 
 | Directory | Purpose | File naming |
 |-----------|---------|-------------|
@@ -104,27 +107,29 @@ Beyond that we have four big directories with different purposes:
 |**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
 | **`src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
 | **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
+| **`docs/`** | Once a new subject, theme or datset is added to project, would be nice to have some documentation describing these items and how others can use them. | Small caps whenever possible, no special character, `-` instead of spaces, preference for `.md` Markdown files. |  |
 
-### Source files (`src/`)
+### The toolbox and our the source files (`src/`)
 
-Here we explain what each script from `src/` does for you:
+Here we explain what each script from `src/` and the `serenata_toolbox` do for you:
 
-##### One script to rule them all
+##### One toolbox to rule them all
 
-1. `src/fetch_datasets.py` downloads all the available datasets to `data/` in `.xz` compressed CSV format with headers translated to English.
+With the [toolbox](https://github.com/datasciencebr/serenata-toolbox) you can download, translate and convert the dataset from XML to CSV. You can chec the [toolbox docs](http://serenata-toolbox.readthedocs.io/en/latest/) too.
 
+
+When you run our setup, the toolbox is installed and all our datasets are downloaded to your `data/` directory. This is handled by these two single lines:
+```python
+from serenata_toolbox.datasets import fetch_latest_backup
+fetch_latest_backup('data/')
+```
 
 ##### Quota for Exercising Parliamentary Activity (CEAP)
-
-1. `src/fetch_datasets.py --from-source` downloads all CEAP datasets to `data/` from the official source (in XML format in Portuguese) .
 1. `src/group_receipts.py` creates a `data/YYYY-MM-DD-reimbursements.xz` file with grouped data from all of the available datasets (`data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`)
-1. `src/fetch_datasets.py` downloads the CEAP datasets into `data/`; it can download them from the official source (in XML format in Portuguese) or from our backup server (`.xz` compressed CSV format, with headers translated to English).
-1. `src/xml2csv.py` converts the original XML datasets to `.xz` compressed CSV format.
-1. `src/translate_datasets.py` translates the datasets file names and the labels of the variables within these files.
 1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
 
-##### Suppliers information (CNPJ)
 
+##### Suppliers information (CNPJ)
 1. `src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info.
 1. `src/clean_cnpj_info_dataset.py` clean up and translate the supplier info dataset.
 1. `src/geocode_addresses.py` iterates over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
@@ -136,9 +141,22 @@ Here we explain what each script from `src/` does for you:
 
 1. `src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
 
+##### Federal Budget
+
+1. `src/fetch_federal_budget_datasets.py` downloads datasets files of agreements made with Federal Budget and their related amendments.  The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
+ - Agreements:  `YYYY-MM-DD-agreements.xz`
+ - Amendments: `YYYY-MM-DD-amendments.xz`
+
+##### Companies and Non-Profit Entities with sanctions (CEIS, CEPIM and CNEP).
+
+1. `src/fetch_federal_sanctions.py` downloads all three datasets files (CEIS, CEPIM and CNEP) from official source. The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
+ - CEIS: `YYYY-MM-DD-inident-and-suspended-companies.xz`
+ - CEPIM:  `YYYY-MM-DD-impeded-non-profit-entities.xz`
+ - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
+
 ### Datasets (`data/`)
 
-Here we explain what are the datasets inside `data/`. They are not part of this repository, but downloaded with the scripts from `src/`. Most files are `.xz` compressed CSV.
+Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with the [toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
 All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
 
 1. `data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `data/YYYY-MM-DD-ceap-datasets.md`.
@@ -155,19 +173,26 @@ The project basically happens in four moments, and contributions are welcomed in
 | Moment | Description | Focus | Target |
 |--------|-------------|-------|--------|
 | **Possibilities** | To structure hypotheses and strategies taking into account (a) the source of the data, (b) how feasible it is to get this data, and (c) what is the purpose of bringing this data into the project.| Contributions here require more sagacity than technical skills.| [GitHub Issues](https://github.com/codelandev/serenata-de-amor/issues) |
-| **Data collection** | Once one agrees that a certain _possibility_ is worth it, one might want to start writing code to get the data (these scripts go into `src/`). | Technical skills in scrapping data and using APIs. | `src/` and `data/` |
+| **Data collection** | Once one agrees that a certain _possibility_ is worth it, one might want to start writing code to get the data (these scripts go into `src/`). | Technical skills in scrapping data and using APIs. | `src/`, `data/` and `docs/` |
 | **Exploring** | Once data is ready to be used, one might want to start exploring and analyzing it. | Here what matters is mostly data science skills. | `develop/` |
 | **Reporting** | Once a relevant finding emerges from the previous stages, this finding might be gathered with other similar findings (e.g. put together explorations on airline tickets, car rentals and geolocation under a report on transportation) on a report. | Contributions here require good communication skills and very basic understanding of quantitative methods. | `report/` |
 
 ## More about the Quota for Exercising Parliamentary Activity (CEAP)
 
-If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](CEAP.md) we made.
+If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](docs/CEAP.md) we made.
 
-Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` if you have run [our scripts](#quota-for-exercising-arliamentary-activity-ceap).
+Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` that was downloaded when you [ran the setup](#one-toolbox-to-rule-them-all).
 
+## More about Federal Budget
 
-## Jarbas
+As a secondary goal, some datasets related to Federal Budget and its uses were analyzed crossing them with datasets of inident and suspect companies that have suffered some sanction by Federal Government and are suspended from entering into any type of contract with Federal Government during sactions.
 
-As soon as we started _Serenata de Amor_ [we felt the need for a simple webservice](https://github.com/datasciencebr/serenata-de-amor/issues/34) to browse our data and refer to documents we analyze. This is how [Jarbas](https://github.com/datasciencebr/jarbas) was created.
+It is a work in progress as other datasets can be downloaded from [SICONV](http://portal.convenios.gov.br/download-de-dados) and documentation can also be improved.
 
-If you fancy web development, feel free to check Jarbas' source code, to check [Jarbas' own Issues](https://github.com/datasciencebr/jarbas/issues) and to contribute there too.
+You can read more about these datasets at:
+- [federal-budget-agreements-datasets.md](docs/federal-budget-agreements-datasets.md)
+- [companies-with-federal-sanctions-datasets.md](docs/companies-with-federal-sanctions-datasets.md)
+
+The notebook with the analysis are:
+- 2016-12-12-marcusrehm-federal-budget-companies-with-sanctions.ipynb
+- 2017-01-15-marcusrehm-congressperson-reimbursements-from-companies-with-sanctions.ipynb

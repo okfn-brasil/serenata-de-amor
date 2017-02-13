@@ -36,11 +36,8 @@ if 'USE_HTTPS' in os.environ:
         os.chmod(PEM_FILE, stat.S_IRUSR | stat.S_IWUSR)
     c.NotebookApp.certfile = PEM_FILE
 
-# Set a password if PASSWORD is set
-if 'PASSWORD' in os.environ:
-    from IPython.lib import passwd
-    c.NotebookApp.password = passwd(os.environ['PASSWORD'])
-    del os.environ['PASSWORD']
+# Disable authentication altogether, NOT RECOMMENDED FOR PRODUCTION ENVIRONMENTS
+c.NotebookApp.token = ''
 
 ### If you want to auto-save .html and .py versions of your notebook:
 # modified from: https://github.com/ipython/ipython/issues/8009
