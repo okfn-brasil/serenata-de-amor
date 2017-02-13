@@ -8,8 +8,8 @@ def vis_network(nodes, edges, physics=False, graph_name=None):
     html = """
     <html>
     <head>
-      <script type="text/javascript" src="../lib/vis/dist/vis.js"></script>
-      <link href="../lib/vis/dist/vis.css" rel="stylesheet" type="text/css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.min.js"></script>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.min.js" rel="stylesheet" type="text/css">
     </head>
     <body>
 
