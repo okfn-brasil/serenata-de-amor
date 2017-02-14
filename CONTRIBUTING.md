@@ -78,7 +78,11 @@ $ docker-compose run --rm jupyter bash
 
 ### Using Neo4j in graph analysis
 
-If you plan to use [Neo4j](https://neo4j.com/) in your analysis and if you don't have Neo4j installed, the easiest way to put it running is using its `Docker` image.
+If you plan to use [Neo4j](https://neo4j.com/) in your analysis and you don't have Neo4j installed, the easiest way to put it running is using its `Docker` image.
+
+If you prefer to install it in a traditional installation, please refer to Neo4j website for more information about [installation steps](https://neo4j.com/) and after install it, skip to [Configuring Environment](#configuring-environment).
+
+#### Install via Docker
 
 Assuming you already have Docker installed, you just need to grab Neo4j image using:
 
@@ -96,6 +100,8 @@ The options to run Neo4j are:
 - `--publish=7474:7474`: Starts neo4j using port 7474.
 - `--volume=$HOME/serenata-de-amor-/data/neo4j/data`: Stores data into `$HOME/serenata-de-amor-/data/neo4j/data`. You may change it to suit your Serenata de Amor installation path.
 - `--env=NEO4J_AUTH=none`: Disable authentication.
+
+#### Configuring Environment
 
 After install Neo4j, you need to install the packages required to run the integration. To do so, just execute:
 ```console
