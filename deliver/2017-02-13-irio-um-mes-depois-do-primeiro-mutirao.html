@@ -12135,14 +12135,23 @@ MG                  ZÉ SILVA          2           2  R$ 212,00
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">source_url</span><span class="p">(</span><span class="n">mailpath</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">configparser</span>
+<span class="n">settings</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;../config.ini&#39;</span><span class="p">)</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Google&#39;</span><span class="p">,</span> <span class="s1">&#39;APIKey&#39;</span><span class="p">)</span>
+<span class="n">api_url</span> <span class="o">=</span> <span class="s1">&#39;https://www.googleapis.com/urlshortener/v1/url?key=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">api_key</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">source_url</span><span class="p">(</span><span class="n">mailpath</span><span class="p">):</span>
     <span class="k">return</span> <span class="s1">&#39;https://github.com/datasciencebr/serenata-de-amor-inbox/tree/39dbf4392359acb3e437287c0884b7daf50fcc59/Resposta</span><span class="si">%20d</span><span class="s1">a%20Camara/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mailpath</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">shorten_github_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">urllib.request</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">({</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">url</span><span class="p">}),</span>
-                 <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s1">&#39;https://git.io/&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">shorten_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+    <span class="kn">import</span> <span class="nn">requests</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;longUrl&#39;</span><span class="p">:</span> <span class="n">url</span><span class="p">})</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">api_url</span><span class="p">,</span>
+                           <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;content-type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">},</span>
+                           <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
 
 <span class="n">emails_wo_return</span> <span class="o">=</span> <span class="n">emails</span> \
     <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">txt</span><span class="p">:</span> <span class="s1">&#39;devolução&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">txt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> \
@@ -12151,7 +12160,7 @@ MG                  ZÉ SILVA          2           2  R$ 212,00
 <span class="n">urls</span> <span class="o">=</span> <span class="n">emails_wo_return</span> \
     <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">txt</span><span class="p">:</span> <span class="n">txt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> \
     <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">source_url</span><span class="p">)</span> \
-    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">shorten_github_url</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">shorten_url</span><span class="p">)</span> \
     <span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 
 <span class="n">document_numbers</span> <span class="o">=</span> <span class="n">emails_wo_return</span> \
@@ -12191,48 +12200,48 @@ MG                  ZÉ SILVA          2           2  R$ 212,00
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Resposta Oficial             Parlamentar
-https://git.io/vDXxF  AELTON FREITAS        
-https://git.io/vDXpJ  AELTON FREITAS        
-https://git.io/vDXpe  AELTON FREITAS        
-https://git.io/vDXpk  ALESSANDRO MOLON      
-https://git.io/vDXp3  ANTÔNIO JÁCOME        
-https://git.io/vDXpm  ANTÔNIO JÁCOME        
-https://git.io/vDXpO  AUGUSTO COUTINHO      
-https://git.io/vDXx5  AUGUSTO COUTINHO      
-https://git.io/vDXpI  CAPITÃO AUGUSTO       
-https://git.io/vDXpt  CAPITÃO AUGUSTO       
-https://git.io/vDXpk  CARLOS HENRIQUE GAGUIM
-https://git.io/vDXxj  CARMEN ZANOTTO        
-https://git.io/vDXp3  DILCEU SPERAFICO      
-https://git.io/vDXpq  FERNANDO MONTEIRO     
-https://git.io/vDXxb  FÁBIO MITIDIERI       
-https://git.io/vDXxd  FÁBIO MITIDIERI       
-https://git.io/vDXxh  FÁBIO RAMALHO         
-https://git.io/vDXxA  FÁBIO RAMALHO         
-https://git.io/vDXxd  GIOVANI CHERINI       
-https://git.io/vDXpU  JERÔNIMO GOERGEN      
-https://git.io/vDXpf  JOÃO ARRUDA           
-https://git.io/vDXpk  JOÃO FERNANDO COUTINHO
-https://git.io/vDXxh  JULIO LOPES           
-https://git.io/vDXpm  JÔ MORAES             
-https://git.io/vDXpI  JÚLIA MARINHO         
-https://git.io/vDXxj  LUCIANA SANTOS        
-https://git.io/vDXpk  LUIZ CLÁUDIO          
-https://git.io/vDXpk  LUIZIANNE LINS        
-https://git.io/vDXpL  MARCOS ROGÉRIO        
-https://git.io/vDXpI  NEWTON CARDOSO JR     
-https://git.io/vDXxx  PAULO MALUF           
-https://git.io/vDXpJ  PAULO TEIXEIRA        
-https://git.io/vDXpY  RAQUEL MUNIZ          
-https://git.io/vDXxN  ROSSONI               
-https://git.io/vDXxA  SAMUEL MOREIRA        
-https://git.io/vDXxp  SÁGUAS MORAES         
-https://git.io/vDXxp  TAKAYAMA              
-https://git.io/vDXpT  TAKAYAMA              
-https://git.io/vDXpI  VALTENIR PEREIRA      
-https://git.io/vDXps  VANDERLEI MACRIS      
-https://git.io/vDXx7  VANDERLEI MACRIS      
-https://git.io/vDXpk  VINICIUS CARVALHO
+https://goo.gl/NY890u  AELTON FREITAS        
+https://goo.gl/h3UxOo  AELTON FREITAS        
+https://goo.gl/IBvpDR  AELTON FREITAS        
+https://goo.gl/vnrkGp  ALESSANDRO MOLON      
+https://goo.gl/FW07Ui  ANTÔNIO JÁCOME        
+https://goo.gl/2FRb5F  ANTÔNIO JÁCOME        
+https://goo.gl/6Z3FMF  AUGUSTO COUTINHO      
+https://goo.gl/fHA16P  AUGUSTO COUTINHO      
+https://goo.gl/9tjHKk  CAPITÃO AUGUSTO       
+https://goo.gl/xbNAAR  CAPITÃO AUGUSTO       
+https://goo.gl/vnrkGp  CARLOS HENRIQUE GAGUIM
+https://goo.gl/Q1WFcX  CARMEN ZANOTTO        
+https://goo.gl/FW07Ui  DILCEU SPERAFICO      
+https://goo.gl/CGnLzL  FERNANDO MONTEIRO     
+https://goo.gl/1tmoNx  FÁBIO MITIDIERI       
+https://goo.gl/xfyBl5  FÁBIO MITIDIERI       
+https://goo.gl/fqUb6h  FÁBIO RAMALHO         
+https://goo.gl/5q2Lve  FÁBIO RAMALHO         
+https://goo.gl/xfyBl5  GIOVANI CHERINI       
+https://goo.gl/w0SHvM  JERÔNIMO GOERGEN      
+https://goo.gl/laehvI  JOÃO ARRUDA           
+https://goo.gl/vnrkGp  JOÃO FERNANDO COUTINHO
+https://goo.gl/fqUb6h  JULIO LOPES           
+https://goo.gl/2FRb5F  JÔ MORAES             
+https://goo.gl/9tjHKk  JÚLIA MARINHO         
+https://goo.gl/Q1WFcX  LUCIANA SANTOS        
+https://goo.gl/vnrkGp  LUIZ CLÁUDIO          
+https://goo.gl/vnrkGp  LUIZIANNE LINS        
+https://goo.gl/wsXcdZ  MARCOS ROGÉRIO        
+https://goo.gl/9tjHKk  NEWTON CARDOSO JR     
+https://goo.gl/ZjTHrC  PAULO MALUF           
+https://goo.gl/h3UxOo  PAULO TEIXEIRA        
+https://goo.gl/t60lh2  RAQUEL MUNIZ          
+https://goo.gl/IQf9kI  ROSSONI               
+https://goo.gl/5q2Lve  SAMUEL MOREIRA        
+https://goo.gl/1Mlu12  SÁGUAS MORAES         
+https://goo.gl/1Mlu12  TAKAYAMA              
+https://goo.gl/bJoduw  TAKAYAMA              
+https://goo.gl/9tjHKk  VALTENIR PEREIRA      
+https://goo.gl/poQELV  VANDERLEI MACRIS      
+https://goo.gl/WDWLmv  VANDERLEI MACRIS      
+https://goo.gl/vnrkGp  VINICIUS CARVALHO
 </pre>
 </div>
 </div>

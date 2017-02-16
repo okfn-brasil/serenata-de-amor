@@ -158,18 +158,27 @@ emails_wo_return.count()
 
 # In[9]:
 
+import configparser
+settings = configparser.RawConfigParser()
+settings.read('../config.ini')
+api_key = settings.get('Google', 'APIKey')
+api_url = 'https://www.googleapis.com/urlshortener/v1/url?key={}'.format(api_key)
+
 def source_url(mailpath):
     return 'https://github.com/datasciencebr/serenata-de-amor-inbox/tree/39dbf4392359acb3e437287c0884b7daf50fcc59/Resposta%20da%20Camara/{}'.format(mailpath)
 
-def shorten_github_url(url):
-    import urllib.request
-    data = bytes(urllib.parse.urlencode({'url': url}),
-                 encoding='utf-8')
-    return urllib.request.urlopen('https://git.io/', data).headers['location']
+def shorten_url(url):
+    import json
+    import requests
+    data = json.dumps({'longUrl': url})
+    result = requests.post(api_url,
+                           headers={'content-type': 'application/json'},
+                           data=data)
+    return result.json()['id']
 
 emails_wo_return = emails     .filter(lambda txt: 'devolução' not in txt[1])     .cache()
     
-urls = emails_wo_return     .map(lambda txt: txt[0].split('/')[-2])     .map(source_url)     .map(shorten_github_url)     .collect()
+urls = emails_wo_return     .map(lambda txt: txt[0].split('/')[-2])     .map(source_url)     .map(shorten_url)     .collect()
 
 document_numbers = emails_wo_return     .map(lambda txt: txt[1].split('\n'))     .map(lambda lines: [line for line in lines if 'idDocumento=' in line])     .map(lambda lines: [get_document_number(line) for line in lines])     .collect()
 
