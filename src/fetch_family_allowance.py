@@ -16,13 +16,23 @@ NOW = datetime.datetime.now()
 
 SERVER = 'http://arquivos.portaldatransparencia.gov.br/'
 PATH = 'downloads.asp?a={}&m={:02d}&consulta=BolsaFamiliaFolhaPagamento'
-
+outputfile = 'data_family_allowance.csv'
 BASE_DATA_DIR = '../data/'
 TEMP_DATA = "../data/temp_data/"
 
-
-COLLUNM_DATA = ['UF', 'CODIGO', 'SIAFI_MUNICIPIO', 'NOME_MUNICIPIO', 'CODIGO_FUNCAO', 'CODIGO_SUBFUNCAO', 'CODIGO_PROGRAMA', 'CODIGO_ACAO',
-                 'NIS_FAVORECIDO', 'NOME_FAVORECIDO', 'FONTE_FINALIDADE', 'VALOR_PARCELA', 'MES_COMPETENCIA']
+columns = {   'UF': 'FEDERAL_UNIT',
+              'CódigoSIAFIMunicípio': 'CODE_SIAFI_TONW',
+              'NomeMunicípio': 'TOWN_NAME',
+              'CódigoFunção': 'FUNCTION_CODE',
+              'CódigoSubfunção': 'SUBFUNCTION_CODE',
+              'CódigoPrograma': 'PROGRAM_CODE',
+              'CódigoAção': 'ACTION_CODE',
+              'NISFavorecido': 'FAVORED_NIS',
+              'NomeFavorecido': 'FAVORED_NAME',
+              'Fonte-Finalidade': 'SOURCE_FINALITY',
+              'ValorParcela': 'PARCEL_VALUE',
+              'MêsCompetência': 'MONTH_COMPETENCE',
+          }
 
 
 def dlProgress(count, blockSize, totalSize):
@@ -48,20 +58,22 @@ def urls():
                     warnings.warn(msg.format(month, year, url))
 
 def concat_csv_file(path_file):
-    chunksize = 2000
+    chunksize = 50000000
 
-    df = pandas.DataFrame(columns=COLLUNM_DATA)
+    df = pandas.DataFrame()
     i=0
     j=0
     for df in pandas.read_csv(path_file, chunksize=chunksize, iterator=True,sep='\t',encoding='latin-1'):
          df = df.rename(columns={c: c.replace(' ', '') for c in df.columns})
+         df.rename(columns=columns, inplace=True)
          df.index += j
          i += 1
-         if not os.path.isfile(BASE_DATA_DIR+'filename.csv'):
-             df.to_csv(BASE_DATA_DIR+'filename.csv')
+         if not os.path.isfile(BASE_DATA_DIR+outputfile):
+             df.to_csv(BASE_DATA_DIR+outputfile)
          else:  # else it exists so append without writing the header
-             df.to_csv(BASE_DATA_DIR+'filename.csv', mode='a', header=False)
+             df.to_csv(BASE_DATA_DIR+outputfile, mode='a', header=False)
          j = df.index[-1] + 1
+
 
 
 
@@ -70,7 +82,7 @@ def download_datasets():
     for data in urls():
         url, year, month =  data
         print (url,year,month)
-        filename = BASE_DATA_DIR +"file" +str(year) + str(month)+".zip"
+        filename = TEMP_DATA+"file" +str(year) + str(month)+".zip"
         urlretrieve(url,filename,reporthook=dlProgress)
         zip_ref = zipfile.ZipFile(filename, 'r')
         print(zip_ref.namelist()[0])
@@ -81,6 +93,7 @@ def download_datasets():
 
 
 if __name__ == '__main__':
+
     download_datasets()
     shutil.rmtree(TEMP_DATA)
 
