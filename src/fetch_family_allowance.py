@@ -34,13 +34,10 @@ columns = {   'UF': 'FEDERAL_UNIT',
               'MêsCompetência': 'MONTH_COMPETENCE',
           }
 
-
 def dlProgress(count, blockSize, totalSize):
   percent = int(count*blockSize*100/totalSize)
   sys.stdout.write("\r" + "progress" + "...%d%%" % percent)
   sys.stdout.flush()
-
-
 
 def urls():
     for year in range(STARTING_YEAR, NOW.year + 1):
@@ -75,8 +72,6 @@ def concat_csv_file(path_file):
          j = df.index[-1] + 1
 
 
-
-
 def download_datasets():
     os.makedirs(TEMP_DATA, exist_ok=True)
     for data in urls():
@@ -90,10 +85,7 @@ def download_datasets():
         concat_csv_file(TEMP_DATA+zip_ref.namelist()[0])
         zip_ref.close()
 
-
-
 if __name__ == '__main__':
 
     download_datasets()
     shutil.rmtree(TEMP_DATA)
-
