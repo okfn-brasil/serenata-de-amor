@@ -154,7 +154,7 @@ fetch_latest_backup('data/')
  - CEPIM:  `YYYY-MM-DD-impeded-non-profit-entities.xz`
  - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
 
- ##### Family Allowance data collection.
+##### Family Allowance data collection.
 1. `src/fetch_family_allowance.py` creates a `data_family_allowance.csv` file with data from all of the available datasets (`YYYYMM_BolsaFamiliaFolhaPagamento.csv) .For many infomations go in http://portaldatransparencia.gov.br/downloads/mensal.asp?c=BolsaFamiliaFolhaPagamento.
 
 
