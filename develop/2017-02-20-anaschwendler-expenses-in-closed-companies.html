@@ -11778,7 +11778,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Expenses-in-closed-companies">Expenses in closed companies<a class="anchor-link" href="#Expenses-in-closed-companies">&#182;</a></h1><p>Recently we find out that there are many companies that are already closed, we are aiming to find if there is expenses made before the situation changed.</p>
+<h1 id="Expenses-in-closed-companies">Expenses in closed companies<a class="anchor-link" href="#Expenses-in-closed-companies">&#182;</a></h1><p>Recently we found out that there are many companies that are already closed or out of service, we are aiming to find if there are expenses made after the company situation as other than open.</p>
 
 </div>
 </div>
@@ -11825,7 +11825,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Setting companies situation_date and reimbursements issue_date columns to correct date format, and set the cpnj to a format without dash and dots.</p>
+<h2 id="Formatting">Formatting<a class="anchor-link" href="#Formatting">&#182;</a></h2><p>Formatting companies situation_date and reimbursements issue_date columns to correct date format (will be needed for a query later), and formatting the companies cpnj to a format without dash and dots.</p>
 
 </div>
 </div>
@@ -11836,9 +11836,7 @@ div#notebook {
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">reimbursements</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">reimbursements</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
-<span class="n">reimbursements</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reimbursements</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">date</span><span class="p">:</span> <span class="n">date</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
 <span class="n">companies</span><span class="p">[</span><span class="s1">&#39;situation_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">companies</span><span class="p">[</span><span class="s1">&#39;situation_date&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
-<span class="n">companies</span><span class="p">[</span><span class="s1">&#39;situation_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">companies</span><span class="p">[</span><span class="s1">&#39;situation_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">date</span><span class="p">:</span> <span class="n">date</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
 <span class="n">companies</span><span class="p">[</span><span class="s1">&#39;cnpj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">companies</span><span class="p">[</span><span class="s1">&#39;cnpj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\D&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -11852,7 +11850,9 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">companies</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">26</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">statuses</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BAIXADA&#39;</span><span class="p">,</span> <span class="s1">&#39;NULA&#39;</span><span class="p">,</span> <span class="s1">&#39;SUSPENSA&#39;</span><span class="p">,</span> <span class="s1">&#39;INAPTA&#39;</span><span class="p">]</span>
+<span class="n">not_open</span> <span class="o">=</span> <span class="n">companies</span><span class="p">[</span><span class="n">companies</span><span class="p">[</span><span class="s1">&#39;situation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">statuses</span><span class="p">)]</span>
+<span class="n">not_open</span><span class="p">[[</span><span class="s1">&#39;cnpj&#39;</span><span class="p">,</span> <span class="s1">&#39;situation_date&#39;</span><span class="p">,</span><span class="s1">&#39;situation&#39;</span><span class="p">,</span> <span class="s1">&#39;situation_reason&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11865,64 +11865,6 @@ div#notebook {
 
 <div class="output_area">
 <div class="prompt output_prompt">Out[4]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[&#39;situation_date&#39;,
- &#39;type&#39;,
- &#39;name&#39;,
- &#39;phone&#39;,
- &#39;situation&#39;,
- &#39;neighborhood&#39;,
- &#39;address&#39;,
- &#39;number&#39;,
- &#39;zip_code&#39;,
- &#39;city&#39;,
- &#39;state&#39;,
- &#39;opening&#39;,
- &#39;legal_entity&#39;,
- &#39;trade_name&#39;,
- &#39;cnpj&#39;,
- &#39;last_updated&#39;,
- &#39;status&#39;,
- &#39;additional_address_details&#39;,
- &#39;email&#39;,
- &#39;responsible_federative_entity&#39;,
- &#39;situation_reason&#39;,
- &#39;special_situation&#39;,
- &#39;special_situation_date&#39;,
- &#39;message&#39;,
- &#39;main_activity_code&#39;,
- &#39;main_activity&#39;]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">statuses</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BAIXADA&#39;</span><span class="p">,</span> <span class="s1">&#39;NULA&#39;</span><span class="p">,</span> <span class="s1">&#39;SUSPENSA&#39;</span><span class="p">,</span> <span class="s1">&#39;INAPTA&#39;</span><span class="p">]</span>
-<span class="n">not_opened</span> <span class="o">=</span> <span class="n">companies</span><span class="p">[</span><span class="n">companies</span><span class="p">[</span><span class="s1">&#39;situation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">statuses</span><span class="p">)]</span>
-<span class="n">not_opened</span><span class="p">[[</span><span class="s1">&#39;cnpj&#39;</span><span class="p">,</span> <span class="s1">&#39;situation_date&#39;</span><span class="p">,</span><span class="s1">&#39;situation&#39;</span><span class="p">,</span> <span class="s1">&#39;situation_reason&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[5]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -11990,16 +11932,17 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The column situation_date is the one that is interesting. Expenses made after that date should be considered suspicious.</p>
+<p>The inner join on merge will give reimbursements that were requested for out of service companies.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">reimbursements</span><span class="p">,</span> <span class="n">not_opened</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">reimbursements</span><span class="p">,</span> <span class="n">not_open</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span>
                    <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;cnpj&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -12010,12 +11953,12 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">,</span><span class="s1">&#39;cnpj&#39;</span><span class="p">,</span> <span class="s1">&#39;situation_date&#39;</span><span class="p">,</span><span class="s1">&#39;situation&#39;</span><span class="p">,</span> <span class="s1">&#39;situation_reason&#39;</span><span class="p">]</span>
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span>
-<span class="n">dataset</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span><span class="s1">&#39;cnpj&#39;</span><span class="p">,</span> <span class="s1">&#39;situation_date&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;situation&#39;</span><span class="p">,</span> <span class="s1">&#39;situation_reason&#39;</span><span class="p">]</span>
+<span class="n">dataset</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12027,7 +11970,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[7]:</div>
+<div class="prompt output_prompt">Out[6]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12036,6 +11979,7 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>congressperson_name</th>
       <th>issue_date</th>
       <th>cnpj</th>
       <th>situation_date</th>
@@ -12046,6 +11990,7 @@ div#notebook {
   <tbody>
     <tr>
       <th>0</th>
+      <td>DILCEU SPERAFICO</td>
       <td>2009-04-06</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12054,6 +11999,7 @@ div#notebook {
     </tr>
     <tr>
       <th>1</th>
+      <td>DILCEU SPERAFICO</td>
       <td>2009-09-23</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12062,6 +12008,7 @@ div#notebook {
     </tr>
     <tr>
       <th>2</th>
+      <td>DOMINGOS DUTRA</td>
       <td>2009-10-14</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12070,6 +12017,7 @@ div#notebook {
     </tr>
     <tr>
       <th>3</th>
+      <td>EDINHO BEZ</td>
       <td>2009-10-19</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12078,6 +12026,7 @@ div#notebook {
     </tr>
     <tr>
       <th>4</th>
+      <td>HERMES PARCIANELLO</td>
       <td>2009-05-29</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12086,6 +12035,7 @@ div#notebook {
     </tr>
     <tr>
       <th>5</th>
+      <td>JAIME MARTINS</td>
       <td>2009-04-08</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12094,6 +12044,7 @@ div#notebook {
     </tr>
     <tr>
       <th>6</th>
+      <td>JOSÉ CARLOS VIEIRA</td>
       <td>2009-07-01</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12102,6 +12053,7 @@ div#notebook {
     </tr>
     <tr>
       <th>7</th>
+      <td>PAULO BORNHAUSEN</td>
       <td>2009-03-26</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12110,6 +12062,7 @@ div#notebook {
     </tr>
     <tr>
       <th>8</th>
+      <td>PAULO BORNHAUSEN</td>
       <td>2009-04-07</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12118,6 +12071,7 @@ div#notebook {
     </tr>
     <tr>
       <th>9</th>
+      <td>PAULO BORNHAUSEN</td>
       <td>2009-04-28</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12135,15 +12089,36 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The inner join on merge will give reimbursements that were requested for colsed companies. It is still necessary to check the reimbursement issue_date is "bigger" than the situation_date.</p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
 
 </div>
 </div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[7]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(93133, 259)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -12167,11 +12142,67 @@ div#notebook {
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>issue_date              2009-04-06
-cnpj                02989654001197
-situation_date          2013-01-03
-situation                  BAIXADA
-situation_reason      INCORPORACAO
+<pre>year                                                       2009
+applicant_id                                               1001
+document_id                                             1564212
+reimbursement_value_total                                   NaN
+total_net_value                                             130
+reimbursement_numbers                                      2888
+congressperson_name                            DILCEU SPERAFICO
+congressperson_id                                         73768
+congressperson_document                                     444
+term                                                       2015
+state_x                                                      PR
+party                                                        PP
+term_id                                                      55
+subquota_number                                               3
+subquota_description                       Fuels and lubricants
+subquota_group_id                                             1
+subquota_group_description                 Veículos Automotores
+supplier                      MELHOR POSTO DE COMBUSTÍVEIS LTDA
+cnpj_cpf                                         02989654001197
+document_number                                           43059
+document_type                                                 0
+issue_date                                  2009-04-06 00:00:00
+document_value                                              130
+remark_value                                                  0
+net_values                                                  130
+month                                                         4
+installment                                                   0
+passenger                                                   NaN
+leg_of_the_trip                                             NaN
+batch_number                                             388810
+                                            ...                
+secondary_activity_88_code                                  NaN
+secondary_activity_89                                       NaN
+secondary_activity_89_code                                  NaN
+secondary_activity_8_code                                   NaN
+secondary_activity_9                                        NaN
+secondary_activity_90                                       NaN
+secondary_activity_90_code                                  NaN
+secondary_activity_91                                       NaN
+secondary_activity_91_code                                  NaN
+secondary_activity_92                                       NaN
+secondary_activity_92_code                                  NaN
+secondary_activity_93                                       NaN
+secondary_activity_93_code                                  NaN
+secondary_activity_94                                       NaN
+secondary_activity_94_code                                  NaN
+secondary_activity_95                                       NaN
+secondary_activity_95_code                                  NaN
+secondary_activity_96                                       NaN
+secondary_activity_96_code                                  NaN
+secondary_activity_97                                       NaN
+secondary_activity_97_code                                  NaN
+secondary_activity_98                                       NaN
+secondary_activity_98_code                                  NaN
+secondary_activity_99                                       NaN
+secondary_activity_99_code                                  NaN
+secondary_activity_9_code                                   NaN
+latitude                                                    NaN
+longitude                                                   NaN
+latitude.1                                                  NaN
+longitude.1                                                 NaN
 Name: 0, dtype: object</pre>
 </div>
 
@@ -12181,13 +12212,24 @@ Name: 0, dtype: object</pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Filtering-suspicious-reimbursements">Filtering suspicious reimbursements<a class="anchor-link" href="#Filtering-suspicious-reimbursements">&#182;</a></h2><p>We have all reibursements requested for expenses made in companies that have situation other than "open".
+It is still necessary to check the reimbursement issue_date is "bigger" than the situation_date.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">expenses_in_closed_companies</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;issue_date &gt; situation_date&#39;</span><span class="p">)</span>
-<span class="n">expenses_in_closed_companies</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">expenses_in_closed_companies</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -12199,7 +12241,7 @@ Name: 0, dtype: object</pre>
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[12]:</div>
+<div class="prompt output_prompt">Out[9]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12208,6 +12250,7 @@ Name: 0, dtype: object</pre>
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>congressperson_name</th>
       <th>issue_date</th>
       <th>cnpj</th>
       <th>situation_date</th>
@@ -12218,6 +12261,7 @@ Name: 0, dtype: object</pre>
   <tbody>
     <tr>
       <th>2429</th>
+      <td>EDINHO ARAÚJO</td>
       <td>2013-01-30</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12226,6 +12270,7 @@ Name: 0, dtype: object</pre>
     </tr>
     <tr>
       <th>2430</th>
+      <td>EDINHO ARAÚJO</td>
       <td>2013-02-02</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12234,6 +12279,7 @@ Name: 0, dtype: object</pre>
     </tr>
     <tr>
       <th>2431</th>
+      <td>EDINHO ARAÚJO</td>
       <td>2013-02-26</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12242,6 +12288,7 @@ Name: 0, dtype: object</pre>
     </tr>
     <tr>
       <th>2432</th>
+      <td>EDINHO ARAÚJO</td>
       <td>2013-03-01</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12250,6 +12297,7 @@ Name: 0, dtype: object</pre>
     </tr>
     <tr>
       <th>2433</th>
+      <td>HERMES PARCIANELLO</td>
       <td>2013-01-28</td>
       <td>02989654001197</td>
       <td>2013-01-03</td>
@@ -12266,6 +12314,47 @@ Name: 0, dtype: object</pre>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">expenses_in_closed_companies</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[10]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(5222, 259)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can safely say that there are 5222 suspicious reimbursements.</p>
+
+</div>
+</div>
 </div>
     </div>
   </div>
