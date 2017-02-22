@@ -155,7 +155,7 @@ fetch_latest_backup('data/')
  - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
 
 ##### Family Allowance data collection.
-1. `src/fetch_family_allowance.py` creates a `data_family_allowance.csv` file with data from all of the available datasets (`YYYYMM_BolsaFamiliaFolhaPagamento.csv) .For many infomations go in http://portaldatransparencia.gov.br/downloads/mensal.asp?c=BolsaFamiliaFolhaPagamento.
+1. src/fetch_family_allowance.py creates YYYY-MM-DD-family_allowance.xz with data from the Family Allowance database available at Portal da Transparência.
 
 
 ### Datasets (`data/`)
