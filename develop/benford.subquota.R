@@ -1,28 +1,28 @@
-## Performs Benford analysis on dataset and returns summary stats and values for suspects
+## performs benford analysis on dataset and returns summary stats and values for suspects
 
-## Returns list with two matrix objetics:
-### 1 - Sample stats from Benford analysis; 
-### 2 - Frequency of cases per congressman for frequent initial digit sequences  
+## returns list with two matrix objetics:
+### 1 - sample stats from benford analysis; 
+### 2 - frequency of cases per congressman for frequent initial digit sequences  
 
-# To do
-# ( ) Use anytime package to parse issue_date and get results per month/trimester (good for detecting pattern changes) 
+# to do
+# ( ) use anytime package to parse issue_date and get results per month/trimester (good for detecting pattern changes) 
 
-# We can use "output.size" argument to get more values and "by" 
+# we can use "output.size" argument to get more values and "by" 
 # to change stat used for classification (’abs.excess.summation’,’difference’,’squared.diff’
 # or’absolute.diff’).
 
-benford.subquota <- function(data,value = "net_value",
+benford.subquota <- function(data,value = "total_net_value",
                              date.str = "issue_date",congr.name = "congressperson_name",
                              ndigits = 2, output.size = 3,by = "absolute.diff"){
   require(benford.analysis)
 
-  # Input checking
-  if(!(is.data.frame(data))) stop ("Data must be in data.frame format",call. = TRUE)
+  # input checking
+  if(!(is.data.frame(data))) stop ("data must be in data.frame format",call. = TRUE)
   vars.list <- c(value,date.str,congr.name) 
   match.values <- sum((vars.list %in% colnames(data)))
-  if (match.values != length(vars.list)) stop("Variables not found in data set",call. = TRUE) #Check if variables are in dataset
+  if (match.values != length(vars.list)) stop("variables not found in data set",call. = TRUE) #check if variables are in dataset
   
-  # Analysis and saving values
+  # analysis and saving values
   net_value.benford <- benford(data[,value],number.of.digits = ndigits)
   sample.stats <- matrix(nrow = 13,ncol = 1)
   row.names(sample.stats) <- c("no_obsv","no_2obsv","no_digits",
@@ -35,9 +35,9 @@ benford.subquota <- function(data,value = "net_value",
                     net_value.benford$mantissa[1:4][[2]],
                     as.numeric(net_value.benford$stats[[2]][1:2]),
                     as.numeric(net_value.benford$stats[[1]][1:2]),
-                    net_value.benford$MAD,net_value.benford$distortion.factor)
+                    net_value.benford$mad,net_value.benford$distortion.factor)
   
-  # The following is 'imported' from getSuspects function
+  # the following is 'imported' from getsuspects function
   benf.digits <- net_value.benford[["bfd"]][order(get(by), decreasing = TRUE)][, 
                                                             list(digits)][1:output.size]
   suspect.lines <- list()
