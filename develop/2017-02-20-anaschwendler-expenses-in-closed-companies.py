@@ -85,3 +85,4 @@ expenses_in_closed_companies.shape
 
 
 # We can safely say that there are 5222 suspicious reimbursements.
+# For this analysis, I would like to thank @jtemporal for being my pair for all the coding, and helping me to understand the hypothesis.
