@@ -10,7 +10,7 @@ import tempfile
 import shutil
 
 
-STARTING_YEAR = 2016
+STARTING_YEAR = 2011
 
 NOW = datetime.datetime.now()
 
