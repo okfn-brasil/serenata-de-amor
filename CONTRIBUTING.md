@@ -160,6 +160,7 @@ fetch_latest_backup('data/')
 
 ### Datasets (`data/`)
 
+
 Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with the [toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
 All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
 
