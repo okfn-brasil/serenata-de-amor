@@ -11759,7 +11759,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
@@ -11810,7 +11810,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[2]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[1]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11829,17 +11829,17 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>There are 56710 meal reimbursements that have OCRed text.</p>
-<h2 id="Meals-for-more-than-one-person">Meals for more than one person<a class="anchor-link" href="#Meals-for-more-than-one-person">&#182;</a></h2><p>Usually the text present on the receipt says <code>PESSOAS: X</code> where <code>X</code> is the number of people in the table. Some places also use <code>PESSOA(S) :X</code> but that seems to be less common. Some pretty simple regexes for fetching those that have more than one person is outlined below</p>
+<h2 id="Meals-for-more-than-one-person">Meals for more than one person<a class="anchor-link" href="#Meals-for-more-than-one-person">&#182;</a></h2><p>Usually the text present on the receipt says <code>PESSOAS: X</code> where <code>X</code> is the number of people in the table. Some places also use <code>PESSOA(S): X</code> but that seems to be less common. Some pretty simple regexes for fetching those that have more than one person is outlined below</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;PESSOAS\s*[2-9]&#39;</span><span class="p">)])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;PESSOA\(?S\)?\s*:?\s*[2-9]&#39;</span><span class="p">)])</span>
 </pre></div>
 
 </div>
@@ -11850,40 +11850,11 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[18]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[2]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>40</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;PESSOA\s*\(\s*S\s*\)\s*[2-9]&#39;</span><span class="p">)])</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>2</pre>
+<pre>188</pre>
 </div>
 
 </div>
@@ -11897,17 +11868,17 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>It also seems that most of the receipts that have this info are really just for one person</p>
+<p>And the amount of reimbursements for one person</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;PESSOAS\s*1|PESSOA\s*\(\s*S\s*\)\s*1&#39;</span><span class="p">)])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;PESSOA\(?S\)?\s*:?\s*1&#39;</span><span class="p">)])</span>
 </pre></div>
 
 </div>
@@ -11918,11 +11889,11 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[3]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>110</pre>
+<pre>154</pre>
 </div>
 
 </div>
@@ -11936,18 +11907,18 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Out of those 42 receipts for 2 or more people, I found that some of them had already subtracted other peoples food present on the receipt. One way to reduce some of the false positives is the search for the <code>total_net_value</code> amount within the text of the receipt. To make things easier, we focus on those that are under R$ 1.000,00</p>
+<p>Based on a previous analysis and after some quick look at the data, I found that some of them had already subtracted other peoples food present on the receipt. One way to reduce some of the false positives is the search for the <code>total_net_value</code> amount within the text of the receipt. To make things easier, we focus on those that are under R$ 1.000,00</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;total_net_value &lt; 1000&#39;</span><span class="p">)</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;PESSOAS\s*[2-9]|PESSOA\s*\(\s*S\s*\)\s*[2-9]&#39;</span><span class="p">)]</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;PESSOA\(?S\)?\s*:?\s*[2-9]&#39;</span><span class="p">)]</span>
 
 <span class="k">def</span> <span class="nf">format_regex</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
     <span class="n">hundreds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
@@ -11977,12 +11948,12 @@ div#notebook {
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>12
+<pre>51
 </pre>
 </div>
 </div>
 
-<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[4]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <table border="1" class="dataframe">
@@ -11992,28 +11963,121 @@ div#notebook {
       <th>document_id</th>
       <th>receipt</th>
       <th>issue_date</th>
-      <th>congressperson_name</th>
       <th>total_net_value</th>
       <th>supplier</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <th>213</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5586256">5586256</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2002/2015/5586256.pdf">RECEIPT</a></td>
+      <td>2015-01-08T00:00:00</td>
+      <td>91.60</td>
+      <td>OUTBACK STEAKHOUSE RESTAURANTES BRASIL S.A</td>
+    </tr>
+    <tr>
+      <th>1524</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5603654">5603654</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2371/2015/5603654.pdf">RECEIPT</a></td>
+      <td>2015-02-10T00:00:00</td>
+      <td>81.70</td>
+      <td>COCO BAMBU</td>
+    </tr>
+    <tr>
+      <th>1577</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5604052">5604052</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2964/2015/5604052.pdf">RECEIPT</a></td>
+      <td>2015-02-06T00:00:00</td>
+      <td>52.80</td>
+      <td>MELO & MELO CAFETERIA LTDA ME</td>
+    </tr>
+    <tr>
+      <th>1733</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5605403">5605403</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2949/2015/5605403.pdf">RECEIPT</a></td>
+      <td>2015-02-11T00:00:00</td>
+      <td>105.42</td>
+      <td>COCO BAMBU LAGO SUL COMERCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>2811</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5616730">5616730</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1810/2015/5616730.pdf">RECEIPT</a></td>
+      <td>2015-03-02T00:00:00</td>
+      <td>100.50</td>
+      <td>OUTBACK</td>
+    </tr>
+    <tr>
       <th>3866</th>
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5625538">5625538</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3025/2015/5625538.pdf">RECEIPT</a></td>
       <td>2015-03-05T00:00:00</td>
-      <td>ZECA CAVALCANTI</td>
       <td>137.10</td>
       <td>COCO BAMBU LAGO SUL COMERCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>4465</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5630492">5630492</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2932/2015/5630492.pdf">RECEIPT</a></td>
+      <td>2015-03-16T00:00:00</td>
+      <td>129.15</td>
+      <td>OUTBACK</td>
     </tr>
     <tr>
       <th>6176</th>
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5642807">5642807</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/356/2015/5642807.pdf">RECEIPT</a></td>
       <td>2015-03-25T00:00:00</td>
-      <td>ROBERTO BALESTRA</td>
       <td>123.50</td>
+      <td>OUTBACK STEAKHOUSE RESTAURANTES BRASIL LTDA</td>
+    </tr>
+    <tr>
+      <th>6465</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5644536">5644536</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3038/2015/5644536.pdf">RECEIPT</a></td>
+      <td>2015-03-26T00:00:00</td>
+      <td>130.30</td>
+      <td>Outback Steakhouse Restaurantes Brasil LTDA</td>
+    </tr>
+    <tr>
+      <th>6782</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5647733">5647733</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3035/2015/5647733.pdf">RECEIPT</a></td>
+      <td>2015-04-05T00:00:00</td>
+      <td>53.50</td>
+      <td>KING FOOD CO COMERCIO DE ALIMENTOS - S/A</td>
+    </tr>
+    <tr>
+      <th>7041</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5649767">5649767</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2911/2015/5649767.pdf">RECEIPT</a></td>
+      <td>2015-04-01T00:00:00</td>
+      <td>93.25</td>
+      <td>outback</td>
+    </tr>
+    <tr>
+      <th>7299</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5651712">5651712</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1951/2015/5651712.pdf">RECEIPT</a></td>
+      <td>2015-04-06T00:00:00</td>
+      <td>61.80</td>
+      <td>OUTBACK STEAKHOUSE RESTAURANTES BRASIL LTDA</td>
+    </tr>
+    <tr>
+      <th>7945</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5657248">5657248</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1951/2015/5657248.pdf">RECEIPT</a></td>
+      <td>2015-04-10T00:00:00</td>
+      <td>84.30</td>
+      <td>OUTBACK STEAKHOUSE RESTAURANTES BRASIL LTDA</td>
+    </tr>
+    <tr>
+      <th>8864</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5664691">5664691</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1782/2015/5664691.pdf">RECEIPT</a></td>
+      <td>2015-04-02T00:00:00</td>
+      <td>98.30</td>
       <td>OUTBACK STEAKHOUSE RESTAURANTES BRASIL LTDA</td>
     </tr>
     <tr>
@@ -12021,7 +12085,6 @@ div#notebook {
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5683073">5683073</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/198/2015/5683073.pdf">RECEIPT</a></td>
       <td>2015-05-12T00:00:00</td>
-      <td>JUTAHY JUNIOR</td>
       <td>46.00</td>
       <td>CASTOR & LEÃO ADMINISTRAÇÃO HOTELEIRA S/A</td>
     </tr>
@@ -12030,17 +12093,111 @@ div#notebook {
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5697164">5697164</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3031/2015/5697164.pdf">RECEIPT</a></td>
       <td>2015-05-22T00:00:00</td>
-      <td>ZÉ CARLOS</td>
       <td>51.70</td>
       <td>BK BRASIL OPERAÇÃO E ASSES. A RESTAURANTES S/A</td>
+    </tr>
+    <tr>
+      <th>13348</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5697888">5697888</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3038/2015/5697888.pdf">RECEIPT</a></td>
+      <td>2015-05-25T00:00:00</td>
+      <td>70.70</td>
+      <td>OUTBACK Restaurantes Brasil S.A.</td>
+    </tr>
+    <tr>
+      <th>13524</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5699122">5699122</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3071/2015/5699122.pdf">RECEIPT</a></td>
+      <td>2015-06-01T00:00:00</td>
+      <td>64.80</td>
+      <td>OUTBACK Restaurantes Brasil S.A.</td>
+    </tr>
+    <tr>
+      <th>13609</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5699866">5699866</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1951/2015/5699866.pdf">RECEIPT</a></td>
+      <td>2015-05-30T00:00:00</td>
+      <td>102.70</td>
+      <td>OUTBACK STEAKHOUSE RESTASURANTES BRASIL LTDA</td>
+    </tr>
+    <tr>
+      <th>14026</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5704328">5704328</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2815/2015/5704328.pdf">RECEIPT</a></td>
+      <td>2015-06-09T00:00:00</td>
+      <td>88.30</td>
+      <td>C.B. BRASÍLIA COMÉRCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>15050</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5713726">5713726</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5713726.pdf">RECEIPT</a></td>
+      <td>2015-06-14T00:00:00</td>
+      <td>103.20</td>
+      <td>OUTBACK Restaurantes Brasil S.A.</td>
+    </tr>
+    <tr>
+      <th>15294</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5716607">5716607</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2988/2015/5716607.pdf">RECEIPT</a></td>
+      <td>2015-06-12T00:00:00</td>
+      <td>199.00</td>
+      <td>COCO BAMBU LAGO SUL COMERCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>15556</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5718753">5718753</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/116/2015/5718753.pdf">RECEIPT</a></td>
+      <td>2015-06-23T00:00:00</td>
+      <td>64.70</td>
+      <td>Outback Steakhouse Restaurantes Brasil LTDA</td>
     </tr>
     <tr>
       <th>16530</th>
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5727775">5727775</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2231/2015/5727775.pdf">RECEIPT</a></td>
       <td>2015-07-02T00:00:00</td>
-      <td>ZÉ SILVA</td>
       <td>55.90</td>
+      <td>OUTBACK Restaurantes Brasil S.A.</td>
+    </tr>
+    <tr>
+      <th>18616</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5750150">5750150</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2911/2015/5750150.pdf">RECEIPT</a></td>
+      <td>2015-07-17T00:00:00</td>
+      <td>56.40</td>
+      <td>outback</td>
+    </tr>
+    <tr>
+      <th>18677</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5750616">5750616</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2267/2015/5750616.pdf">RECEIPT</a></td>
+      <td>2015-07-24T00:00:00</td>
+      <td>82.80</td>
+      <td>outback</td>
+    </tr>
+    <tr>
+      <th>19729</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5760429">5760429</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3033/2015/5760429.pdf">RECEIPT</a></td>
+      <td>2015-06-18T00:00:00</td>
+      <td>77.90</td>
+      <td>OUTBACK Restaurantes Brasil S.A.</td>
+    </tr>
+    <tr>
+      <th>20101</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5764323">5764323</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2935/2015/5764323.pdf">RECEIPT</a></td>
+      <td>2015-08-18T00:00:00</td>
+      <td>122.70</td>
+      <td>COCO BAMBU LAGO SUL COMERCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>21464</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5775911">5775911</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1782/2015/5775911.pdf">RECEIPT</a></td>
+      <td>2015-06-07T00:00:00</td>
+      <td>90.80</td>
       <td>OUTBACK Restaurantes Brasil S.A.</td>
     </tr>
     <tr>
@@ -12048,7 +12205,6 @@ div#notebook {
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5775917">5775917</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1782/2015/5775917.pdf">RECEIPT</a></td>
       <td>2015-06-06T00:00:00</td>
-      <td>ANTONIO BULHÕES</td>
       <td>103.30</td>
       <td>OUTBACK Restaurantes Brasil S.A.</td>
     </tr>
@@ -12057,54 +12213,168 @@ div#notebook {
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5785255">5785255</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3038/2015/5785255.pdf">RECEIPT</a></td>
       <td>2015-09-02T00:00:00</td>
-      <td>ROSANGELA GOMES</td>
       <td>71.80</td>
       <td>OUTBACK Restaurantes Brasil S.A.</td>
+    </tr>
+    <tr>
+      <th>27518</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5830676">5830676</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2964/2015/5830676.pdf">RECEIPT</a></td>
+      <td>2015-10-23T00:00:00</td>
+      <td>144.00</td>
+      <td>COCO BAMBU LAGO SUL COMERCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>27788</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5832582">5832582</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2976/2015/5832582.pdf">RECEIPT</a></td>
+      <td>2015-10-28T00:00:00</td>
+      <td>159.30</td>
+      <td>COCO BAMBU LAGO SUL COMERCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>28291</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5837425">5837425</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1994/2015/5837425.pdf">RECEIPT</a></td>
+      <td>2015-11-04T00:00:00</td>
+      <td>63.40</td>
+      <td>Outback Steakhouse Restaurantes Brasil LTDA</td>
     </tr>
     <tr>
       <th>28888</th>
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5844007">5844007</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3006/2015/5844007.pdf">RECEIPT</a></td>
       <td>2015-11-11T00:00:00</td>
-      <td>JOÃO FERNANDO COUTINHO</td>
       <td>226.10</td>
       <td>COCO BAMBU LAGO SUL COMERCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>29603</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5850778">5850778</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1198/2015/5850778.pdf">RECEIPT</a></td>
+      <td>2015-11-13T00:00:00</td>
+      <td>136.25</td>
+      <td>Outback Steakhouse Restaurantes Brasil LTDA</td>
+    </tr>
+    <tr>
+      <th>30117</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5855207">5855207</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2239/2015/5855207.pdf">RECEIPT</a></td>
+      <td>2015-11-22T00:00:00</td>
+      <td>132.40</td>
+      <td>OUTBACK STEAK HOUSE RESTAURANTES BR S.A.</td>
+    </tr>
+    <tr>
+      <th>30659</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5860629">5860629</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3057/2015/5860629.pdf">RECEIPT</a></td>
+      <td>2015-11-15T00:00:00</td>
+      <td>99.90</td>
+      <td>OUTBACK Restaurantes Brasil S.A.</td>
+    </tr>
+    <tr>
+      <th>31224</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5866920">5866920</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2371/2015/5866920.pdf">RECEIPT</a></td>
+      <td>2015-11-19T00:00:00</td>
+      <td>80.30</td>
+      <td>COCO BAMBU BRASÍLIA COMÉRCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>31932</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5875875">5875875</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2911/2015/5875875.pdf">RECEIPT</a></td>
+      <td>2015-12-13T00:00:00</td>
+      <td>82.90</td>
+      <td>OUTBACK STEAKHOUSE RESTAURANTES BRASIL S.A</td>
+    </tr>
+    <tr>
+      <th>33675</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5906826">5906826</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1946/2016/5906826.pdf">RECEIPT</a></td>
+      <td>2016-01-31T00:00:00</td>
+      <td>54.50</td>
+      <td>OUTBACK STEAKHOUSE RESTAURANTES BRASIL LTDA</td>
     </tr>
     <tr>
       <th>38670</th>
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5961582">5961582</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2227/2016/5961582.pdf">RECEIPT</a></td>
       <td>2016-04-03T00:00:00</td>
-      <td>DANILO FORTE</td>
       <td>38.00</td>
       <td>OSMARINA DOS SANTOS CUNHA</td>
+    </tr>
+    <tr>
+      <th>40230</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5975436">5975436</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2016/5975436.pdf">RECEIPT</a></td>
+      <td>2016-04-16T00:00:00</td>
+      <td>151.90</td>
+      <td>OUTBACK STEAKHOUSE Restaurantes Brasil S/A</td>
     </tr>
     <tr>
       <th>40264</th>
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5976068">5976068</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1946/2016/5976068.pdf">RECEIPT</a></td>
       <td>2016-04-24T00:00:00</td>
-      <td>VALTENIR PEREIRA</td>
       <td>115.85</td>
       <td>OUTBACK STEAKHOUSE RESTAURANTES BRASIL LTDA</td>
+    </tr>
+    <tr>
+      <th>40492</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/5978547">5978547</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2983/2016/5978547.pdf">RECEIPT</a></td>
+      <td>2016-04-24T00:00:00</td>
+      <td>113.30</td>
+      <td>OUTBACK</td>
     </tr>
     <tr>
       <th>43237</th>
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/6005152">6005152</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3038/2016/6005152.pdf">RECEIPT</a></td>
       <td>2016-05-23T00:00:00</td>
-      <td>ROSANGELA GOMES</td>
       <td>44.55</td>
       <td>CAFES FINOS LTDA</td>
+    </tr>
+    <tr>
+      <th>46359</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/6037645">6037645</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1472/2016/6037645.pdf">RECEIPT</a></td>
+      <td>2016-06-08T00:00:00</td>
+      <td>55.80</td>
+      <td>BK BRASIL OPEN. E ASSESS. A RESTAURANTE S/A</td>
     </tr>
     <tr>
       <th>47683</th>
       <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/6050635">6050635</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3143/2016/6050635.pdf">RECEIPT</a></td>
       <td>2016-07-13T00:00:00</td>
-      <td>PASTOR LUCIANO BRAGA</td>
       <td>150.80</td>
       <td>COCO BAMBU LAGO SUL COMERCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>49765</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/6075013">6075013</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2468/2016/6075013.pdf">RECEIPT</a></td>
+      <td>2016-08-15T00:00:00</td>
+      <td>76.00</td>
+      <td>C. B. BRASÍLIA COMÉRCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>53860</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/6120498">6120498</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2244/2016/6120498.pdf">RECEIPT</a></td>
+      <td>2016-10-07T00:00:00</td>
+      <td>88.85</td>
+      <td>OUTBACK STEAKHOUSE RESTAURANTES BRASIL S.A.</td>
+    </tr>
+    <tr>
+      <th>55143</th>
+      <td><a target="_blank" href="http://jarbas.datasciencebr.com/#/document_id/6135973">6135973</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1947/2016/6135973.pdf">RECEIPT</a></td>
+      <td>2016-10-03T00:00:00</td>
+      <td>62.80</td>
+      <td>BK BRASIL OPERAÇÃO E ASSES. A RESTAURANTES S.A.</td>
     </tr>
   </tbody>
 </table>
@@ -12121,7 +12391,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Out of those reimbursements, I found 6 that are really suspicious and I'll try to get them reported.</p>
+<p>Out of those reimbursements, I found at least 6 that are really suspicious and I'll try to get them reported.</p>
 <p>I'm not sure how this affects meals prior to 2015 and after 2016 since the dataset I put together only has information about 2015-2016 ones, but it can contribute a lot for bringing up some reimbursements up in the rank of suspicious ones.</p>
 
 </div>

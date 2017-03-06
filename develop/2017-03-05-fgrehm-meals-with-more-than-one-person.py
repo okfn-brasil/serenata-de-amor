@@ -9,7 +9,7 @@
 # 
 # ## Data preparation
 
-# In[2]:
+# In[1]:
 
 import re
 
@@ -55,31 +55,26 @@ len(data)
 # 
 # ## Meals for more than one person
 # 
-# Usually the text present on the receipt says `PESSOAS: X` where `X` is the number of people in the table. Some places also use `PESSOA(S) :X` but that seems to be less common. Some pretty simple regexes for fetching those that have more than one person is outlined below
+# Usually the text present on the receipt says `PESSOAS: X` where `X` is the number of people in the table. Some places also use `PESSOA(S): X` but that seems to be less common. Some pretty simple regexes for fetching those that have more than one person is outlined below
 
-# In[18]:
+# In[2]:
 
-len(data[data.text.str.contains('PESSOAS\s*[2-9]')])
-
-
-# In[11]:
-
-len(data[data.text.str.contains('PESSOA\s*\(\s*S\s*\)\s*[2-9]')])
+len(data[data.text.str.contains('PESSOA\(?S\)?\s*:?\s*[2-9]')])
 
 
-# It also seems that most of the receipts that have this info are really just for one person
+# And the amount of reimbursements for one person
 
-# In[10]:
+# In[3]:
 
-len(data[data.text.str.contains('PESSOAS\s*1|PESSOA\s*\(\s*S\s*\)\s*1')])
+len(data[data.text.str.contains('PESSOA\(?S\)?\s*:?\s*1')])
 
 
-# Out of those 42 receipts for 2 or more people, I found that some of them had already subtracted other peoples food present on the receipt. One way to reduce some of the false positives is the search for the `total_net_value` amount within the text of the receipt. To make things easier, we focus on those that are under R$ 1.000,00
+# Based on a previous analysis and after some quick look at the data, I found that some of them had already subtracted other peoples food present on the receipt. One way to reduce some of the false positives is the search for the `total_net_value` amount within the text of the receipt. To make things easier, we focus on those that are under R$ 1.000,00
 
-# In[20]:
+# In[4]:
 
 r = data.query('total_net_value < 1000')
-r = r[r.text.str.contains('PESSOAS\s*[2-9]|PESSOA\s*\(\s*S\s*\)\s*[2-9]')]
+r = r[r.text.str.contains('PESSOA\(?S\)?\s*:?\s*[2-9]')]
 
 def format_regex(val):
     hundreds = int(val)
@@ -99,6 +94,6 @@ print(len(r))
 report(r)
 
 
-# Out of those reimbursements, I found 6 that are really suspicious and I'll try to get them reported.
+# Out of those reimbursements, I found at least 6 that are really suspicious and I'll try to get them reported.
 # 
 # I'm not sure how this affects meals prior to 2015 and after 2016 since the dataset I put together only has information about 2015-2016 ones, but it can contribute a lot for bringing up some reimbursements up in the rank of suspicious ones.
