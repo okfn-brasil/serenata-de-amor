@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>2017-02-12-marcusrehm-neo4j-example2</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>2017-02-12-marcusrehm-neo4j-example2</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -13,8 +11,8 @@
 *
 */
 /*!
- * Bootstrap v3.3.6 (http://getbootstrap.com)
- * Copyright 2011-2015 Twitter, Inc.
+ * Bootstrap v3.3.7 (http://getbootstrap.com)
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -1109,7 +1107,6 @@ a:focus {
   text-decoration: underline;
 }
 a:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2538,7 +2535,6 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -3029,7 +3025,6 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -8760,6 +8755,9 @@ body > #header .header-bar {
     margin-left: 10px;
   }
 }
+[dir="rtl"] #ipython_notebook {
+  float: right !important;
+}
 #noscript {
   width: auto;
   padding-top: 16px;
@@ -8962,8 +8960,14 @@ span#login_widget > .button .badge,
  *
  * Author: Jupyter Development Team
  */
+[dir="rtl"] #tabs li {
+  float: right;
+}
 ul#tabs {
   margin-bottom: 4px;
+}
+[dir="rtl"] ul#tabs {
+  margin-right: 0px;
 }
 ul#tabs a {
   padding-top: 6px;
@@ -8986,6 +8990,16 @@ ul.breadcrumb span {
 }
 .list_toolbar .tree-buttons {
   padding-top: 1px;
+}
+[dir="rtl"] .list_toolbar .tree-buttons {
+  float: left !important;
+}
+[dir="rtl"] .list_toolbar .pull-right {
+  padding-top: 1px;
+  float: left !important;
+}
+[dir="rtl"] .list_toolbar .pull-left {
+  float: right !important;
 }
 .dynamic-buttons {
   padding-top: 3px;
@@ -9122,6 +9136,9 @@ ul.breadcrumb span {
 #tree-selector {
   padding-right: 0px;
 }
+[dir="rtl"] #tree-selector a {
+  float: right;
+}
 #button-select-all {
   min-width: 50px;
 }
@@ -9211,6 +9228,9 @@ ul#new-menu {
   left: auto;
   right: 0;
 }
+[dir="rtl"] #new-menu {
+  text-align: right;
+}
 .kernel-menu-icon {
   padding-right: 12px;
   width: 24px;
@@ -9255,6 +9275,9 @@ ul#new-menu {
 }
 #running .panel-group .panel .panel-body .list_container .list_item:last-child {
   border-bottom: 0px;
+}
+[dir="rtl"] #running .col-sm-8 {
+  float: right !important;
 }
 .delete-button {
   display: none;
@@ -9551,6 +9574,7 @@ div.cell.selected.jupyter-soft-selected {
   }
 }
 div.inner_cell {
+  min-width: 0;
   /* Old browsers */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -9571,11 +9595,6 @@ div.inner_cell {
   box-flex: 1;
   /* Modern browsers */
   flex: 1;
-}
-@-moz-document url-prefix() {
-  div.inner_cell {
-    overflow-x: hidden;
-  }
 }
 /* input_area and input_prompt must match in top border and margin for alignment */
 div.input_area {
@@ -11246,7 +11265,7 @@ div#pager .ui-resizable-handle::after {
 }
 .shortcut_key {
   display: inline-block;
-  width: 20ex;
+  width: 21ex;
   text-align: right;
   font-family: monospace;
 }
@@ -11558,6 +11577,7 @@ ul.typeahead-list > li > a {
   box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
 }
 .terminal-app .terminal {
+  width: 100%;
   float: left;
   font-family: monospace;
   color: white;
@@ -11571,6 +11591,9 @@ ul.typeahead-list > li > a {
 .terminal-app .terminal dummy-screen {
   line-height: 1em;
   font-size: 14px;
+}
+.terminal-app .terminal .xterm-rows {
+  padding: 10px;
 }
 .terminal-app .terminal-cursor {
   color: black;
@@ -11631,8 +11654,10 @@ ul.typeahead-list > li > a {
 .highlight .mh { color: #666666 } /* Literal.Number.Hex */
 .highlight .mi { color: #666666 } /* Literal.Number.Integer */
 .highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
 .highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
 .highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
 .highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
 .highlight .s2 { color: #BA2121 } /* Literal.String.Double */
 .highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
@@ -11643,9 +11668,11 @@ ul.typeahead-list > li > a {
 .highlight .s1 { color: #BA2121 } /* Literal.String.Single */
 .highlight .ss { color: #19177C } /* Literal.String.Symbol */
 .highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
 .highlight .vc { color: #19177C } /* Name.Variable.Class */
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
 <style type="text/css">
@@ -11748,7 +11775,7 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[98]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -11771,7 +11798,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[99]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">amendments</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-22-amendments.xz&#39;</span><span class="p">,</span> 
@@ -11792,7 +11819,9 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[99]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[2]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11816,7 +11845,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[100]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-22-agreements.xz&#39;</span><span class="p">,</span> 
@@ -11839,7 +11868,9 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[100]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[3]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11863,7 +11894,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[101]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_with_amendments</span> <span class="o">=</span> <span class="n">agreements</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">amendments</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;proposal_id&#39;</span><span class="p">)</span>
@@ -11885,7 +11916,9 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[101]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[4]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11912,7 +11945,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[102]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">impeded_non_profit_entities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-20-impeded-non-profit-entities.xz&#39;</span><span class="p">,</span> 
@@ -11929,7 +11962,9 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[102]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[5]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11954,7 +11989,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[103]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">impeded_entities_w_start_date</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
@@ -11985,7 +12020,9 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[103]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[6]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12017,7 +12054,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[104]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span> <span class="o">=</span> <span class="n">agreements_with_amendments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
@@ -12043,7 +12080,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[105]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span> <span class="o">=</span> <span class="n">agreements_after_impended</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
@@ -12061,7 +12098,9 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[105]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[8]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12076,7 +12115,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[106]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">agreements_after_impended</span>
@@ -12090,7 +12129,9 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[106]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[9]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12239,7 +12280,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[107]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">py2neo</span> <span class="k">import</span> <span class="n">Node</span>
@@ -12249,8 +12290,12 @@ Name: 0, dtype: object</pre>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">delete_all</span><span class="p">()</span>
 
-<span class="n">congresspersons</span> <span class="o">=</span> <span class="p">[</span><span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Congressperson&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">congressperson</span><span class="p">)</span> <span class="k">for</span> <span class="n">congressperson</span> <span class="ow">in</span> <span class="n">agreements_after_impended</span><span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()]</span>
-<span class="n">entities</span> <span class="o">=</span> <span class="p">[</span><span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Entity&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;compay_name&#39;</span><span class="p">],</span> <span class="n">cnpj</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;company_cnpj&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">beneficiary</span> <span class="ow">in</span> <span class="n">agreements_after_impended</span><span class="p">[</span><span class="s1">&#39;amendment_beneficiary&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()]</span>
+<span class="n">congresspersons</span> <span class="o">=</span> <span class="p">[</span><span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Congressperson&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">congressperson</span><span class="p">)</span> 
+                   <span class="k">for</span> <span class="n">congressperson</span> <span class="ow">in</span> 
+                   <span class="n">agreements_after_impended</span><span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()]</span>
+<span class="n">entities</span> <span class="o">=</span> <span class="p">[</span><span class="n">Node</span><span class="p">(</span><span class="s2">&quot;Entity&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">beneficiary</span><span class="p">)</span> 
+            <span class="k">for</span> <span class="n">beneficiary</span> <span class="ow">in</span> 
+            <span class="n">agreements_after_impended</span><span class="p">[</span><span class="s1">&#39;compay_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()]</span>
 
 <span class="k">for</span> <span class="n">congressperson</span> <span class="ow">in</span> <span class="n">congresspersons</span><span class="p">:</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">congressperson</span><span class="p">)</span>
@@ -12259,9 +12304,13 @@ Name: 0, dtype: object</pre>
     <span class="n">graph</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">agreements_after_impended</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-    <span class="n">congressperson</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">],</span> <span class="n">congresspersons</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">entity</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;compay_name&#39;</span><span class="p">],</span> <span class="n">entities</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">graph</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">Relationship</span><span class="p">(</span><span class="n">congressperson</span><span class="p">,</span> <span class="s2">&quot;benefited&quot;</span><span class="p">,</span> <span class="n">entity</span><span class="p">))</span>
+    <span class="n">congressperson</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">],</span> 
+                                 <span class="n">congresspersons</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">entity</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;compay_name&#39;</span><span class="p">],</span> 
+                         <span class="n">entities</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">Relationship</span><span class="p">(</span><span class="n">congressperson</span><span class="p">,</span> 
+                              <span class="s2">&quot;benefited&quot;</span><span class="p">,</span> 
+                              <span class="n">entity</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -12271,13 +12320,12 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[108]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.vis</span> <span class="k">import</span> <span class="n">draw</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">neo4jupyter</span>
 
-<span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Congressperson&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Entity&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">}</span>
-<span class="n">draw</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">graph_name</span><span class="o">=</span><span class="s1">&#39;Companies with Sanctions&#39;</span><span class="p">)</span>
+<span class="n">neo4jupyter</span><span class="o">.</span><span class="n">init_notebook_mode</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -12288,18 +12336,102 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[108]:</div>
+<div class="output_area">
+<div class="prompt"></div>
+
+
+
+
+<div id="496d5332-4de5-4c81-8695-383e593f4ba5"></div>
+<div class="output_subarea output_javascript ">
+<script type="text/javascript">
+var element = $('#496d5332-4de5-4c81-8695-383e593f4ba5');
+$("head").append($("<link/>").attr({
+  rel:  "stylesheet",
+  type: "text/css",
+  href: "https://cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.css"
+}));
+require.config({     paths: {         vis: '//cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.min'     } }); require(['vis'], function(vis) {  window.vis = vis; }); 
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">neo4jupyter</span> <span class="k">import</span> <span class="n">draw</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Congressperson&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Entity&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">}</span>
+<span class="n">draw</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[27]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
+<div id="00f91961-0e87-43fa-8f1a-6fcfd14fa296" style="height: 400px;"></div>
 
-        <iframe
-            width="100%"
-            height="400"
-            src="figure/graph-Companies with Sanctions.html"
-            frameborder="0"
-            allowfullscreen
-        ></iframe>
-        
+<script type="text/javascript">
+
+    var nodes = [{"group": "Congressperson", "title": "{'name': 'RICARDO BARROS'}", "id": 5370, "label": "RICARDO BARROS"}, {"group": "Entity", "title": "{'name': 'SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA'}", "id": 5373, "label": "SOCIEDADE EVANGELICA BENEFICENTE DE CURITIBA"}, {"group": "Congressperson", "title": "{'name': 'LUIZ CARLOS SETIM'}", "id": 5368, "label": "LUIZ CARLOS SETIM"}, {"group": "Congressperson", "title": "{'name': 'OSMAR SERRAGLIO'}", "id": 5366, "label": "OSMAR SERRAGLIO"}, {"group": "Congressperson", "title": "{'name': 'NELSON MEURER'}", "id": 5367, "label": "NELSON MEURER"}, {"group": "Congressperson", "title": "{'name': 'SERGIO SOUZA'}", "id": 5369, "label": "SERGIO SOUZA"}, {"group": "Congressperson", "title": "{'name': 'FLAVIO JOSE ARNS'}", "id": 5371, "label": "FLAVIO JOSE ARNS"}, {"group": "Congressperson", "title": "{'name': 'DILCEU SPERAFICO'}", "id": 5372, "label": "DILCEU SPERAFICO"}];
+    var edges = [{"to": 5373, "from": 5370, "label": "benefited"}, {"to": 5373, "from": 5368, "label": "benefited"}, {"to": 5373, "from": 5366, "label": "benefited"}, {"to": 5373, "from": 5367, "label": "benefited"}, {"to": 5373, "from": 5369, "label": "benefited"}, {"to": 5373, "from": 5371, "label": "benefited"}, {"to": 5373, "from": 5372, "label": "benefited"}];
+
+    var container = document.getElementById("00f91961-0e87-43fa-8f1a-6fcfd14fa296");
+
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+
+    var options = {
+    nodes: {
+        shape: 'dot',
+        size: 25,
+        font: {
+            size: 14
+        }
+    },
+    edges: {
+        font: {
+            size: 14,
+            align: 'middle'
+        },
+        color: 'gray',
+        arrows: {
+            to: {
+                enabled: true,
+                scaleFactor: 0.5
+            }
+        },
+        smooth: {
+            enabled: false
+        }
+    },
+    physics: {
+        enabled: true
+        }
+    };
+
+    var network = new vis.Network(container, data, options);
+
+</script>
+
 </div>
 
 </div>
@@ -12324,4 +12456,8 @@ Name: 0, dtype: object</pre>
     </div>
   </div>
 </body>
+
+ 
+
+
 </html>

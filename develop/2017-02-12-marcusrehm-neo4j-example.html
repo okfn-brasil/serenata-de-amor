@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>2017-02-12-marcusrehm-neo4j-example</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>2017-02-12-marcusrehm-neo4j-example</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -13,8 +11,8 @@
 *
 */
 /*!
- * Bootstrap v3.3.6 (http://getbootstrap.com)
- * Copyright 2011-2015 Twitter, Inc.
+ * Bootstrap v3.3.7 (http://getbootstrap.com)
+ * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -1109,7 +1107,6 @@ a:focus {
   text-decoration: underline;
 }
 a:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2538,7 +2535,6 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -3029,7 +3025,6 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -8760,6 +8755,9 @@ body > #header .header-bar {
     margin-left: 10px;
   }
 }
+[dir="rtl"] #ipython_notebook {
+  float: right !important;
+}
 #noscript {
   width: auto;
   padding-top: 16px;
@@ -8962,8 +8960,14 @@ span#login_widget > .button .badge,
  *
  * Author: Jupyter Development Team
  */
+[dir="rtl"] #tabs li {
+  float: right;
+}
 ul#tabs {
   margin-bottom: 4px;
+}
+[dir="rtl"] ul#tabs {
+  margin-right: 0px;
 }
 ul#tabs a {
   padding-top: 6px;
@@ -8986,6 +8990,16 @@ ul.breadcrumb span {
 }
 .list_toolbar .tree-buttons {
   padding-top: 1px;
+}
+[dir="rtl"] .list_toolbar .tree-buttons {
+  float: left !important;
+}
+[dir="rtl"] .list_toolbar .pull-right {
+  padding-top: 1px;
+  float: left !important;
+}
+[dir="rtl"] .list_toolbar .pull-left {
+  float: right !important;
 }
 .dynamic-buttons {
   padding-top: 3px;
@@ -9122,6 +9136,9 @@ ul.breadcrumb span {
 #tree-selector {
   padding-right: 0px;
 }
+[dir="rtl"] #tree-selector a {
+  float: right;
+}
 #button-select-all {
   min-width: 50px;
 }
@@ -9211,6 +9228,9 @@ ul#new-menu {
   left: auto;
   right: 0;
 }
+[dir="rtl"] #new-menu {
+  text-align: right;
+}
 .kernel-menu-icon {
   padding-right: 12px;
   width: 24px;
@@ -9255,6 +9275,9 @@ ul#new-menu {
 }
 #running .panel-group .panel .panel-body .list_container .list_item:last-child {
   border-bottom: 0px;
+}
+[dir="rtl"] #running .col-sm-8 {
+  float: right !important;
 }
 .delete-button {
   display: none;
@@ -9551,6 +9574,7 @@ div.cell.selected.jupyter-soft-selected {
   }
 }
 div.inner_cell {
+  min-width: 0;
   /* Old browsers */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -9571,11 +9595,6 @@ div.inner_cell {
   box-flex: 1;
   /* Modern browsers */
   flex: 1;
-}
-@-moz-document url-prefix() {
-  div.inner_cell {
-    overflow-x: hidden;
-  }
 }
 /* input_area and input_prompt must match in top border and margin for alignment */
 div.input_area {
@@ -11246,7 +11265,7 @@ div#pager .ui-resizable-handle::after {
 }
 .shortcut_key {
   display: inline-block;
-  width: 20ex;
+  width: 21ex;
   text-align: right;
   font-family: monospace;
 }
@@ -11558,6 +11577,7 @@ ul.typeahead-list > li > a {
   box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
 }
 .terminal-app .terminal {
+  width: 100%;
   float: left;
   font-family: monospace;
   color: white;
@@ -11571,6 +11591,9 @@ ul.typeahead-list > li > a {
 .terminal-app .terminal dummy-screen {
   line-height: 1em;
   font-size: 14px;
+}
+.terminal-app .terminal .xterm-rows {
+  padding: 10px;
 }
 .terminal-app .terminal-cursor {
   color: black;
@@ -11631,8 +11654,10 @@ ul.typeahead-list > li > a {
 .highlight .mh { color: #666666 } /* Literal.Number.Hex */
 .highlight .mi { color: #666666 } /* Literal.Number.Integer */
 .highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
 .highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
 .highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
 .highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
 .highlight .s2 { color: #BA2121 } /* Literal.String.Double */
 .highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
@@ -11643,9 +11668,11 @@ ul.typeahead-list > li > a {
 .highlight .s1 { color: #BA2121 } /* Literal.String.Single */
 .highlight .ss { color: #19177C } /* Literal.String.Symbol */
 .highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
 .highlight .vc { color: #19177C } /* Name.Variable.Class */
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
 <style type="text/css">
@@ -11751,7 +11778,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Hello-World">Hello World<a class="anchor-link" href="#Hello-World">&#182;</a></h1><p>This notebook walks through basic code examples for integrating various packages with Neo4j, including <code>py2neo</code>, <code>ipython-cypher</code>, <code>pandas</code>, <code>networkx</code>, <code>igraph</code>, and <code>jgraph</code>.</p>
+<h1 id="Hello-World">Hello World<a class="anchor-link" href="#Hello-World">&#182;</a></h1><p>This notebook walks through basic code examples for integrating various packages with Neo4j, including <code>py2neo</code>, <code>ipython-cypher</code>, <code>pandas</code>, <code>neo4jupyter</code>, <code>networkx</code> and <code>jgraph</code>.</p>
 
 </div>
 </div>
@@ -11778,7 +11805,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">py2neo</span> <span class="k">import</span> <span class="n">Graph</span>
@@ -11793,7 +11820,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">graph</span><span class="o">.</span><span class="n">delete_all</span><span class="p">()</span>
@@ -11816,7 +11843,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">py2neo</span> <span class="k">import</span> <span class="n">Node</span>
@@ -11838,55 +11865,6 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.vis</span> <span class="k">import</span> <span class="n">draw</span>
-
-<span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Person&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Drink&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Manufacturer&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">}</span>
-<span class="n">draw</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">graph_name</span><span class="o">=</span><span class="s2">&quot;Example 1&quot;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[26]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-
-        <iframe
-            width="100%"
-            height="400"
-            src="figure/graph-Example 1.html"
-            frameborder="0"
-            allowfullscreen
-        ></iframe>
-        
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>P.S. - If you want to check out what's going on behind the scenes for the <code>draw()</code> function used above, take a look at <a href="https://github.com/nicolewhite/neo4j-jupyter/blob/master/scripts/vis.py"><code>scripts/vis.py</code></a>.</p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -11899,7 +11877,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">py2neo</span> <span class="k">import</span> <span class="n">Relationship</span>
@@ -11909,8 +11887,31 @@ div#notebook {
 <span class="n">graph</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">Relationship</span><span class="p">(</span><span class="n">drew</span><span class="p">,</span> <span class="s2">&quot;LIKES&quot;</span><span class="p">,</span> <span class="n">mtdew</span><span class="p">))</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">Relationship</span><span class="p">(</span><span class="n">coke</span><span class="p">,</span> <span class="s2">&quot;MAKES&quot;</span><span class="p">,</span> <span class="n">cokezero</span><span class="p">))</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">Relationship</span><span class="p">(</span><span class="n">pepsi</span><span class="p">,</span> <span class="s2">&quot;MAKES&quot;</span><span class="p">,</span> <span class="n">mtdew</span><span class="p">))</span>
+</pre></div>
 
-<span class="n">draw</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">graph_name</span><span class="o">=</span><span class="s2">&quot;Example 2&quot;</span><span class="p">)</span>
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Neo4jupyter">Neo4jupyter<a class="anchor-link" href="#Neo4jupyter">&#182;</a></h2><p>First of all we need to initialize neo4jupyter in order to draw graphs.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">neo4jupyter</span>
+
+<span class="n">neo4jupyter</span><span class="o">.</span><span class="n">init_notebook_mode</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11921,18 +11922,102 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[27]:</div>
+<div class="output_area">
+<div class="prompt"></div>
+
+
+
+
+<div id="4460fdba-c058-43d1-8990-babb4574e745"></div>
+<div class="output_subarea output_javascript ">
+<script type="text/javascript">
+var element = $('#4460fdba-c058-43d1-8990-babb4574e745');
+$("head").append($("<link/>").attr({
+  rel:  "stylesheet",
+  type: "text/css",
+  href: "https://cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.css"
+}));
+require.config({     paths: {         vis: '//cdnjs.cloudflare.com/ajax/libs/vis/4.8.2/vis.min'     } }); require(['vis'], function(vis) {  window.vis = vis; }); 
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">neo4jupyter</span> <span class="k">import</span> <span class="n">draw</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Person&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Drink&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Manufacturer&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">}</span>
+<span class="n">draw</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[6]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
+<div id="c20eb17b-c87e-425d-bc91-91fc593c60c6" style="height: 400px;"></div>
 
-        <iframe
-            width="100%"
-            height="400"
-            src="figure/graph-Example 2.html"
-            frameborder="0"
-            allowfullscreen
-        ></iframe>
-        
+<script type="text/javascript">
+
+    var nodes = [{"id": 5339, "title": "{'name': 'Mountain Dew', 'calories': 9000}", "group": "Drink", "label": "Mountain Dew"}, {"id": 5340, "title": "{'name': 'Coke Zero', 'calories': 0}", "group": "Drink", "label": "Coke Zero"}, {"id": 5341, "title": "{'name': 'Coca Cola'}", "group": "Manufacturer", "label": "Coca Cola"}, {"id": 5336, "title": "{'name': 'Pepsi'}", "group": "Manufacturer", "label": "Pepsi"}, {"id": 5338, "title": "{'name': 'Nicole', 'age': 24}", "group": "Person", "label": "Nicole"}, {"id": 5337, "title": "{'name': 'Drew', 'age': 20}", "group": "Person", "label": "Drew"}];
+    var edges = [{"label": "MAKES", "to": 5340, "from": 5341}, {"label": "MAKES", "to": 5339, "from": 5336}, {"label": "LIKES", "to": 5339, "from": 5338}, {"label": "LIKES", "to": 5340, "from": 5338}, {"label": "LIKES", "to": 5339, "from": 5337}];
+
+    var container = document.getElementById("c20eb17b-c87e-425d-bc91-91fc593c60c6");
+
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+
+    var options = {
+    nodes: {
+        shape: 'dot',
+        size: 25,
+        font: {
+            size: 14
+        }
+    },
+    edges: {
+        font: {
+            size: 14,
+            align: 'middle'
+        },
+        color: 'gray',
+        arrows: {
+            to: {
+                enabled: true,
+                scaleFactor: 0.5
+            }
+        },
+        smooth: {
+            enabled: false
+        }
+    },
+    physics: {
+        enabled: true
+        }
+    };
+
+    var network = new vis.Network(container, data, options);
+
+</script>
+
 </div>
 
 </div>
@@ -11946,14 +12031,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Cypher">Cypher<a class="anchor-link" href="#Cypher">&#182;</a></h2><p>Retrieve Cypher query results with <code>Graph.cypher.execute</code>.</p>
+<h2 id="Cypher">Cypher<a class="anchor-link" href="#Cypher">&#182;</a></h2><p>Retrieve Cypher query results with <code>Graph.run</code>.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -11975,11 +12060,13 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(&#39;name&#39;: &#39;Nicole&#39;, &#39;drink&#39;: &#39;Mountain Dew&#39;)
+<pre>(&#39;name&#39;: &#39;Drew&#39;, &#39;drink&#39;: &#39;Mountain Dew&#39;)
+(&#39;name&#39;: &#39;Nicole&#39;, &#39;drink&#39;: &#39;Mountain Dew&#39;)
 (&#39;name&#39;: &#39;Nicole&#39;, &#39;drink&#39;: &#39;Coke Zero&#39;)
-(&#39;name&#39;: &#39;Drew&#39;, &#39;drink&#39;: &#39;Mountain Dew&#39;)
 </pre>
 </div>
 </div>
@@ -11993,14 +12080,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Parameterized-Cypher">Parameterized Cypher<a class="anchor-link" href="#Parameterized-Cypher">&#182;</a></h2><p>Pass parameters to Cypher queries by passing additional key-value arguments to <code>Graph.cypher.execute.</code> Parameters in Cypher are named and are wrapped in curly braces.</p>
+<h2 id="Parameterized-Cypher">Parameterized Cypher<a class="anchor-link" href="#Parameterized-Cypher">&#182;</a></h2><p>Pass parameters to Cypher queries by passing additional key-value arguments to <code>Graph.run</code>. Parameters in Cypher are named and are wrapped in curly braces.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -12023,7 +12110,9 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>(&#39;name&#39;: &#39;Nicole&#39;, &#39;avg_calories&#39;: 4500.0)
 </pre>
@@ -12046,28 +12135,13 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> cypher
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>The cypher extension is already loaded. To reload it, use:
-  %reload_ext cypher
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -12084,7 +12158,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">cypher</span>
@@ -12100,14 +12174,18 @@ RETURN person.name, drink.name, drink.calories
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>3 rows affected.
 </pre>
 </div>
 </div>
 
-<div class="output_area"><div class="prompt output_prompt">Out[31]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[10]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <table>
@@ -12115,6 +12193,11 @@ RETURN person.name, drink.name, drink.calories
         <th>person.name</th>
         <th>drink.name</th>
         <th>drink.calories</th>
+    </tr>
+    <tr>
+        <td>Drew</td>
+        <td>Mountain Dew</td>
+        <td>9000</td>
     </tr>
     <tr>
         <td>Nicole</td>
@@ -12125,11 +12208,6 @@ RETURN person.name, drink.name, drink.calories
         <td>Nicole</td>
         <td>Coke Zero</td>
         <td>0</td>
-    </tr>
-    <tr>
-        <td>Drew</td>
-        <td>Mountain Dew</td>
-        <td>9000</td>
     </tr>
 </table>
 </div>
@@ -12152,7 +12230,7 @@ RETURN person.name, drink.name, drink.calories
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="o">%</span><span class="k">cypher</span> MATCH (person:Person)-[:LIKES]-&gt;(drink:Drink) \
@@ -12171,14 +12249,18 @@ RETURN person.name, drink.name, drink.calories
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>3 rows affected.
 </pre>
 </div>
 </div>
 
-<div class="output_area"><div class="prompt output_prompt">Out[32]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[11]:</div>
+
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12193,128 +12275,22 @@ RETURN person.name, drink.name, drink.calories
   <tbody>
     <tr>
       <th>0</th>
-      <td>Nicole</td>
-      <td>Mountain Dew</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Nicole</td>
-      <td>Coke Zero</td>
-    </tr>
-    <tr>
-      <th>2</th>
       <td>Drew</td>
       <td>Mountain Dew</td>
     </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">index</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[33]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>RangeIndex(start=0, stop=3, step=1)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">1</span><span class="p">]]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[34]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>name</th>
-      <th>drink</th>
-    </tr>
-  </thead>
-  <tbody>
     <tr>
       <th>1</th>
+      <td>Nicole</td>
+      <td>Mountain Dew</td>
+    </tr>
+    <tr>
+      <th>2</th>
       <td>Nicole</td>
       <td>Coke Zero</td>
     </tr>
   </tbody>
 </table>
 </div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[35]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>0    Nicole
-1    Nicole
-2      Drew
-Name: name, dtype: object</pre>
 </div>
 
 </div>
@@ -12335,7 +12311,7 @@ Name: name, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
@@ -12356,127 +12332,162 @@ Name: name, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>3 rows affected.
 </pre>
 </div>
 </div>
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/home/marcus/anaconda/envs/serenata_de_amor/lib/python3.5/site-packages/networkx/drawing/nx_pylab.py:126: MatplotlibDeprecationWarning: pyplot.hold is deprecated.
+    Future behavior will be consistent with the long-time default:
+    plot commands add elements without first clearing the
+    Axes and/or Figure.
+  b = plt.ishold()
+/home/marcus/anaconda/envs/serenata_de_amor/lib/python3.5/site-packages/networkx/drawing/nx_pylab.py:138: MatplotlibDeprecationWarning: pyplot.hold is deprecated.
+    Future behavior will be consistent with the long-time default:
+    plot commands add elements without first clearing the
+    Axes and/or Figure.
+  plt.hold(b)
+/home/marcus/anaconda/envs/serenata_de_amor/lib/python3.5/site-packages/matplotlib/__init__.py:917: UserWarning: axes.hold is deprecated. Please remove it from your matplotlibrc and/or style files.
+  warnings.warn(self.msg_depr_set % key)
+/home/marcus/anaconda/envs/serenata_de_amor/lib/python3.5/site-packages/matplotlib/rcsetup.py:152: UserWarning: axes.hold is deprecated, will be removed in 3.0
+  warnings.warn(&#34;axes.hold is deprecated, will be removed in 3.0&#34;)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt"></div>
+
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
+YII=
 "
 >
 </div>
@@ -12489,7 +12500,7 @@ xAAAGESIAQAwiBADAGAQIQYAwCBCDACAQf8PSKVpvD/T140AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -12503,14 +12514,16 @@ xAAAGESIAQAwiBADAGAQIQYAwCBCDACAQf8PSKVpvD/T140AAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[37]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[13]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[(&#39;11795&#39;, {&#39;calories&#39;: 0, &#39;labels&#39;: [&#39;Drink&#39;], &#39;name&#39;: &#39;Coke Zero&#39;}),
- (&#39;11799&#39;, {&#39;age&#39;: 20, &#39;labels&#39;: [&#39;Person&#39;], &#39;name&#39;: &#39;Drew&#39;}),
- (&#39;11797&#39;, {&#39;age&#39;: 24, &#39;labels&#39;: [&#39;Person&#39;], &#39;name&#39;: &#39;Nicole&#39;}),
- (&#39;11794&#39;, {&#39;calories&#39;: 9000, &#39;labels&#39;: [&#39;Drink&#39;], &#39;name&#39;: &#39;Mountain Dew&#39;})]</pre>
+<pre>[(&#39;5337&#39;, {&#39;age&#39;: 20, &#39;labels&#39;: [&#39;Person&#39;], &#39;name&#39;: &#39;Drew&#39;}),
+ (&#39;5339&#39;, {&#39;calories&#39;: 9000, &#39;labels&#39;: [&#39;Drink&#39;], &#39;name&#39;: &#39;Mountain Dew&#39;}),
+ (&#39;5338&#39;, {&#39;age&#39;: 24, &#39;labels&#39;: [&#39;Person&#39;], &#39;name&#39;: &#39;Nicole&#39;}),
+ (&#39;5340&#39;, {&#39;calories&#39;: 0, &#39;labels&#39;: [&#39;Drink&#39;], &#39;name&#39;: &#39;Coke Zero&#39;})]</pre>
 </div>
 
 </div>
@@ -12521,7 +12534,7 @@ xAAAGESIAQAwiBADAGAQIQYAwCBCDACAQf8PSKVpvD/T140AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">nx</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
@@ -12535,150 +12548,15 @@ xAAAGESIAQAwiBADAGAQIQYAwCBCDACAQf8PSKVpvD/T140AAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[38]:</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[14]:</div>
+
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;11794&#39;: 2, &#39;11795&#39;: 1, &#39;11797&#39;: 2, &#39;11799&#39;: 1}</pre>
+<pre>{&#39;5337&#39;: 1, &#39;5338&#39;: 2, &#39;5339&#39;: 2, &#39;5340&#39;: 1}</pre>
 </div>
 
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="igraph">igraph<a class="anchor-link" href="#igraph">&#182;</a></h1><p>Cypher query results can be imported into <code>igraph</code> with <code>py2neo</code>. You'll need to install <code>igraph</code> with <code>pip install python-igraph</code>. Query results should be returned as edgelists, as <code>igraph</code> has a method for building an <code>igraph</code> object from a list of tuples representing edges between nodes.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">py2neo</span> <span class="k">import</span> <span class="n">Graph</span> <span class="k">as</span> <span class="n">PGraph</span>
-<span class="kn">from</span> <span class="nn">igraph</span> <span class="k">import</span> <span class="n">Graph</span> <span class="k">as</span> <span class="n">IGraph</span>
-
-<span class="n">neo4j</span> <span class="o">=</span> <span class="n">PGraph</span><span class="p">()</span>
-
-<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">MATCH (person:Person)-[:LIKES]-&gt;(drink:Drink)</span>
-<span class="s2">RETURN person.name AS source, drink.name AS target</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">neo4j</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-<span class="n">tups</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-    <span class="n">tups</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">DeprecationWarning</span>                        Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-17-83f9b4c09ddb&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">from</span> py2neo <span class="ansi-green-fg">import</span> Graph <span class="ansi-green-fg">as</span> PGraph
-<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> igraph <span class="ansi-green-fg">import</span> Graph <span class="ansi-green-fg">as</span> IGraph
-<span class="ansi-green-intense-fg ansi-bold">      3</span> 
-<span class="ansi-green-intense-fg ansi-bold">      4</span> neo4j <span class="ansi-blue-fg">=</span> PGraph<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span> 
-
-<span class="ansi-green-fg">/home/marcus/anaconda/envs/serenata_de_amor/lib/python3.5/site-packages/igraph/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      6</span> __license__ <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#34;MIT&#34;</span>
-<span class="ansi-green-intense-fg ansi-bold">      7</span> 
-<span class="ansi-green-fg">----&gt; 8</span><span class="ansi-red-fg"> raise DeprecationWarning(&#34;To avoid name collision with the igraph project, &#34;
-</span><span class="ansi-green-intense-fg ansi-bold">      9</span>                          <span class="ansi-blue-fg">&#34;this visualization library has been renamed to &#34;</span>
-<span class="ansi-green-intense-fg ansi-bold">     10</span>                          &#34;&#39;jgraph&#39;. Please upgrade when convenient.&#34;)
-
-<span class="ansi-red-fg">DeprecationWarning</span>: To avoid name collision with the igraph project, this visualization library has been renamed to &#39;jgraph&#39;. Please upgrade when convenient.</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ig</span> <span class="o">=</span> <span class="n">IGraph</span><span class="o">.</span><span class="n">TupleList</span><span class="p">(</span><span class="n">tups</span><span class="p">)</span>
-
-<span class="n">ig</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-18-fdde58cbe06b&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>ig <span class="ansi-blue-fg">=</span> IGraph<span class="ansi-blue-fg">.</span>TupleList<span class="ansi-blue-fg">(</span>tups<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> 
-<span class="ansi-green-intense-fg ansi-bold">      3</span> ig
-
-<span class="ansi-red-fg">NameError</span>: name &#39;IGraph&#39; is not defined</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">best</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">vs</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">_degree</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">maxdegree</span><span class="p">())[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-<span class="n">best</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-19-a7b11f3daf07&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>best <span class="ansi-blue-fg">=</span> ig<span class="ansi-blue-fg">.</span>vs<span class="ansi-blue-fg">.</span>select<span class="ansi-blue-fg">(</span>_degree <span class="ansi-blue-fg">=</span> ig<span class="ansi-blue-fg">.</span>maxdegree<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;name&#34;</span><span class="ansi-blue-fg">]</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> best
-
-<span class="ansi-red-fg">NameError</span>: name &#39;ig&#39; is not defined</pre>
-</div>
 </div>
 
 </div>
@@ -12697,7 +12575,7 @@ xAAAGESIAQAwiBADAGAQIQYAwCBCDACAQf8PSKVpvD/T140AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">jgraph</span>
@@ -12713,15 +12591,17 @@ xAAAGESIAQAwiBADAGAQIQYAwCBCDACAQf8PSKVpvD/T140AAAAASUVORK5CYII=
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
+<div class="output_area">
+<div class="prompt"></div>
+
 
 <div class="output_html rendered_html output_subarea ">
-<div id="graph-689eda40-ed82-416d-b335-029722c322aa"></div>
+<div id="graph-33bb637a-fe12-4d31-98c1-098e6ebfcddb"></div>
            <script type="text/javascript">
            require.config({baseUrl: '/',
                              paths: {jgraph: ['nbextensions/jgraph.min', 'https://rawgit.com/patrickfuller/jgraph/master/js/build/jgraph.min']}});
            require(['jgraph'], function () {
-               var $d = $('#graph-689eda40-ed82-416d-b335-029722c322aa');
+               var $d = $('#graph-33bb637a-fe12-4d31-98c1-098e6ebfcddb');
                $d.width(600); $d.height(400);
                $d.jgraph = jQuery.extend({}, jgraph);
                $d.jgraph.create($d, {nodeSize: 2.000000,
@@ -12744,10 +12624,10 @@ xAAAGESIAQAwiBADAGAQIQYAwCBCDACAQf8PSKVpvD/T140AAAAASUVORK5CYII=
     ],
     "nodes": {
         "1": { "location": [ -2.0, -2.0, -2.0 ] },
-        "2": { "location": [ -1.0746527889923414, -1.0504290902019673, -0.9687830889933474 ] },
-        "3": { "location": [ -0.35433863833478013, 0.13726096285088632, 0.21712858072573904 ] },
-        "4": { "location": [ 1.2539699936801654, 0.9862834369900845, 1.1385645553275074 ] },
-        "5": { "location": [ 2.0, 2.0, 1.8032273884182002 ] }
+        "2": { "location": [ -0.9461516086599593, -0.7194854432857765, -1.3992006385676505 ] },
+        "3": { "location": [ -0.18125179724996496, -0.18198768289523493, 0.3189414737029518 ] },
+        "4": { "location": [ 1.1329805146193213, 1.1756159218463949, 1.4723647359884806 ] },
+        "5": { "location": [ 2.0, 2.0, 1.9975328459996018 ] }
     }
 });
 
@@ -12764,106 +12644,6 @@ xAAAGESIAQAwiBADAGAQIQYAwCBCDACAQf8PSKVpvD/T140AAAAASUVORK5CYII=
 
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;MATCH (n)--&gt;(m) RETURN ID(n), ID(m)&quot;</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
-
-<span class="n">jgraph</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-
-<div class="output_html rendered_html output_subarea ">
-<div id="graph-78bded5d-4805-4fb6-99b1-9b68c070d94d"></div>
-           <script type="text/javascript">
-           require.config({baseUrl: '/',
-                             paths: {jgraph: ['nbextensions/jgraph.min', 'https://rawgit.com/patrickfuller/jgraph/master/js/build/jgraph.min']}});
-           require(['jgraph'], function () {
-               var $d = $('#graph-78bded5d-4805-4fb6-99b1-9b68c070d94d');
-               $d.width(600); $d.height(400);
-               $d.jgraph = jQuery.extend({}, jgraph);
-               $d.jgraph.create($d, {nodeSize: 2.000000,
-                                     edgeSize: 0.250000,
-                                     defaultNodeColor: '0x5bc0de',
-                                     defaultEdgeColor: '0xaaaaaa',
-                                     shader: 'basic',
-                                     z: 100,
-                                     runOptimization: true,
-                                     directed: true,
-                                     showSave: false});
-               $d.jgraph.draw({
-    "edges": [
-        { "source": 11782, "target": 11785 },
-        { "source": 11783, "target": 11785 },
-        { "source": 11784, "target": 11785 },
-        { "source": 11784, "target": 11786 },
-        { "source": 11787, "target": 11786 }
-    ],
-    "nodes": {
-        "11782": { "location": [ -2.0, -2.0, -2.0 ] },
-        "11783": { "location": [ -2.0, -1.5447543579115544, -1.5886853872884035 ] },
-        "11784": { "location": [ -0.5428605683517916, -0.7184108288241228, -0.8405707447170225 ] },
-        "11785": { "location": [ 0.705822579666723, 1.0676865006680356, 0.7369379840103648 ] },
-        "11786": { "location": [ 1.5246196751786767, 1.6751947514193115, 1.7197540432845557 ] },
-        "11787": { "location": [ 2.0, 2.0, 2.0 ] }
-    }
-});
-
-               $d.resizable({
-                   aspectRatio: 600 / 400,
-                   resize: function (evt, ui) {
-                       $d.jgraph.renderer.setSize(ui.size.width,
-                                                  ui.size.height);
-                   }
-               });
-           });
-           </script>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-</div>
 </div>
 </div>
 
@@ -12871,4 +12651,8 @@ xAAAGESIAQAwiBADAGAQIQYAwCBCDACAQf8PSKVpvD/T140AAAAASUVORK5CYII=
     </div>
   </div>
 </body>
+
+ 
+
+
 </html>

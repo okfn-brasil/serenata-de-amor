@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[98]:
+# In[1]:
 
 import pandas as pd
 import numpy as np
@@ -9,7 +9,7 @@ import numpy as np
 
 # ### Amendments with Federal Budget
 
-# In[99]:
+# In[2]:
 
 amendments = pd.read_csv('../data/2016-12-22-amendments.xz', 
                          dtype={'proposal_id': np.str,
@@ -23,7 +23,7 @@ amendments.shape
 
 # ### Agreements made with Federal Budget
 
-# In[100]:
+# In[3]:
 
 agreements = pd.read_csv('../data/2016-12-22-agreements.xz', 
                          usecols=(['agreement_number', 'proposal_id', 
@@ -39,7 +39,7 @@ agreements.shape
 
 # ### Agreements related to amendments
 
-# In[101]:
+# In[4]:
 
 agreements_with_amendments = agreements.merge(amendments, on='proposal_id')
 agreements_with_amendments = agreements_with_amendments.filter(['amendment_number', 
@@ -59,7 +59,7 @@ agreements_with_amendments.shape
 # 
 # Origin of the information: Controladoria-Geral da União - CGU (Comptroller General of the Union)
 
-# In[102]:
+# In[5]:
 
 impeded_non_profit_entities = pd.read_csv('../data/2016-12-20-impeded-non-profit-entities.xz', 
                                               dtype={'company_cnpj': np.str,
@@ -70,7 +70,7 @@ impeded_non_profit_entities.shape
 # 
 # First we need to get the agreements in which entities were impeded:
 
-# In[103]:
+# In[6]:
 
 impeded_entities_w_start_date = agreements_with_amendments.merge(
                                     impeded_non_profit_entities, 
@@ -96,7 +96,7 @@ impeded_entities_w_start_date.iloc[0]
 # 
 # So **date_impended** means that we are concerned only with agreements signed after this date.
 
-# In[104]:
+# In[7]:
 
 agreements_after_impended = agreements_with_amendments.merge(
                                         impeded_entities_w_start_date, 
@@ -108,7 +108,7 @@ agreements_after_impended = agreements_with_amendments.merge(
 # 
 # Below we have a list of agreements that are still in execution and are related to the amendments that have as beneficiaries non-profit entities that are impeded. In addition, the difference between the date of signature of the agreements in execution and the date of entities disability is less than 2 years.
 
-# In[105]:
+# In[8]:
 
 agreements_after_impended = agreements_after_impended.query(
                                     'situation == \'Em execução\' and \
@@ -117,12 +117,12 @@ agreements_after_impended = agreements_after_impended.query(
 agreements_after_impended.shape
 
 
-# In[106]:
+# In[9]:
 
 agreements_after_impended
 
 
-# In[107]:
+# In[21]:
 
 from py2neo import Node
 from py2neo import Relationship
@@ -131,8 +131,12 @@ from py2neo import Graph
 graph = Graph()
 graph.delete_all()
 
-congresspersons = [Node("Congressperson", name=congressperson) for congressperson in agreements_after_impended['congressperson_name'].unique()]
-entities = [Node("Entity", name=row['compay_name'], cnpj=row['company_cnpj']) for beneficiary in agreements_after_impended['amendment_beneficiary'].unique()]
+congresspersons = [Node("Congressperson", name=congressperson) 
+                   for congressperson in 
+                   agreements_after_impended['congressperson_name'].unique()]
+entities = [Node("Entity", name=beneficiary) 
+            for beneficiary in 
+            agreements_after_impended['compay_name'].unique()]
 
 for congressperson in congresspersons:
     graph.create(congressperson)
@@ -141,17 +145,28 @@ for entity in entities:
     graph.create(entity)
 
 for index, row in agreements_after_impended.iterrows():
-    congressperson = list(filter(lambda c: c['name'] == row['congressperson_name'], congresspersons))[0]
-    entity = list(filter(lambda c: c['name'] == row['compay_name'], entities))[0]
-    graph.create(Relationship(congressperson, "benefited", entity))
+    congressperson = list(filter(lambda c: c['name'] == row['congressperson_name'], 
+                                 congresspersons))[0]
+    entity = list(filter(lambda c: c['name'] == row['compay_name'], 
+                         entities))[0]
+    graph.create(Relationship(congressperson, 
+                              "benefited", 
+                              entity))
 
 
-# In[108]:
+# In[25]:
 
-from scripts.vis import draw
+import neo4jupyter
+
+neo4jupyter.init_notebook_mode()
+
+
+# In[27]:
+
+from neo4jupyter import draw
 
 options = {"Congressperson": "name", "Entity": "name"}
-draw(graph, options, graph_name='Companies with Sanctions')
+draw(graph, options)
 
 
 # In[ ]:
