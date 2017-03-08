@@ -9,6 +9,7 @@ from rosie.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
 from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 from rosie.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
+from rosie.irregular_companies_classifier import IrregularCompaniesClassifier
 
 
 class Rosie:
