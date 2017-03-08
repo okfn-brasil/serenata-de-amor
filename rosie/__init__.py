@@ -17,7 +17,8 @@ class Rosie:
         MonthlySubquotaLimitClassifier: 'over_monthly_subquota_limit',
         TraveledSpeedsClassifier: 'suspicious_traveled_speed_day',
         InvalidCnpjCpfClassifier: 'invalid_cnpj_cpf',
-        ElectionExpensesClassifier: 'election_expenses'
+        ElectionExpensesClassifier: 'election_expenses',
+        IrregularCompaniesClassifier: 'irregular_companies_classifier'
     }
     DATASET_KEYS = ['applicant_id', 'year', 'document_id']
 
