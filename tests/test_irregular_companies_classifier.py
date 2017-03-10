@@ -31,7 +31,6 @@ class TestIrregularCompaniesClassifier(TestCase):
     def test_is_valid_reimbursement_based_on_date(self):
         self.assertEqual(self.subject.predict(self.dataset)[5], False)
 
-
     def test_fit(self):
         self.assertEqual(self.subject.fit(self.dataset), self.subject)
 
