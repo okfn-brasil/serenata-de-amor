@@ -82,36 +82,55 @@ If you plan to use [Neo4j](https://neo4j.com/) in your analysis and you don't ha
 
 If you prefer to install it in a traditional installation, please refer to Neo4j website for more information about [installation steps](https://neo4j.com/) and after install it, skip to [Configuring Environment](#configuring-environment).
 
-#### Install via Docker
+#### Install / Run via Docker
 
 Assuming you already have Docker installed, you just need to grab Neo4j image using:
 
 ```console
-$ docker pull neo4j
+$ docker-compose -f docker-compose-neo4j.yml up -d
 ```
-Once Neo4j is installed, you can start it with the command below.
+This way you can download and run Neo4j on port `7474`. You may check the installation accessing http://localhost:7474 on your web browser.
+
+To run both Serenata de Amor and Neo4j with Docker you need to run:
 ```console
-$ docker run
-    --publish=7474:7474 --publish=7687:7687
-    --volume=$HOME/serenata-de-amor-/data/neo4j/data:/data
-    --env=NEO4J_AUTH=none neo4j
+$ docker-compose -f docker-compose.yml -f docker-compose-neo4j.yml up -d
 ```
-The options to run Neo4j are:
-- `--publish=7474:7474`: Starts neo4j using port 7474.
-- `--volume=$HOME/serenata-de-amor-/data/neo4j/data`: Stores data into `$HOME/serenata-de-amor-/data/neo4j/data`. You may change it to suit your Serenata de Amor installation path.
-- `--env=NEO4J_AUTH=none`: Disable authentication.
+
+To Stop the container(s):
+```console
+$ docker-compose -f docker-compose-neo4j.yml down
+```
+or
+```console
+$ docker-compose -f docker-compose.yml -f docker-compose-neo4j.yml down
+```
+
+The data stored in Neo4j will be stored in folder `serenata-de-amor-instalation-path/data/neo4j/data`.
 
 #### Configuring Environment
 
-After install Neo4j, you need to install the packages required to run the integration. To do so, just execute:
+After install Neo4j, you may need to run pip on requirements.txt again to install packages required to run the integration. To do so, just execute:
 ```console
-$ pip install neo4j_requirements.txt
+$ pip install -r requirements.txt
 ```
 Make sure that you are using the python environment created for Serenata de Amor.
 
-To use it inside notebooks you need to start Jupyter inside `/develop` folder. A `figure` folder will be created inside `/develop` folder in order to store graphs figures and htmls.
+#### Instantiating Graph object
 
-Neo4j integration in Jupyter notebooks is totaly based on Nichole White's work. It can be found [here](https://github.com/nicolewhite/neo4j-jupyter).
+If you are running Serenata de Amor in a Local Installation (outside a Docker container) you can instantiating the Graph object in notebooks without passing Neo4j url just like this.
+```
+graph = Graph()
+```
+
+If you are using Serenata de Amor inside a docker container, you will need to pass Neo4j address this way:
+```
+graph = Graph('http://neo4j:7474')
+```
+Where `neo4j` is the Neo4j container name.
+
+Please refer to `2017-02-12-marcusrehm-neo4j-example` and `2017-02-12-marcusrehm-neo4j-example2` notebooks for more information.
+
+Neo4j integration in Jupyter notebooks is based on Nichole White's work. It can be found [here](https://github.com/nicolewhite/neo4j-jupyter).
 
 
 ## Best practices

@@ -17,6 +17,11 @@
 
 from py2neo import Graph
 
+# If you plan to use both serenata de amor and neo4j 
+# inside docker containers you need to instantiate the Graph object like this
+
+# graph = Graph('http://neo4j:7474')
+
 graph = Graph()
 
 
