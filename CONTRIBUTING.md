@@ -65,7 +65,7 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
-1. Start the environment (it might take a while, the base image has 5.8GB and we also pull in lots of dependencies): `$ docker-compose up -d`
+1. Start the environment (it might take a while, the base image has 5.8GB and we also pull in lots of dependencies): `$ docker-compose up -d`.
 1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
 1. Run the script to download data and other useful files: `$ docker-compose run --rm jupyter python src/fetch_datasets.py`
 1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm jupyter jupyter notebook`
@@ -78,57 +78,15 @@ $ docker-compose run --rm jupyter bash
 
 ### Using Neo4j in graph analysis
 
-If you plan to use [Neo4j](https://neo4j.com/) in your analysis and you don't have Neo4j installed, the easiest way to put it running is using its `Docker` image.
+[Neo4j](https://neo4j.com/) is a *graph* database that enables you analyse data expressing its relationship in a graph model.
 
-If you prefer to install it in a traditional installation, please refer to Neo4j website for more information about [installation steps](https://neo4j.com/) and after install it, skip to [Configuring Environment](#configuring-environment).
+If you plan to use Neo4j in your analysis and you don't have it installed, the easiest way to put it running is using `Docker`. If you prefer to install in a traditional way, please refer to Neo4j website for more information about [installation steps](https://neo4j.com/).
 
-#### Install / Run via Docker
+In case you are running Serenata de Amor using Docker, then you already have a Neo4j container up and running. However, if you are using Serenata de Amor outside Docker, you need to run `$ docker-compose up -d neo4j` to start the container.
 
-Assuming you already have Docker installed, you just need to grab Neo4j image using:
+To stop it just run `$ docker-compose down neo4j`. The data stored in Neo4j will be stored in folder `serenata-de-amor-instalation-path/data/neo4j/data`.
 
-```console
-$ docker-compose -f docker-compose-neo4j.yml up -d
-```
-This way you can download and run Neo4j on port `7474`. You may check the installation accessing http://localhost:7474 on your web browser.
-
-To run both Serenata de Amor and Neo4j with Docker you need to run:
-```console
-$ docker-compose -f docker-compose.yml -f docker-compose-neo4j.yml up -d
-```
-
-To Stop the container(s):
-```console
-$ docker-compose -f docker-compose-neo4j.yml down
-```
-or
-```console
-$ docker-compose -f docker-compose.yml -f docker-compose-neo4j.yml down
-```
-
-The data stored in Neo4j will be stored in folder `serenata-de-amor-instalation-path/data/neo4j/data`.
-
-#### Configuring Environment
-
-After install Neo4j, you may need to run pip on requirements.txt again to install packages required to run the integration. To do so, just execute:
-```console
-$ pip install -r requirements.txt
-```
-Make sure that you are using the python environment created for Serenata de Amor.
-
-#### Instantiating Graph object
-
-If you are running Serenata de Amor in a Local Installation (outside a Docker container) you can instantiating the Graph object in notebooks without passing Neo4j url just like this.
-```
-graph = Graph()
-```
-
-If you are using Serenata de Amor inside a docker container, you will need to pass Neo4j address this way:
-```
-graph = Graph('http://neo4j:7474')
-```
-Where `neo4j` is the Neo4j container name.
-
-Please refer to `2017-02-12-marcusrehm-neo4j-example` and `2017-02-12-marcusrehm-neo4j-example2` notebooks for more information.
+Please refer to `2017-02-12-marcusrehm-neo4j-example` and `2017-02-12-marcusrehm-neo4j-example2` notebooks for more information on how to use it.
 
 Neo4j integration in Jupyter notebooks is based on Nichole White's work. It can be found [here](https://github.com/nicolewhite/neo4j-jupyter).
 
