@@ -1,126 +1,141 @@
-import csv
-import lzma
+import asyncio
+import json
+import math
+import os
 import re
+import sys
+from csv import DictWriter
 from configparser import RawConfigParser
 from datetime import date
+from io import StringIO
 from itertools import chain
-from multiprocessing import Process, Queue, cpu_count
-from os import listdir, path
-from shutil import copyfile
-from urllib.parse import parse_qs, urlencode, urlparse
+from pathlib import Path
+from urllib.parse import urlencode
 
-import grequests
-import numpy as np
+import aiofiles
 import pandas as pd
-import requests
+from aiohttp import request
 from geopy.distance import vincenty
 
 DATE = date.today().strftime('%Y-%m-%d')
 DATA_DIR = 'data'
-OUTPUT = path.join(DATA_DIR, '{}-sex-place-distances.xz'.format(DATE))
+OUTPUT = os.path.join(DATA_DIR, '{}-sex-place-distances.csv'.format(DATE))
+XZ_OUTPUT = os.path.join(DATA_DIR, '{}-sex-place-distances.xz'.format(DATE))
+
+settings = RawConfigParser()
+settings.read('config.ini')
 
 
-class SexPlacesSearch:
+class SexPlacesNearBy:
 
     BASE_URL = 'https://maps.googleapis.com/maps/api/place/'
+    KEYWORDS = ('acompanhantes',
+                'adult entertainment club',
+                'adult entertainment store',
+                'gay sauna',
+                'massagem',
+                'modeling agency',
+                'motel',
+                'night club',
+                'sex club',
+                'sex shop',
+                'strip club',
+                'swinger clubs')
 
-    def __init__(self, key):
-        self.GOOGLE_API_KEY = key
-
-    def requests_by_keywords(self, latitude, longitude, keywords):
+    def __init__(self, company, key=None):
         """
-        Generator of all grequests.get() given a latitude, longitue, and a
-        list of keywords.
+        :param company: (dict) Company with name, cnpj, latitude and longitude
+        :param key: (str) Google Places API key
         """
-        for keyword in keywords:
-            latlong = '{},{}'.format(latitude, longitude)
-            yield grequests.get(self.nearby_url(latlong, keyword))
+        self.company = company
+        self.key = key or settings.get('Google', 'APIKey')
+        self.latitude = self.company['latitude']
+        self.longitude = self.company['longitude']
+        self.places = []
+        self.closest = None
 
-    def keyword_from_url(self, url):
-        """Given a URL it returns the keyword used in the query."""
-        qs = parse_qs(urlparse(url).query)
-        try:
-            keyword = qs.get('keyword')
-            return keyword[0]
-        except TypeError:
+    @property
+    def company_name(self):
+        return self.company.get('trade_name') or self.company.get('name')
+
+    async def get_all_places(self):
+        """
+        Use aiohttp to get the closest place to the company according to each
+        keyworn. Returns `None`, the results are saved on self.places.
+        """
+        tasks = [self.load_place(k) for k in self.KEYWORDS]
+        await asyncio.gather(*tasks)
+
+    async def get_closest(self):
+        """
+        Gets the closest place find in reads self.places, queries for its
+        details and returns a dictoinary with all the info on that place.
+        """
+        if not self.is_valid():
             return None
 
-    def by_keyword(self, company, keywords):
-        """
-        Given a company and a list of keywords this generator parallelize all
-        the requests.
-        :param company: (dict) with latitude and longitude keys (as floats)
-        :param keyworks: (iterable) list of keywords
-        """
-        msg = 'Looking for sex related places nearby {} ({})…'
-        print(msg.format(get_name(company), company['cnpj']))
+        await self.get_all_places()
+        ordered = sorted(self.places, key=lambda x: x['distance'])
 
-        lat, lng = company['latitude'], company['longitude']
-        queue = grequests.imap(self.requests_by_keywords(lat, lng, keywords))
-        for response in queue:
-            url = response.url
-            response = response.json()
-            if response['status'] != 'OK':
-                if 'error_message' in response:
-                    print('{}: {}'.format(response.get('status'),
-                                          response.get('error_message')))
-                elif response.get('status') != 'ZERO_RESULTS':
-                    msg = 'Google Places API Status: {}'
-                    print(msg.format(response.get('status')))
+        for place in ordered:
+            place = await self.load_details(place)
+            name = place.get('name', '').lower()
 
-            # If have some result for this keywork, get first
+            if place['keyword'] == 'motel' and 'hotel' in name:
+                pass  # google returns hotels when looking for a motel
+
             else:
-                try:
-                    place = response.get('results')[0]
-                    location = deep_get(place, ['geometry', 'location'])
-                    latitude = float(location.get('lat'))
-                    longitude = float(location.get('lng'))
-                    distance = vincenty((lat, lng), (latitude, longitude))
-                    cnpj = re.sub(r'\D', '', company['cnpj'])
-                    yield {
-                        'id': place.get('place_id'),
-                        'keyword': self.keyword_from_url(url),
-                        'latitude': latitude,
-                        'longitude': longitude,
-                        'distance': distance.meters,
-                        'cnpj': cnpj,
-                        'company_name': company.get('name'),
-                        'company_trade_name': company.get('trade_name')
-                    }
-                except TypeError:
-                    pass
+                prefix = '💋 ' if place['distance'] < 5 else ''
+                msg = '{}Found something interesting {:.2f}m away from {}…'
+                args = (prefix, place.get('distance'), self.company_name)
+                print(msg.format(*args))
+                self.closest = place
+                return place
 
-    def with_details(self, place, company):
+    @staticmethod
+    def is_valid_coordinate(coord):
+        try:
+            as_float = float(coord)
+        except ValueError:
+            return False
+
+        return False if math.isnan(as_float) else True
+
+    def is_valid(self):
+        coords = (self.latitude, self.longitude)
+        if not all(map(self.is_valid_coordinate, coords)):
+            msg = 'No geolocation information for company: {} ({})'
+            print(msg.format(self.company_name, self.company['cnpj']))
+            return False
+
+        return True
+
+    async def load_place(self, keyword):
         """
-        :param place: dictonary with id key.
-        :return: dictionary updated with name, address and phone.
+        Given a keyword it loads the place returned by the API to self.places.
         """
-        prefix = '💋 ' if place['distance'] < 3 else ''
-        msg = '{}Found something interesting {:.2f}m away from {} ({})…'
-        args = (prefix, place['distance'], get_name(company), company['cnpj'])
-        print(msg.format(*args))
-        place_id = place.get('id')
-        if not place_id:
-            return place
+        keyword, content = await self.get(keyword)
+        place = self.parse(keyword, content)
+        if place and isinstance(place.get('distance'), float):
+            self.places.append(place)
 
-        details = requests.get(self.details_url(place.get('id'))).json()
-        if not details:
-            return place
+    async def get(self, keyword, print_status=False):
+        if print_status:
+            msg = 'Looking for a {} near {} ({})…'
+            args = (keyword, self.company_name, self.company.get('cnpj'))
+            print(msg.format(*args))
 
-        name = deep_get(details, ['result', 'name'])
-        address = deep_get(details, ['result', 'formatted_address'], '')
-        phone = deep_get(details, ['result', 'formatted_phone_number'], '')
+        url = self.nearby_url(keyword)
+        response = await request('GET', url)
+        content = await response.text()
+        return keyword, content
 
-        place.update(dict(name=name, address=address, phone=phone))
-        return place
-
-    def near_to(self, company):
+    def parse(self, keyword, content):
         """
-        Return a dictonary containt information of the nearest sex place
-        arround a given company. A sex place is some company that match a
-        keyword (see `keywords` tuple) in a Google Places search.
-
-        :param company: (dict) with latitude and longitude keys (as floats)
+        Return a dictonary with information of the nearest sex place
+        around a given company.
+        :param keyword: (str) keyword used by the request
+        :param content: (str) content of the response to the request
         :return: (dict) with
             * name : The name of nearest sex place
             * latitude : The latitude of nearest sex place
@@ -132,33 +147,63 @@ class SexPlacesSearch:
             * id : The Google Place ID of the nearest sex place
             * keyword : term that matched the sex place in Google Place Search
         """
-        keywords = ('Acompanhantes',
-                    'Adult Entertainment Club',
-                    'Adult Entertainment Store',
-                    'Gay Sauna',
-                    'Massagem',
-                    'Modeling Agency',
-                    'Motel',
-                    'Night Club',
-                    'Sex Club',
-                    'Sex Shop',
-                    'Strip Club',
-                    'Swinger clubs')
+        response = json.loads(content)
+        if response['status'] != 'OK':
+            if 'error_message' in response:
+                status, error = response.get('status'), response.get('error')
+                print('{}: {}'.format(status, error))
+            elif response.get('status') != 'ZERO_RESULTS':
+                msg = 'Google Places API Status: {}'
+                print(msg.format(response.get('status')))
 
-        # Get the closest place inside all the searched keywords
-        sex_places = list(self.by_keyword(company, keywords))
+        else:
+            place = response.get('results', [{}])[0]
+
+            location = place.get('geometry', {}).get('location', {})
+            latitude = float(location.get('lat'))
+            longitude = float(location.get('lng'))
+
+            company_location = (self.latitude, self.longitude)
+            place_location = (latitude, longitude)
+            distance = vincenty(company_location, place_location)
+
+            return {
+                'id': place.get('place_id'),
+                'keyword': keyword,
+                'latitude': latitude,
+                'longitude': longitude,
+                'distance': distance.meters,
+                'cnpj': re.sub(r'\D', '', self.company.get('cnpj')),
+                'company_name': self.company.get('name'),
+                'company_trade_name': self.company.get('trade_name')
+            }
+
+    async def load_details(self, place):
+        """
+        :param place: dictionary with id key.
+        :return: dictionary updated with name, address and phone.
+        """
+        place_id = place.get('id')
+        if not place_id:
+            return place
+
+        response = await request('GET', self.details_url(place_id))
+        content = await response.text()
+
         try:
-            closest = min(sex_places, key=lambda x: x['distance'])
+            details = json.loads(content)
         except ValueError:
-            return None  # i.e, not sex place found nearby
+            return place
+        else:
+            if not details:
+                return place
 
-        # skip "hotel" when category is "motel"
-        place = self.with_details(closest, company)
-        name = place['name']
-        if name:
-            if 'hotel' in name.lower() and place['keyword'] == 'Motel':
-                return None
-
+        result = details.get('result', {})
+        place.update(dict(
+            name=result.get('name', ''),
+            address=result.get('formatted_address', ''),
+            phone=result.get('formatted_phone_number', '')
+        ))
         return place
 
     def details_url(self, place):
@@ -169,12 +214,12 @@ class SexPlacesSearch:
         query = (('placeid', place),)
         return self.google_places_url('details', query)
 
-    def nearby_url(self, location, keyword):
+    def nearby_url(self, keyword):
         """
-        :param location: (str) latitude and longitude separeted by a comma
         :param keywork: (str) category to search places
         :return: (str) URL to do a nearby Google Places search
         """
+        location = '{},{}'.format(self.latitude, self.longitude)
         query = (
             ('location', location),
             ('keyword', keyword),
@@ -189,7 +234,7 @@ class SexPlacesSearch:
         :param format: (str) output format (default is `json`)
         :return: (str) URL to do an authenticated Google Places request
         """
-        key = ('key', self.GOOGLE_API_KEY)
+        key = ('key', self.key)
         query = tuple(chain(query, (key,))) if query else (key)
         parts = (
             self.BASE_URL,
@@ -200,211 +245,149 @@ class SexPlacesSearch:
         return ''.join(parts)
 
 
-class FindAndWrite:
+async def write_to_csv(path, place=None, **kwargs):
+    """
+    Receives a given place (dict) and writes it in the CSV format into path.
+    CSV headers are defined in `fields`. The named argument `headers`
+    (bool) determines if the functions write the CSV header or not.
+    """
+    headers = kwargs.get('headers', False)
+    if not place and not headers:
+        return
 
-    def __init__(self, companies, output=None):
-        """
-        :param companies: pandas dataframe
-        :param output: output path (.xz file)
-        """
+    fields = (
+        'id', 'keyword', 'latitude', 'longitude', 'distance', 'name',
+        'address', 'phone', 'cnpj', 'company_name', 'company_trade_name'
+    )
 
-        self.output = output
-        self.fieldnames = (
-            'id', 'keyword', 'latitude', 'longitude', 'distance', 'name',
-            'address', 'phone', 'cnpj', 'company_name', 'company_trade_name'
-        )
-
-        settings = RawConfigParser()
-        settings.read('config.ini')
-        self.sex_place = SexPlacesSearch(settings.get('Google', 'APIKey'))
-
-        self.find_queue = Queue()
-        self.write_queue = Queue()
-
-        cpus = range(cpu_count())
-        self.feed = Process(target=self.feed_find_queue)
-        self.find = (Process(target=self.feed_write_queue) for c in cpus)
-        self.write = Process(target=self.write)
-
-        if not path.exists(output):
-            self.create_csv()
-
-        self.run()
-
-    def run(self):
-        self.feed.start()
-        for process in self.find:
-            process.start()
-        self.write.start()
-
-        self.feed.join()
-        for process in self.find:
-            process.join()
-        self.write.join()
-
-    def feed_find_queue(self):
-        for company in self.iter_dicts(companies):
-            if company.get('latitude') and company.get('latitude'):
-                self.find_queue.put(company)
-            else:
-                msg = 'No geolocation information for company: {} ({})'
-                print(msg.format(get_name(company), company['cnpj']))
-
-    def feed_write_queue(self):
-        while True:
-            try:
-                company = self.find_queue.get(block=True)
-                self.write_queue.put(self.sex_place.near_to(company))
-            except:
-                break
-
-    def write(self):
-        output = lzma.open(self.output, 'at')
-        writer = csv.DictWriter(output, fieldnames=self.fieldnames)
-        while True:
-            try:
-                place = self.write_queue.get(block=True)
-                if place:
-                    writer.writerow(self.cleanup(place))
-            except:
-                break
-        output.close()
-
-    def create_csv(self):
-        print('Creating {}…'.format(self.output))
-        with lzma.open(self.output, 'at') as output:
-            writer = csv.DictWriter(output, fieldnames=self.fieldnames)
+    with StringIO() as obj:
+        writer = DictWriter(obj, fieldnames=fields, extrasaction='ignore')
+        if headers:
             writer.writeheader()
+        if place:
+            writer.writerow(place)
 
-    def cleanup(self, place):
-        return {k: v for k, v in place.items() if k in self.fieldnames}
-
-    @staticmethod
-    def iter_dicts(companies):
-        """
-        Genarator of companies (as dictionaries) from a Pandas DataFrame.
-        :param companies: pandas dataframe.
-        """
-        for company in companies.itertuples(index=True):
-            yield dict(company._asdict())  # _asdict returns an OrderedDict
+        async with aiofiles.open(path, mode='a') as fh:
+            await fh.write(obj.getvalue())
 
 
-def find_newest_file(name):
+async def write_place(company, semaphore):
     """
-    Assuming that the files will be in the form of :
-    yyyy-mm-dd-type_of_file.xz we can try to find the newest file
-    based on the date, but if the file doesn't exist fallback to another
-    date until all dates are exhausted
+    Gets a company (dict), finds the closest place nearby and write the result
+    to a CSV file.
     """
-    date_regex = re.compile('\d{4}-\d{2}-\d{2}')
-
-    matches = (date_regex.findall(f) for f in listdir(DATA_DIR))
-    dates = sorted(set([l[0] for l in matches if l]), reverse=True)
-    for dt in dates:
-        filename = path.join(DATA_DIR, '{}-{}.xz'.format(dt, name))
-        if path.isfile(filename):
-            return filename
-
-    return None
+    with (await semaphore):
+        places = SexPlacesNearBy(company)
+        await places.get_closest()
+        if places.closest:
+            await write_to_csv(OUTPUT, places.closest)
 
 
-def deep_get(dictionary, keys, default=None):
+async def main_corotine(companies, new_file):
     """
-    Returns values from nested dictionaries in a safe way (avoids KeyError).
-
-    :param: (dict) usually a nested dict
-    :param: (list) keys as strings
-    :return: value or None
-
-    Example:
-    >>> d = {'ahoy': {'capn': 42}}
-    >>> deep_get(['ahoy', 'capn'], d)
-    42
+    :param companies: (Pandas DataFrame)
+    :param new_file: (bool) whether to create a new file (and headers) or not
     """
-    if not keys:
+    # write CSV headers
+    if new_file and not companies.empty:
+        await write_to_csv(OUTPUT, headers=True)
+
+    semaphore = asyncio.Semaphore(32)  # approx. 400 parallel requests
+    tasks = []
+
+    # write CSV data
+    for company_row in companies.itertuples(index=True):
+        company = dict(company_row._asdict())  # _asdict() returns OrderedDict
+        tasks.append(write_place(company, semaphore))
+
+    await asyncio.wait(tasks)
+
+
+def find_newest_file(pattern='*.*', source_dir='.'):
+    """
+    Assuming that the files will be in the form of:
+    yyyy-mm-dd-type-of-file.xz we can try to find the newest file
+    based on the date.
+    """
+    files = Path(source_dir).glob(pattern)
+    files = filter(lambda f: not 'foursquare' in str(f), files)
+    files = filter(lambda f: not 'yelp' in str(f), files)
+    files = sorted(files)
+    if not files:
         return None
 
-    if len(keys) == 1:
-        return dictionary.get(keys[0], default)
-
-    return deep_get(dictionary.get(keys[0], {}), keys[1:])
-
-
-def get_name(company):
-    trade_name = company.get('trade_name')
-    if trade_name:
-        return trade_name
-    return company.get('name')
-
-
-def get_companies():
-    print('Loading companies dataset…')
-    usecols = ('cnpj', 'trade_name', 'name', 'latitude', 'longitude')
-    companies_path = find_newest_file('companies')
-    companies = pd.read_csv(companies_path, usecols=usecols)
-
-    # remove companies mistakenly located outside Brasil
-    brazil = (companies['longitude'] < -34.7916667) & \
-             (companies['longitude'] > -73.992222) & \
-             (companies['latitude'] < 5.2722222) & \
-             (companies['latitude'] > -33.742222)
-    companies = companies[brazil]
-
-    # replace NaN with empty string
-    companies = companies.fillna(value='')
-
-    return companies, companies_path
-
-
-def get_sex_places_path():
-    print('Looking for an existing sex releated places dataset…')
-    sex_places_path = find_newest_file('sex-place-distances')
-    if not sex_places_path:
+    file = files.pop()
+    if not file:
         return None
 
-    if sex_places_path != OUTPUT:
-        copyfile(sex_places_path, OUTPUT)
-
-    return OUTPUT
+    return str(file)
 
 
-def get_sex_places():
-    sex_places_path = get_sex_places_path()
-    if not sex_places_path:
-        return None, sex_places_path
+def load_newest_dataset(pattern, usecols, na_value=''):
+    filepath = find_newest_file(pattern)
+    if not filepath:
+        return None
 
-    dtype = dict(cnpj=np.str)
-    df = pd.read_csv(sex_places_path, usecols=('cnpj',), dtype=dtype)
-    return df, sex_places_path
+    print('Loading {}'.format(filepath))
+    dataset = pd.read_csv(filepath, usecols=usecols, low_memory=False)
+    dataset = dataset.fillna(value=na_value)
+    return dataset
 
 
-def get_remaining(companies, sex_places):
+def get_remaining_companies():
+    """
+    Compares YYYY-MM-DD-companies.xz with the newest
+    YYYY-MM-DD-sex-place-distances.xz and returns a DataFrame with only
+    unfetched companies.
+    """
+    companies = load_newest_dataset(
+        '**/*companies.xz',
+        ('cnpj', 'trade_name', 'name', 'latitude', 'longitude')
+    )
+    sex_places = load_newest_dataset('**/*sex-place-distances.xz', ('cnpj',))
+
     if sex_places is None or sex_places.empty:
         return companies
 
     return companies[~companies.cnpj.isin(sex_places.cnpj)]
 
 
+def is_new_dataset():
+    sex_places = find_newest_file('*sex-place-distances.xz', 'data')
+    if not sex_places:
+        return True
+
+    # convert previous database from xz to csv
+    pd.read_csv(sex_places).to_csv(OUTPUT)
+    os.remove(sex_places)
+    return False
+
+
+def convert_to_lzma():
+    pd.read_csv(OUTPUT).to_csv(XZ_OUTPUT, compression='xz')
+    os.remove(OUTPUT)
+
+
+def main():
+
+    # get companies
+    companies = get_remaining_companies()
+    try:
+        sample = int(sys.argv[1])
+    except (IndexError, ValueError):
+        pass
+    else:
+        companies = companies.sample(sample)
+
+    # run
+    if companies.empty:
+        print('Nothing to fetch.')
+    else:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main_corotine(companies, is_new_dataset()))
+        loop.close()
+        convert_to_lzma()
+
+
 if __name__ == '__main__':
-
-    companies, companies_path = get_companies()
-    sex_places, sex_places_path = get_sex_places()
-    remaining = get_remaining(companies, sex_places)
-
-    msg = """
-    There are {:,} companies with valid latitude and longitude in {}
-
-    We already have the nearest sex location for {:,} of them in {}
-    Yet {:,} company surroundings haven't been searched for sex places…
-
-    Let's get started!
-    """
-    print(msg.format(
-        len(companies),
-        companies_path,
-        len(sex_places),
-        sex_places_path,
-        len(remaining)
-    ))
-
-    FindAndWrite(companies, sex_places_path)
+    main()

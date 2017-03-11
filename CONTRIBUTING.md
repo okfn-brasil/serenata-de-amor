@@ -133,6 +133,7 @@ fetch_latest_backup('data/')
 1. `src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info.
 1. `src/clean_cnpj_info_dataset.py` clean up and translate the supplier info dataset.
 1. `src/geocode_addresses.py` iterates over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
+1. `src/fetch_sex_places.py <optional: number>` fetches the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (optianally you can pass a number to limit the amount of comapnies to be searched, useful for tests and to limit Google Place API queries).
 
 ##### Miscellaneous
 1. `src/backup_data.py` uploads files from `data/` to an Amazon S3 bucket set on `config.ini` .
@@ -165,6 +166,7 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/YYYY-MM-DD-companies.xz`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
 1. `data/YYYY-MM-DD-congressperson_relatives.xz` contains data on the relatives of congresspeople and the nature of their relationship.
 1. `data/YYYY-MM-DD-congressperson_relatives_raw.xz` also contains data on the relatives of congresspeople, but is only created if `src/get_family_names.py` fails to handle some names.
+1. `data/YYYY-MM-DD-sex-place-distances` contains data from the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (including distance in meters).
 
 ## Four moments
 
