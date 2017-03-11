@@ -86,7 +86,7 @@ In case you are running Serenata de Amor using Docker, then you already have a N
 
 To stop it just run `$ docker-compose down neo4j`. The data stored in Neo4j will be stored in folder `serenata-de-amor-instalation-path/data/neo4j/data`.
 
-Please refer to `2017-02-12-marcusrehm-neo4j-example` and `2017-02-12-marcusrehm-neo4j-example2` notebooks for more information on how to use it.
+Please refer to `2017-02-12-marcusrehm-neo4j-guide` and `2017-02-12-marcusrehm-neo4j-example2` notebooks for more information on how to use it.
 
 Neo4j integration in Jupyter notebooks is based on Nichole White's work. It can be found [here](https://github.com/nicolewhite/neo4j-jupyter).
 
