@@ -1,40 +1,55 @@
 
 # coding: utf-8
 
-# # Hello World
+# # Neo4j configuration guide
 # 
-# This notebook walks through basic code examples for integrating various packages with Neo4j, including `py2neo`, `ipython-cypher`, `pandas`, `neo4jupyter`, `networkx` and `jgraph`.
+# This notebook walks through basic code examples for integrating various packages with Neo4j, including `py2neo`, `ipython-cypher`, `pandas`, `neo4jupyter`, `networkx` and `jgraph`. It helps you configure Neo4j depending of your environment. 
 
-# # py2neo
+# # Installation
 # 
-# `py2neo` is one of Neo4j's Python drivers. It offers a fully-featured interface for interacting with your data in Neo4j. Install `py2neo` with `pip install py2neo`.
+# First of all you need to check your installation. Jupyter and Neo4j integration is done using `py2neo` package. `py2neo` is one of Neo4j's Python drivers. It offers a fully-featured interface for interacting with your data in Neo4j.
 
-# ## Connect
+# ### Connecting
 # 
-# Connect to Neo4j with the `Graph` class.
+# To connect to Neo4j with the `Graph` class you need tell it what is Neo4j address. If you are running it from a traditional installation or as a Docker container, as described in CONTRIBUTING.MD, you can instantiate `Graph` class just like this:
 
-# In[1]:
+# In[13]:
 
 from py2neo import Graph
-
-# If you plan to use both serenata de amor and neo4j 
-# inside docker containers you need to instantiate the Graph object like this
-
-# graph = Graph('http://neo4j:7474')
-
 graph = Graph()
 
 
-# In[2]:
+# or
+
+# In[14]:
+
+graph = Graph('http://localhost:7474')
+
+
+# If you are using both serenata de amor and neo4j inside docker containers you need to instantiate the Graph object pointing to **http://neo4j:7474** like this:
+
+# In[15]:
+
+try:
+    graph = Graph('http://neo4j:7474')
+except:
+    print('Neo4j not found. Maybe it is not runnning inside a container...')
+
+
+# To delete the entire graph database just run:
+
+# In[16]:
 
 graph.delete_all()
 
+
+# # Using py2neo
 
 # ## Nodes
 # 
 # Create nodes with the `Node` class. The first argument is the node's label. The remaining arguments are an arbitrary amount of node properties or key-value pairs.
 
-# In[3]:
+# In[17]:
 
 from py2neo import Node
 
@@ -54,7 +69,7 @@ graph.create(nicole | drew | mtdew | cokezero | coke | pepsi)
 # 
 # Create relationships between nodes with the `Relationship` class.
 
-# In[4]:
+# In[18]:
 
 from py2neo import Relationship
 
@@ -67,16 +82,18 @@ graph.create(Relationship(pepsi, "MAKES", mtdew))
 
 # ## Neo4jupyter
 # 
-# First of all we need to initialize neo4jupyter in order to draw graphs.
+# `neo4jupyter` is a python package that helps in drawing graphs inside Jupyter notebooks.
+# 
+# The first thing after import the package is run `neo4jupyter.init_notebook_mode()` in order to setup the required scripts.
 
-# In[5]:
+# In[19]:
 
 import neo4jupyter
 
 neo4jupyter.init_notebook_mode()
 
 
-# In[6]:
+# In[20]:
 
 from neo4jupyter import draw
 
@@ -88,7 +105,7 @@ draw(graph, options)
 # 
 # Retrieve Cypher query results with `Graph.run`.
 
-# In[7]:
+# In[21]:
 
 query = """
 MATCH (person:Person)-[:LIKES]->(drink:Drink)
@@ -105,7 +122,7 @@ for d in data:
 # 
 # Pass parameters to Cypher queries by passing additional key-value arguments to `Graph.run`. Parameters in Cypher are named and are wrapped in curly braces.
 
-# In[8]:
+# In[22]:
 
 query = """
 MATCH (p:Person)-[:LIKES]->(drink:Drink)
@@ -123,7 +140,7 @@ for d in data:
 # 
 # `ipython-cypher` exposes `%cypher` magic in Jupyter. Install `ipython-cypher` with `pip install ipython-cypher`.
 
-# In[9]:
+# In[23]:
 
 get_ipython().magic('load_ext cypher')
 
@@ -132,7 +149,7 @@ get_ipython().magic('load_ext cypher')
 # 
 # `%cypher` is intended for one-line Cypher queries and `%%cypher` is intended for multi-line Cypher queries. Placing `%%cypher` above a Cypher query will display that query's results.
 
-# In[10]:
+# In[24]:
 
 get_ipython().run_cell_magic('cypher', '', 'MATCH (person:Person)-[:LIKES]->(drink:Drink)\nRETURN person.name, drink.name, drink.calories')
 
@@ -141,7 +158,7 @@ get_ipython().run_cell_magic('cypher', '', 'MATCH (person:Person)-[:LIKES]->(dri
 # 
 # Cypher query results can be coerced to `pandas` data frames with the `get_dataframe` method. To assign Cypher query results to a variable, you need to use `%cypher` and separate lines with \\. You'll first need to install `pandas` with `pip install pandas`.
 
-# In[11]:
+# In[25]:
 
 results = get_ipython().magic('cypher MATCH (person:Person)-[:LIKES]->(drink:Drink)                   RETURN person.name AS name, drink.name AS drink')
     
@@ -154,7 +171,7 @@ df
 # 
 # Cypher query results can be coerced to `NetworkX` MultiDiGraphs, graphs that permit multiple edges between nodes, with the `get_graph` method. You'll first need to install `NetworkX` with `pip install networkx`.
 
-# In[12]:
+# In[26]:
 
 import networkx as nx
 get_ipython().magic('matplotlib inline')
@@ -166,12 +183,12 @@ g = results.get_graph()
 nx.draw(g)
 
 
-# In[13]:
+# In[27]:
 
 g.nodes(data=True)
 
 
-# In[14]:
+# In[28]:
 
 nx.degree(g)
 
@@ -180,7 +197,7 @@ nx.degree(g)
 # 
 # `jgraph` will plot tuple lists as 3D graphs.
 
-# In[15]:
+# In[29]:
 
 import jgraph
 
