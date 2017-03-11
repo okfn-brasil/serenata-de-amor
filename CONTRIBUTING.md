@@ -82,10 +82,6 @@ $ docker-compose run --rm jupyter bash
 
 If you plan to use Neo4j in your analysis and you don't have it installed, the easiest way to put it running is using `Docker`. If you prefer to install in a traditional way, please refer to Neo4j website for more information about [installation steps](https://neo4j.com/).
 
-In case you are running Serenata de Amor using Docker, then you already have a Neo4j container up and running. However, if you are using Serenata de Amor outside Docker, you need to run `$ docker-compose up -d neo4j` to start the container.
-
-To stop it just run `$ docker-compose down neo4j`. The data stored in Neo4j will be stored in folder `serenata-de-amor-instalation-path/data/neo4j/data`.
-
 Please refer to `2017-02-12-marcusrehm-neo4j-guide` and `2017-02-12-marcusrehm-neo4j-example2` notebooks for more information on how to use it.
 
 Neo4j integration in Jupyter notebooks is based on Nichole White's work. It can be found [here](https://github.com/nicolewhite/neo4j-jupyter).

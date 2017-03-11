@@ -7,7 +7,11 @@
 
 # # Installation
 # 
-# First of all you need to check your installation. Jupyter and Neo4j integration is done using `py2neo` package. `py2neo` is one of Neo4j's Python drivers. It offers a fully-featured interface for interacting with your data in Neo4j.
+# In case you are running Serenata de Amor using Docker, then you already have a Neo4j container up and running. However, if you are using Serenata de Amor outside Docker, you need to run **$ docker-compose up -d neo4j** to start the container.
+# 
+# To stop it just run **$ docker-compose down neo4j**. The data stored in Neo4j will be stored in folder **serenata-de-amor-instalation-path/data/neo4j/data**.
+# 
+# Now you gonna check installation. Jupyter and Neo4j integration is done using `py2neo` package. `py2neo` is one of Neo4j's Python drivers. It offers a fully-featured interface for interacting with your data in Neo4j.
 
 # ### Connecting
 # 

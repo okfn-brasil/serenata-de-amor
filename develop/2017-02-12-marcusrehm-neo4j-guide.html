@@ -11788,7 +11788,9 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Installation">Installation<a class="anchor-link" href="#Installation">&#182;</a></h1><p>First of all you need to check your installation. Jupyter and Neo4j integration is done using <code>py2neo</code> package. <code>py2neo</code> is one of Neo4j's Python drivers. It offers a fully-featured interface for interacting with your data in Neo4j.</p>
+<h1 id="Installation">Installation<a class="anchor-link" href="#Installation">&#182;</a></h1><p>In case you are running Serenata de Amor using Docker, then you already have a Neo4j container up and running. However, if you are using Serenata de Amor outside Docker, you need to run <strong>$ docker-compose up -d neo4j</strong> to start the container.</p>
+<p>To stop it just run <strong>$ docker-compose down neo4j</strong>. The data stored in Neo4j will be stored in folder <strong>serenata-de-amor-instalation-path/data/neo4j/data</strong>.</p>
+<p>Now you gonna check installation. Jupyter and Neo4j integration is done using <code>py2neo</code> package. <code>py2neo</code> is one of Neo4j's Python drivers. It offers a fully-featured interface for interacting with your data in Neo4j.</p>
 
 </div>
 </div>
@@ -12012,10 +12014,10 @@ div#notebook {
 
 
 
-<div id="05bbb5d7-6b92-42b4-8eec-34eb63c1fb6d"></div>
+<div id="0ee37fd3-315e-45e2-b2a8-b3725d2e92a2"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#05bbb5d7-6b92-42b4-8eec-34eb63c1fb6d');
+var element = $('#0ee37fd3-315e-45e2-b2a8-b3725d2e92a2');
 $("head").append($("<link/>").attr({
   rel:  "stylesheet",
   type: "text/css",
