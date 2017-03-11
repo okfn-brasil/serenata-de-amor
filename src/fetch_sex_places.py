@@ -3,7 +3,7 @@ import json
 import math
 import os
 import re
-import sys
+from argparse import ArgumentParser
 from csv import DictWriter
 from configparser import RawConfigParser
 from datetime import date
@@ -16,14 +16,6 @@ import aiofiles
 import pandas as pd
 from aiohttp import request
 from geopy.distance import vincenty
-
-DATE = date.today().strftime('%Y-%m-%d')
-DATA_DIR = 'data'
-OUTPUT = os.path.join(DATA_DIR, '{}-sex-place-distances.csv'.format(DATE))
-XZ_OUTPUT = os.path.join(DATA_DIR, '{}-sex-place-distances.xz'.format(DATE))
-
-settings = RawConfigParser()
-settings.read('config.ini')
 
 
 class SexPlacesNearBy:
@@ -47,6 +39,8 @@ class SexPlacesNearBy:
         :param company: (dict) Company with name, cnpj, latitude and longitude
         :param key: (str) Google Places API key
         """
+        settings = RawConfigParser()
+        settings.read('config.ini')
         self.company = company
         self.key = key or settings.get('Google', 'APIKey')
         self.latitude = self.company['latitude']
@@ -271,7 +265,7 @@ async def write_to_csv(path, place=None, **kwargs):
             await fh.write(obj.getvalue())
 
 
-async def write_place(company, semaphore):
+async def write_place(company, output, semaphore):
     """
     Gets a company (dict), finds the closest place nearby and write the result
     to a CSV file.
@@ -280,25 +274,27 @@ async def write_place(company, semaphore):
         places = SexPlacesNearBy(company)
         await places.get_closest()
         if places.closest:
-            await write_to_csv(OUTPUT, places.closest)
+            await write_to_csv(output, places.closest)
 
 
-async def main_corotine(companies, new_file):
+async def main_coro(companies, output, max_requests):
     """
     :param companies: (Pandas DataFrame)
-    :param new_file: (bool) whether to create a new file (and headers) or not
+    :param output: (str) Path to the CSV output
+    :param max_requests: (int) max parallel requests
     """
     # write CSV headers
-    if new_file and not companies.empty:
-        await write_to_csv(OUTPUT, headers=True)
+    if is_new_dataset(output) and not companies.empty:
+        await write_to_csv(output, headers=True)
 
-    semaphore = asyncio.Semaphore(32)  # approx. 400 parallel requests
+    semaphore = asyncio.Semaphore(max_requests // 13)  # 13 reqs per company
     tasks = []
+    print("Let's get started!")
 
     # write CSV data
     for company_row in companies.itertuples(index=True):
         company = dict(company_row._asdict())  # _asdict() returns OrderedDict
-        tasks.append(write_place(company, semaphore))
+        tasks.append(write_place(company, output, semaphore))
 
     await asyncio.wait(tasks)
 
@@ -309,10 +305,7 @@ def find_newest_file(pattern='*.*', source_dir='.'):
     yyyy-mm-dd-type-of-file.xz we can try to find the newest file
     based on the date.
     """
-    files = Path(source_dir).glob(pattern)
-    files = filter(lambda f: not 'foursquare' in str(f), files)
-    files = filter(lambda f: not 'yelp' in str(f), files)
-    files = sorted(files)
+    files = sorted(Path(source_dir).glob(pattern))
     if not files:
         return None
 
@@ -334,16 +327,14 @@ def load_newest_dataset(pattern, usecols, na_value=''):
     return dataset
 
 
-def get_remaining_companies():
+def get_remaining_companies(companies_path):
     """
     Compares YYYY-MM-DD-companies.xz with the newest
     YYYY-MM-DD-sex-place-distances.xz and returns a DataFrame with only
     unfetched companies.
     """
-    companies = load_newest_dataset(
-        '**/*companies.xz',
-        ('cnpj', 'trade_name', 'name', 'latitude', 'longitude')
-    )
+    cols = ('cnpj', 'trade_name', 'name', 'latitude', 'longitude')
+    companies = load_newest_dataset(companies_path, cols)
     sex_places = load_newest_dataset('**/*sex-place-distances.xz', ('cnpj',))
 
     if sex_places is None or sex_places.empty:
@@ -352,42 +343,65 @@ def get_remaining_companies():
     return companies[~companies.cnpj.isin(sex_places.cnpj)]
 
 
-def is_new_dataset():
+def is_new_dataset(output):
     sex_places = find_newest_file('*sex-place-distances.xz', 'data')
     if not sex_places:
         return True
 
     # convert previous database from xz to csv
-    pd.read_csv(sex_places).to_csv(OUTPUT)
+    pd.read_csv(sex_places).to_csv(output)
     os.remove(sex_places)
     return False
 
 
-def convert_to_lzma():
-    pd.read_csv(OUTPUT).to_csv(XZ_OUTPUT, compression='xz')
-    os.remove(OUTPUT)
+def convert_to_lzma(csv_output, xz_output):
+    pd.read_csv(csv_output).to_csv(xz_output, compression='xz')
+    os.remove(csv_output)
 
 
-def main():
+def main(companies_path, max_requests=500, sample_size=None):
+
+    if not os.path.exists(companies_path):
+        print('File not found: {}'.format(companies_path))
+        return
+
+    # set file paths
+    directory = os.path.dirname(os.path.abspath(companies_path))
+    name = '{}-sex-place-distances.{}'
+    today = date.today().strftime('%Y-%m-%d')
+    csv_output = os.path.join(directory, name.format(today, 'csv'))
+    xz_output = os.path.join(directory, name.format(today, 'xz'))
 
     # get companies
-    companies = get_remaining_companies()
-    try:
-        sample = int(sys.argv[1])
-    except (IndexError, ValueError):
-        pass
-    else:
-        companies = companies.sample(sample)
+    companies = get_remaining_companies(companies_path)
+    if sample_size:
+        companies = companies.sample(sample_size)
 
     # run
     if companies.empty:
         print('Nothing to fetch.')
     else:
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(main_corotine(companies, is_new_dataset()))
+        loop.run_until_complete(main_coro(companies, csv_output, max_requests))
         loop.close()
-        convert_to_lzma()
+        convert_to_lzma(csv_output, xz_output)
 
 
 if __name__ == '__main__':
-    main()
+    description = (
+        'Fetch the closest sex place to each company. '
+        'Requires a Google Places API key set at config.ini.'
+    )
+    parser = ArgumentParser(description=description)
+    parser.add_argument('companies_path', help='Companies .xz datset')
+    parser.add_argument(
+        '--max-parallel-requests', '-m', type=int, default=500,
+        help='Max parallel requests (default: 500)'
+    )
+    parser.add_argument(
+        '--sample-size', '-s', type=int, default=None,
+        help='Limit fetching to a given sample size (default: None)'
+    )
+
+    args = parser.parse_args()
+    main(args.companies_path, args.max_parallel_requests, args.sample_size)
