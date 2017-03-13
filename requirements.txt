@@ -4,7 +4,7 @@ django-assets==0.12
 django-bulk-update==1.1.10
 django-cors-middleware==1.3.1
 django-test-without-migrations==0.4
-djangorestframework==3.5.4
+djangorestframework==3.6.2
 gunicorn==19.7.0
 psycopg2==2.7
 py-gfm==0.1.3
