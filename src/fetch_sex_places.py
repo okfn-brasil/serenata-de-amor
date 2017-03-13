@@ -2,7 +2,6 @@ import asyncio
 import json
 import math
 import os
-import re
 from argparse import ArgumentParser
 from csv import DictWriter
 from configparser import RawConfigParser
@@ -14,8 +13,12 @@ from urllib.parse import urlencode
 
 import aiofiles
 import pandas as pd
+import numpy as np
 from aiohttp import request
 from geopy.distance import vincenty
+
+
+DTYPE = dict(cnpj=np.str)
 
 
 class SexPlacesNearBy:
@@ -146,9 +149,11 @@ class SexPlacesNearBy:
             if 'error_message' in response:
                 status, error = response.get('status'), response.get('error')
                 print('{}: {}'.format(status, error))
+                return None
             elif response.get('status') != 'ZERO_RESULTS':
                 msg = 'Google Places API Status: {}'
                 print(msg.format(response.get('status')))
+                return None
 
         else:
             place = response.get('results', [{}])[0]
@@ -167,7 +172,7 @@ class SexPlacesNearBy:
                 'latitude': latitude,
                 'longitude': longitude,
                 'distance': distance.meters,
-                'cnpj': re.sub(r'\D', '', self.company.get('cnpj')),
+                'cnpj': self.company.get('cnpj'),
                 'company_name': self.company.get('name'),
                 'company_trade_name': self.company.get('trade_name')
             }
@@ -322,7 +327,12 @@ def load_newest_dataset(pattern, usecols, na_value=''):
         return None
 
     print('Loading {}'.format(filepath))
-    dataset = pd.read_csv(filepath, usecols=usecols, low_memory=False)
+    dataset = pd.read_csv(
+        filepath,
+        dtype=DTYPE,
+        low_memory=False,
+        usecols=usecols
+    )
     dataset = dataset.fillna(value=na_value)
     return dataset
 
@@ -349,13 +359,13 @@ def is_new_dataset(output):
         return True
 
     # convert previous database from xz to csv
-    pd.read_csv(sex_places).to_csv(output)
+    pd.read_csv(sex_places, dtype=DTYPE).to_csv(output)
     os.remove(sex_places)
     return False
 
 
 def convert_to_lzma(csv_output, xz_output):
-    pd.read_csv(csv_output).to_csv(xz_output, compression='xz')
+    pd.read_csv(csv_output, dtype=DTYPE).to_csv(xz_output, compression='xz')
     os.remove(csv_output)
 
 
