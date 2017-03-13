@@ -63,7 +63,7 @@ class SexPlacesNearBy:
     async def get_closest(self):
         """
         Gets the closest place find in reads self.places, queries for its
-        details and returns a dictoinary with all the info on that place.
+        details and returns a dict with all the info on that place.
         """
         if not self.is_valid():
             return None
