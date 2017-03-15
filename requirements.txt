@@ -1,3 +1,8 @@
 git+https://github.com/datasciencebr/serenata-toolbox.git#egg=serenata-toolbox
 pycpfcnpj==1.0.2
 tinys3==0.1.11
+git+git://github.com/marcusrehm/neo4jupyter.git@master
+py2neo==3.1.2
+ipython-cypher==0.2.4
+igraph==0.1.11
+jgraph==0.2.1
