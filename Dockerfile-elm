@@ -1,9 +1,17 @@
 FROM node:6.9.1
-RUN npm install -g yarn
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN sudo apt-get update
+RUN sudo apt-get install yarn
+
 WORKDIR /code
-COPY elm-package.json elm-package.json
+
+COPY yarn.lock yarn.lock
 COPY package.json package.json
+COPY elm-package.json elm-package.json
 COPY gulpfile.js gulpfile.js
-RUN yarn install
+RUN yarn install --pure-lockfile
+
 COPY jarbas jarbas
 CMD yarn assets

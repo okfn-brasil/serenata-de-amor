@@ -31,7 +31,7 @@ services:
       - "./:/code"
       - "/code/node_modules"
       - "assets:/code/jarbas/frontend/static"
-    command: [npm, run, watch]
+    command: [yarn, watch]
   nginx:
     build:
       context: .
