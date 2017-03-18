@@ -165,7 +165,12 @@ fetch_latest_backup('data/')
  - CEPIM:  `YYYY-MM-DD-impeded-non-profit-entities.xz`
  - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
 
+##### Family Allowance data collection.
+1. src/fetch_family_allowance.py creates YYYY-MM-DD-family_allowance.xz with data from the Family Allowance database available at Portal da Transparência.
+
+
 ### Datasets (`data/`)
+
 
 Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with the [toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
 All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
@@ -176,6 +181,7 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/YYYY-MM-DD-companies.xz`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
 1. `data/YYYY-MM-DD-congressperson_relatives.xz` contains data on the relatives of congresspeople and the nature of their relationship.
 1. `data/YYYY-MM-DD-congressperson_relatives_raw.xz` also contains data on the relatives of congresspeople, but is only created if `src/get_family_names.py` fails to handle some names.
+1.  `data/YYYY-MM-DD-family_allowance.xz` contains data on the relatives to social program Bolsa Família sice 2011.
 
 ## Four moments
 
