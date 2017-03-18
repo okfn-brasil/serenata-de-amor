@@ -632,6 +632,15 @@ translate lang trans =
                             TranslationSet
                                 "Many expenses in different cities at the same day"
                                 "Muitas despesas em diferentes cidades no mesmo dia"
+                        "invalid_cnpj_cpf" ->
+                            TranslationSet
+                                "Invalid CNPJ or CPF"
+                                "CPF ou CNPJ inválidos"
+
+                        "election_expenses" ->
+                            TranslationSet
+                                "Expense in electoral campaign"
+                                "Gasto com campanha eleitoral"
 
                         _ ->
                             TranslationSet
