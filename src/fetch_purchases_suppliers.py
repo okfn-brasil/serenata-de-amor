@@ -41,6 +41,8 @@ def retrieve_data():
             suppliers_info.append(supplier)
 
     df = pd.DataFrame(suppliers_info, columns=suppliers_attributes_columns.keys())
+    df.rename(columns=dict(zip(suppliers_attributes_columns.keys(), suppliers_attributes_columns.values())), inplace=True)
+
     return df
 
 
