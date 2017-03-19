@@ -6,6 +6,7 @@ import pandas as pd
 
 SUPPLIERS_PURCHASE_ENDPOINT = 'http://compras.dados.gov.br/fornecedores/v1/fornecedores.json'
 
+
 def fetch_suppliers():
     print('Loading first results...')
     response = requests.get(SUPPLIERS_PURCHASE_ENDPOINT).json()
@@ -47,12 +48,14 @@ def retrieve_data():
 
 
 def save_csv(df):
-    dataset_name = time.strftime('%Y-%m-%d') + '-' + 'purchase-suppliers.xz'
+    dataset_name = time.strftime('%Y-%m-%d') + '-' + 'purchases-suppliers.xz'
     df.to_csv(path_or_buf=os.path.join('data', dataset_name), sep=',', compression='xz', encoding='utf-8', index=False)
+
 
 def main():
     suppliers_info = retrieve_data()
     save_csv(suppliers_info)
+
 
 if __name__ == '__main__':
     main()
