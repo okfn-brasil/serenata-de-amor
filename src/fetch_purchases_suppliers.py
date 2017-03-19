@@ -18,10 +18,20 @@ def fetch_suppliers():
 
 
 def prepare_data(raw_data):
-    suppliers_attributes_columns = {'id': 'id', 'cnpj': 'cnpj', 'nome': 'name', 'ativo': 'active',
-    'recadastrado': 'relisted', 'id_municipio': 'city_id', 'uf': 'state', 'id_natureza_juridica': 'legal_nature_id',
-    'id_porte_empresa': 'company_size_id', 'id_ramo_negocio': 'business_id', 'id_unidade_cadastradora': 'responsible_entity',
-    'id_cnae': 'cnae_id', 'habilitado_licitar': 'allowed_to_bid'}
+    suppliers_attributes_columns = {
+        'id': 'id',
+        'cnpj': 'cnpj',
+        'nome': 'name',
+        'ativo': 'active',
+        'recadastrado': 'relisted',
+        'id_municipio': 'city_id',
+        'uf': 'state',
+        'id_natureza_juridica': 'legal_nature_id',
+        'id_porte_empresa': 'company_size_id',
+        'id_ramo_negocio': 'business_id',
+        'id_unidade_cadastradora': 'responsible_entity',
+        'id_cnae': 'cnae_id',
+        'habilitado_licitar': 'allowed_to_bid'}
 
     df = pd.DataFrame(raw_data, columns = suppliers_attributes_columns.keys())
 
