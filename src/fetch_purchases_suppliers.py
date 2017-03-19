@@ -4,20 +4,21 @@ import requests
 import pandas as pd
 
 
+SUPPLIERS_PURCHASE_ENDPOINT = 'http://compras.dados.gov.br/fornecedores/v1/fornecedores.json'
+
 def fetch_suppliers():
-    raw_suppliers = []
-    response = requests.get('http://compras.dados.gov.br/fornecedores/v1/fornecedores.json').json()
-    raw_suppliers = raw_suppliers + response['_embedded']['fornecedores']
+    
+    response = requests.get(SUPPLIERS_PURCHASE_ENDPOINT).json()
+    yield response
 
     last_page = response['count']
     for page in range(2, last_page):
         print('{}/{}'.format(page, last_page))
-        response = requests.get('http://compras.dados.gov.br/fornecedores/v1/fornecedores.json').json()
-        raw_suppliers = raw_suppliers + response['_embedded']['fornecedores']
-    return raw_suppliers
+        response = requests.get(SUPPLIERS_PURCHASE_ENDPOINT).json()
+        yield response
 
 
-def prepare_data(raw_data):
+def retrieve_data():
     suppliers_attributes_columns = {
         'id': 'id',
         'cnpj': 'cnpj',
@@ -33,8 +34,13 @@ def prepare_data(raw_data):
         'id_cnae': 'cnae_id',
         'habilitado_licitar': 'allowed_to_bid'}
 
-    df = pd.DataFrame(raw_data, columns = suppliers_attributes_columns.keys())
+    suppliers_info = []
 
+    for suppliers_page in fetch_suppliers():
+        for supplier in suppliers_page['_embedded']['fornecedores']:
+            suppliers_info.append(supplier)
+
+    df = pd.DataFrame(suppliers_info, columns=suppliers_attributes_columns.keys())
     return df
 
 
@@ -43,8 +49,7 @@ def save_csv(df):
     df.to_csv(path_or_buf=os.path.join('data', dataset_name), sep=',', compression='xz', encoding='utf-8', index=False)
 
 def main():
-    raw_data = fetch_suppliers()
-    suppliers_info = prepare_data(raw_data)
+    suppliers_info = retrieve_data()
     save_csv(suppliers_info)
 
 if __name__ == '__main__':
