@@ -7,7 +7,7 @@ import pandas as pd
 SUPPLIERS_PURCHASE_ENDPOINT = 'http://compras.dados.gov.br/fornecedores/v1/fornecedores.json'
 
 def fetch_suppliers():
-    
+    print('Loading first results...')
     response = requests.get(SUPPLIERS_PURCHASE_ENDPOINT).json()
     yield response
 
