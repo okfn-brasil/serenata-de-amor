@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 import pandas as pd
 
@@ -38,7 +39,8 @@ def prepare_data(raw_data):
 
 
 def save_csv(df):
-    df.to_csv(path_or_buf=os.path.join('data', 'purchase_suppliers.xz'), sep=',', compression='xz', encoding='utf-8', index=False)
+    dataset_name = time.strftime('%Y-%m-%d') + '-' + 'purchase-suppliers.xz'
+    df.to_csv(path_or_buf=os.path.join('data', dataset_name), sep=',', compression='xz', encoding='utf-8', index=False)
 
 def main():
     raw_data = fetch_suppliers()
