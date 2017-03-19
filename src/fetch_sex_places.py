@@ -172,9 +172,9 @@ class SexPlacesNearBy:
                 'latitude': latitude,
                 'longitude': longitude,
                 'distance': distance.meters,
-                'cnpj': self.company.get('cnpj'),
-                'company_name': self.company.get('name'),
-                'company_trade_name': self.company.get('trade_name')
+                'cnpj': self.company.get('cnpj', ''),
+                'company_name': self.company.get('name', ''),
+                'company_trade_name': self.company.get('trade_name', '')
             }
 
     async def load_details(self, place):
