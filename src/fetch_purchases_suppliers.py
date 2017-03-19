@@ -1,14 +1,13 @@
+import os
 import requests
 import pandas as pd
 
-
-BASE_DATA_DIR = './data/'
 
 def fetch_suppliers():
     raw_suppliers = []
     response = requests.get('http://compras.dados.gov.br/fornecedores/v1/fornecedores.json').json()
     raw_suppliers = raw_suppliers + response['_embedded']['fornecedores']
-    
+
     last_page = response['count']
     for page in range(2, last_page):
         print('{}/{}'.format(page, last_page))
@@ -39,7 +38,7 @@ def prepare_data(raw_data):
 
 
 def save_csv(df):
-    df.to_csv(path_or_buf=BASE_DATA_DIR+'purchase_suppliers.xz', sep=',', compression='xz', encoding='utf-8', index=False)
+    df.to_csv(path_or_buf=os.path.join('data', 'purchase_suppliers.xz'), sep=',', compression='xz', encoding='utf-8', index=False)
 
 def main():
     raw_data = fetch_suppliers()
