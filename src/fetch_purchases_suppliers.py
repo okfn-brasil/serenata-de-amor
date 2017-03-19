@@ -6,14 +6,14 @@ BASE_DATA_DIR = './data/'
 
 def fetch_suppliers():
     raw_suppliers = []
-    first_response = requests.get('http://compras.dados.gov.br/fornecedores/v1/fornecedores.json').json()
-    raw_suppliers = raw_suppliers + first_response['_embedded']['fornecedores']
-
-    last_page = first_response['count']
+    response = requests.get('http://compras.dados.gov.br/fornecedores/v1/fornecedores.json').json()
+    raw_suppliers = raw_suppliers + response['_embedded']['fornecedores']
+    
+    last_page = response['count']
     for page in range(2, last_page):
         print('{}/{}'.format(page, last_page))
         response = requests.get('http://compras.dados.gov.br/fornecedores/v1/fornecedores.json').json()
-        raw_suppliers = raw_suppliers + first_response['_embedded']['fornecedores']
+        raw_suppliers = raw_suppliers + response['_embedded']['fornecedores']
     return raw_suppliers
 
 
