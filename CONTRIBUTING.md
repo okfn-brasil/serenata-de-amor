@@ -165,8 +165,8 @@ fetch_latest_backup('data/')
  - CEPIM:  `YYYY-MM-DD-impeded-non-profit-entities.xz`
  - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
 
-##### Suppliers purchases
-1. `src/fetch_purchases_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchases-suppliers.xz`.
+##### Purchase suppliers
+1. `src/fetch_purchase_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchase-suppliers.xz`.
 
 ### Datasets (`data/`)
 

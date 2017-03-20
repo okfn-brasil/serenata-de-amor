@@ -1,13 +1,17 @@
 import os
-import time
-import requests
+from datetime import date
+
 import pandas as pd
+import requests
 
 
-SUPPLIERS_PURCHASE_ENDPOINT = 'http://compras.dados.gov.br/fornecedores/v1/fornecedores.json'
+SUPPLIERS_PURCHASE_ENDPOINT = (
+    'http://compras.dados.gov.br/'
+    'fornecedores/v1/fornecedores.json'
+)
 
 
-def fetch_suppliers():
+def supplier_pages():
     print('Loading first results...')
     response = requests.get(SUPPLIERS_PURCHASE_ENDPOINT).json()
     yield response
@@ -19,8 +23,13 @@ def fetch_suppliers():
         yield response
 
 
+def supplier_details():
+    for page in supplier_pages():
+        yield from page.get('_embedded', {}).get('fornecedores', [])
+
+
 def retrieve_data():
-    suppliers_attributes_columns = {
+    columns = {
         'id': 'id',
         'cnpj': 'cnpj',
         'nome': 'name',
@@ -35,26 +44,22 @@ def retrieve_data():
         'id_cnae': 'cnae_id',
         'habilitado_licitar': 'allowed_to_bid'}
 
-    suppliers_info = []
-
-    for suppliers_page in fetch_suppliers():
-        for supplier in suppliers_page['_embedded']['fornecedores']:
-            suppliers_info.append(supplier)
-
-    df = pd.DataFrame(suppliers_info, columns=suppliers_attributes_columns.keys())
-    df.rename(columns=dict(zip(suppliers_attributes_columns.keys(), suppliers_attributes_columns.values())), inplace=True)
+    suppliers = supplier_details()
+    df = pd.DataFrame(suppliers, columns=columns)
+    df.rename(columns=columns, inplace=True)
 
     return df
 
 
 def save_csv(df):
-    dataset_name = time.strftime('%Y-%m-%d') + '-' + 'purchases-suppliers.xz'
-    df.to_csv(path_or_buf=os.path.join('data', dataset_name), sep=',', compression='xz', encoding='utf-8', index=False)
+    dataset_name = date.today().strftime('%Y-%m-%d') + '-purchase-suppliers.xz'
+    dataset_path = os.path.join('data', dataset_name)
+    df.to_csv(dataset_path, compression='xz', encoding='utf-8', index=False)
 
 
 def main():
-    suppliers_info = retrieve_data()
-    save_csv(suppliers_info)
+    suppliers = retrieve_data()
+    save_csv(suppliers)
 
 
 if __name__ == '__main__':
