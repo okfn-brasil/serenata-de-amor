@@ -165,6 +165,9 @@ fetch_latest_backup('data/')
  - CEPIM:  `YYYY-MM-DD-impeded-non-profit-entities.xz`
  - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
 
+##### Suppliers purchases
+1. `src/fetch_purchases_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchases-suppliers.xz`.
+
 ### Datasets (`data/`)
 
 Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with the [toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
