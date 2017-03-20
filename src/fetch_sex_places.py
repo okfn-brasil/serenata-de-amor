@@ -57,8 +57,8 @@ class SexPlacesNearBy:
 
     async def get_all_places(self):
         """
-        Use aiohttp to get the closest place to the company according to each
-        keyworn. Returns `None`, the results are saved on self.places.
+        Use asyncio to get the closest place to the company according to each
+        keyword. Returns `None`, the results are saved on self.places.
         """
         tasks = [self.load_place(k) for k in self.KEYWORDS]
         await asyncio.gather(*tasks)
@@ -129,7 +129,7 @@ class SexPlacesNearBy:
 
     def parse(self, keyword, content):
         """
-        Return a dictonary with information of the nearest sex place
+        Return a dictionary with information of the nearest sex place
         around a given company.
         :param keyword: (str) keyword used by the request
         :param content: (str) content of the response to the request
@@ -172,9 +172,9 @@ class SexPlacesNearBy:
                 'latitude': latitude,
                 'longitude': longitude,
                 'distance': distance.meters,
-                'cnpj': self.company.get('cnpj'),
-                'company_name': self.company.get('name'),
-                'company_trade_name': self.company.get('trade_name')
+                'cnpj': self.company.get('cnpj', ''),
+                'company_name': self.company.get('name', ''),
+                'company_trade_name': self.company.get('trade_name', '')
             }
 
     async def load_details(self, place):
