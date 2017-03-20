@@ -3,29 +3,49 @@ from datetime import date
 
 import pandas as pd
 import requests
+from tqdm import tqdm
+
+API_SERVER = 'http://compras.dados.gov.br'
+API_ENDPOINT = API_SERVER + '/fornecedores/v1/fornecedores.json'
 
 
-SUPPLIERS_PURCHASE_ENDPOINT = (
-    'http://compras.dados.gov.br/'
-    'fornecedores/v1/fornecedores.json'
-)
+class Suppliers:
 
+    def __init__(self):
+        self.response = requests.get(API_ENDPOINT).json()
+        self.total = self.response.get('count', 0)
 
-def supplier_pages():
-    print('Loading first results...')
-    response = requests.get(SUPPLIERS_PURCHASE_ENDPOINT).json()
-    yield response
+    @property
+    def next(self):
+        path = self.response.get('_links', {}).get('next', {}).get('href')
+        if path:
+            return API_SERVER + path
+        return False
 
-    last_page = response['count']
-    for page in range(2, last_page):
-        print('{}/{}'.format(page, last_page))
-        response = requests.get(SUPPLIERS_PURCHASE_ENDPOINT).json()
-        yield response
+    def pages(self):
+        yield self.response
+        while self.next:
 
+            response = requests.get(self.next)
+            if 200 <= response.status_code < 500:
+                self.response = response.json()
+                yield self.response
 
-def supplier_details():
-    for page in supplier_pages():
-        yield from page.get('_embedded', {}).get('fornecedores', [])
+            else:
+                msg = 'Server responded with a {} HTTP Status'
+                print(msg.format(response.status_code))
+                break
+
+    def details(self):
+        for page in self.pages():
+            for supplier in page.get('_embedded', {}).get('fornecedores', []):
+                yield supplier
+
+    def fetch(self):
+        with tqdm(total=self.total) as progress:
+            for supplier in self.details():
+                progress.update(1)
+                yield supplier
 
 
 def retrieve_data():
@@ -42,10 +62,11 @@ def retrieve_data():
         'id_ramo_negocio': 'business_id',
         'id_unidade_cadastradora': 'responsible_entity',
         'id_cnae': 'cnae_id',
-        'habilitado_licitar': 'allowed_to_bid'}
+        'habilitado_licitar': 'allowed_to_bid'
+    }
 
-    suppliers = supplier_details()
-    df = pd.DataFrame(suppliers, columns=columns)
+    suppliers = Suppliers()
+    df = pd.DataFrame(suppliers.fetch(), columns=columns)
     df.rename(columns=columns, inplace=True)
 
     return df
