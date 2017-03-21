@@ -27,7 +27,7 @@ class Suppliers:
         while self.next:
 
             response = requests.get(self.next)
-            if 200 <= response.status_code < 500:
+            if 200 <= response.status_code < 400:
                 self.response = response.json()
                 yield self.response
 
