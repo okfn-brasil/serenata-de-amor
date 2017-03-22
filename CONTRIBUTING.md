@@ -65,7 +65,7 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
-1. Start the environment (it might take a while, the base image has 5.8GB and we also pull in lots of dependencies): `$ docker-compose up -d`
+1. Start the environment (it might take a while, the base image has 5.8GB and we also pull in lots of dependencies): `$ docker-compose up -d`.
 1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
 1. Run the script to download data and other useful files: `$ docker-compose run --rm jupyter python src/fetch_datasets.py`
 1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm jupyter jupyter notebook`
@@ -75,6 +75,17 @@ If you want to access the console:
 ```console
 $ docker-compose run --rm jupyter bash
 ```
+
+### Using Neo4j in graph analysis
+
+[Neo4j](https://neo4j.com/) is a *graph* database that enables you analyse data expressing its relationship in a graph model.
+
+If you plan to use Neo4j in your analysis and you don't have it installed, the easiest way to put it running is using `Docker`. If you prefer to install in a traditional way, please refer to Neo4j website for more information about [installation steps](https://neo4j.com/).
+
+Please refer to `2017-02-12-marcusrehm-neo4j-guide` and `2017-02-12-marcusrehm-neo4j-example2` notebooks for more information on how to use it.
+
+Neo4j integration in Jupyter notebooks is based on Nichole White's work. It can be found [here](https://github.com/nicolewhite/neo4j-jupyter).
+
 
 ## Best practices
 
@@ -153,6 +164,9 @@ fetch_latest_backup('data/')
  - CEIS: `YYYY-MM-DD-inident-and-suspended-companies.xz`
  - CEPIM:  `YYYY-MM-DD-impeded-non-profit-entities.xz`
  - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
+
+##### Purchase suppliers
+1. `src/fetch_purchase_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchase-suppliers.xz`.
 
 ### Datasets (`data/`)
 
