@@ -1,6 +1,14 @@
 module Internationalization exposing (..)
 
-import Internationalization.Constants exposing (..)
+import Internationalization.Common as Common
+import Internationalization.DocumentType as DocumentType
+import Internationalization.Reimbursement.Common as ReimbursementCommon
+import Internationalization.Reimbursement.Company as ReimbursementCompany
+import Internationalization.Reimbursement.Field as ReimbursementField
+import Internationalization.Reimbursement.Fieldset as ReimbursementFieldset
+import Internationalization.Reimbursement.Receipt as ReimbursementReceipt
+import Internationalization.Reimbursement.Search as ReimbursementSearch
+import Internationalization.Suspicion as Suspicion
 import Internationalization.Types exposing (Language(..), TranslationId(..), TranslationSet)
 
 
@@ -10,522 +18,318 @@ translate lang trans =
         translationSet =
             case trans of
                 About ->
-                    about
+                    Common.about
 
                 AboutJarbas ->
-                    aboutJarbas
+                    Common.aboutJarbas
 
                 AboutSerenata ->
-                    TranslationSet
-                        "About Serenata de Amor"
-                        "Sobre a Serenata de Amor"
+                    Common.aboutSerenata
 
                 AboutDatasets ->
-                    TranslationSet
-                        "About the dataset"
-                        "Sobre a base de dados"
+                    Common.aboutDatasets
 
                 SearchFieldsetReimbursement ->
-                    TranslationSet
-                        "Reimbursement data"
-                        "Dados do reembolso"
+                    ReimbursementSearch.fieldsetReimbursement
 
                 SearchFieldsetCongressperson ->
-                    TranslationSet
-                        "Congressperson & expense data"
-                        "Dados do(a) deputado(a) e da despesa"
+                    ReimbursementSearch.fieldsetCongressperson
 
                 FieldsetSummary ->
-                    TranslationSet
-                        "Summary"
-                        "Resumo"
+                    ReimbursementFieldset.summary
 
                 FieldsetTrip ->
-                    TranslationSet
-                        "Ticket details"
-                        "Detalhes da passagem"
+                    ReimbursementFieldset.trip
 
                 FieldsetCongressperson ->
-                    TranslationSet
-                        "Congressperson details"
-                        "Detalhes do(a) deputado(a)"
+                    ReimbursementFieldset.congressperson
 
                 FieldsetReimbursement ->
-                    TranslationSet
-                        "Reimbursement details"
-                        "Detalhes do reembolso"
+                    ReimbursementFieldset.reimbursement
 
                 FieldsetCompanyDetails ->
-                    TranslationSet
-                        "If we can find the CNPJ of this supplier in our database more info will be available in the sidebar."
-                        "Se o CNPJ estiver no nosso banco de dados mais detalhes sobre o fornecedor aparecerão ao lado."
+                    ReimbursementFieldset.companyDetails
 
                 FieldsetCurrencyDetails ->
-                    TranslationSet
-                        "Expense made abroad: "
-                        "Despesa feita no exterior "
+                    ReimbursementFieldset.currencyDetails
 
                 FieldsetCurrencyDetailsLink ->
-                    TranslationSet
-                        "check the currency rate on "
-                        "veja a cotação em "
+                    ReimbursementFieldset.detailsLink
 
                 FieldYear ->
-                    TranslationSet
-                        "Year"
-                        "Ano"
+                    ReimbursementField.year
 
                 FieldDocumentId ->
-                    TranslationSet
-                        "Document ID"
-                        "ID do documento"
+                    ReimbursementField.documentId
 
                 FieldApplicantId ->
-                    TranslationSet
-                        "Applicant ID"
-                        "Identificador do Solicitante"
+                    ReimbursementField.applicantId
 
                 FieldTotalReimbursementValue ->
-                    TranslationSet
-                        "Total reimbursement value"
-                        "Valor total dos reembolsos"
+                    ReimbursementField.totalReimbursementValue
 
                 FieldTotalNetValue ->
-                    TranslationSet
-                        "Total net value"
-                        "Valor líquido total"
+                    ReimbursementField.totalNetValue
 
                 FieldReimbursementNumbers ->
-                    TranslationSet
-                        "Reimbursement number"
-                        "Número dos reembolsos"
+                    ReimbursementField.reimbursementNumbers
 
                 FieldNetValues ->
-                    TranslationSet
-                        "Net values"
-                        "Valores líquidos"
+                    ReimbursementField.netValues
 
                 FieldCongresspersonId ->
-                    TranslationSet
-                        "Congressperson ID"
-                        "Cadastro do Parlamentar"
+                    ReimbursementField.congresspersonId
 
                 FieldCongressperson ->
-                    TranslationSet
-                        "Congressperson"
-                        "Deputado(a)"
+                    ReimbursementField.congressperson
 
                 FieldCongresspersonName ->
-                    TranslationSet
-                        "Congressperson nome"
-                        "Nome do(a) deputado(a)"
+                    ReimbursementField.congresspersonName
 
                 FieldCongresspersonDocument ->
-                    TranslationSet
-                        "Congressperson document"
-                        "Número da Carteira Parlamentar"
+                    ReimbursementField.congresspersonDocument
 
                 FieldState ->
-                    TranslationSet
-                        "State"
-                        "UF"
+                    ReimbursementField.state
 
                 FieldParty ->
-                    TranslationSet
-                        "Party"
-                        "Partido"
+                    ReimbursementField.party
 
                 FieldTermId ->
-                    TranslationSet
-                        "Term ID"
-                        "Código da legislatura"
+                    ReimbursementField.termId
 
                 FieldTerm ->
-                    TranslationSet
-                        "Term"
-                        "Número da legislatura"
+                    ReimbursementField.term
 
                 FieldSubquotaId ->
-                    TranslationSet
-                        "Subquota number"
-                        "Número da Subcota"
+                    ReimbursementField.subquotaId
 
                 FieldSubquotaDescription ->
-                    TranslationSet
-                        "Subquota"
-                        "Subquota"
+                    ReimbursementField.subquotaDescription
 
                 FieldSubquotaGroupId ->
-                    TranslationSet
-                        "Subquota group number"
-                        "Número da especificação da subcota"
+                    ReimbursementField.subquotaGroupId
 
                 FieldSubquotaGroupDescription ->
-                    TranslationSet
-                        "Subquota group"
-                        "Especificação da subcota"
+                    ReimbursementField.subquotaGroupDescription
 
                 FieldCompany ->
-                    TranslationSet
-                        "Company"
-                        "Fornecedor"
+                    ReimbursementField.company
 
                 FieldCnpjCpf ->
-                    TranslationSet
-                        "CNPJ or CPF"
-                        "CNPJ ou CPF"
+                    ReimbursementField.cnpjCpf
 
                 FieldDocumentType ->
-                    TranslationSet
-                        "Document type"
-                        "Tipo do documento"
+                    ReimbursementField.documentType
 
                 FieldDocumentNumber ->
-                    TranslationSet
-                        "Document number"
-                        "Número do documento"
+                    ReimbursementField.documentNumber
 
                 FieldDocumentValue ->
-                    TranslationSet
-                        "Expense value"
-                        "Valor da despesa"
+                    ReimbursementField.documentValue
 
                 FieldIssueDate ->
-                    TranslationSet
-                        "Expense date"
-                        "Data da despesa"
+                    ReimbursementField.issueDate
 
                 FieldIssueDateStart ->
-                    TranslationSet
-                        "Expense date (start)"
-                        "Data da despesa (início)"
+                    ReimbursementField.issueDateStart
 
                 FieldIssueDateEnd ->
-                    TranslationSet
-                        "Expense date (end)"
-                        "Data da despesa (fim)"
+                    ReimbursementField.issueDateEnd
 
                 FieldIssueDateValidation ->
-                    TranslationSet
-                        "Please use the YYYY-MM-DD format"
-                        "Por favor, utilize o formato YYYY-MM-DD"
+                    ReimbursementField.issueDateValidation
 
                 FieldClaimDate ->
-                    TranslationSet
-                        "Claim date"
-                        "Data do pedido de reembolso"
+                    ReimbursementField.claimDate
 
                 FieldMonth ->
-                    TranslationSet
-                        "Month"
-                        "Mês"
+                    ReimbursementField.month
 
                 FieldRemarkValue ->
-                    TranslationSet
-                        "Remark value"
-                        "Valor da glosa"
+                    ReimbursementField.remarkValue
 
                 FieldInstallment ->
-                    TranslationSet
-                        "Installment"
-                        "Número da parcela"
+                    ReimbursementField.installment
 
                 FieldBatchNumber ->
-                    TranslationSet
-                        "Batch number"
-                        "Número do lote"
+                    ReimbursementField.batchNumber
 
                 FieldReimbursementValues ->
-                    TranslationSet
-                        "Reimbursement values"
-                        "Valor dos reembolsos"
+                    ReimbursementField.reimbursementValues
 
                 FieldPassenger ->
-                    TranslationSet
-                        "Passenger"
-                        "Passageiro"
+                    ReimbursementField.passenger
 
                 FieldLegOfTheTrip ->
-                    TranslationSet
-                        "Leg of the trip"
-                        "Trecho"
+                    ReimbursementField.legOfTheTrip
 
                 FieldProbability ->
-                    TranslationSet
-                        "Probability"
-                        "Probabilidade"
+                    ReimbursementField.probability
 
                 FieldSuspicions ->
-                    TranslationSet
-                        "Suspicions"
-                        "Suspeitas"
+                    ReimbursementField.suspicions
 
                 FieldEmpty ->
-                    TranslationSet
-                        ""
-                        ""
+                    Common.empty
 
                 ReimbursementSource ->
-                    TranslationSet
-                        "Source: "
-                        "Fonte: "
+                    ReimbursementCommon.reimbursementSource
 
                 ReimbursementChamberOfDeputies ->
-                    TranslationSet
-                        "Chamber of Deputies"
-                        "Câmara dos Deputados"
+                    ReimbursementCommon.reimbursementChamberOfDeputies
 
                 ReceiptFetch ->
-                    TranslationSet
-                        " Fetch receipt"
-                        " Buscar recibo"
+                    ReimbursementReceipt.fetch
 
                 ReceiptAvailable ->
-                    TranslationSet
-                        " View receipt"
-                        " Ver recibo"
+                    ReimbursementReceipt.available
 
                 ReceiptNotAvailable ->
-                    TranslationSet
-                        " Digitalized receipt not available."
-                        " Recibo não disponível."
+                    ReimbursementReceipt.notAvailable
 
                 Map ->
-                    TranslationSet
-                        " Company on Maps"
-                        " Ver no Google Maps"
+                    ReimbursementCommon.map
 
                 CompanyCNPJ ->
-                    TranslationSet
-                        "CNPJ"
-                        "CNPJ"
+                    ReimbursementCompany.cnpj
 
                 CompanyTradeName ->
-                    TranslationSet
-                        "Trade name"
-                        "Nome fantasia"
+                    ReimbursementCompany.tradeName
 
                 CompanyName ->
-                    TranslationSet
-                        "Name"
-                        "Razão social"
+                    ReimbursementCompany.name
 
                 CompanyOpeningDate ->
-                    TranslationSet
-                        "Opening date"
-                        "Data de abertura"
+                    ReimbursementCompany.openingDate
 
                 CompanyLegalEntity ->
-                    TranslationSet
-                        "Legal entity"
-                        "Natureza jurídica"
+                    ReimbursementCompany.legalEntity
 
                 CompanyType ->
-                    TranslationSet
-                        "Type"
-                        "Tipo"
+                    ReimbursementCompany.companyType
 
                 CompanyStatus ->
-                    TranslationSet
-                        "Status"
-                        "Status"
+                    ReimbursementCompany.status
 
                 CompanySituation ->
-                    TranslationSet
-                        "Situation"
-                        "Situação"
+                    ReimbursementCompany.situation
 
                 CompanySituationReason ->
-                    TranslationSet
-                        "Situation Reason"
-                        "Motivo situação"
+                    ReimbursementCompany.situationReason
 
                 CompanySituationDate ->
-                    TranslationSet
-                        "Situation Date"
-                        "Data situação"
+                    ReimbursementCompany.situationDate
 
                 CompanySpecialSituation ->
-                    TranslationSet
-                        "Special Situation"
-                        "Situação especial"
+                    ReimbursementCompany.specialSituation
 
                 CompanySpecialSituationDate ->
-                    TranslationSet
-                        "Special Situation Date"
-                        "Data situação especial"
+                    ReimbursementCompany.specialSituationDate
 
                 CompanyResponsibleFederativeEntity ->
-                    TranslationSet
-                        "Responsible Federative Entity"
-                        "EFR"
+                    ReimbursementCompany.responsibleFederativeEntity
 
                 CompanyAddress ->
-                    TranslationSet
-                        "Address"
-                        "Endereço"
+                    ReimbursementCompany.address
 
                 CompanyNumber ->
-                    TranslationSet
-                        "Number"
-                        "Número"
+                    ReimbursementCompany.number
 
                 CompanyAdditionalAddressDetails ->
-                    TranslationSet
-                        "Additional Address Details"
-                        "Complemento"
+                    ReimbursementCompany.additionalAddressDetails
 
                 CompanyNeighborhood ->
-                    TranslationSet
-                        "Neighborhood"
-                        "Bairro"
+                    ReimbursementCompany.neighborhood
 
                 CompanyZipCode ->
-                    TranslationSet
-                        "Zip Code"
-                        "CEP"
+                    ReimbursementCompany.zipCode
 
                 CompanyCity ->
-                    TranslationSet
-                        "City"
-                        "Cidade"
+                    ReimbursementCompany.city
 
                 CompanyState ->
-                    TranslationSet
-                        "State"
-                        "Estado"
+                    ReimbursementCompany.state
 
                 CompanyEmail ->
-                    TranslationSet
-                        "Email"
-                        "Email"
+                    ReimbursementCompany.email
 
                 CompanyPhone ->
-                    TranslationSet
-                        "Telephone"
-                        "Telefone"
+                    ReimbursementCompany.phone
 
                 CompanyLastUpdated ->
-                    TranslationSet
-                        "Last Updated"
-                        "Última atualização"
+                    ReimbursementCompany.lastUpdated
 
                 CompanyMainActivity ->
-                    TranslationSet
-                        "Main Activity"
-                        "Atividade principal"
+                    ReimbursementCompany.mainActivity
 
                 CompanySecondaryActivity ->
-                    TranslationSet
-                        "Secondary Activity"
-                        "Atividades secundárias"
+                    ReimbursementCompany.secondaryActivity
 
                 CompanySource ->
-                    TranslationSet
-                        "Source: "
-                        "Fonte: "
+                    ReimbursementCompany.source
 
                 CompanyFederalRevenue ->
-                    TranslationSet
-                        "Federal Revenue of Brazil"
-                        "Receita Federal"
+                    ReimbursementCompany.federalRevenue
 
                 ReimbursementTitle ->
-                    TranslationSet
-                        "Document #"
-                        "Documento nº"
+                    ReimbursementCommon.reimbursementTitle
 
                 ResultTitleSingular ->
-                    TranslationSet
-                        " document found."
-                        " documento encontrado."
+                    ReimbursementCommon.resultTitleSingular
 
                 ResultTitlePlural ->
-                    TranslationSet
-                        " documents found."
-                        " documentos encontrados."
+                    ReimbursementCommon.resultTitlePlural
 
                 Search ->
-                    TranslationSet
-                        "Search"
-                        "Buscar"
+                    ReimbursementSearch.search
 
                 NewSearch ->
-                    TranslationSet
-                        "New search"
-                        "Nova busca"
+                    ReimbursementSearch.newSearch
 
                 Loading ->
-                    TranslationSet
-                        "Loading…"
-                        "Carregando…"
+                    ReimbursementSearch.loading
 
                 PaginationPage ->
-                    TranslationSet
-                        "Page "
-                        "Página "
+                    ReimbursementCommon.paginationPage
 
                 PaginationOf ->
-                    TranslationSet
-                        " of "
-                        " de "
+                    ReimbursementCommon.paginationOf
 
                 ReimbursementNotFound ->
-                    TranslationSet
-                        "Document not found."
-                        "Documento não encontrado."
+                    ReimbursementCommon.reimbursementNotFound
 
                 SameDayTitle ->
-                    TranslationSet
-                        "Other reimbursements from the same day"
-                        "Outros reembolsos do mesmo dia"
+                    ReimbursementCommon.sameDayTitle
 
                 SameSubquotaTitle ->
-                    TranslationSet
-                        "Other reimbursements from the same month & subquota"
-                        "Outros reembolsos do mesmo mês e subquota"
+                    ReimbursementCommon.sameSubquoteTitle
 
                 BrazilianCurrency value ->
-                    TranslationSet
-                        (value ++ " BRL")
-                        ("R$ " ++ value)
+                    Common.brazilianCurrency value
 
                 ThousandSeparator ->
-                    TranslationSet
-                        ","
-                        "."
+                    Common.thousandSeparator
 
                 DecimalSeparator ->
-                    TranslationSet
-                        "."
-                        ","
+                    Common.decimalSeparator
 
                 Suspicion suspicion ->
                     case suspicion of
                         "meal_price_outlier" ->
-                            TranslationSet
-                                "Meal price is an outlier"
-                                "Preço de refeição muito incomum"
+                            Suspicion.mealPriceOutlier
 
                         "over_monthly_subquota_limit" ->
-                            TranslationSet
-                                "Expenses over the (sub)quota limit"
-                                "Extrapolou limita da (sub)quota"
+                            Suspicion.overMonthlySubquoteLimit
 
                         "suspicious_traveled_speed_day" ->
-                            TranslationSet
-                                "Many expenses in different cities at the same day"
-                                "Muitas despesas em diferentes cidades no mesmo dia"
+                            Suspicion.suspiciousTraveledSpeedDay
 
                         "invalid_cnpj_cpf" ->
-                            TranslationSet
-                                "Invalid CNPJ or CPF"
-                                "CPF ou CNPJ inválidos"
+                            Suspicion.invalidCpfCnpj
 
                         "election_expenses" ->
-                            TranslationSet
-                                "Expense in electoral campaign"
-                                "Gasto com campanha eleitoral"
+                            Suspicion.electionExpenses
 
                         _ ->
                             TranslationSet
@@ -535,24 +339,16 @@ translate lang trans =
                 DocumentType value ->
                     case value of
                         0 ->
-                            TranslationSet
-                                "Bill of sale"
-                                "Nota fiscal"
+                            DocumentType.billOfSale
 
                         1 ->
-                            TranslationSet
-                                "Simple receipt"
-                                "Recibo simples"
+                            DocumentType.simpleReceipt
 
                         2 ->
-                            TranslationSet
-                                "Expense made abroad"
-                                "Despesa no exterior"
+                            DocumentType.expenseMadeAbroad
 
                         _ ->
-                            TranslationSet
-                                ""
-                                ""
+                            Common.empty
     in
         case lang of
             English ->
