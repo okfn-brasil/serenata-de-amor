@@ -2,7 +2,8 @@ module Reimbursement.Map.View exposing (view)
 
 import Html exposing (a, text)
 import Html.Attributes exposing (href, target)
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization exposing (translate)
+import Internationalization.Types exposing (Language(..), TranslationId(..))
 import Material.Button as Button
 import Material.Icon as Icon
 import Reimbursement.Map.Model exposing (Model)

@@ -3,12 +3,12 @@ module Reimbursement.Model exposing (..)
 import Array exposing (Array)
 import Date
 import Http
-import Internationalization exposing (Language(..))
+import Internationalization.Types exposing (Language(..))
 import Material
 import Reimbursement.Company.Model as Company
-import Reimbursement.Search.Model as Search
 import Reimbursement.Receipt.Model as Receipt
 import Reimbursement.RelatedTable.Model as RelatedTable
+import Reimbursement.Search.Model as Search
 
 
 type alias Reimbursement =

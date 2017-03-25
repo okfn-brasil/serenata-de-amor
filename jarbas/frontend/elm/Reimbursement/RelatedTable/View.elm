@@ -5,7 +5,7 @@ import Format.Price exposing (formatPrice)
 import Html exposing (a, br, div, p, text)
 import Html.Attributes exposing (attribute, class, href, style, target)
 import Html.Events exposing (onClick, onMouseEnter, onMouseLeave)
-import Internationalization exposing (Language)
+import Internationalization.Types exposing (Language)
 import Material
 import Material.Icon as Icon
 import Material.Options as Options

@@ -1,7 +1,7 @@
 module Reimbursement.Receipt.Model exposing (Model, ReimbursementId, model)
 
 import Http
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization.Types exposing (Language(..))
 import Material
 
 

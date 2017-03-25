@@ -1,6 +1,6 @@
 module Model exposing (Model, model)
 
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization.Types exposing (Language(..))
 import Layout
 import Material
 import Reimbursement.Model as Reimbursement

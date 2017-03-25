@@ -1,7 +1,7 @@
 module Update exposing (Flags, Msg(..), isValidKeyValue, pair, toTuples, update, updateFromFlags, urlUpdate)
 
 import Dict exposing (Dict)
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization.Types exposing (Language(..))
 import Material
 import Model exposing (Model, model)
 import Navigation

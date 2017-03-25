@@ -4,20 +4,20 @@ import Array exposing (Array)
 import Char
 import Format.Url exposing (url)
 import Http
-import Internationalization exposing (Language, TranslationId(..))
+import Internationalization.Types exposing (Language(..))
 import Material
 import Navigation
 import Regex exposing (regex, replace)
 import Reimbursement.Company.Update as Company
 import Reimbursement.Decoder exposing (decoder)
-import Reimbursement.Search.Model
-import Reimbursement.Search.Update as Search
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
 import Reimbursement.Receipt.Model exposing (ReimbursementId)
 import Reimbursement.Receipt.Update as Receipt
 import Reimbursement.RelatedTable.Update as RelatedTable
 import Reimbursement.SameDay.Update as SameDay
 import Reimbursement.SameSubquota.Update as SameSubquota
+import Reimbursement.Search.Model
+import Reimbursement.Search.Update as Search
 import String
 
 

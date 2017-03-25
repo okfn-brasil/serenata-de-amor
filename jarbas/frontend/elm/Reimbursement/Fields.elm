@@ -1,6 +1,7 @@
 module Reimbursement.Fields exposing (..)
 
-import Internationalization exposing (Language(..), TranslationId(..), TranslationSet, translate)
+import Internationalization exposing (translate)
+import Internationalization.Types exposing (Language(..), TranslationId(..), TranslationSet)
 import List.Extra
 
 

@@ -2,7 +2,7 @@ module Reimbursement.Company.Model exposing (Model, Company, Activity, model)
 
 import Date
 import Http
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization.Types exposing (Language(..))
 import Material
 
 

@@ -1,7 +1,7 @@
 module Reimbursement.RelatedTable.Model exposing (ReimbursementSummary, Model, Results, model)
 
 import Array exposing (Array)
-import Internationalization exposing (Language(..))
+import Internationalization.Types exposing (Language(..))
 import Material
 
 

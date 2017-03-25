@@ -1,6 +1,6 @@
 module Reimbursement.Receipt.Decoder exposing (decoder, urlDecoder)
 
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization.Types exposing (Language(..))
 import Json.Decode exposing (at, bool, nullable, string)
 import Json.Decode.Pipeline exposing (decode, hardcoded, required)
 import Material

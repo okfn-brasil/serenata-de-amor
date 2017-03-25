@@ -1,6 +1,6 @@
 module Reimbursement.Map.Model exposing (Model, modelFrom)
 
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization.Types exposing (Language(..))
 import Material
 import Reimbursement.Company.Model as Company
 

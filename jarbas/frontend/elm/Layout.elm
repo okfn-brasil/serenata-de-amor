@@ -2,7 +2,8 @@ module Layout exposing (Model, drawer, header, model)
 
 import Html exposing (a, div, img, text)
 import Html.Attributes exposing (alt, href, src, style)
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization exposing (translate)
+import Internationalization.Types exposing (Language(..), TranslationId(..))
 import Material
 import Material.Layout as Layout
 

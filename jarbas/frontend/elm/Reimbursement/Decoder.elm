@@ -2,7 +2,7 @@ module Reimbursement.Decoder exposing (..)
 
 import Array exposing (Array, fromList)
 import Dict
-import Internationalization exposing (Language)
+import Internationalization.Types exposing (Language)
 import Json.Decode exposing (Decoder, array, bool, float, int, keyValuePairs, list, nullable, string)
 import Json.Decode.Extra exposing (date)
 import Json.Decode.Pipeline exposing (decode, hardcoded, required)

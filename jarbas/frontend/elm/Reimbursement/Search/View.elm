@@ -2,7 +2,9 @@ module Reimbursement.Search.View exposing (correctedFieldIndex, matchDate, view)
 
 import Html exposing (Html, br, p, span, text, form, div)
 import Html.Events exposing (onSubmit)
-import Internationalization exposing (TranslationId(..), Language, translate)
+import Internationalization exposing (translate)
+import Internationalization.Types exposing (Language(..), TranslationId(..))
+import List.Extra
 import Material.Button as Button
 import Material.Grid exposing (Device(..), cell, grid, size)
 import Material.Options as Options
@@ -10,10 +12,9 @@ import Material.Textfield as Textfield
 import Material.Typography as Typography
 import Regex
 import Reimbursement.Fields as Fields exposing (Field(..), Label(..))
+import Reimbursement.Model as ParentModel exposing (Model)
 import Reimbursement.Search.Update exposing (Msg(..), update)
 import Reimbursement.Update as ParentMsg exposing (Msg(..))
-import Reimbursement.Model as ParentModel exposing (Model)
-import List.Extra
 
 
 {-| Matches a date un the YYYY-MM-DD format

@@ -10,7 +10,8 @@ import Html exposing (Html, a, div, form, p, span, text)
 import Html.Attributes exposing (class, href, target)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization exposing (translate)
+import Internationalization.Types exposing (Language(..), TranslationId(..))
 import Material.Button as Button
 import Material.Color as Color
 import Material.Grid exposing (Device(..), cell, grid, size)
@@ -20,16 +21,16 @@ import Material.Options as Options
 import Material.Textfield as Textfield
 import Material.Typography as Typography
 import Reimbursement.Company.View as CompanyView
-import Reimbursement.Search.Update as SearchUpdate
-import Reimbursement.Search.View as SearchView
+import Reimbursement.Fields as Fields exposing (Field(..), Label(..), getLabelTranslation)
 import Reimbursement.Map.Model as MapModel
 import Reimbursement.Map.View as MapView
 import Reimbursement.Model exposing (Model, Reimbursement, Results, results)
 import Reimbursement.Receipt.View as ReceiptView
 import Reimbursement.SameDay.View as SameDay
 import Reimbursement.SameSubquota.View as SameSubquota
+import Reimbursement.Search.Update as SearchUpdate
+import Reimbursement.Search.View as SearchView
 import Reimbursement.Update exposing (Msg(..), onlyDigits, totalPages)
-import Reimbursement.Fields as Fields exposing (Field(..), Label(..), getLabelTranslation)
 import String
 
 
@@ -367,7 +368,7 @@ viewReimbursementDetails lang reimbursement =
                 |> String.join ", "
 
         documentType =
-            Internationalization.DocumentType reimbursement.documentType
+            Internationalization.Types.DocumentType reimbursement.documentType
                 |> translate lang
 
         fields =

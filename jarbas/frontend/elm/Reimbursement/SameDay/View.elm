@@ -1,7 +1,8 @@
 module Reimbursement.SameDay.View exposing (view)
 
 import Html
-import Internationalization exposing (TranslationId(..), translate)
+import Internationalization exposing (translate)
+import Internationalization.Types exposing (TranslationId(..))
 import Reimbursement.RelatedTable.Model exposing (Model)
 import Reimbursement.RelatedTable.Update exposing (Msg)
 import Reimbursement.RelatedTable.View as RelatedTable

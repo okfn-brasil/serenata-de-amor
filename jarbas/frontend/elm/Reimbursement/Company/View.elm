@@ -5,7 +5,8 @@ import Format.Date exposing (formatDate)
 import Format.Url exposing (url)
 import Html exposing (a, br, div, img, p, span, text)
 import Html.Attributes exposing (class, href, src, style, target)
-import Internationalization exposing (Language(..), TranslationId(..), translate)
+import Internationalization exposing (translate)
+import Internationalization.Types exposing (Language(..), TranslationId(..))
 import Material.Icon as Icon
 import Material.Options as Options
 import Material.Typography as Typography

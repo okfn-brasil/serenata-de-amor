@@ -1,7 +1,8 @@
 module Format.Price exposing (..)
 
 import FormatNumber exposing (Locale, formatFloat)
-import Internationalization exposing (Language, TranslationId(..), translate)
+import Internationalization exposing (translate)
+import Internationalization.Types exposing (Language(..), TranslationId(..))
 import String
 
 
