@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>2017-03-30-rafonseca-use-tse-data</title>
+<title>2017-03-31-rafonseca-use-tse-data</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -11759,7 +11759,7 @@ In this script we filter the candidates in order to obtain a dataframe containin
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -11773,10 +11773,10 @@ In this script we filter the candidates in order to obtain a dataframe containin
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DATASET_PATH</span> <span class="o">=</span> <span class="s1">&#39;../data/tse-candidates.xz&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DATASET_PATH</span> <span class="o">=</span> <span class="s1">&#39;../data/2017-03-31-tse-candidates.xz&#39;</span>
 </pre></div>
 
 </div>
@@ -11786,7 +11786,7 @@ In this script we filter the candidates in order to obtain a dataframe containin
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Loading csv</span>
@@ -11800,7 +11800,7 @@ In this script we filter the candidates in order to obtain a dataframe containin
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Here, we quickly check the data using  value_counts() to get the frequency on each column</span>
@@ -12310,7 +12310,7 @@ We use DESC_SIT_TOT_TURNO to figure out who has been elected. It is better to us
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ind_elected</span><span class="o">=</span><span class="n">cand_df</span><span class="o">.</span><span class="n">DESC_SIT_TOT_TURNO</span><span class="o">==</span><span class="s1">&#39;ELEITO&#39;</span>
@@ -12327,7 +12327,7 @@ We use DESC_SIT_TOT_TURNO to figure out who has been elected. It is better to us
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">politicians_df</span><span class="o">=</span><span class="n">cand_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">ind_elected</span><span class="p">,[</span><span class="s1">&#39;CPF_CANDIDATO&#39;</span><span class="p">,</span><span class="s1">&#39;NOME_CANDIDATO&#39;</span><span class="p">,</span><span class="s1">&#39;DESCRICAO_CARGO&#39;</span><span class="p">,</span><span class="s1">&#39;DESCRICAO_UE&#39;</span><span class="p">,</span><span class="s1">&#39;SIGLA_UF&#39;</span><span class="p">,</span><span class="s1">&#39;ANO_ELEICAO&#39;</span><span class="p">]]</span>
@@ -12340,7 +12340,7 @@ We use DESC_SIT_TOT_TURNO to figure out who has been elected. It is better to us
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">politicians_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;NOME_CANDIDATO&#39;</span><span class="p">)</span>
@@ -12354,7 +12354,7 @@ We use DESC_SIT_TOT_TURNO to figure out who has been elected. It is better to us
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[7]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>

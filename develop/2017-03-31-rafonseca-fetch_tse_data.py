@@ -1,3 +1,14 @@
+
+# coding: utf-8
+
+# This notebook is a scratch of a script that will download and format data from TSE website.
+# The first objective with this data is to obtain a list of all politicians in Brazil.
+# In march 2017, the data available in TSE website contained information about elected people from the year 1994 to 2016. Data before 1994 does not contains name of the politicians. Further, they inform that data from 1994 to 2002 is being updated.
+# The data is available in csv format: one csv file per state, grouped in one zip file per year. Some of the csv files from TSE contain headers. Unfortunately, this is not the case for the files we are dealing with here. For different years there are different numbers of columns, and consequently, different headers.
+# In this script, after downloading the files, we appropriately name the columns and select a useful subsample of columns to export for future use in Serenata Project.
+
+# In[2]:
+
 import shutil
 import pandas as pd
 import numpy as np
@@ -7,6 +18,10 @@ import zipfile
 import glob
 
 
+# ### Download candidacies data from TSE
+# Next, we download the data related to candidacies from TSE website and unzip them. Data from 1994 to a 2002 is also available but is not consistent. On TSE website, they inform they are working on this.
+
+# In[25]:
 
 FILENAME_PREFIX='consulta_cand_'
 TEMP_PATH = '../data/tse_temp'
@@ -14,17 +29,28 @@ TSE_CANDIDATES_URL='http://agencia.tse.jus.br/estatistica/sead/odsele/consulta_c
 OUTPUT_DATASET_PATH = '../data/2017-03-31-tse-candidates.xz'
 os.makedirs(TEMP_PATH)
 
+
+# In[26]:
+
 # setting year range from 2004 to 2016. this will be modified further to 'from 1994 to 2016'
 year_list=[str(year) for year in (range(2004,2017,2))]
+
+
+# In[27]:
 
 # Download files
 for year in year_list:
     filename=FILENAME_PREFIX+year+'.zip'
     file_url=TSE_CANDIDATES_URL+filename
     output_file=os.path.join(TEMP_PATH,filename)
+    print ('downloading',filename, 'from',TSE_CANDIDATES_URL)
     urllib.request.urlretrieve(file_url,output_file)
 
+
+# In[28]:
+
 # Unzip downloaded files
+
 for year in year_list:
     filename=FILENAME_PREFIX+year+'.zip'
     filepath=os.path.join(TEMP_PATH,filename)
@@ -35,6 +61,9 @@ for year in year_list:
 
 # ### Adding the headers
 # The following headers were extracted from LEIAME.pdf in consulta_cand_2016.zip.
+
+# In[29]:
+
 header_consulta_cand_till2010=[
     "DATA_GERACAO",#
     "HORA_GERACAO",#
@@ -178,6 +207,10 @@ header_consulta_cand_from2014=[
 ]
 
 
+# We select 11 columns that contains relevant information for the purpose of this script. When encoded and explicit information are avaiable, we choosed explicit information, because we do not rely on their encoding. There is no guarantee that they keep the same encoding along the years. Besides, it is easier to identify when the columns get mixed due to import errors.
+
+# In[30]:
+
 sel_columns=[
 # "DATA_GERACAO", 
 # "HORA_GERACAO",
@@ -228,6 +261,8 @@ sel_columns=[
 ]
 
 
+# In[31]:
+
 ###Concatenate all files in one pandas dataframe
 cand_df=pd.DataFrame()
 for year in year_list:
@@ -243,11 +278,22 @@ for year in year_list:
         else:
             cand_df_i=(pd.read_csv('./'+file_i,sep=';',header=None,dtype=str,names=header_consulta_cand_till2010,encoding='iso-8859-1'))
         cand_df=cand_df.append(cand_df_i[sel_columns])
+        print(cand_df_i.shape,cand_df.shape)
 
 cand_df.index=cand_df.reset_index().index # this index contains no useful information
 
+
+
+
+
+# In[32]:
+
 # Exporting data
 cand_df.to_csv(OUTPUT_DATASET_PATH,encoding='iso-8859-1',compression='xz',header=True,index=False)
+
+
+
+# In[ ]:
 
 # Removing temporary files
 shutil.rmtree(TEMP_PATH)
