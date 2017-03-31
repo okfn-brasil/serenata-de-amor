@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>2016-08-08-irio-translate-dataset</title>
+<title>2017-03-30-rafonseca-use-tse-data</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -11751,8 +11751,8 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Translate-dataset">Translate dataset<a class="anchor-link" href="#Translate-dataset">&#182;</a></h1><p>The main language of the project is English: works well mixed in programming languages like Python and provides a low barrier for non-Brazilian contributors. Today, the dataset we make available by default for them is a set of XMLs from The Chamber of Deputies, in Portuguese. We need attribute names and categorical values to be translated to English.</p>
-<p>This file is intended to serve as a base for the script to translate current and future datasets in the same format.</p>
+<h3 id="TSE-data-example">TSE data example<a class="anchor-link" href="#TSE-data-example">&#182;</a></h3><p>This is just a small example of how to use tse data. 
+In this script we filter the candidates in order to obtain a dataframe containing only politicians that were elected at least once.</p>
 
 </div>
 </div>
@@ -11763,28 +11763,10 @@ div#notebook {
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-08-08-AnoAtual.csv&#39;</span><span class="p">)</span>
-<span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[1]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(185459, 29)</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -11794,177 +11776,10 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DATASET_PATH</span> <span class="o">=</span> <span class="s1">&#39;../data/tse-candidates.xz&#39;</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[2]:</div>
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ideDocumento</th>
-      <th>txNomeParlamentar</th>
-      <th>ideCadastro</th>
-      <th>nuCarteiraParlamentar</th>
-      <th>nuLegislatura</th>
-      <th>sgUF</th>
-      <th>sgPartido</th>
-      <th>codLegislatura</th>
-      <th>numSubCota</th>
-      <th>txtDescricao</th>
-      <th>...</th>
-      <th>vlrLiquido</th>
-      <th>numMes</th>
-      <th>numAno</th>
-      <th>numParcela</th>
-      <th>txtPassageiro</th>
-      <th>txtTrecho</th>
-      <th>numLote</th>
-      <th>numRessarcimento</th>
-      <th>vlrRestituicao</th>
-      <th>nuDeputadoId</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>5928744.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>MANUTENÇÃO DE ESCRITÓRIO DE APOIO À ATIVIDADE ...</td>
-      <td>...</td>
-      <td>31.37</td>
-      <td>1</td>
-      <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1268870</td>
-      <td>5369.0</td>
-      <td>NaN</td>
-      <td>3074</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>5970849.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>MANUTENÇÃO DE ESCRITÓRIO DE APOIO À ATIVIDADE ...</td>
-      <td>...</td>
-      <td>37.24</td>
-      <td>3</td>
-      <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1282185</td>
-      <td>5417.0</td>
-      <td>NaN</td>
-      <td>3074</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>6024670.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>MANUTENÇÃO DE ESCRITÓRIO DE APOIO À ATIVIDADE ...</td>
-      <td>...</td>
-      <td>103.73</td>
-      <td>4</td>
-      <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1299456</td>
-      <td>5492.0</td>
-      <td>NaN</td>
-      <td>3074</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>6024668.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>MANUTENÇÃO DE ESCRITÓRIO DE APOIO À ATIVIDADE ...</td>
-      <td>...</td>
-      <td>43.11</td>
-      <td>5</td>
-      <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1299457</td>
-      <td>5492.0</td>
-      <td>NaN</td>
-      <td>3074</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>5928732.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>MANUTENÇÃO DE ESCRITÓRIO DE APOIO À ATIVIDADE ...</td>
-      <td>...</td>
-      <td>33.30</td>
-      <td>2</td>
-      <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1268878</td>
-      <td>5369.0</td>
-      <td>NaN</td>
-      <td>3074</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 29 columns</p>
-</div>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -11974,119 +11789,24 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Loading csv</span>
+<span class="n">cand_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATASET_PATH</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[3]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>ideDocumento                                                       5.92874e+06
-txNomeParlamentar                                            ABEL MESQUITA JR.
-ideCadastro                                                             178957
-nuCarteiraParlamentar                                                        1
-nuLegislatura                                                             2015
-sgUF                                                                        RR
-sgPartido                                                                  DEM
-codLegislatura                                                              55
-numSubCota                                                                   1
-txtDescricao                 MANUTENÇÃO DE ESCRITÓRIO DE APOIO À ATIVIDADE ...
-numEspecificacaoSubCota                                                      0
-txtDescricaoEspecificacao                                                  NaN
-txtFornecedor                          COMPANHIA DE AGUAS E ESGOTOS DE RORAIMA
-txtCNPJCPF                                                         5.93947e+12
-txtNumero                                                               146439
-indTipoDocumento                                                             0
-datEmissao                                                 2016-02-15T00:00:00
-vlrDocumento                                                             37.37
-vlrGlosa                                                                     6
-vlrLiquido                                                               31.37
-numMes                                                                       1
-numAno                                                                    2016
-numParcela                                                                   0
-txtPassageiro                                                              NaN
-txtTrecho                                                                  NaN
-numLote                                                                1268870
-numRessarcimento                                                          5369
-vlrRestituicao                                                             NaN
-nuDeputadoId                                                              3074
-Name: 0, dtype: object</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>New names are based on the "<strong>Nome do Dado</strong>" column of the table available at <a href="http://www2.camara.leg.br/transparencia/cota-para-exercicio-da-atividade-parlamentar/explicacoes-sobre-o-formato-dos-arquivos-xml"><code>data/2016-08-08-datasets-format.html</code></a>, not "<strong>Elemento de Dado</strong>", their current names.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;ideDocumento&#39;</span><span class="p">:</span> <span class="s1">&#39;document_id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txNomeParlamentar&#39;</span><span class="p">:</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;ideCadastro&#39;</span><span class="p">:</span> <span class="s1">&#39;congressperson_id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;nuCarteiraParlamentar&#39;</span><span class="p">:</span> <span class="s1">&#39;congressperson_document&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;nuLegislatura&#39;</span><span class="p">:</span> <span class="s1">&#39;term&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;sgUF&#39;</span><span class="p">:</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;sgPartido&#39;</span><span class="p">:</span> <span class="s1">&#39;party&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;codLegislatura&#39;</span><span class="p">:</span> <span class="s1">&#39;term_id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;numSubCota&#39;</span><span class="p">:</span> <span class="s1">&#39;subquota_number&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txtDescricao&#39;</span><span class="p">:</span> <span class="s1">&#39;subquota_description&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;numEspecificacaoSubCota&#39;</span><span class="p">:</span> <span class="s1">&#39;subquota_group_id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txtDescricaoEspecificacao&#39;</span><span class="p">:</span> <span class="s1">&#39;subquota_group_description&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txtFornecedor&#39;</span><span class="p">:</span> <span class="s1">&#39;supplier&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txtCNPJCPF&#39;</span><span class="p">:</span> <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txtNumero&#39;</span><span class="p">:</span> <span class="s1">&#39;document_number&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;indTipoDocumento&#39;</span><span class="p">:</span> <span class="s1">&#39;document_type&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;datEmissao&#39;</span><span class="p">:</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;vlrDocumento&#39;</span><span class="p">:</span> <span class="s1">&#39;document_value&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;vlrGlosa&#39;</span><span class="p">:</span> <span class="s1">&#39;remark_value&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;vlrLiquido&#39;</span><span class="p">:</span> <span class="s1">&#39;net_value&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;numMes&#39;</span><span class="p">:</span> <span class="s1">&#39;month&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;numAno&#39;</span><span class="p">:</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;numParcela&#39;</span><span class="p">:</span> <span class="s1">&#39;installment&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txtPassageiro&#39;</span><span class="p">:</span> <span class="s1">&#39;passenger&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;txtTrecho&#39;</span><span class="p">:</span> <span class="s1">&#39;leg_of_the_trip&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;numLote&#39;</span><span class="p">:</span> <span class="s1">&#39;batch_number&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;numRessarcimento&#39;</span><span class="p">:</span> <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;vlrRestituicao&#39;</span><span class="p">:</span> <span class="s1">&#39;reimbursement_value&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;nuDeputadoId&#39;</span><span class="p">:</span> <span class="s1">&#39;applicant_id&#39;</span><span class="p">,</span>
-    <span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">categories</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Here, we quickly check the data using  value_counts() to get the frequency on each column</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cand_df</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
 </pre></div>
 
 </div>
@@ -12097,27 +11817,480 @@ Name: 0, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>	 ANO_ELEICAO 
 
+2016    497257
+2012    483825
+2004    401789
+2008    384532
+2014     26222
+2010     22577
+2006     20790
+Name: ANO_ELEICAO, dtype: int64
+	 NUM_TURNO 
 
-<div class="output_text output_subarea output_execute_result">
-<pre>Index([&#39;ASSINATURA DE PUBLICAÇÕES&#39;, &#39;COMBUSTÍVEIS E LUBRIFICANTES.&#39;,
-       &#39;CONSULTORIAS, PESQUISAS E TRABALHOS TÉCNICOS.&#39;,
-       &#39;DIVULGAÇÃO DA ATIVIDADE PARLAMENTAR.&#39;, &#39;Emissão Bilhete Aéreo&#39;,
-       &#39;FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR&#39;,
-       &#39;HOSPEDAGEM ,EXCETO DO PARLAMENTAR NO DISTRITO FEDERAL.&#39;,
-       &#39;LOCAÇÃO OU FRETAMENTO DE AERONAVES&#39;,
-       &#39;LOCAÇÃO OU FRETAMENTO DE EMBARCAÇÕES&#39;,
-       &#39;LOCAÇÃO OU FRETAMENTO DE VEÍCULOS AUTOMOTORES&#39;,
-       &#39;MANUTENÇÃO DE ESCRITÓRIO DE APOIO À ATIVIDADE PARLAMENTAR&#39;,
-       &#39;PARTICIPAÇÃO EM CURSO, PALESTRA OU EVENTO SIMILAR&#39;, &#39;PASSAGENS AÉREAS&#39;,
-       &#39;PASSAGENS TERRESTRES, MARÍTIMAS OU FLUVIAIS&#39;,
-       &#39;SERVIÇO DE SEGURANÇA PRESTADO POR EMPRESA ESPECIALIZADA.&#39;,
-       &#39;SERVIÇO DE TÁXI, PEDÁGIO E ESTACIONAMENTO&#39;, &#39;SERVIÇOS POSTAIS&#39;,
-       &#39;TELEFONIA&#39;],
-      dtype=&#39;object&#39;)</pre>
+1    1836124
+2        868
+Name: NUM_TURNO, dtype: int64
+	 DESCRICAO_ELEICAO 
+
+Eleições Municipais 2016                  497124
+ELEIÇÃO MUNICIPAL 2012                    483068
+ELEICOES 2004                             401789
+ELEIÇÕES 2008                             383530
+Eleições Gerais 2014                       26222
+ELEIÇÕES 2010                              22577
+ELEICOES 2006                              20790
+ELEIÇÕES SUPLEMENTARES 2008                  990
+JUARA                                         14
+Eleição Suplementar de Foz do Iguaçu          13
+ELEIÇÃO SUPLEMENTAR CAMAMU-BA                 13
+ELEIÇÃO SUPLEMENTAR MOSSORÓ-RN                12
+ ELEIÇÃO SUPLEMENTAR DE MARITUBA/PA           12
+NOVA ELEIÇÃO SANTANA DO PARNAÍBA              12
+Eleição Suplementar de Gravataí               12
+MAJORITÁRIA - CRICIÚMA                        12
+ELEIÇÃO SUPLEMENTAR - PIRES DO RIO            11
+ELEIÇÃO SUPLEMENTAR AMAPARI-AP                11
+ELEIÇÃO SUPLEMENTAR GUARAPARI 2012            10
+ELEIÇÃO SUPLEMENTAR DE PAULO DE FARIA         10
+NOVA ELEIÇÃO PIRANGI                          10
+ELEIÇÃO SUPLEMENTAR DE SANTA MARIA            10
+Eleição Suplementar de Piraí do Sul           10
+SUPLEMENTAR BELA VISTA                        10
+NOVA ELEIÇÃO DESCALVADO                       10
+NOVA ELEIÇÃO - ELDORADO 7ABR2013              10
+Eleição Suplementar de Calçoene-AP             9
+ELEIÇÃO SUPL. DE ÁGUA DOCE DO NORTE ES         9
+ELEIÇÃO SUPL. DE ÁGUA AZUL DO NORTE            9
+ELEIÇÃO SUPLEMENTAR - GOIATUBA                 9
+                                           ...  
+ELEIÇÃO SUPLEMENTAR - CAIÇARA DO NORTE         4
+MAJORITÁRIA - ERECHIM                          4
+MAJORITÁRIA - MAXIMILIANO DE ALMEIDA           4
+Nova Eleição 2017 - Sangão                     4
+ELEIÇÃO MAJORITÁRIA_SERRA DO MEL/RN            4
+ELEIÇÃO SUPLEMENTAR DE ARARIPE                 4
+NOVA ELEIÇÃO BOA ESPERANÇA DO SUL              4
+MAJORITÁRIA - PEDRAS ALTAS                     4
+MAJORITÁRIA - FORTALEZA DOS VALOS              4
+ELEIÇÃO SUPLEM. BREJO DA MADRE DE DEUS         4
+ELEIÇÃO SUPLEMENTAR DE MACARANI                4
+MAJORITÁRIA - TAQUARI                          4
+ELEIÇÃO SUPLEMENTAR DE ÁGUA PRETA              4
+Eleição Suplementar de Salto do Jacuí          4
+Eleição Suplementar de Arvorezinha             4
+MAJORITÁRIA - BALN RINCÃO                      4
+NOVA ELEIÇÃO - MERUOCA/CE                      4
+SÃO SEBASTIÃO DA VARGEM ALEGRE ZE 178          4
+MAJORITÁRIA - JAQUIRANA                        4
+ELEIÇÃO SUP. DE CACHOEIRA DOURADA              4
+Eleição Suplementar de Butiá                   4
+NOVA ELEIÇÃO - FERNÃO 7ABR2013                 4
+Eleição Suplementar de São Vendelino           4
+Eleição Suplementar Nova Laranjeiras           4
+ELEIÇÃO SUPLEMENTAR FRANCISCO DANTAS           4
+ELEIÇÃO SUPLEMENTAR DE BIQUINHAS               4
+ELEICAO SUPLEM. DE BOA VISTA DO GURUPI         4
+MAJORITÁRIA - TUPANDI                          4
+MAJORITÁRIA - COLINAS                          2
+NOVA ELEIÇÃO PEDRINHAS PAULISTA                2
+Name: DESCRICAO_ELEICAO, dtype: int64
+	 SIGLA_UF 
+
+SP    309867
+MG    283437
+BA    136528
+PR    118785
+RS    109415
+RJ     84313
+GO     77641
+MA     70845
+PA     70587
+PE     66949
+SC     66259
+CE     55448
+PB     46646
+MT     40026
+PI     39594
+ES     37118
+RN     34129
+AM     31939
+AL     30137
+TO     29504
+MS     26796
+SE     22380
+RO     20527
+AC      9225
+AP      8026
+RR      7660
+DF      3141
+BR        70
+Name: SIGLA_UF, dtype: int64
+	 DESCRICAO_UE 
+
+RIO DE JANEIRO                14315
+SÃO PAULO                     13796
+MINAS GERAIS                   5362
+BELO HORIZONTE                 5015
+FORTALEZA                      4247
+GUARULHOS                      4146
+SALVADOR                       4134
+MANAUS                         4112
+CURITIBA                       3444
+RECIFE                         3404
+PARANÁ                         3282
+DISTRITO FEDERAL               3141
+GOIÁS                          3036
+BAHIA                          3002
+CAMPINAS                       2997
+RIO GRANDE DO SUL              2974
+BELÉM                          2803
+PARÁ                           2612
+DUQUE DE CAXIAS                2527
+CEARÁ                          2474
+SANTA LUZIA                    2394
+BELFORD ROXO                   2289
+PERNAMBUCO                     2271
+MARANHÃO                       2244
+PORTO ALEGRE                   2238
+GOIÂNIA                        2152
+CAMPO GRANDE                   2127
+SÃO GONÇALO                    2082
+JABOATÃO DOS GUARARAPES        2040
+CONTAGEM                       2036
+                              ...  
+CAPITAO                          21
+VERE                             21
+SAO LUIS DO PIAUI                21
+POCO DAS ANTAS                   21
+SAO FERNANDO                     21
+SALVADOR DAS MISSOES             21
+SANTA CECILIA DO SUL             20
+BETANIA                          20
+JOSE DA PENHA                    20
+ITAPORA DO TOCANTINS             20
+BETANIA DO PIAUI                 20
+FIGUEIROPOLIS D&#39;OESTE            20
+CAMPINAS DO PIAUI                20
+SAO PEDRO DO BUTIA               20
+SAO JOSE DA BOA VISTA            20
+SAGRADA FAMILIA                  19
+UNIAO DA SERRA                   19
+BELA VISTA DO PIAUI              18
+ALMIRANTE TAMANDARE DO SUL       18
+PAJEU DO PIAUI                   18
+NOVA CANDELARIA                  18
+BRACO DO TROMBUDO                18
+IBIACA                           18
+CAMPOS DE JULIO                  17
+AGUA SANTA                       16
+JOAO DIAS                        16
+CAMPINA DAS MISSOES              15
+NOVA MARILANDIA                  14
+ENEAS MARQUES                    13
+ALEGRETE DO PIAUI                11
+Name: DESCRICAO_UE, dtype: int64
+	 DESCRICAO_CARGO 
+
+VEREADOR                                                                                1634725
+VICE-PREFEITO                                                                             67176
+PREFEITO                                                                                  65498
+DEPUTADO ESTADUAL                                                                         44512
+DEPUTADO FEDERAL                                                                          18811
+DEPUTADO DISTRITAL                                                                         2610
+SENADOR                                                                                     706
+VICE-GOVERNADOR                                                                             666
+GOVERNADOR                                                                                  628
+2º SUPLENTE SENADOR                                                                         590
+1º SUPLENTE SENADOR                                                                         573
+2º SUPLENTE                                                                                 214
+1º SUPLENTE                                                                                 209
+PRESIDENTE                                                                                   35
+VICE-PRESIDENTE                                                                              35
+VOCÊ É A FAVOR | DA CRIAÇÃO DO MUNICÍPIO DE | EXTREMA DE RONDÔNIA?                            2
+VOCÊ É A FAVOR DA | ALTERAÇÃO DO NOME | DA CIDADE DE EMBU&#34; | PARA &#34;EMBU DAS ARTES&#34;?&#34;          2
+Name: DESCRICAO_CARGO, dtype: int64
+	 NOME_CANDIDATO 
+
+LUIZ CARLOS DA SILVA                      338
+JOSE CARLOS DA SILVA                      320
+MARIA APARECIDA DA SILVA                  306
+JOSÉ CARLOS DA SILVA                      258
+JOÃO BATISTA DA SILVA                     254
+ANTONIO CARLOS DA SILVA                   240
+JOSE CARLOS DOS SANTOS                    208
+LUIZ CARLOS DOS SANTOS                    186
+ANTONIO PEREIRA DA SILVA                  181
+CARLOS ROBERTO DA SILVA                   174
+ANTONIO CARLOS DOS SANTOS                 172
+MARCOS ANTONIO DA SILVA                   171
+CARLOS ALBERTO DA SILVA                   166
+JOSE ANTONIO DA SILVA                     160
+MARIA APARECIDA DOS SANTOS                157
+JOÃO BATISTA DE OLIVEIRA                  157
+FRANCISCO DE ASSIS DA SILVA               155
+LUIZ CARLOS DE OLIVEIRA                   153
+CARLOS ALBERTO DOS SANTOS                 148
+JOSE CARLOS DE OLIVEIRA                   143
+JOÃO BATISTA DOS SANTOS                   142
+JOSÉ CARLOS DOS SANTOS                    137
+RAIMUNDO NONATO DA SILVA                  136
+LUIZ ANTONIO DA SILVA                     132
+MARIA JOSE DA SILVA                       131
+JOAO BATISTA DA SILVA                     131
+PAULO ROBERTO DA SILVA                    129
+PAULO SERGIO DA SILVA                     127
+JOSÉ PEREIRA DA SILVA                     123
+ANTONIO FERREIRA DA SILVA                 121
+                                         ... 
+JOSÉMILSON LUCAS DA SILVA                   1
+SILVANETE PEREIRA NASCIMENTO                1
+CLARICE SOARES DA SILVA                     1
+ADEMIR JOÃOZINHO STEIL                      1
+GENESCO EVANGELISTA MARQUES DOS SANTOS      1
+JOSÉ SOARES DE MESQUITA                     1
+GILBERTO POLI                               1
+ELIETE RODRIGUES DIAS                       1
+ANILSON FERREIRA DOS SANTOS                 1
+ELIETE MARIA DA SILVA TORRES                1
+ADELIO JOSÉ CARDOSO                         1
+LUIZA DE FATIMA ALMEIDA DA CRUZ             1
+ADALIRIO SOARES LOPES                       1
+PAULO VAZ                                   1
+AÉLIO SILVEIRA ARUDA                        1
+MAYKERT GONZAGA MURÇA                       1
+NAZIRA MARIA DA SILVA MACIEL                1
+ITAMAR ALVES CANOPF                         1
+JHONE MAYK DE ASSIS                         1
+ANDRÉIA DIAS NASCIMENTO                     1
+EDUARDO CERQUEIRA DOS SANTOS                1
+LUIS FERNANDO KASPER                        1
+JOSE VITOR LOUREIRO                         1
+GLÉCIA PEREIRA DA SILVA                     1
+RIVANALDO MENEZES DE FREITA                 1
+CLAUDECIR PEIXOTO DE MELO                   1
+VOLNEI MARMENTINI                           1
+JANDER LUIZ DE SOUZA SANTOS                 1
+VERA LUCIA CAMARGO                          1
+RUI SIMÕES DOS SANTOS                       1
+Name: NOME_CANDIDATO, dtype: int64
+	 SEQUENCIAL_CANDIDATO 
+
+27              2084
+26              2083
+28              2081
+11              2076
+31              2073
+22              2071
+14              2071
+25              2071
+12              2068
+37              2068
+29              2067
+30              2066
+20              2065
+10              2065
+13              2065
+21              2064
+24              2064
+38              2062
+23              2061
+32              2060
+40              2059
+36              2058
+41              2058
+33              2058
+34              2055
+18              2054
+39              2052
+19              2052
+17              2052
+35              2051
+                ... 
+120000008463       1
+220000003735       1
+180000004482       1
+150000003433       1
+130000045097       1
+130000022446       1
+50000045893        1
+160000029339       1
+250000049140       1
+130000014518       1
+130000075668       1
+190000006923       1
+160000038311       1
+260000003156       1
+130000081998       1
+180000005575       1
+10000002757        1
+90000019060        1
+270000002591       1
+50000002400        1
+100000019057       1
+250000003191       1
+90000021490        1
+190000027539       1
+140000020066       1
+190000004424       1
+90000027736        1
+170000016322       1
+50000015224        1
+250000018565       1
+Name: SEQUENCIAL_CANDIDATO, dtype: int64
+	 CPF_CANDIDATO 
+
+#NULO#         782
+00000000000     23
+07166109653      9
+34175504249      9
+01311846794      9
+08654680792      9
+00247570125      9
+81824726791      9
+21891583034      9
+89219961504      9
+53433696187      8
+02455828867      8
+42787262449      8
+00153958200      8
+44828624953      8
+07290623762      8
+02518619887      8
+82334196991      8
+20912340282      8
+24101370168      8
+11811455204      8
+10636994104      8
+86132687904      8
+21387268864      8
+26838194805      8
+70079650830      8
+52096327172      8
+93565968834      8
+15044162876      8
+13521039668      8
+              ... 
+25514072819      1
+02297553994      1
+06114144813      1
+05072501922      1
+32511639815      1
+08959994200      1
+19169288895      1
+05111346651      1
+92921329620      1
+37674633268      1
+33372969634      1
+04403328423      1
+06998414455      1
+68744102615      1
+01960709615      1
+36609480044      1
+81812450672      1
+27834999591      1
+02559132656      1
+18264379915      1
+15381080468      1
+35833246687      1
+06861431320      1
+09271990684      1
+44801327087      1
+86485555315      1
+08668468758      1
+31047840006      1
+08889605812      1
+86089676420      1
+Name: CPF_CANDIDATO, dtype: int64
+	 NUM_TITULO_ELEITORAL_CANDIDATO 
+
+#NI#            246
+000000000000     12
+078197990566      9
+018043040469      9
+001332522500      9
+006956330256      9
+096204260353      9
+000138731082      9
+008976591473      9
+051255330329      9
+050981860620      8
+100679880191      8
+001531061899      8
+030649460930      8
+000428982313      8
+046162330205      8
+009710700914      8
+268189670167      8
+027078800191      8
+022822831066      8
+086309170108      8
+011808700256      8
+003620941287      8
+004968442216      8
+004423681929      8
+059745140329      8
+000605301414      8
+038345361163      8
+039174640361      8
+116572130124      8
+               ... 
+012228682208      1
+098476600221      1
+084480290477      1
+183424990299      1
+021420790930      1
+010048060957      1
+016484930124      1
+000463431341      1
+201829560183      1
+010143911821      1
+004076851309      1
+090663480299      1
+055618520299      1
+222856740124      1
+028026590248      1
+031218801066      1
+024505770230      1
+042495590281      1
+000038101856      1
+091813100272      1
+030400780230      1
+086573110604      1
+023385460744      1
+029377741392      1
+040325860450      1
+064198320141      1
+230629000183      1
+041329520108      1
+122962110370      1
+078517310213      1
+Name: NUM_TITULO_ELEITORAL_CANDIDATO, dtype: int64
+	 DESC_SIT_TOT_TURNO 
+
+SUPLENTE                                          1107993
+NÃO ELEITO                                         321926
+#NULO#                                             132428
+ELEITO                                             116463
+ELEITO POR QP                                       92910
+MÉDIA                                               24377
+ELEITO POR MÉDIA                                    23936
+#NE#                                                 5965
+REGISTRO NEGADO ANTES DA ELEIÇÃO                     4765
+INDEFERIDO COM RECURSO                               2310
+RENÚNCIA/FALECIMENTO/CASSAÇÃO ANTES DA ELEIÇÃO       1983
+2º TURNO                                              674
+SUBSTITUÍDO                                           484
+REGISTRO NEGADO APÓS A ELEIÇÃO                        440
+RENÚNCIA/FALECIMENTO COM SUBSTITUIÇÃO                 210
+RENÚNCIA/FALECIMENTO/CASSAÇÃO APÓS A ELEIÇÃO          123
+CASSADO COM RECURSO                                     1
+Name: DESC_SIT_TOT_TURNO, dtype: int64
+</pre>
 </div>
-
 </div>
 
 </div>
@@ -12129,36 +12302,35 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>When localizing categorical values, I prefer a direct translation over adaptation as much as possible. Not sure what values each attribute will contain, so I give the power of the interpretation to the people analyzing it in the future.</p>
+<h3 id="Only-elected-politicians">Only elected politicians<a class="anchor-link" href="#Only-elected-politicians">&#182;</a></h3><p>Now, we process cancidacies data to obtain a list of elected politicians
+We use DESC_SIT_TOT_TURNO to figure out who has been elected. It is better to use the description column then the code column, since the codes dont seem to be consistent along the years.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ind_elected</span><span class="o">=</span><span class="n">cand_df</span><span class="o">.</span><span class="n">DESC_SIT_TOT_TURNO</span><span class="o">==</span><span class="s1">&#39;ELEITO&#39;</span>
+<span class="n">ind_elected</span><span class="o">|=</span><span class="n">cand_df</span><span class="o">.</span><span class="n">DESC_SIT_TOT_TURNO</span><span class="o">==</span><span class="s1">&#39;ELEITO POR QP&#39;</span>
+<span class="n">ind_elected</span><span class="o">|=</span><span class="n">cand_df</span><span class="o">.</span><span class="n">DESC_SIT_TOT_TURNO</span><span class="o">==</span><span class="s1">&#39;ELEITO POR MÉDIA&#39;</span>
+<span class="n">ind_elected</span><span class="o">|=</span><span class="n">cand_df</span><span class="o">.</span><span class="n">DESC_SIT_TOT_TURNO</span><span class="o">==</span><span class="s1">&#39;MÉDIA&#39;</span>
+<span class="c1"># ind_elected|=cand_df.DESC_SIT_TOT_TURNO==&#39;SUPLENTE&#39;# should we consider it?</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">rename_categories</span><span class="p">([</span>
-        <span class="s1">&#39;Publication subscriptions&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Fuels and lubricants&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Consultancy, research and technical work&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Publicity of parliamentary activity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Flight ticket issue&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Congressperson meal&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Lodging, except for congressperson from Distrito Federal&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Aircraft renting or charter of aircraft&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Watercraft renting or charter&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Automotive vehicle renting or charter&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Maintenance of office supporting parliamentary activity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Participation in course, talk or similar event&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Flight tickets&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Terrestrial, maritime and fluvial tickets&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Security service provided by specialized company&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Taxi, toll and parking&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Postal services&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Telecommunication&#39;</span><span class="p">,</span>
-    <span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">politicians_df</span><span class="o">=</span><span class="n">cand_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">ind_elected</span><span class="p">,[</span><span class="s1">&#39;CPF_CANDIDATO&#39;</span><span class="p">,</span><span class="s1">&#39;NOME_CANDIDATO&#39;</span><span class="p">,</span><span class="s1">&#39;DESCRICAO_CARGO&#39;</span><span class="p">,</span><span class="s1">&#39;DESCRICAO_UE&#39;</span><span class="p">,</span><span class="s1">&#39;SIGLA_UF&#39;</span><span class="p">,</span><span class="s1">&#39;ANO_ELEICAO&#39;</span><span class="p">]]</span>
 </pre></div>
 
 </div>
@@ -12171,7 +12343,7 @@ Name: 0, dtype: object</pre>
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">politicians_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;NOME_CANDIDATO&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12190,153 +12362,567 @@ Name: 0, dtype: object</pre>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>document_id</th>
-      <th>congressperson_name</th>
-      <th>congressperson_id</th>
-      <th>congressperson_document</th>
-      <th>term</th>
-      <th>state</th>
-      <th>party</th>
-      <th>term_id</th>
-      <th>subquota_number</th>
-      <th>subquota_description</th>
-      <th>...</th>
-      <th>net_value</th>
-      <th>month</th>
-      <th>year</th>
-      <th>installment</th>
-      <th>passenger</th>
-      <th>leg_of_the_trip</th>
-      <th>batch_number</th>
-      <th>reimbursement_number</th>
-      <th>reimbursement_value</th>
-      <th>applicant_id</th>
+      <th>CPF_CANDIDATO</th>
+      <th>NOME_CANDIDATO</th>
+      <th>DESCRICAO_CARGO</th>
+      <th>DESCRICAO_UE</th>
+      <th>SIGLA_UF</th>
+      <th>ANO_ELEICAO</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>5928744.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>Maintenance of office supporting parliamentary...</td>
-      <td>...</td>
-      <td>31.37</td>
-      <td>1</td>
-      <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1268870</td>
-      <td>5369.0</td>
-      <td>NaN</td>
-      <td>3074</td>
+      <th>1096815</th>
+      <td>13178547304</td>
+      <td>AARÃO CRUZ MENDES</td>
+      <td>PREFEITO</td>
+      <td>BENEDITINOS</td>
+      <td>PI</td>
+      <td>2012</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>5970849.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>Maintenance of office supporting parliamentary...</td>
-      <td>...</td>
-      <td>37.24</td>
-      <td>3</td>
-      <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1282185</td>
-      <td>5417.0</td>
-      <td>NaN</td>
-      <td>3074</td>
+      <th>631490</th>
+      <td>13178547304</td>
+      <td>AARÃO CRUZ MENDES</td>
+      <td>PREFEITO</td>
+      <td>BENEDITINOS</td>
+      <td>PI</td>
+      <td>2008</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>6024670.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>Maintenance of office supporting parliamentary...</td>
-      <td>...</td>
-      <td>103.73</td>
-      <td>4</td>
-      <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1299456</td>
-      <td>5492.0</td>
-      <td>NaN</td>
-      <td>3074</td>
+      <th>259280</th>
+      <td>58270876704</td>
+      <td>AARÃO DE MOURA BRITO NETO</td>
+      <td>PREFEITO</td>
+      <td>MANGARATIBA</td>
+      <td>RJ</td>
+      <td>2004</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>6024668.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>Maintenance of office supporting parliamentary...</td>
-      <td>...</td>
-      <td>43.11</td>
-      <td>5</td>
+      <th>1657528</th>
+      <td>58270876704</td>
+      <td>AARÃO DE MOURA BRITO NETO</td>
+      <td>PREFEITO</td>
+      <td>MANGARATIBA</td>
+      <td>RJ</td>
       <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1299457</td>
-      <td>5492.0</td>
-      <td>NaN</td>
-      <td>3074</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>5928732.0</td>
-      <td>ABEL MESQUITA JR.</td>
-      <td>178957.0</td>
-      <td>1.0</td>
-      <td>2015</td>
-      <td>RR</td>
-      <td>DEM</td>
-      <td>55.0</td>
-      <td>1</td>
-      <td>Maintenance of office supporting parliamentary...</td>
-      <td>...</td>
-      <td>33.30</td>
-      <td>2</td>
+      <th>671307</th>
+      <td>58270876704</td>
+      <td>AARÃO DE MOURA BRITO NETO</td>
+      <td>PREFEITO</td>
+      <td>MANGARATIBA</td>
+      <td>RJ</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>1554972</th>
+      <td>16133358149</td>
+      <td>ABADIA DE MOURA MORAES</td>
+      <td>VEREADOR</td>
+      <td>ARAPUTANGA</td>
+      <td>MT</td>
       <td>2016</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1268878</td>
-      <td>5369.0</td>
-      <td>NaN</td>
-      <td>3074</td>
+    </tr>
+    <tr>
+      <th>492413</th>
+      <td>24937630253</td>
+      <td>ABADIA DELFINO DUARTE SOUZA</td>
+      <td>VEREADOR</td>
+      <td>GOIANÉSIA</td>
+      <td>GO</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>106975</th>
+      <td>59857277691</td>
+      <td>ABADIA NUNES DE OLIVEIRA ANDRADE</td>
+      <td>VEREADOR</td>
+      <td>BONFINOPOLIS DE MINAS</td>
+      <td>MG</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>1311039</th>
+      <td>37736744149</td>
+      <td>ABADIO RODRIGUES DA SILVA</td>
+      <td>VEREADOR</td>
+      <td>TALISMÃ</td>
+      <td>TO</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>939880</th>
+      <td>09482822315</td>
+      <td>ABDALA DA COSTA SOUSA</td>
+      <td>VEREADOR</td>
+      <td>BOM JESUS DAS SELVAS</td>
+      <td>MA</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>940015</th>
+      <td>00917446364</td>
+      <td>ABDALA DA COSTA SOUSA FILHO</td>
+      <td>VICE-PREFEITO</td>
+      <td>BOM JESUS DAS SELVAS</td>
+      <td>MA</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>1315209</th>
+      <td>33460825200</td>
+      <td>ABDALA HABIB FRAXE JUNIOR</td>
+      <td>DEPUTADO ESTADUAL</td>
+      <td>AMAZONAS</td>
+      <td>AM</td>
+      <td>2014</td>
+    </tr>
+    <tr>
+      <th>808132</th>
+      <td>33460825200</td>
+      <td>ABDALA HABIB FRAXE JUNIOR</td>
+      <td>DEPUTADO ESTADUAL</td>
+      <td>AMAZONAS</td>
+      <td>AM</td>
+      <td>2010</td>
+    </tr>
+    <tr>
+      <th>776856</th>
+      <td>04365099892</td>
+      <td>ABDALA SALOMÃO NETO</td>
+      <td>VEREADOR</td>
+      <td>PINDAMONHANGABA</td>
+      <td>SP</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>635601</th>
+      <td>13076688871</td>
+      <td>ABDENALDO JOSÉ DE SOUSA</td>
+      <td>VEREADOR</td>
+      <td>MORRO CABEÇA NO TEMPO</td>
+      <td>PI</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>496679</th>
+      <td>24261742187</td>
+      <td>ABDERMAN BATISTA DA SILVA JÚNIOR</td>
+      <td>VEREADOR</td>
+      <td>NERÓPOLIS</td>
+      <td>GO</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>517850</th>
+      <td>29143853315</td>
+      <td>ABDIAS CIDRAO RODRIGUES DA COSTA</td>
+      <td>VEREADOR</td>
+      <td>VARGEM GRANDE</td>
+      <td>MA</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>936023</th>
+      <td>29143853315</td>
+      <td>ABDIAS CIDRAO RODRIGUES DA COSTA</td>
+      <td>VEREADOR</td>
+      <td>VARGEM GRANDE</td>
+      <td>MA</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>98992</th>
+      <td>29143853315</td>
+      <td>ABDIAS CIDRÃO RODRIGUES DA COSTA</td>
+      <td>VEREADOR</td>
+      <td>VARGEM GRANDE</td>
+      <td>MA</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>96044</th>
+      <td>52052710353</td>
+      <td>ABDIAS GOMES DA COSTA</td>
+      <td>VEREADOR</td>
+      <td>SAO DOMINGOS DO AZEITAO</td>
+      <td>MA</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>943656</th>
+      <td>52052710353</td>
+      <td>ABDIAS GOMES DA COSTA</td>
+      <td>VICE-PREFEITO</td>
+      <td>SÃO DOMINGOS DO AZEITÃO</td>
+      <td>MA</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>515145</th>
+      <td>52052710353</td>
+      <td>ABDIAS GOMES DA COSTA</td>
+      <td>VEREADOR</td>
+      <td>SÃO DOMINGOS DO AZEITÃO</td>
+      <td>MA</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>1455080</th>
+      <td>52052710353</td>
+      <td>ABDIAS GOMES DA COSTA</td>
+      <td>VICE-PREFEITO</td>
+      <td>SÃO DOMINGOS DO AZEITÃO</td>
+      <td>MA</td>
+      <td>2016</td>
+    </tr>
+    <tr>
+      <th>52328</th>
+      <td>06926096368</td>
+      <td>ABDIAS LOPES DE SOUSA</td>
+      <td>VEREADOR</td>
+      <td>IPAPORANGA</td>
+      <td>CE</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>501714</th>
+      <td>02531160159</td>
+      <td>ABDIAS LUIZ DA SILVA</td>
+      <td>VEREADOR</td>
+      <td>TURVÂNIA</td>
+      <td>GO</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>474090</th>
+      <td>00130397334</td>
+      <td>ABDIAS PATRICIO OLIVEIRA</td>
+      <td>PREFEITO</td>
+      <td>ITAITINGA</td>
+      <td>CE</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>52633</th>
+      <td>00130397334</td>
+      <td>ABDIAS PATRICIO OLIVEIRA</td>
+      <td>PREFEITO</td>
+      <td>ITAITINGA</td>
+      <td>CE</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>86443</th>
+      <td>40788091387</td>
+      <td>ABDIAS SOARES DOS SANTOS</td>
+      <td>VEREADOR</td>
+      <td>BOM LUGAR</td>
+      <td>MA</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>586389</th>
+      <td>34028803187</td>
+      <td>ABDIAS VIEIRA DA SILVA</td>
+      <td>VEREADOR</td>
+      <td>CURVELÂNDIA</td>
+      <td>MT</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>1549170</th>
+      <td>34028803187</td>
+      <td>ABDIAS VIEIRA DA SILVA</td>
+      <td>VEREADOR</td>
+      <td>CURVELÂNDIA</td>
+      <td>MT</td>
+      <td>2016</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>739982</th>
+      <td>29965438900</td>
+      <td>ÉZIO SPERA</td>
+      <td>PREFEITO</td>
+      <td>ASSIS</td>
+      <td>SP</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>177491</th>
+      <td>62278320068</td>
+      <td>ÊNIO ALVES DA SILVA</td>
+      <td>PREFEITO</td>
+      <td>UNIAO DO SUL</td>
+      <td>MT</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>250154</th>
+      <td>71742840949</td>
+      <td>ÊNIO GONZAGA NEVES</td>
+      <td>VEREADOR</td>
+      <td>SAO PEDRO DO IGUACU</td>
+      <td>PR</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>1707055</th>
+      <td>19955529091</td>
+      <td>ÊNIO JOSÉ DICK</td>
+      <td>VEREADOR</td>
+      <td>TRAMANDAÍ</td>
+      <td>RS</td>
+      <td>2016</td>
+    </tr>
+    <tr>
+      <th>441835</th>
+      <td>59544635572</td>
+      <td>ÊNIO PEREIRA GUEDES</td>
+      <td>VEREADOR</td>
+      <td>BOM JESUS DA LAPA</td>
+      <td>BA</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>1256513</th>
+      <td>20456497846</td>
+      <td>ÊNIO RIBEIRO RIBAS</td>
+      <td>VEREADOR</td>
+      <td>SANTO EXPEDITO</td>
+      <td>SP</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>709306</th>
+      <td>57586489068</td>
+      <td>ÊNIO SCHEIN</td>
+      <td>VEREADOR</td>
+      <td>PORTO VERA CRUZ</td>
+      <td>RS</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>1194638</th>
+      <td>57586489068</td>
+      <td>ÊNIO SCHEIN</td>
+      <td>VEREADOR</td>
+      <td>PORTO VERA CRUZ</td>
+      <td>RS</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>1614992</th>
+      <td>05488911332</td>
+      <td>ÊNNIO DA COSTA GONÇALVES</td>
+      <td>VEREADOR</td>
+      <td>CALDEIRÃO GRANDE DO PIAUÍ</td>
+      <td>PI</td>
+      <td>2016</td>
+    </tr>
+    <tr>
+      <th>308334</th>
+      <td>02099748934</td>
+      <td>ÊNORE TADEU GRANZOTTO</td>
+      <td>VEREADOR</td>
+      <td>ANITA GARIBALDI</td>
+      <td>SC</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>1062546</th>
+      <td>07989001489</td>
+      <td>ÍCARO TEIXEIRA ROCHA</td>
+      <td>VEREADOR</td>
+      <td>ALAGOA NOVA</td>
+      <td>PB</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>214707</th>
+      <td>90114876487</td>
+      <td>ÍRIS ALMEIDA AVELINO</td>
+      <td>VEREADOR</td>
+      <td>SANHARO</td>
+      <td>PE</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>852208</th>
+      <td>70742480534</td>
+      <td>ÍRIS DE CÁSSIA SANTOS COSTA</td>
+      <td>VEREADOR</td>
+      <td>MARCIONÍLIO SOUZA</td>
+      <td>BA</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>34076</th>
+      <td>70742480534</td>
+      <td>ÍRIS DE CÁSSIA SANTOS COSTA</td>
+      <td>VEREADOR</td>
+      <td>MARCIONILIO SOUZA</td>
+      <td>BA</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>557082</th>
+      <td>62300199653</td>
+      <td>ÍRIS MARIA DE ALCÂNTARA</td>
+      <td>VEREADOR</td>
+      <td>PAPAGAIOS</td>
+      <td>MG</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>578283</th>
+      <td>74865846620</td>
+      <td>ÍRIS PEREIRA RAMOS</td>
+      <td>PREFEITO</td>
+      <td>PONTO CHIQUE</td>
+      <td>MG</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>618503</th>
+      <td>07093421440</td>
+      <td>ÍTALO DAMASCENO CABRAL DE ANDRADE</td>
+      <td>VEREADOR</td>
+      <td>BONITO</td>
+      <td>PE</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>411128</th>
+      <td>09543937249</td>
+      <td>ÍTALO DE ALMEIDA MÁCOLA JUNIOR</td>
+      <td>DEPUTADO ESTADUAL</td>
+      <td>PARÁ</td>
+      <td>PA</td>
+      <td>2006</td>
+    </tr>
+    <tr>
+      <th>1594682</th>
+      <td>08439743467</td>
+      <td>ÍTALO FERREIRA DOS SANTOS</td>
+      <td>VICE-PREFEITO</td>
+      <td>LAGOA GRANDE</td>
+      <td>PE</td>
+      <td>2016</td>
+    </tr>
+    <tr>
+      <th>1084326</th>
+      <td>08439743467</td>
+      <td>ÍTALO FERREIRA DOS SANTOS</td>
+      <td>VEREADOR</td>
+      <td>LAGOA GRANDE</td>
+      <td>PE</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>1682855</th>
+      <td>00881006424</td>
+      <td>ÍTALO FRANCISCO GONCALVES MEDEIROS</td>
+      <td>VEREADOR</td>
+      <td>ITAÚ</td>
+      <td>RN</td>
+      <td>2016</td>
+    </tr>
+    <tr>
+      <th>683296</th>
+      <td>00881006424</td>
+      <td>ÍTALO FRANCISCO GONÇALVES MEDEIROS</td>
+      <td>VEREADOR</td>
+      <td>ITAÚ</td>
+      <td>RN</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>1156636</th>
+      <td>00881006424</td>
+      <td>ÍTALO FRANCISCO GONÇALVES MEDEIROS</td>
+      <td>VEREADOR</td>
+      <td>ITAÚ</td>
+      <td>RN</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>1677073</th>
+      <td>04554888436</td>
+      <td>ÍTALO MENDONÇA DE CARVALHO</td>
+      <td>VEREADOR</td>
+      <td>MACAU</td>
+      <td>RN</td>
+      <td>2016</td>
+    </tr>
+    <tr>
+      <th>1689699</th>
+      <td>07346070674</td>
+      <td>ÍTALO OTÁVIO TEIXEIRA PINTO</td>
+      <td>VEREADOR</td>
+      <td>BOA VISTA</td>
+      <td>RR</td>
+      <td>2016</td>
+    </tr>
+    <tr>
+      <th>468159</th>
+      <td>77707249534</td>
+      <td>ÍTALO XAVIER MATOS</td>
+      <td>VEREADOR</td>
+      <td>WAGNER</td>
+      <td>BA</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>737108</th>
+      <td>09993391840</td>
+      <td>ÍVANO JOSÉ ZUCCOLOTTO FILHO</td>
+      <td>VEREADOR</td>
+      <td>ALTINÓPOLIS</td>
+      <td>SP</td>
+      <td>2008</td>
+    </tr>
+    <tr>
+      <th>1161818</th>
+      <td>05479977440</td>
+      <td>ÓSEAS MONTHALGGAN FERNANDES COSTA</td>
+      <td>VEREADOR</td>
+      <td>UPANEMA</td>
+      <td>RN</td>
+      <td>2012</td>
+    </tr>
+    <tr>
+      <th>20538</th>
+      <td>10691987572</td>
+      <td>ÓTON CARDOSO PEREIRA</td>
+      <td>VEREADOR</td>
+      <td>CAMAMU</td>
+      <td>BA</td>
+      <td>2004</td>
+    </tr>
+    <tr>
+      <th>1465254</th>
+      <td>34491686653</td>
+      <td>ÚLTIMO BITENCOURT DE FREITAS</td>
+      <td>PREFEITO</td>
+      <td>MONTE ALEGRE DE MINAS</td>
+      <td>MG</td>
+      <td>2016</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 29 columns</p>
+<p>257686 rows × 6 columns</p>
 </div>
 </div>
 
@@ -12346,76 +12932,15 @@ Name: 0, dtype: object</pre>
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It is quite curious that alphabetically ordered in this way, the last politician is called...</p>
 
 </div>
 </div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>document_id                                                         5.92874e+06
-congressperson_name                                           ABEL MESQUITA JR.
-congressperson_id                                                        178957
-congressperson_document                                                       1
-term                                                                       2015
-state                                                                        RR
-party                                                                       DEM
-term_id                                                                      55
-subquota_number                                                               1
-subquota_description          Maintenance of office supporting parliamentary...
-subquota_group_id                                                             0
-subquota_group_description                                                  NaN
-supplier                                COMPANHIA DE AGUAS E ESGOTOS DE RORAIMA
-cnpj_cpf                                                            5.93947e+12
-document_number                                                          146439
-document_type                                                                 0
-issue_date                                                  2016-02-15T00:00:00
-document_value                                                            37.37
-remark_value                                                                  6
-net_value                                                                 31.37
-month                                                                         1
-year                                                                       2016
-installment                                                                   0
-passenger                                                                   NaN
-leg_of_the_trip                                                             NaN
-batch_number                                                            1268870
-reimbursement_number                                                       5369
-reimbursement_value                                                         NaN
-applicant_id                                                               3074
-Name: 0, dtype: object</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
     </div>
   </div>
