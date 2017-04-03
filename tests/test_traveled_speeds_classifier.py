@@ -77,3 +77,7 @@ class TestTraveledSpeedsClassifier(TestCase):
             TraveledSpeedsClassifier(contamination=0)
         with self.assertRaises(ValueError):
             TraveledSpeedsClassifier(contamination=1)
+
+    def test_is_company_coordinates_in_brazil(self):
+        prediction = self.subject.predict(self.dataset)
+        self.assertEqual(1, prediction[28])
