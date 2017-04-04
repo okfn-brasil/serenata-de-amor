@@ -1,7 +1,9 @@
 import asyncio
 import json
+import logging
 import math
 import os
+import sys
 from argparse import ArgumentParser
 from csv import DictWriter
 from configparser import RawConfigParser
@@ -19,6 +21,9 @@ from geopy.distance import vincenty
 
 
 DTYPE = dict(cnpj=np.str)
+LOG_FORMAT = '[%(levelname)s] %(asctime)s: %(message)s'
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
 
 
 class SexPlacesNearBy:
@@ -85,7 +90,7 @@ class SexPlacesNearBy:
                 prefix = '💋 ' if place['distance'] < 5 else ''
                 msg = '{}Found something interesting {:.2f}m away from {}…'
                 args = (prefix, place.get('distance'), self.company_name)
-                print(msg.format(*args))
+                logging.info(msg.format(*args))
                 self.closest = place
                 return place
 
@@ -102,7 +107,7 @@ class SexPlacesNearBy:
         coords = (self.latitude, self.longitude)
         if not all(map(self.is_valid_coordinate, coords)):
             msg = 'No geolocation information for company: {} ({})'
-            print(msg.format(self.company_name, self.company['cnpj']))
+            logging.info(msg.format(self.company_name, self.company['cnpj']))
             return False
 
         return True
@@ -120,7 +125,7 @@ class SexPlacesNearBy:
         if print_status:
             msg = 'Looking for a {} near {} ({})…'
             args = (keyword, self.company_name, self.company.get('cnpj'))
-            print(msg.format(*args))
+            logging.info(msg.format(*args))
 
         url = self.nearby_url(keyword)
         response = await request('GET', url)
@@ -148,11 +153,11 @@ class SexPlacesNearBy:
         if response['status'] != 'OK':
             if 'error_message' in response:
                 status, error = response.get('status'), response.get('error')
-                print('{}: {}'.format(status, error))
+                logging.info('{}: {}'.format(status, error))
                 return None
             elif response.get('status') != 'ZERO_RESULTS':
                 msg = 'Google Places API Status: {}'
-                print(msg.format(response.get('status')))
+                logging.info(msg.format(response.get('status')))
                 return None
 
         else:
@@ -294,7 +299,7 @@ async def main_coro(companies, output, max_requests):
 
     semaphore = asyncio.Semaphore(max_requests // 13)  # 13 reqs per company
     tasks = []
-    print("Let's get started!")
+    logging.info("Let's get started!")
 
     # write CSV data
     for company_row in companies.itertuples(index=True):
@@ -326,7 +331,7 @@ def load_newest_dataset(pattern, usecols, na_value=''):
     if not filepath:
         return None
 
-    print('Loading {}'.format(filepath))
+    logging.info('Loading {}'.format(filepath))
     dataset = pd.read_csv(
         filepath,
         dtype=DTYPE,
@@ -372,7 +377,7 @@ def convert_to_lzma(csv_output, xz_output):
 def main(companies_path, max_requests=500, sample_size=None):
 
     if not os.path.exists(companies_path):
-        print('File not found: {}'.format(companies_path))
+        logging.info('File not found: {}'.format(companies_path))
         return
 
     # set file paths
@@ -389,7 +394,7 @@ def main(companies_path, max_requests=500, sample_size=None):
 
     # run
     if companies.empty:
-        print('Nothing to fetch.')
+        logging.info('Nothing to fetch.')
     else:
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main_coro(companies, csv_output, max_requests))
