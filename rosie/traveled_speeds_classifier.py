@@ -53,13 +53,12 @@ class TraveledSpeedsClassifier(TransformerMixin):
         return _X
 
     def __classify_dataset(self, X):
-        _X = X.copy()
-        _X['expected_distance'] = self._polynomial_fn(_X['expenses'])
-        _X['diff_distance'] = abs(_X['expected_distance'] - _X['distance_traveled'])
-        _X['expenses_threshold_outlier'] = _X['expenses'] > 8
-        threshold = self.__threshold_for_contamination(_X, self.contamination)
-        _X['traveled_speed_outlier'] = _X['diff_distance'] > threshold
-        return _X
+        X['expected_distance'] = self._polynomial_fn(X['expenses'])
+        X['diff_distance'] = abs(X['expected_distance'] - X['distance_traveled'])
+        X['expenses_threshold_outlier'] = X['expenses'] > 8
+        threshold = self.__threshold_for_contamination(X, self.contamination)
+        X['traveled_speed_outlier'] = X['diff_distance'] > threshold
+        return X
 
     def __applicable_rows(self, X):
         return (X['subquota_description'] == 'Congressperson meal') & \
