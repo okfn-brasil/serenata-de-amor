@@ -9,6 +9,7 @@ from rosie.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
 from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 from rosie.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
+from rosie.irregular_companies_classifier import IrregularCompaniesClassifier
 
 
 class Rosie:
@@ -17,7 +18,8 @@ class Rosie:
         MonthlySubquotaLimitClassifier: 'over_monthly_subquota_limit',
         TraveledSpeedsClassifier: 'suspicious_traveled_speed_day',
         InvalidCnpjCpfClassifier: 'invalid_cnpj_cpf',
-        ElectionExpensesClassifier: 'election_expenses'
+        ElectionExpensesClassifier: 'election_expenses',
+        IrregularCompaniesClassifier: 'irregular_companies_classifier'
     }
     DATASET_KEYS = ['applicant_id', 'year', 'document_id']
 

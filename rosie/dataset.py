@@ -47,4 +47,6 @@ class Dataset:
                               dtype={'cnpj': np.str},
                               low_memory=False)
         dataset['cnpj'] = dataset['cnpj'].str.replace(r'\D', '')
+        dataset['situation_date'] = pd.to_datetime(dataset['situation_date'],
+                                                   errors='coerce')
         return dataset
