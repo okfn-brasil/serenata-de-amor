@@ -148,6 +148,24 @@ class SexPlacesNearBy:
             * phone : The phone of the nearest sex place
             * id : The Google Place ID of the nearest sex place
             * keyword : term that matched the sex place in Google Place Search
+
+        Google responses:
+            * `OK` indicates that no errors occurred; the place was
+              successfully detected and at least one result was returned.
+            * `UNKNOWN_ERROR` indicates a server-side error; trying again may
+              be successful.
+            * `ZERO_RESULTS` indicates that the reference was valid but no
+              longer refers to a valid result. This may occur if the
+              establishment is no longer in business.
+            * `OVER_QUERY_LIMIT` indicates that you are over your quota.
+            * `REQUEST_DENIED` indicates that your request was denied,
+              generally because of lack of an invalid key parameter.
+            * `INVALID_REQUEST` generally indicates that the query (reference)
+              is missing.
+            * `NOT_FOUND` indicates that the referenced location was not found
+              in the Places database.<Paste>
+
+        Source: https://developers.google.com/places/web-service/details
         """
         response = json.loads(content)
         if response['status'] != 'OK':
