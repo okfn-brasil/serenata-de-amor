@@ -5,8 +5,9 @@ import math
 import os
 import sys
 from argparse import ArgumentParser
-from csv import DictWriter
+from concurrent.futures import CancelledError
 from configparser import RawConfigParser
+from csv import DictWriter
 from datetime import date
 from io import StringIO
 from itertools import chain
@@ -168,37 +169,39 @@ class SexPlacesNearBy:
         Source: https://developers.google.com/places/web-service/details
         """
         response = json.loads(content)
-        if response['status'] != 'OK':
-            if 'error_message' in response:
-                status, error = response.get('status'), response.get('error')
-                logging.info('{}: {}'.format(status, error))
-                return None
-            elif response.get('status') != 'ZERO_RESULTS':
-                msg = 'Google Places API Status: {}'
-                logging.info(msg.format(response.get('status')))
-                return None
+        status = response.get('status')
 
-        else:
-            place = response.get('results', [{}])[0]
+        if status != 'OK':
+            if status in ('OVER_QUERY_LIMIT', 'REQUEST_DENIED'):
+                shutdown()  # reached API limit or API key is missing/wrong
 
-            location = place.get('geometry', {}).get('location', {})
-            latitude = float(location.get('lat'))
-            longitude = float(location.get('lng'))
+            if status != 'ZERO_RESULTS':
+                error = response.get('error', '')
+                msg = 'Google Places API Status: {} {}'.format(status, error)
+                logging.info(msg.strip())
 
-            company_location = (self.latitude, self.longitude)
-            place_location = (latitude, longitude)
-            distance = vincenty(company_location, place_location)
+            return None
 
-            return {
-                'id': place.get('place_id'),
-                'keyword': keyword,
-                'latitude': latitude,
-                'longitude': longitude,
-                'distance': distance.meters,
-                'cnpj': self.company.get('cnpj'),
-                'company_name': self.company.get('name'),
-                'company_trade_name': self.company.get('trade_name')
-            }
+        place, *_ = response.get('results', [{}])
+
+        location = place.get('geometry', {}).get('location', {})
+        latitude = float(location.get('lat'))
+        longitude = float(location.get('lng'))
+
+        company_location = (self.latitude, self.longitude)
+        place_location = (latitude, longitude)
+        distance = vincenty(company_location, place_location)
+
+        return {
+            'id': place.get('place_id'),
+            'keyword': keyword,
+            'latitude': latitude,
+            'longitude': longitude,
+            'distance': distance.meters,
+            'cnpj': self.company.get('cnpj'),
+            'company_name': self.company.get('name'),
+            'company_trade_name': self.company.get('trade_name')
+        }
 
     async def load_details(self, place):
         """
@@ -391,6 +394,15 @@ def convert_to_lzma(csv_output, xz_output):
     pd.read_csv(csv_output, dtype=DTYPE).to_csv(xz_output, compression='xz')
     os.remove(csv_output)
 
+def shutdown():
+    """
+    Something is wrong and it does nt worth it to keep running. This method
+    cancels all pending coroutines so the script can wrap up data collection
+    and move on (that is to say, compress the output we've got so far as an
+    .xz file).
+    """
+    for task in asyncio.Task.all_tasks():
+        task.cancel()
 
 def main(companies_path, max_requests=500, sample_size=None):
 
@@ -410,13 +422,19 @@ def main(companies_path, max_requests=500, sample_size=None):
     if sample_size:
         companies = companies.sample(sample_size)
 
-    # run
+    # check we have data to work on
     if companies.empty:
         logging.info('Nothing to fetch.')
-    else:
-        loop = asyncio.get_event_loop()
+        return None
+
+    # run
+    loop = asyncio.get_event_loop()
+
+    try:
         loop.run_until_complete(main_coro(companies, csv_output, max_requests))
-        loop.close()
+    except CancelledError:
+        logging.debug('All async tasks were stopped')
+    finally:
         convert_to_lzma(csv_output, xz_output)
 
 
