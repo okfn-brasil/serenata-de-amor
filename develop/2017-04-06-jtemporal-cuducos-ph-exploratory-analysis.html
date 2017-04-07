@@ -12555,10 +12555,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[99]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Congressperson meal&#39;</span><span class="p">]</span>
+<span class="n">meals</span> <span class="o">=</span> <span class="n">meals</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -12568,7 +12569,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[100]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">]</span>
@@ -12584,7 +12585,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[101]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals_aggregation</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;expenses&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
@@ -12599,7 +12600,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[8]:</div>
+<div class="prompt output_prompt">Out[101]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12781,7 +12782,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[102]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals</span><span class="p">[[</span><span class="s1">&#39;document_id&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span> <span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">]]</span><span class="o">.</span> \
@@ -12797,7 +12798,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[16]:</div>
+<div class="prompt output_prompt">Out[102]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12815,7 +12816,7 @@ div#notebook {
   </thead>
   <tbody>
     <tr>
-      <th>1266040</th>
+      <th>151919</th>
       <td>5857053</td>
       <td>2015-11-25 00:00:00.0</td>
       <td>6205.00</td>
@@ -12823,7 +12824,7 @@ div#notebook {
       <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
     </tr>
     <tr>
-      <th>1242665</th>
+      <th>148474</th>
       <td>5588112</td>
       <td>2015-01-18 00:00:00.0</td>
       <td>5880.00</td>
@@ -12831,7 +12832,7 @@ div#notebook {
       <td>VR COMERCIO DE VEICULOS LTDA-ME</td>
     </tr>
     <tr>
-      <th>23296</th>
+      <th>1628</th>
       <td>1689682</td>
       <td>2009-09-01 00:00:00.0</td>
       <td>5852.00</td>
@@ -12839,7 +12840,7 @@ div#notebook {
       <td>HOTEL NACIONAL S/A</td>
     </tr>
     <tr>
-      <th>767478</th>
+      <th>84828</th>
       <td>2383218</td>
       <td>2012-08-22 00:00:00.0</td>
       <td>5696.00</td>
@@ -12847,7 +12848,7 @@ div#notebook {
       <td>PARRILLA FIGUEIRA DA VILLA</td>
     </tr>
     <tr>
-      <th>1467845</th>
+      <th>182594</th>
       <td>5954206</td>
       <td>2016-03-30T00:00:00</td>
       <td>5142.25</td>
@@ -12855,7 +12856,7 @@ div#notebook {
       <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
     </tr>
     <tr>
-      <th>1266024</th>
+      <th>151914</th>
       <td>5834088</td>
       <td>2015-11-03 00:00:00.0</td>
       <td>5054.99</td>
@@ -12863,7 +12864,7 @@ div#notebook {
       <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
     </tr>
     <tr>
-      <th>1126704</th>
+      <th>132370</th>
       <td>5573885</td>
       <td>2014-12-10 00:00:00.0</td>
       <td>5050.00</td>
@@ -12871,7 +12872,7 @@ div#notebook {
       <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
     </tr>
     <tr>
-      <th>954390</th>
+      <th>109870</th>
       <td>5056362</td>
       <td>2013-03-18 00:00:00.0</td>
       <td>4990.00</td>
@@ -12879,7 +12880,7 @@ div#notebook {
       <td>Emporio Albamonte Comercio e Serviços Alimentí...</td>
     </tr>
     <tr>
-      <th>23314</th>
+      <th>1631</th>
       <td>1717750</td>
       <td>2009-11-03 00:00:00.0</td>
       <td>4840.00</td>
@@ -12887,12 +12888,1841 @@ div#notebook {
       <td>HOTEL NACIONAL S/A</td>
     </tr>
     <tr>
-      <th>389390</th>
+      <th>36007</th>
       <td>2195568</td>
       <td>2011-11-02 00:00:00.0</td>
       <td>4510.00</td>
       <td>SALVADOR ZIMBALDI</td>
       <td>HOTEL NACIONAL SA</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Bode-assado">Bode assado<a class="anchor-link" href="#Bode-assado">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[103]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">re</span> <span class="k">import</span> <span class="nb">compile</span><span class="p">,</span> <span class="n">search</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[104]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">meals</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[104]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>197237</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[112]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bode</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;BODE&#39;</span><span class="p">)</span>
+<span class="n">bode_bool</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">meals</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">bode</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">meals</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">_</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">]):</span>
+        <span class="n">bode_bool</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bode_bool</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[144]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bode_meals</span> <span class="o">=</span> <span class="n">meals</span><span class="p">[</span><span class="n">bode_bool</span><span class="p">]</span>
+<span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;congressperson_id&#39;</span><span class="p">,</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span> <span class="s1">&#39;document_id&#39;</span><span class="p">]</span>
+<span class="n">bode_meals_grouped</span> <span class="o">=</span> <span class="n">bode_meals</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+<span class="n">bode_meals_grouped</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[144]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>year</th>
+      <th>applicant_id</th>
+      <th>document_id</th>
+      <th>reimbursement_value_total</th>
+      <th>total_net_value</th>
+      <th>reimbursement_numbers</th>
+      <th>congressperson_name</th>
+      <th>congressperson_id</th>
+      <th>congressperson_document</th>
+      <th>...</th>
+      <th>issue_date</th>
+      <th>document_value</th>
+      <th>remark_value</th>
+      <th>net_values</th>
+      <th>month</th>
+      <th>installment</th>
+      <th>passenger</th>
+      <th>leg_of_the_trip</th>
+      <th>batch_number</th>
+      <th>reimbursement_values</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2031</th>
+      <td>27773</td>
+      <td>2009</td>
+      <td>137</td>
+      <td>1723164</td>
+      <td>NaN</td>
+      <td>92.18</td>
+      <td>3129</td>
+      <td>GONZAGA PATRIOTA</td>
+      <td>74419</td>
+      <td>143.0</td>
+      <td>...</td>
+      <td>2009-11-15 00:00:00.0</td>
+      <td>99.22</td>
+      <td>7.04</td>
+      <td>92.18</td>
+      <td>11</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>437960</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2032</th>
+      <td>27774</td>
+      <td>2009</td>
+      <td>137</td>
+      <td>1724236</td>
+      <td>NaN</td>
+      <td>7.04</td>
+      <td>3137</td>
+      <td>GONZAGA PATRIOTA</td>
+      <td>74419</td>
+      <td>143.0</td>
+      <td>...</td>
+      <td>2009-11-15 00:00:00.0</td>
+      <td>7.04</td>
+      <td>0.00</td>
+      <td>7.04</td>
+      <td>11</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>437960</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2208</th>
+      <td>36156</td>
+      <td>2009</td>
+      <td>1455</td>
+      <td>1660201</td>
+      <td>NaN</td>
+      <td>14.00</td>
+      <td>3046</td>
+      <td>LUIS CARLOS HEINZE</td>
+      <td>73483</td>
+      <td>500.0</td>
+      <td>...</td>
+      <td>2009-07-09 00:00:00.0</td>
+      <td>14.00</td>
+      <td>0.00</td>
+      <td>14.00</td>
+      <td>7</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>419418</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2234</th>
+      <td>36236</td>
+      <td>2009</td>
+      <td>1455</td>
+      <td>1676470</td>
+      <td>NaN</td>
+      <td>20.00</td>
+      <td>3079</td>
+      <td>LUIS CARLOS HEINZE</td>
+      <td>73483</td>
+      <td>500.0</td>
+      <td>...</td>
+      <td>2009-08-23 00:00:00.0</td>
+      <td>20.00</td>
+      <td>0.00</td>
+      <td>20.00</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>424313</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2241</th>
+      <td>36245</td>
+      <td>2009</td>
+      <td>1455</td>
+      <td>1676509</td>
+      <td>NaN</td>
+      <td>14.00</td>
+      <td>3079</td>
+      <td>LUIS CARLOS HEINZE</td>
+      <td>73483</td>
+      <td>500.0</td>
+      <td>...</td>
+      <td>2009-08-31 00:00:00.0</td>
+      <td>14.00</td>
+      <td>0.00</td>
+      <td>14.00</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>424313</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2261</th>
+      <td>36452</td>
+      <td>2009</td>
+      <td>1455</td>
+      <td>1703745</td>
+      <td>NaN</td>
+      <td>14.00</td>
+      <td>3109</td>
+      <td>LUIS CARLOS HEINZE</td>
+      <td>73483</td>
+      <td>500.0</td>
+      <td>...</td>
+      <td>2009-09-11 00:00:00.0</td>
+      <td>14.00</td>
+      <td>0.00</td>
+      <td>14.00</td>
+      <td>9</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>432250</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2275</th>
+      <td>36545</td>
+      <td>2009</td>
+      <td>1455</td>
+      <td>1722763</td>
+      <td>NaN</td>
+      <td>14.00</td>
+      <td>3129</td>
+      <td>LUIS CARLOS HEINZE</td>
+      <td>73483</td>
+      <td>500.0</td>
+      <td>...</td>
+      <td>2009-10-08 00:00:00.0</td>
+      <td>14.00</td>
+      <td>0.00</td>
+      <td>14.00</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>437831</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2281</th>
+      <td>36684</td>
+      <td>2009</td>
+      <td>1455</td>
+      <td>1749643</td>
+      <td>NaN</td>
+      <td>12.50</td>
+      <td>3168</td>
+      <td>LUIS CARLOS HEINZE</td>
+      <td>73483</td>
+      <td>500.0</td>
+      <td>...</td>
+      <td>2009-11-19 00:00:00.0</td>
+      <td>12.50</td>
+      <td>0.00</td>
+      <td>12.50</td>
+      <td>11</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>446024</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2619</th>
+      <td>41752</td>
+      <td>2009</td>
+      <td>1544</td>
+      <td>1645842</td>
+      <td>NaN</td>
+      <td>39.00</td>
+      <td>3017</td>
+      <td>LUIZ BASSUMA</td>
+      <td>74059</td>
+      <td>182.0</td>
+      <td>...</td>
+      <td>2009-08-09 00:00:00.0</td>
+      <td>39.00</td>
+      <td>0.00</td>
+      <td>39.00</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>415238</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4213</th>
+      <td>69076</td>
+      <td>2009</td>
+      <td>1710</td>
+      <td>1667521</td>
+      <td>NaN</td>
+      <td>44.50</td>
+      <td>3056</td>
+      <td>ZEZÉU RIBEIRO</td>
+      <td>74145</td>
+      <td>217.0</td>
+      <td>...</td>
+      <td>2009-09-07 00:00:00.0</td>
+      <td>44.50</td>
+      <td>0.00</td>
+      <td>44.50</td>
+      <td>9</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>421639</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6253</th>
+      <td>93856</td>
+      <td>2009</td>
+      <td>1833</td>
+      <td>1646356</td>
+      <td>NaN</td>
+      <td>100.00</td>
+      <td>3017</td>
+      <td>FERNANDO COELHO FILHO</td>
+      <td>141431</td>
+      <td>158.0</td>
+      <td>...</td>
+      <td>2009-08-07 00:00:00.0</td>
+      <td>100.00</td>
+      <td>0.00</td>
+      <td>100.00</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>415317</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6864</th>
+      <td>102028</td>
+      <td>2009</td>
+      <td>1856</td>
+      <td>1712629</td>
+      <td>NaN</td>
+      <td>50.00</td>
+      <td>3120</td>
+      <td>JOÃO CARLOS BACELAR</td>
+      <td>141458</td>
+      <td>187.0</td>
+      <td>...</td>
+      <td>2009-09-23 00:00:00.0</td>
+      <td>50.00</td>
+      <td>0.00</td>
+      <td>50.00</td>
+      <td>9</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>434841</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8644</th>
+      <td>122708</td>
+      <td>2009</td>
+      <td>1924</td>
+      <td>1656921</td>
+      <td>NaN</td>
+      <td>51.04</td>
+      <td>3042</td>
+      <td>ROBERTO BRITTO</td>
+      <td>141529</td>
+      <td>211.0</td>
+      <td>...</td>
+      <td>2009-08-22 00:00:00.0</td>
+      <td>51.04</td>
+      <td>0.00</td>
+      <td>51.04</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>418446</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8656</th>
+      <td>122734</td>
+      <td>2009</td>
+      <td>1924</td>
+      <td>1677315</td>
+      <td>NaN</td>
+      <td>73.02</td>
+      <td>3073</td>
+      <td>ROBERTO BRITTO</td>
+      <td>141529</td>
+      <td>211.0</td>
+      <td>...</td>
+      <td>2009-09-20 00:00:00.0</td>
+      <td>73.02</td>
+      <td>0.00</td>
+      <td>73.02</td>
+      <td>9</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>424564</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8659</th>
+      <td>122747</td>
+      <td>2009</td>
+      <td>1924</td>
+      <td>1691378</td>
+      <td>NaN</td>
+      <td>60.00</td>
+      <td>3093</td>
+      <td>ROBERTO BRITTO</td>
+      <td>141529</td>
+      <td>211.0</td>
+      <td>...</td>
+      <td>2009-10-03 00:00:00.0</td>
+      <td>60.00</td>
+      <td>0.00</td>
+      <td>60.00</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>428635</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9608</th>
+      <td>134752</td>
+      <td>2009</td>
+      <td>1960</td>
+      <td>1663229</td>
+      <td>NaN</td>
+      <td>120.00</td>
+      <td>3052</td>
+      <td>ANA ARRAES</td>
+      <td>141377</td>
+      <td>140.0</td>
+      <td>...</td>
+      <td>2009-08-15 00:00:00.0</td>
+      <td>120.00</td>
+      <td>0.00</td>
+      <td>120.00</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>420345</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9911</th>
+      <td>139849</td>
+      <td>2009</td>
+      <td>1970</td>
+      <td>1651145</td>
+      <td>NaN</td>
+      <td>84.37</td>
+      <td>3027</td>
+      <td>JOSEPH BANDEIRA</td>
+      <td>4929</td>
+      <td>565.0</td>
+      <td>...</td>
+      <td>2009-08-14 00:00:00.0</td>
+      <td>84.37</td>
+      <td>0.00</td>
+      <td>84.37</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>416827</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9921</th>
+      <td>139887</td>
+      <td>2009</td>
+      <td>1970</td>
+      <td>1661621</td>
+      <td>NaN</td>
+      <td>81.62</td>
+      <td>3048</td>
+      <td>JOSEPH BANDEIRA</td>
+      <td>4929</td>
+      <td>565.0</td>
+      <td>...</td>
+      <td>2009-08-24 00:00:00.0</td>
+      <td>81.62</td>
+      <td>0.00</td>
+      <td>81.62</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>419813</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9922</th>
+      <td>139888</td>
+      <td>2009</td>
+      <td>1970</td>
+      <td>1661637</td>
+      <td>NaN</td>
+      <td>91.50</td>
+      <td>3051</td>
+      <td>JOSEPH BANDEIRA</td>
+      <td>4929</td>
+      <td>565.0</td>
+      <td>...</td>
+      <td>2009-08-26 00:00:00.0</td>
+      <td>91.50</td>
+      <td>0.00</td>
+      <td>91.50</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>419814</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9938</th>
+      <td>139932</td>
+      <td>2009</td>
+      <td>1970</td>
+      <td>1673022</td>
+      <td>NaN</td>
+      <td>47.30</td>
+      <td>3068</td>
+      <td>JOSEPH BANDEIRA</td>
+      <td>4929</td>
+      <td>565.0</td>
+      <td>...</td>
+      <td>2009-09-04 00:00:00.0</td>
+      <td>47.30</td>
+      <td>0.00</td>
+      <td>47.30</td>
+      <td>9</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>423304</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9960</th>
+      <td>140004</td>
+      <td>2009</td>
+      <td>1970</td>
+      <td>1700862</td>
+      <td>NaN</td>
+      <td>180.00</td>
+      <td>3107</td>
+      <td>JOSEPH BANDEIRA</td>
+      <td>4929</td>
+      <td>565.0</td>
+      <td>...</td>
+      <td>2009-10-17 00:00:00.0</td>
+      <td>180.00</td>
+      <td>0.00</td>
+      <td>180.00</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>431355</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9961</th>
+      <td>140005</td>
+      <td>2009</td>
+      <td>1970</td>
+      <td>1700872</td>
+      <td>NaN</td>
+      <td>165.00</td>
+      <td>3107</td>
+      <td>JOSEPH BANDEIRA</td>
+      <td>4929</td>
+      <td>565.0</td>
+      <td>...</td>
+      <td>2009-10-18 00:00:00.0</td>
+      <td>165.00</td>
+      <td>0.00</td>
+      <td>165.00</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>431355</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9989</th>
+      <td>140098</td>
+      <td>2009</td>
+      <td>1970</td>
+      <td>1732594</td>
+      <td>NaN</td>
+      <td>85.50</td>
+      <td>3143</td>
+      <td>JOSEPH BANDEIRA</td>
+      <td>4929</td>
+      <td>565.0</td>
+      <td>...</td>
+      <td>2009-10-30 00:00:00.0</td>
+      <td>85.50</td>
+      <td>0.00</td>
+      <td>85.50</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>440603</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>15947</th>
+      <td>206963</td>
+      <td>2010</td>
+      <td>137</td>
+      <td>1882756</td>
+      <td>NaN</td>
+      <td>440.00</td>
+      <td>3367</td>
+      <td>GONZAGA PATRIOTA</td>
+      <td>74419</td>
+      <td>143.0</td>
+      <td>...</td>
+      <td>2010-06-18 00:00:00.0</td>
+      <td>440.00</td>
+      <td>0.00</td>
+      <td>440.00</td>
+      <td>6</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>483439</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>15952</th>
+      <td>206977</td>
+      <td>2010</td>
+      <td>137</td>
+      <td>1905263</td>
+      <td>NaN</td>
+      <td>480.00</td>
+      <td>3391</td>
+      <td>GONZAGA PATRIOTA</td>
+      <td>74419</td>
+      <td>143.0</td>
+      <td>...</td>
+      <td>2010-08-02 00:00:00.0</td>
+      <td>480.00</td>
+      <td>0.00</td>
+      <td>480.00</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>489467</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>16638</th>
+      <td>219753</td>
+      <td>2010</td>
+      <td>153</td>
+      <td>1788491</td>
+      <td>NaN</td>
+      <td>98.89</td>
+      <td>3254</td>
+      <td>JAIRO CARNEIRO</td>
+      <td>74547</td>
+      <td>597.0</td>
+      <td>...</td>
+      <td>2010-02-26 00:00:00.0</td>
+      <td>98.89</td>
+      <td>0.00</td>
+      <td>98.89</td>
+      <td>2</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>457197</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>16841</th>
+      <td>222309</td>
+      <td>2010</td>
+      <td>1544</td>
+      <td>1875090</td>
+      <td>NaN</td>
+      <td>73.00</td>
+      <td>3359</td>
+      <td>LUIZ BASSUMA</td>
+      <td>74059</td>
+      <td>182.0</td>
+      <td>...</td>
+      <td>2010-06-20 00:00:00.0</td>
+      <td>73.00</td>
+      <td>0.00</td>
+      <td>73.00</td>
+      <td>6</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>481515</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>16850</th>
+      <td>222353</td>
+      <td>2010</td>
+      <td>1544</td>
+      <td>1885867</td>
+      <td>NaN</td>
+      <td>47.50</td>
+      <td>3370</td>
+      <td>LUIZ BASSUMA</td>
+      <td>74059</td>
+      <td>182.0</td>
+      <td>...</td>
+      <td>2010-07-04 00:00:00.0</td>
+      <td>47.50</td>
+      <td>0.00</td>
+      <td>47.50</td>
+      <td>7</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>484279</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>16892</th>
+      <td>222632</td>
+      <td>2010</td>
+      <td>1544</td>
+      <td>1946822</td>
+      <td>NaN</td>
+      <td>37.00</td>
+      <td>3461</td>
+      <td>LUIZ BASSUMA</td>
+      <td>74059</td>
+      <td>182.0</td>
+      <td>...</td>
+      <td>2010-09-10 00:00:00.0</td>
+      <td>37.00</td>
+      <td>0.00</td>
+      <td>37.00</td>
+      <td>9</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>500580</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>17927</th>
+      <td>236857</td>
+      <td>2010</td>
+      <td>1612</td>
+      <td>1836387</td>
+      <td>NaN</td>
+      <td>20.00</td>
+      <td>3323</td>
+      <td>MAURÍCIO RANDS</td>
+      <td>74045</td>
+      <td>138.0</td>
+      <td>...</td>
+      <td>2010-04-21 00:00:00.0</td>
+      <td>20.00</td>
+      <td>0.00</td>
+      <td>20.00</td>
+      <td>4</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>471793</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>170832</th>
+      <td>1377491</td>
+      <td>2016</td>
+      <td>137</td>
+      <td>6136125</td>
+      <td>NaN</td>
+      <td>82.50</td>
+      <td>5591</td>
+      <td>GONZAGA PATRIOTA</td>
+      <td>74419</td>
+      <td>143.0</td>
+      <td>...</td>
+      <td>2016-10-08T00:00:00</td>
+      <td>82.50</td>
+      <td>0.00</td>
+      <td>82.50</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1334003</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>170833</th>
+      <td>1377492</td>
+      <td>2016</td>
+      <td>137</td>
+      <td>6136127</td>
+      <td>NaN</td>
+      <td>85.00</td>
+      <td>5591</td>
+      <td>GONZAGA PATRIOTA</td>
+      <td>74419</td>
+      <td>143.0</td>
+      <td>...</td>
+      <td>2016-10-14T00:00:00</td>
+      <td>85.00</td>
+      <td>0.00</td>
+      <td>85.00</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1334003</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>170834</th>
+      <td>1377493</td>
+      <td>2016</td>
+      <td>137</td>
+      <td>6136129</td>
+      <td>NaN</td>
+      <td>82.50</td>
+      <td>5591</td>
+      <td>GONZAGA PATRIOTA</td>
+      <td>74419</td>
+      <td>143.0</td>
+      <td>...</td>
+      <td>2016-10-15T00:00:00</td>
+      <td>82.50</td>
+      <td>0.00</td>
+      <td>82.50</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1334003</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>170835</th>
+      <td>1377494</td>
+      <td>2016</td>
+      <td>137</td>
+      <td>6136132</td>
+      <td>NaN</td>
+      <td>85.00</td>
+      <td>5591</td>
+      <td>GONZAGA PATRIOTA</td>
+      <td>74419</td>
+      <td>143.0</td>
+      <td>...</td>
+      <td>2016-10-21T00:00:00</td>
+      <td>85.00</td>
+      <td>0.00</td>
+      <td>85.00</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1334003</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>170836</th>
+      <td>1377495</td>
+      <td>2016</td>
+      <td>137</td>
+      <td>6136137</td>
+      <td>NaN</td>
+      <td>82.50</td>
+      <td>5591</td>
+      <td>GONZAGA PATRIOTA</td>
+      <td>74419</td>
+      <td>143.0</td>
+      <td>...</td>
+      <td>2016-10-22T00:00:00</td>
+      <td>82.50</td>
+      <td>0.00</td>
+      <td>82.50</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1334003</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>171326</th>
+      <td>1382253</td>
+      <td>2016</td>
+      <td>1458</td>
+      <td>5914177</td>
+      <td>NaN</td>
+      <td>45.00</td>
+      <td>5345</td>
+      <td>POMPEO DE MATTOS</td>
+      <td>73486</td>
+      <td>516.0</td>
+      <td>...</td>
+      <td>2016-02-13T00:00:00</td>
+      <td>45.00</td>
+      <td>0.00</td>
+      <td>45.00</td>
+      <td>2</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1264083</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>173560</th>
+      <td>1399523</td>
+      <td>2016</td>
+      <td>1782</td>
+      <td>5964720</td>
+      <td>NaN</td>
+      <td>28.71</td>
+      <td>5411</td>
+      <td>ANTONIO BULHÕES</td>
+      <td>141383</td>
+      <td>333.0</td>
+      <td>...</td>
+      <td>2016-02-26T00:00:00</td>
+      <td>35.09</td>
+      <td>6.38</td>
+      <td>28.71</td>
+      <td>2</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1280328</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>173565</th>
+      <td>1399535</td>
+      <td>2016</td>
+      <td>1782</td>
+      <td>5964795</td>
+      <td>NaN</td>
+      <td>35.09</td>
+      <td>5411</td>
+      <td>ANTONIO BULHÕES</td>
+      <td>141383</td>
+      <td>333.0</td>
+      <td>...</td>
+      <td>2016-02-15T00:00:00</td>
+      <td>35.09</td>
+      <td>0.00</td>
+      <td>35.09</td>
+      <td>2</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1280331</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>173569</th>
+      <td>1399556</td>
+      <td>2016</td>
+      <td>1782</td>
+      <td>6001047</td>
+      <td>NaN</td>
+      <td>35.09</td>
+      <td>5449</td>
+      <td>ANTONIO BULHÕES</td>
+      <td>141383</td>
+      <td>333.0</td>
+      <td>...</td>
+      <td>2016-03-11T00:00:00</td>
+      <td>35.09</td>
+      <td>0.00</td>
+      <td>35.09</td>
+      <td>3</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1292165</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>173636</th>
+      <td>1399688</td>
+      <td>2016</td>
+      <td>1782</td>
+      <td>6169580</td>
+      <td>NaN</td>
+      <td>40.59</td>
+      <td>5637</td>
+      <td>ANTONIO BULHÕES</td>
+      <td>141383</td>
+      <td>333.0</td>
+      <td>...</td>
+      <td>2016-11-04T00:00:00</td>
+      <td>40.59</td>
+      <td>0.00</td>
+      <td>40.59</td>
+      <td>11</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1345480</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>176813</th>
+      <td>1426474</td>
+      <td>2016</td>
+      <td>2225</td>
+      <td>5986257</td>
+      <td>NaN</td>
+      <td>154.00</td>
+      <td>5435</td>
+      <td>ARTHUR OLIVEIRA MAIA</td>
+      <td>160600</td>
+      <td>192.0</td>
+      <td>...</td>
+      <td>2016-04-02T00:00:00</td>
+      <td>154.00</td>
+      <td>0.00</td>
+      <td>154.00</td>
+      <td>4</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1287060</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>178775</th>
+      <td>1438724</td>
+      <td>2016</td>
+      <td>2264</td>
+      <td>5984491</td>
+      <td>NaN</td>
+      <td>57.20</td>
+      <td>5433</td>
+      <td>PASTOR EURICO</td>
+      <td>160642</td>
+      <td>155.0</td>
+      <td>...</td>
+      <td>2016-05-01T00:00:00</td>
+      <td>57.20</td>
+      <td>0.00</td>
+      <td>57.20</td>
+      <td>5</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1286380</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>178782</th>
+      <td>1438733</td>
+      <td>2016</td>
+      <td>2264</td>
+      <td>6002881</td>
+      <td>NaN</td>
+      <td>93.50</td>
+      <td>5451</td>
+      <td>PASTOR EURICO</td>
+      <td>160642</td>
+      <td>155.0</td>
+      <td>...</td>
+      <td>2016-05-22T00:00:00</td>
+      <td>93.50</td>
+      <td>0.00</td>
+      <td>93.50</td>
+      <td>5</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1292367</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>178809</th>
+      <td>1438803</td>
+      <td>2016</td>
+      <td>2264</td>
+      <td>6048054</td>
+      <td>NaN</td>
+      <td>48.00</td>
+      <td>5498</td>
+      <td>PASTOR EURICO</td>
+      <td>160642</td>
+      <td>155.0</td>
+      <td>...</td>
+      <td>2016-07-09T00:00:00</td>
+      <td>48.00</td>
+      <td>0.00</td>
+      <td>48.00</td>
+      <td>7</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1306686</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>178824</th>
+      <td>1438840</td>
+      <td>2016</td>
+      <td>2264</td>
+      <td>6061984</td>
+      <td>NaN</td>
+      <td>104.39</td>
+      <td>5514</td>
+      <td>PASTOR EURICO</td>
+      <td>160642</td>
+      <td>155.0</td>
+      <td>...</td>
+      <td>2016-07-26T00:00:00</td>
+      <td>104.39</td>
+      <td>0.00</td>
+      <td>104.39</td>
+      <td>7</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1310791</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>178887</th>
+      <td>1438978</td>
+      <td>2016</td>
+      <td>2264</td>
+      <td>6140191</td>
+      <td>NaN</td>
+      <td>137.28</td>
+      <td>5597</td>
+      <td>PASTOR EURICO</td>
+      <td>160642</td>
+      <td>155.0</td>
+      <td>...</td>
+      <td>2016-10-27T00:00:00</td>
+      <td>137.28</td>
+      <td>0.00</td>
+      <td>137.28</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1335505</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>180349</th>
+      <td>1449855</td>
+      <td>2016</td>
+      <td>2341</td>
+      <td>6084017</td>
+      <td>NaN</td>
+      <td>24.50</td>
+      <td>5534</td>
+      <td>ARNALDO JORDY</td>
+      <td>160602</td>
+      <td>18.0</td>
+      <td>...</td>
+      <td>2016-08-10T00:00:00</td>
+      <td>24.50</td>
+      <td>0.00</td>
+      <td>24.50</td>
+      <td>8</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1317676</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>183196</th>
+      <td>1470047</td>
+      <td>2016</td>
+      <td>2813</td>
+      <td>6062270</td>
+      <td>NaN</td>
+      <td>112.42</td>
+      <td>5513</td>
+      <td>PAULÃO</td>
+      <td>171617</td>
+      <td>170.0</td>
+      <td>...</td>
+      <td>2016-07-22T00:00:00</td>
+      <td>112.42</td>
+      <td>0.00</td>
+      <td>112.42</td>
+      <td>7</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1310980</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>187501</th>
+      <td>1501306</td>
+      <td>2016</td>
+      <td>2964</td>
+      <td>5922876</td>
+      <td>NaN</td>
+      <td>54.77</td>
+      <td>5360</td>
+      <td>MARINALDO ROSENDO</td>
+      <td>178919</td>
+      <td>152.0</td>
+      <td>...</td>
+      <td>2016-01-18T00:00:00</td>
+      <td>54.77</td>
+      <td>0.00</td>
+      <td>54.77</td>
+      <td>1</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1266857</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>187520</th>
+      <td>1501372</td>
+      <td>2016</td>
+      <td>2964</td>
+      <td>5982295</td>
+      <td>NaN</td>
+      <td>85.62</td>
+      <td>5497</td>
+      <td>MARINALDO ROSENDO</td>
+      <td>178919</td>
+      <td>152.0</td>
+      <td>...</td>
+      <td>2016-04-19T00:00:00</td>
+      <td>85.62</td>
+      <td>0.00</td>
+      <td>85.62</td>
+      <td>4</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1285681</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>187565</th>
+      <td>1501503</td>
+      <td>2016</td>
+      <td>2964</td>
+      <td>6139368</td>
+      <td>NaN</td>
+      <td>102.94</td>
+      <td>5600</td>
+      <td>MARINALDO ROSENDO</td>
+      <td>178919</td>
+      <td>152.0</td>
+      <td>...</td>
+      <td>2016-10-20T00:00:00</td>
+      <td>102.94</td>
+      <td>0.00</td>
+      <td>102.94</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1335164</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>187569</th>
+      <td>1501510</td>
+      <td>2016</td>
+      <td>2964</td>
+      <td>6140741</td>
+      <td>NaN</td>
+      <td>93.90</td>
+      <td>5596</td>
+      <td>MARINALDO ROSENDO</td>
+      <td>178919</td>
+      <td>152.0</td>
+      <td>...</td>
+      <td>2016-11-03T00:00:00</td>
+      <td>93.90</td>
+      <td>0.00</td>
+      <td>93.90</td>
+      <td>11</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1335672</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>187573</th>
+      <td>1501535</td>
+      <td>2016</td>
+      <td>2964</td>
+      <td>6151244</td>
+      <td>NaN</td>
+      <td>101.88</td>
+      <td>5615</td>
+      <td>MARINALDO ROSENDO</td>
+      <td>178919</td>
+      <td>152.0</td>
+      <td>...</td>
+      <td>2016-11-18T00:00:00</td>
+      <td>101.88</td>
+      <td>0.00</td>
+      <td>101.88</td>
+      <td>11</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1339151</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>187589</th>
+      <td>1501601</td>
+      <td>2016</td>
+      <td>2964</td>
+      <td>6180565</td>
+      <td>NaN</td>
+      <td>89.25</td>
+      <td>5651</td>
+      <td>MARINALDO ROSENDO</td>
+      <td>178919</td>
+      <td>152.0</td>
+      <td>...</td>
+      <td>2016-12-26T00:00:00</td>
+      <td>89.25</td>
+      <td>0.00</td>
+      <td>89.25</td>
+      <td>12</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1349244</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>194432</th>
+      <td>1559517</td>
+      <td>2016</td>
+      <td>831</td>
+      <td>5963677</td>
+      <td>NaN</td>
+      <td>94.96</td>
+      <td>5413</td>
+      <td>RUBENS BUENO</td>
+      <td>73466</td>
+      <td>460.0</td>
+      <td>...</td>
+      <td>2016-04-06T00:00:00</td>
+      <td>94.96</td>
+      <td>0.00</td>
+      <td>94.96</td>
+      <td>4</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1279938</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>194528</th>
+      <td>1559762</td>
+      <td>2016</td>
+      <td>831</td>
+      <td>6124674</td>
+      <td>NaN</td>
+      <td>157.30</td>
+      <td>5580</td>
+      <td>RUBENS BUENO</td>
+      <td>73466</td>
+      <td>460.0</td>
+      <td>...</td>
+      <td>2016-10-12T00:00:00</td>
+      <td>157.30</td>
+      <td>0.00</td>
+      <td>157.30</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1330544</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>194778</th>
+      <td>1561444</td>
+      <td>2016</td>
+      <td>995</td>
+      <td>5898172</td>
+      <td>NaN</td>
+      <td>28.00</td>
+      <td>5352</td>
+      <td>CLAUDIO CAJADO</td>
+      <td>74537</td>
+      <td>186.0</td>
+      <td>...</td>
+      <td>2016-01-20T00:00:00</td>
+      <td>28.00</td>
+      <td>0.00</td>
+      <td>28.00</td>
+      <td>1</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1258809</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>196256</th>
+      <td>1571835</td>
+      <td>2017</td>
+      <td>2468</td>
+      <td>6214010</td>
+      <td>NaN</td>
+      <td>108.60</td>
+      <td>5730</td>
+      <td>SEVERINO NINHO</td>
+      <td>167614</td>
+      <td>573.0</td>
+      <td>...</td>
+      <td>2017-02-17T00:00:00</td>
+      <td>108.60</td>
+      <td>0.00</td>
+      <td>108.60</td>
+      <td>2</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1359942</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>196627</th>
+      <td>1574997</td>
+      <td>2017</td>
+      <td>2964</td>
+      <td>6189928</td>
+      <td>NaN</td>
+      <td>84.69</td>
+      <td>5688</td>
+      <td>MARINALDO ROSENDO</td>
+      <td>178919</td>
+      <td>152.0</td>
+      <td>...</td>
+      <td>2017-01-24T00:00:00</td>
+      <td>84.69</td>
+      <td>0.00</td>
+      <td>84.69</td>
+      <td>1</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1351786</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>196631</th>
+      <td>1575010</td>
+      <td>2017</td>
+      <td>2964</td>
+      <td>6196054</td>
+      <td>NaN</td>
+      <td>87.19</td>
+      <td>5704</td>
+      <td>MARINALDO ROSENDO</td>
+      <td>178919</td>
+      <td>152.0</td>
+      <td>...</td>
+      <td>2017-01-19T00:00:00</td>
+      <td>87.19</td>
+      <td>0.00</td>
+      <td>87.19</td>
+      <td>1</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1353801</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>536 rows × 32 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[145]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bode_meals_grouped</span> <span class="o">=</span> <span class="n">bode_meals_grouped</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;expense&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">bode_meals_grouped</span> <span class="o">=</span> <span class="n">bode_meals_grouped</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;expense&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">bode_meals_grouped</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[145]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>congressperson_id</th>
+      <th>cnpj_cpf</th>
+      <th>supplier</th>
+      <th>issue_date</th>
+      <th>document_id</th>
+      <th>expense</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>250</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2011-02-13 00:00:00.0</td>
+      <td>2006450</td>
+      <td>1493.00</td>
+    </tr>
+    <tr>
+      <th>249</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2010-08-02 00:00:00.0</td>
+      <td>1905263</td>
+      <td>480.00</td>
+    </tr>
+    <tr>
+      <th>240</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO  BODE ASSADO</td>
+      <td>2010-06-18 00:00:00.0</td>
+      <td>1882756</td>
+      <td>440.00</td>
+    </tr>
+    <tr>
+      <th>529</th>
+      <td>74419</td>
+      <td>16814703000193</td>
+      <td>BODEGA DA SERRA</td>
+      <td>2014-07-21 00:00:00.0</td>
+      <td>5476790</td>
+      <td>250.00</td>
+    </tr>
+    <tr>
+      <th>516</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2012-01-07 00:00:00.0</td>
+      <td>2249894</td>
+      <td>245.00</td>
+    </tr>
+    <tr>
+      <th>252</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2012-01-15 00:00:00.0</td>
+      <td>2249881</td>
+      <td>243.00</td>
+    </tr>
+    <tr>
+      <th>277</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2013-03-23 00:00:00.0</td>
+      <td>5061745</td>
+      <td>240.00</td>
+    </tr>
+    <tr>
+      <th>515</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2012-01-02 00:00:00.0</td>
+      <td>2249896</td>
+      <td>210.00</td>
+    </tr>
+    <tr>
+      <th>264</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2012-08-04 00:00:00.0</td>
+      <td>2385459</td>
+      <td>210.00</td>
+    </tr>
+    <tr>
+      <th>164</th>
+      <td>163322</td>
+      <td>03459794000144</td>
+      <td>ENTRE AMIGOS O BODE LTDA</td>
+      <td>2013-12-07 00:00:00.0</td>
+      <td>5303369</td>
+      <td>209.22</td>
+    </tr>
+    <tr>
+      <th>160</th>
+      <td>163322</td>
+      <td>03459794000144</td>
+      <td>ENTRE AMIGOS O BODE LTDA</td>
+      <td>2013-10-10 00:00:00.0</td>
+      <td>5247138</td>
+      <td>204.16</td>
+    </tr>
+    <tr>
+      <th>270</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2012-10-18 00:00:00.0</td>
+      <td>2415343</td>
+      <td>204.00</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>160603</td>
+      <td>11173206000130</td>
+      <td>BODE ASSADO CURAÇÁ</td>
+      <td>2014-03-09 00:00:00.0</td>
+      <td>5368496</td>
+      <td>200.00</td>
+    </tr>
+    <tr>
+      <th>246</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO - BODE ASSADO</td>
+      <td>2012-01-17 00:00:00.0</td>
+      <td>2244667</td>
+      <td>200.00</td>
+    </tr>
+    <tr>
+      <th>241</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO  BODE ASSADO</td>
+      <td>2012-07-01 00:00:00.0</td>
+      <td>2347164</td>
+      <td>200.00</td>
+    </tr>
+    <tr>
+      <th>271</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2012-10-19 00:00:00.0</td>
+      <td>2415342</td>
+      <td>198.00</td>
+    </tr>
+    <tr>
+      <th>242</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO  BODE ASSADO</td>
+      <td>2012-07-02 00:00:00.0</td>
+      <td>2347168</td>
+      <td>193.00</td>
+    </tr>
+    <tr>
+      <th>140</th>
+      <td>163322</td>
+      <td>03459794000144</td>
+      <td>ENTRE AMIGOS O BODE LTDA</td>
+      <td>2012-01-20 00:00:00.0</td>
+      <td>2241841</td>
+      <td>192.50</td>
+    </tr>
+    <tr>
+      <th>272</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2012-12-14 00:00:00.0</td>
+      <td>2451431</td>
+      <td>190.00</td>
+    </tr>
+    <tr>
+      <th>517</th>
+      <td>74419</td>
+      <td>03487767000185</td>
+      <td>GERALDO BODE ASSADO</td>
+      <td>2012-01-12 00:00:00.0</td>
+      <td>2249890</td>
+      <td>182.00</td>
     </tr>
   </tbody>
 </table>
