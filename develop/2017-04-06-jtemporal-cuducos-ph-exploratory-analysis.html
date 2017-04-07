@@ -11814,6 +11814,16 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We are aiming to find suspicious expenses in hotels, maybe someone spent the holidays in some luxury hotel and asked for reimbursement</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
@@ -12520,6 +12530,390 @@ div#notebook {
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Top-eaters">Top eaters<a class="anchor-link" href="#Top-eaters">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Who were the congresspeople that ate more in one day and when?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Congressperson meal&#39;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">]</span>
+<span class="n">meals_aggregation</span> <span class="o">=</span> <span class="n">meals</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span> \
+                        <span class="n">agg</span><span class="p">({</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s1">&#39;expenses&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">})</span>
+<span class="n">meals_aggregation</span><span class="p">[</span><span class="s1">&#39;expenses&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meals_aggregation</span><span class="p">[</span><span class="s1">&#39;expenses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals_aggregation</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;expenses&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[8]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>sum</th>
+      <th>expenses</th>
+      <th>mean</th>
+    </tr>
+    <tr>
+      <th>congressperson_name</th>
+      <th>issue_date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>CELSO MALDANER</th>
+      <th>2011-09-05 00:00:00.0</th>
+      <td>750.28</td>
+      <td>13</td>
+      <td>57.713846</td>
+    </tr>
+    <tr>
+      <th>JOSÉ PAULO TÓFFANO</th>
+      <th>2010-04-27 00:00:00.0</th>
+      <td>558.07</td>
+      <td>13</td>
+      <td>42.928462</td>
+    </tr>
+    <tr>
+      <th rowspan="3" valign="top">SANDRA ROSADO</th>
+      <th>2012-01-12 00:00:00.0</th>
+      <td>333.40</td>
+      <td>12</td>
+      <td>27.783333</td>
+    </tr>
+    <tr>
+      <th>2012-01-17 00:00:00.0</th>
+      <td>287.43</td>
+      <td>12</td>
+      <td>23.952500</td>
+    </tr>
+    <tr>
+      <th>2012-01-06 00:00:00.0</th>
+      <td>281.75</td>
+      <td>12</td>
+      <td>23.479167</td>
+    </tr>
+    <tr>
+      <th>LÉO VIVAS</th>
+      <th>2010-08-31 00:00:00.0</th>
+      <td>630.00</td>
+      <td>11</td>
+      <td>57.272727</td>
+    </tr>
+    <tr>
+      <th>SANDRA ROSADO</th>
+      <th>2012-01-11 00:00:00.0</th>
+      <td>541.56</td>
+      <td>11</td>
+      <td>49.232727</td>
+    </tr>
+    <tr>
+      <th>PAULO WAGNER</th>
+      <th>2011-07-21 00:00:00.0</th>
+      <td>537.66</td>
+      <td>11</td>
+      <td>48.878182</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">SANDRA ROSADO</th>
+      <th>2015-01-07 00:00:00.0</th>
+      <td>396.60</td>
+      <td>11</td>
+      <td>36.054545</td>
+    </tr>
+    <tr>
+      <th>2012-01-15 00:00:00.0</th>
+      <td>295.58</td>
+      <td>11</td>
+      <td>26.870909</td>
+    </tr>
+    <tr>
+      <th>FRANCISCO DE ASSIS</th>
+      <th>2014-11-18 00:00:00.0</th>
+      <td>565.99</td>
+      <td>10</td>
+      <td>56.599000</td>
+    </tr>
+    <tr>
+      <th>SANDRA ROSADO</th>
+      <th>2012-01-09 00:00:00.0</th>
+      <td>340.18</td>
+      <td>10</td>
+      <td>34.018000</td>
+    </tr>
+    <tr>
+      <th>MAGDA MOFATTO</th>
+      <th>2015-03-15 00:00:00.0</th>
+      <td>435.63</td>
+      <td>9</td>
+      <td>48.403333</td>
+    </tr>
+    <tr>
+      <th>FRANCISCO DE ASSIS</th>
+      <th>2014-12-02 00:00:00.0</th>
+      <td>409.56</td>
+      <td>9</td>
+      <td>45.506667</td>
+    </tr>
+    <tr>
+      <th>PAULO WAGNER</th>
+      <th>2011-07-31 00:00:00.0</th>
+      <td>404.75</td>
+      <td>9</td>
+      <td>44.972222</td>
+    </tr>
+    <tr>
+      <th>FRANCISCO DE ASSIS</th>
+      <th>2014-10-01 00:00:00.0</th>
+      <td>346.19</td>
+      <td>9</td>
+      <td>38.465556</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">VANDERLEI MACRIS</th>
+      <th>2009-09-12 00:00:00.0</th>
+      <td>279.13</td>
+      <td>9</td>
+      <td>31.014444</td>
+    </tr>
+    <tr>
+      <th>2009-12-11 00:00:00.0</th>
+      <td>274.00</td>
+      <td>9</td>
+      <td>30.444444</td>
+    </tr>
+    <tr>
+      <th>SANDRA ROSADO</th>
+      <th>2012-01-05 00:00:00.0</th>
+      <td>265.87</td>
+      <td>9</td>
+      <td>29.541111</td>
+    </tr>
+    <tr>
+      <th>DR. ADILSON SOARES</th>
+      <th>2014-03-19 00:00:00.0</th>
+      <td>248.59</td>
+      <td>9</td>
+      <td>27.621111</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>What was the highest meal reimbursement, where it was made and by who?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals</span><span class="p">[[</span><span class="s1">&#39;document_id&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span> <span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">]]</span><span class="o">.</span> \
+        <span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[16]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>document_id</th>
+      <th>issue_date</th>
+      <th>total_net_value</th>
+      <th>congressperson_name</th>
+      <th>supplier</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1266040</th>
+      <td>5857053</td>
+      <td>2015-11-25 00:00:00.0</td>
+      <td>6205.00</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
+    </tr>
+    <tr>
+      <th>1242665</th>
+      <td>5588112</td>
+      <td>2015-01-18 00:00:00.0</td>
+      <td>5880.00</td>
+      <td>MARLLOS SAMPAIO</td>
+      <td>VR COMERCIO DE VEICULOS LTDA-ME</td>
+    </tr>
+    <tr>
+      <th>23296</th>
+      <td>1689682</td>
+      <td>2009-09-01 00:00:00.0</td>
+      <td>5852.00</td>
+      <td>MANOEL SALVIANO</td>
+      <td>HOTEL NACIONAL S/A</td>
+    </tr>
+    <tr>
+      <th>767478</th>
+      <td>2383218</td>
+      <td>2012-08-22 00:00:00.0</td>
+      <td>5696.00</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>PARRILLA FIGUEIRA DA VILLA</td>
+    </tr>
+    <tr>
+      <th>1467845</th>
+      <td>5954206</td>
+      <td>2016-03-30T00:00:00</td>
+      <td>5142.25</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
+    </tr>
+    <tr>
+      <th>1266024</th>
+      <td>5834088</td>
+      <td>2015-11-03 00:00:00.0</td>
+      <td>5054.99</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
+    </tr>
+    <tr>
+      <th>1126704</th>
+      <td>5573885</td>
+      <td>2014-12-10 00:00:00.0</td>
+      <td>5050.00</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
+    </tr>
+    <tr>
+      <th>954390</th>
+      <td>5056362</td>
+      <td>2013-03-18 00:00:00.0</td>
+      <td>4990.00</td>
+      <td>LIDERANÇA DO PSDB</td>
+      <td>Emporio Albamonte Comercio e Serviços Alimentí...</td>
+    </tr>
+    <tr>
+      <th>23314</th>
+      <td>1717750</td>
+      <td>2009-11-03 00:00:00.0</td>
+      <td>4840.00</td>
+      <td>MANOEL SALVIANO</td>
+      <td>HOTEL NACIONAL S/A</td>
+    </tr>
+    <tr>
+      <th>389390</th>
+      <td>2195568</td>
+      <td>2011-11-02 00:00:00.0</td>
+      <td>4510.00</td>
+      <td>SALVADOR ZIMBALDI</td>
+      <td>HOTEL NACIONAL SA</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
 </div>
 </div>
 

@@ -20,6 +20,8 @@ dataset = pd.read_csv('../../../serenata-data/2017-03-15-reimbursements.xz',
 
 # ## Luxury Hotel
 
+# We are aiming to find suspicious expenses in hotels, maybe someone spent the holidays in some luxury hotel and asked for reimbursement
+
 # In[2]:
 
 lodging = dataset[dataset['subquota_description'] == 'Lodging, except for congressperson from Distrito Federal']
@@ -95,4 +97,37 @@ aggregation.head()
 
 aggregation = aggregation.sort_values(by='top_net_value', ascending=False)
 aggregation.head(10)
+
+
+# ## Top eaters
+
+# Who were the congresspeople that ate more in one day and when?
+
+# In[9]:
+
+meals = dataset[dataset['subquota_description'] == 'Congressperson meal']
+
+
+# In[7]:
+
+keys = ['congressperson_name', 'issue_date']
+meals_aggregation = meals.groupby(keys)['total_net_value'].                         agg({'sum': np.sum, 'expenses': len, 'mean': np.mean})
+meals_aggregation['expenses'] = meals_aggregation['expenses'].astype(np.int)
+
+
+# In[8]:
+
+meals_aggregation.sort_values(['expenses', 'sum'], ascending=[False, False]).head(20)
+
+
+# What was the highest meal reimbursement, where it was made and by who?
+
+# In[16]:
+
+meals[['document_id', 'issue_date', 'total_net_value', 'congressperson_name', 'supplier']].         sort_values('total_net_value', ascending=False).head(10)
+
+
+# In[ ]:
+
+
 
