@@ -12,6 +12,7 @@ from urllib.request import urlopen
 import re
 
 INFO_DATASET_PATH = os.path.join('data', 'cnpj-info.xz')
+INFO_PARTNERS_DATASET_PATH = os.path.join('data', 'cnpj-partners-info.xz')
 TEMP_PATH = os.path.join('data', 'cnpj-info')
 
 datasets_cols = {'reimbursements': 'cnpj_cpf',
@@ -51,6 +52,17 @@ def load_info_dataset():
                                      'data_situacao_especial'])
 
 
+def load_info_partners_dataset():
+    if os.path.exists(INFO_PARTNERS_DATASET_PATH):
+        return pd.read_csv(INFO_PARTNERS_DATASET_PATH)
+    else:
+        return pd.DataFrame(columns=['cnpj',
+                                     'partner_name',
+                                     'partner_qualification',
+                                     'legal_representative_name',
+                                     'legal_representative_qualification'])
+
+
 def read_cnpj_list_to_import(filename, column):
     cnpj_list = pd.read_csv(filename,
                     usecols=([column]),
@@ -85,7 +97,7 @@ def read_cnpj_info(cnpj_filename):
         return pickle.load(f)
 
 
-def import_cnpj_infos(info_dataset):
+def import_cnpj_infos(info_dataset, info_partners_dataset):
     cnpjs_to_import = [filename
                        for filename in os.listdir(TEMP_PATH)
                        if filename.endswith('.pkl')]
@@ -93,11 +105,26 @@ def import_cnpj_infos(info_dataset):
         print('Importing %s' % filename)
         attributes = read_cnpj_info(filename)
         info_dataset = info_dataset.append(attributes, ignore_index=True)
+        if 'qsa' in attributes:
+            info_partners = pd.DataFrame(attributes['qsa'])
+            info_partners['cnpj'] = attributes['cnpj']
+            info_partners.rename(columns={
+                                'nome': 'partner_name',
+                                'qual': 'partner_qualification',
+                                'nome_rep_legal': 'legal_representative_name',
+                                'qual_rep_legal': 'legal_representative_qualification'},
+                                inplace=True)
+            info_partners_dataset = info_partners_dataset.append(info_partners,
+                                                                 ignore_index=True)
+
     info_dataset.to_csv(INFO_DATASET_PATH,
                         compression='xz',
                         encoding='utf-8',
                         index=False)
-
+    info_partners_dataset.to_csv(INFO_PARTNERS_DATASET_PATH,
+                                 compression='xz',
+                                 encoding='utf-8',
+                                 index=False)
 
 def extract_dataset_name(filepath):
     date = re.compile('\d+-\d+-\d+-').findall(os.path.basename(filepath))
@@ -123,6 +150,7 @@ if args:
                                                       datasets_cols.get(extract_dataset_name(file.lower()))),
                 filesFound)))
     info_dataset = load_info_dataset()
+    info_partners_dataset = load_info_partners_dataset()
     cnpj_list = remaining_cnpjs(cnpj_list_to_import, info_dataset)
 
     print('%i CNPJ\'s to be fetched' % len(cnpj_list_to_import))
@@ -138,7 +166,7 @@ if args:
             else:
                 write_cnpj_info(cnpj, future.result())
 
-    import_cnpj_infos(info_dataset)
+    import_cnpj_infos(info_dataset, info_partners_dataset)
 
     if len(filesNotFound) > 0:
         print('The following files were not found:')
