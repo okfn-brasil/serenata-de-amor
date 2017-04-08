@@ -11790,8 +11790,21 @@ div#notebook {
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">re</span> <span class="k">import</span> <span class="nb">compile</span><span class="p">,</span> <span class="n">search</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+</pre></div>
 
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../../../serenata-data/2017-03-15-reimbursements.xz&#39;</span><span class="p">,</span>
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../../../serenata-data/2017-03-15-reimbursements.xz&#39;</span><span class="p">,</span>
                       <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                              <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                              <span class="s1">&#39;congressperson_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
@@ -11826,11 +11839,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">lodging</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Lodging, except for congressperson from Distrito Federal&#39;</span><span class="p">]</span>
-<span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;congressperson_id&#39;</span><span class="p">,</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">]</span>
+<span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">,</span><span class="s1">&#39;congressperson_id&#39;</span><span class="p">,</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">]</span>
 <span class="n">grouped</span> <span class="o">=</span> <span class="n">lodging</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
 </pre></div>
 
@@ -11851,7 +11864,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">grouped</span><span class="p">)</span>
@@ -11866,92 +11879,12 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[3]:</div>
+<div class="prompt output_prompt">Out[4]:</div>
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>21063</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subquota_numbers</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="s1">&#39;subquota_number&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="n">subquota_numbers</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[4]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>congressperson_id</th>
-      <th>cnpj_cpf</th>
-      <th>supplier</th>
-      <th>subquota_number</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>101309</td>
-      <td>02697172000191</td>
-      <td>HOTEL E RESTAURANTE CARAIVA</td>
-      <td>14,14</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>101309</td>
-      <td>04652379000175</td>
-      <td>HOTEL ROYAL LTDA</td>
-      <td>14,14,14,14,14</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
-      <td>14,14</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
-      <td>14</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO ESTACIONAMENTO P/ VEICU...</td>
-      <td>14</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+<pre>21064</pre>
 </div>
 
 </div>
@@ -11965,8 +11898,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">document_ids</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="n">document_ids</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subquota_numbers</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="s1">&#39;subquota_number&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">subquota_numbers</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11987,47 +11920,53 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>applicant_id</th>
       <th>congressperson_id</th>
       <th>cnpj_cpf</th>
       <th>supplier</th>
-      <th>document_id</th>
+      <th>subquota_number</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>101309</td>
-      <td>02697172000191</td>
-      <td>HOTEL E RESTAURANTE CARAIVA</td>
-      <td>(5769892, 5769895)</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01044236000192</td>
+      <td>ORION HOTEL LTDA</td>
+      <td>14</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>101309</td>
-      <td>04652379000175</td>
-      <td>HOTEL ROYAL LTDA</td>
-      <td>(5789888, 5942187, 5978852, 6005283, 6019174)</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01233159000119</td>
+      <td>GUAMIRANGA HOTEL</td>
+      <td>14</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
-      <td>(5796458, 5922475)</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01233159000119</td>
+      <td>GUAMIRANGA HOTEL LTDA</td>
+      <td>14,14</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
-      <td>(6041598,)</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01680970000148</td>
+      <td>Hotel e churrascaria do Gaúcho</td>
+      <td>14</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO ESTACIONAMENTO P/ VEICU...</td>
-      <td>(5622880,)</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01687173000192</td>
+      <td>BOA VISTA HOTEL LTDA.</td>
+      <td>14</td>
     </tr>
   </tbody>
 </table>
@@ -12045,8 +11984,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">net_values_sum</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="n">net_values_sum</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">document_ids</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">document_ids</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -12067,47 +12006,53 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>applicant_id</th>
       <th>congressperson_id</th>
       <th>cnpj_cpf</th>
       <th>supplier</th>
-      <th>sum</th>
+      <th>document_id</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>101309</td>
-      <td>02697172000191</td>
-      <td>HOTEL E RESTAURANTE CARAIVA</td>
-      <td>128.5</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01044236000192</td>
+      <td>ORION HOTEL LTDA</td>
+      <td>(2277751,)</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>101309</td>
-      <td>04652379000175</td>
-      <td>HOTEL ROYAL LTDA</td>
-      <td>1890.9</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01233159000119</td>
+      <td>GUAMIRANGA HOTEL</td>
+      <td>(1901299,)</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
-      <td>617.7</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01233159000119</td>
+      <td>GUAMIRANGA HOTEL LTDA</td>
+      <td>(1901305, 1901309)</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
-      <td>953.4</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01680970000148</td>
+      <td>Hotel e churrascaria do Gaúcho</td>
+      <td>(5324333,)</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO ESTACIONAMENTO P/ VEICU...</td>
-      <td>194.0</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01687173000192</td>
+      <td>BOA VISTA HOTEL LTDA.</td>
+      <td>(5100425,)</td>
     </tr>
   </tbody>
 </table>
@@ -12125,9 +12070,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">aggregation</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">subquota_numbers</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">keys</span><span class="p">),</span>
-                       <span class="n">net_values_sum</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">keys</span><span class="p">)</span>
-<span class="n">aggregation</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">net_values_sum</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">net_values_sum</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -12148,6 +12092,94 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>applicant_id</th>
+      <th>congressperson_id</th>
+      <th>cnpj_cpf</th>
+      <th>supplier</th>
+      <th>sum</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01044236000192</td>
+      <td>ORION HOTEL LTDA</td>
+      <td>99.3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01233159000119</td>
+      <td>GUAMIRANGA HOTEL</td>
+      <td>40.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01233159000119</td>
+      <td>GUAMIRANGA HOTEL LTDA</td>
+      <td>99.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01680970000148</td>
+      <td>Hotel e churrascaria do Gaúcho</td>
+      <td>90.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01687173000192</td>
+      <td>BOA VISTA HOTEL LTDA.</td>
+      <td>129.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">aggregation</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">subquota_numbers</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">keys</span><span class="p">),</span>
+                       <span class="n">net_values_sum</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">keys</span><span class="p">)</span>
+<span class="n">aggregation</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[8]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>applicant_id</th>
       <th>congressperson_id</th>
       <th>cnpj_cpf</th>
       <th>supplier</th>
@@ -12159,48 +12191,53 @@ div#notebook {
   <tbody>
     <tr>
       <th>0</th>
-      <td>101309</td>
-      <td>02697172000191</td>
-      <td>HOTEL E RESTAURANTE CARAIVA</td>
-      <td>14,14</td>
-      <td>(5769892, 5769895)</td>
-      <td>128.5</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01044236000192</td>
+      <td>ORION HOTEL LTDA</td>
+      <td>14</td>
+      <td>(2277751,)</td>
+      <td>99.3</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>101309</td>
-      <td>04652379000175</td>
-      <td>HOTEL ROYAL LTDA</td>
-      <td>14,14,14,14,14</td>
-      <td>(5789888, 5942187, 5978852, 6005283, 6019174)</td>
-      <td>1890.9</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01233159000119</td>
+      <td>GUAMIRANGA HOTEL</td>
+      <td>14</td>
+      <td>(1901299,)</td>
+      <td>40.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01233159000119</td>
+      <td>GUAMIRANGA HOTEL LTDA</td>
       <td>14,14</td>
-      <td>(5796458, 5922475)</td>
-      <td>617.7</td>
+      <td>(1901305, 1901309)</td>
+      <td>99.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01680970000148</td>
+      <td>Hotel e churrascaria do Gaúcho</td>
       <td>14</td>
-      <td>(6041598,)</td>
-      <td>953.4</td>
+      <td>(5324333,)</td>
+      <td>90.0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO ESTACIONAMENTO P/ VEICU...</td>
+      <td>1001</td>
+      <td>73768</td>
+      <td>01687173000192</td>
+      <td>BOA VISTA HOTEL LTDA.</td>
       <td>14</td>
-      <td>(5622880,)</td>
-      <td>194.0</td>
+      <td>(5100425,)</td>
+      <td>129.0</td>
     </tr>
   </tbody>
 </table>
@@ -12225,7 +12262,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_top_net_value</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
@@ -12234,153 +12271,16 @@ div#notebook {
     <span class="k">for</span> <span class="n">reimbursement_id</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
         <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">reimbursement_id</span><span class="p">][</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]))</span>
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;top_net_value&#39;</span><span class="p">:</span><span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="s1">&#39;top_document&#39;</span><span class="p">:</span><span class="n">l</span><span class="p">[</span><span class="n">values</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">))]}</span>
-</pre></div>
 
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">top_things</span> <span class="o">=</span> <span class="n">aggregation</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">get_top_net_value</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
-<span class="c1"># new columns</span>
+<span class="n">top_things</span> <span class="o">=</span> <span class="n">aggregation</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">get_top_net_value</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
 <span class="n">aggregation</span><span class="p">[</span><span class="s1">&#39;top_net_value&#39;</span><span class="p">],</span> <span class="n">aggregation</span><span class="p">[</span><span class="s1">&#39;top_document&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span>
-</pre></div>
 
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">top_things</span><span class="p">)):</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">top_things</span><span class="p">)):</span>
     <span class="c1"># paliative since DataFrame.replace() did not work ¯\_(ツ)_/¯</span>
     <span class="n">aggregation</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">_</span><span class="p">,</span> <span class="s1">&#39;top_net_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_things</span><span class="p">[</span><span class="n">_</span><span class="p">][</span><span class="s1">&#39;top_net_value&#39;</span><span class="p">]</span>
     <span class="n">aggregation</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">_</span><span class="p">,</span> <span class="s1">&#39;top_document&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_things</span><span class="p">[</span><span class="n">_</span><span class="p">][</span><span class="s1">&#39;top_document&#39;</span><span class="p">]</span>
-</pre></div>
 
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">aggregation</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[11]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>congressperson_id</th>
-      <th>cnpj_cpf</th>
-      <th>supplier</th>
-      <th>subquota_number</th>
-      <th>document_id</th>
-      <th>sum</th>
-      <th>top_net_value</th>
-      <th>top_document</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>101309</td>
-      <td>02697172000191</td>
-      <td>HOTEL E RESTAURANTE CARAIVA</td>
-      <td>14,14</td>
-      <td>(5769892, 5769895)</td>
-      <td>128.5</td>
-      <td>79</td>
-      <td>5769892</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>101309</td>
-      <td>04652379000175</td>
-      <td>HOTEL ROYAL LTDA</td>
-      <td>14,14,14,14,14</td>
-      <td>(5789888, 5942187, 5978852, 6005283, 6019174)</td>
-      <td>1890.9</td>
-      <td>822.7</td>
-      <td>5978852</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
-      <td>14,14</td>
-      <td>(5796458, 5922475)</td>
-      <td>617.7</td>
-      <td>430.7</td>
-      <td>5796458</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO E ESTACIONAMENTO PARA V...</td>
-      <td>14</td>
-      <td>(6041598,)</td>
-      <td>953.4</td>
-      <td>953.4</td>
-      <td>6041598</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>101309</td>
-      <td>07881411000182</td>
-      <td>ITEM HOTELARIA TURISMO ESTACIONAMENTO P/ VEICU...</td>
-      <td>14</td>
-      <td>(5622880,)</td>
-      <td>194.0</td>
-      <td>194</td>
-      <td>5622880</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">aggregation</span> <span class="o">=</span> <span class="n">aggregation</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;top_net_value&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">aggregation</span> <span class="o">=</span> <span class="n">aggregation</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;top_net_value&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">aggregation</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
@@ -12393,7 +12293,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[12]:</div>
+<div class="prompt output_prompt">Out[9]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12402,6 +12302,7 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>applicant_id</th>
       <th>congressperson_id</th>
       <th>cnpj_cpf</th>
       <th>supplier</th>
@@ -12414,7 +12315,8 @@ div#notebook {
   </thead>
   <tbody>
     <tr>
-      <th>9102</th>
+      <th>15494</th>
+      <td>2389</td>
       <td>160633</td>
       <td>07959819000120</td>
       <td>KAPITAL VIAG. E TUR. LTDA</td>
@@ -12425,7 +12327,8 @@ div#notebook {
       <td>5877120</td>
     </tr>
     <tr>
-      <th>17690</th>
+      <th>20048</th>
+      <td>80</td>
       <td>74319</td>
       <td>04443021000213</td>
       <td>EUROPA INVESTIMENTOS LTDA</td>
@@ -12436,7 +12339,8 @@ div#notebook {
       <td>5322461</td>
     </tr>
     <tr>
-      <th>8366</th>
+      <th>14774</th>
+      <td>2362</td>
       <td>160606</td>
       <td>05668014000100</td>
       <td>D.A.N HOTEL SP LTDA</td>
@@ -12447,7 +12351,8 @@ div#notebook {
       <td>5652142</td>
     </tr>
     <tr>
-      <th>6509</th>
+      <th>15653</th>
+      <td>2392</td>
       <td>160549</td>
       <td>40848905000130</td>
       <td>WM TURISMO E VIAGENS LTDA.</td>
@@ -12458,7 +12363,8 @@ div#notebook {
       <td>2349567</td>
     </tr>
     <tr>
-      <th>13162</th>
+      <th>19983</th>
+      <td>775</td>
       <td>73437</td>
       <td>58133323000133</td>
       <td>VASCO DA GAMA TURISMO LTDA</td>
@@ -12469,7 +12375,8 @@ div#notebook {
       <td>5487203</td>
     </tr>
     <tr>
-      <th>12678</th>
+      <th>18078</th>
+      <td>2976</td>
       <td>178981</td>
       <td>61223608000170</td>
       <td>MEGTUR AGENCIA DE VIAGENS E TURISMO LTDA</td>
@@ -12480,7 +12387,8 @@ div#notebook {
       <td>5794903</td>
     </tr>
     <tr>
-      <th>17693</th>
+      <th>20051</th>
+      <td>80</td>
       <td>74319</td>
       <td>04863492000108</td>
       <td>RIO POTY HOTEL</td>
@@ -12491,7 +12399,8 @@ div#notebook {
       <td>1955426</td>
     </tr>
     <tr>
-      <th>11387</th>
+      <th>17868</th>
+      <td>2955</td>
       <td>178847</td>
       <td>16978175000108</td>
       <td>Adria viagens e turismo LTDA ME</td>
@@ -12502,7 +12411,8 @@ div#notebook {
       <td>5884760</td>
     </tr>
     <tr>
-      <th>17250</th>
+      <th>19616</th>
+      <td>611</td>
       <td>74207</td>
       <td>04433548000186</td>
       <td>EMILIANO EMPREENDIMENTOS E PARTICIPAÇÕES HOTEL...</td>
@@ -12513,7 +12423,8 @@ div#notebook {
       <td>5443587</td>
     </tr>
     <tr>
-      <th>17121</th>
+      <th>955</th>
+      <td>1119</td>
       <td>74177</td>
       <td>34776559000120</td>
       <td>NOVO HOTEL</td>
@@ -12539,23 +12450,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Top-eaters">Top eaters<a class="anchor-link" href="#Top-eaters">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Who were the congresspeople that ate more in one day and when?</p>
+<h2 id="Top-eaters">Top eaters<a class="anchor-link" href="#Top-eaters">&#182;</a></h2><p>Who were the congresspeople that ate more in one day and when?</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[99]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Congressperson meal&#39;</span><span class="p">]</span>
@@ -12569,10 +12471,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[100]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">,</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">]</span>
 <span class="n">meals_aggregation</span> <span class="o">=</span> <span class="n">meals</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span> \
                         <span class="n">agg</span><span class="p">({</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s1">&#39;expenses&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">})</span>
 <span class="n">meals_aggregation</span><span class="p">[</span><span class="s1">&#39;expenses&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meals_aggregation</span><span class="p">[</span><span class="s1">&#39;expenses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
@@ -12585,10 +12487,35 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[101]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals_aggregation</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;expenses&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals_agg_top20</span> <span class="o">=</span> <span class="n">meals_aggregation</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;expenses&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">meals_agg_top20</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">meals_agg_top20</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
+<span class="n">meals_agg_top20</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">meals_agg_top20</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Bellow you can see the top 20 congresspeople that requested more reimbursements in one day</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals_agg_top20</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12600,7 +12527,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[101]:</div>
+<div class="prompt output_prompt">Out[13]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12609,152 +12536,191 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th></th>
+      <th>applicant_id</th>
+      <th>congressperson_name</th>
+      <th>issue_date</th>
       <th>sum</th>
       <th>expenses</th>
       <th>mean</th>
     </tr>
-    <tr>
-      <th>congressperson_name</th>
-      <th>issue_date</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
   </thead>
   <tbody>
     <tr>
-      <th>CELSO MALDANER</th>
-      <th>2011-09-05 00:00:00.0</th>
+      <th>0</th>
+      <td>1798</td>
+      <td>CELSO MALDANER</td>
+      <td>2011-09-05</td>
       <td>750.28</td>
       <td>13</td>
       <td>57.713846</td>
     </tr>
     <tr>
-      <th>JOSÉ PAULO TÓFFANO</th>
-      <th>2010-04-27 00:00:00.0</th>
+      <th>1</th>
+      <td>1862</td>
+      <td>JOSÉ PAULO TÓFFANO</td>
+      <td>2010-04-27</td>
       <td>558.07</td>
       <td>13</td>
       <td>42.928462</td>
     </tr>
     <tr>
-      <th rowspan="3" valign="top">SANDRA ROSADO</th>
-      <th>2012-01-12 00:00:00.0</th>
+      <th>2</th>
+      <td>1689</td>
+      <td>SANDRA ROSADO</td>
+      <td>2012-01-12</td>
       <td>333.40</td>
       <td>12</td>
       <td>27.783333</td>
     </tr>
     <tr>
-      <th>2012-01-17 00:00:00.0</th>
+      <th>3</th>
+      <td>1689</td>
+      <td>SANDRA ROSADO</td>
+      <td>2012-01-17</td>
       <td>287.43</td>
       <td>12</td>
       <td>23.952500</td>
     </tr>
     <tr>
-      <th>2012-01-06 00:00:00.0</th>
+      <th>4</th>
+      <td>1689</td>
+      <td>SANDRA ROSADO</td>
+      <td>2012-01-06</td>
       <td>281.75</td>
       <td>12</td>
       <td>23.479167</td>
     </tr>
     <tr>
-      <th>LÉO VIVAS</th>
-      <th>2010-08-31 00:00:00.0</th>
+      <th>5</th>
+      <td>1872</td>
+      <td>LÉO VIVAS</td>
+      <td>2010-08-31</td>
       <td>630.00</td>
       <td>11</td>
       <td>57.272727</td>
     </tr>
     <tr>
-      <th>SANDRA ROSADO</th>
-      <th>2012-01-11 00:00:00.0</th>
+      <th>6</th>
+      <td>1689</td>
+      <td>SANDRA ROSADO</td>
+      <td>2012-01-11</td>
       <td>541.56</td>
       <td>11</td>
       <td>49.232727</td>
     </tr>
     <tr>
-      <th>PAULO WAGNER</th>
-      <th>2011-07-21 00:00:00.0</th>
+      <th>7</th>
+      <td>2257</td>
+      <td>PAULO WAGNER</td>
+      <td>2011-07-21</td>
       <td>537.66</td>
       <td>11</td>
       <td>48.878182</td>
     </tr>
     <tr>
-      <th rowspan="2" valign="top">SANDRA ROSADO</th>
-      <th>2015-01-07 00:00:00.0</th>
+      <th>8</th>
+      <td>1689</td>
+      <td>SANDRA ROSADO</td>
+      <td>2015-01-07</td>
       <td>396.60</td>
       <td>11</td>
       <td>36.054545</td>
     </tr>
     <tr>
-      <th>2012-01-15 00:00:00.0</th>
+      <th>9</th>
+      <td>1689</td>
+      <td>SANDRA ROSADO</td>
+      <td>2012-01-15</td>
       <td>295.58</td>
       <td>11</td>
       <td>26.870909</td>
     </tr>
     <tr>
-      <th>FRANCISCO DE ASSIS</th>
-      <th>2014-11-18 00:00:00.0</th>
+      <th>10</th>
+      <td>2874</td>
+      <td>FRANCISCO DE ASSIS</td>
+      <td>2014-11-18</td>
       <td>565.99</td>
       <td>10</td>
       <td>56.599000</td>
     </tr>
     <tr>
-      <th>SANDRA ROSADO</th>
-      <th>2012-01-09 00:00:00.0</th>
+      <th>11</th>
+      <td>1689</td>
+      <td>SANDRA ROSADO</td>
+      <td>2012-01-09</td>
       <td>340.18</td>
       <td>10</td>
       <td>34.018000</td>
     </tr>
     <tr>
-      <th>MAGDA MOFATTO</th>
-      <th>2015-03-15 00:00:00.0</th>
+      <th>12</th>
+      <td>2437</td>
+      <td>MAGDA MOFATTO</td>
+      <td>2015-03-15</td>
       <td>435.63</td>
       <td>9</td>
       <td>48.403333</td>
     </tr>
     <tr>
-      <th>FRANCISCO DE ASSIS</th>
-      <th>2014-12-02 00:00:00.0</th>
+      <th>13</th>
+      <td>2874</td>
+      <td>FRANCISCO DE ASSIS</td>
+      <td>2014-12-02</td>
       <td>409.56</td>
       <td>9</td>
       <td>45.506667</td>
     </tr>
     <tr>
-      <th>PAULO WAGNER</th>
-      <th>2011-07-31 00:00:00.0</th>
+      <th>14</th>
+      <td>2257</td>
+      <td>PAULO WAGNER</td>
+      <td>2011-07-31</td>
       <td>404.75</td>
       <td>9</td>
       <td>44.972222</td>
     </tr>
     <tr>
-      <th>FRANCISCO DE ASSIS</th>
-      <th>2014-10-01 00:00:00.0</th>
+      <th>15</th>
+      <td>2874</td>
+      <td>FRANCISCO DE ASSIS</td>
+      <td>2014-10-01</td>
       <td>346.19</td>
       <td>9</td>
       <td>38.465556</td>
     </tr>
     <tr>
-      <th rowspan="2" valign="top">VANDERLEI MACRIS</th>
-      <th>2009-09-12 00:00:00.0</th>
+      <th>16</th>
+      <td>1947</td>
+      <td>VANDERLEI MACRIS</td>
+      <td>2009-09-12</td>
       <td>279.13</td>
       <td>9</td>
       <td>31.014444</td>
     </tr>
     <tr>
-      <th>2009-12-11 00:00:00.0</th>
+      <th>17</th>
+      <td>1947</td>
+      <td>VANDERLEI MACRIS</td>
+      <td>2009-12-11</td>
       <td>274.00</td>
       <td>9</td>
       <td>30.444444</td>
     </tr>
     <tr>
-      <th>SANDRA ROSADO</th>
-      <th>2012-01-05 00:00:00.0</th>
+      <th>18</th>
+      <td>1689</td>
+      <td>SANDRA ROSADO</td>
+      <td>2012-01-05</td>
       <td>265.87</td>
       <td>9</td>
       <td>29.541111</td>
     </tr>
     <tr>
-      <th>DR. ADILSON SOARES</th>
-      <th>2014-03-19 00:00:00.0</th>
+      <th>19</th>
+      <td>1812</td>
+      <td>DR. ADILSON SOARES</td>
+      <td>2014-03-19</td>
       <td>248.59</td>
       <td>9</td>
       <td>27.621111</td>
@@ -12770,23 +12736,27 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>What was the highest meal reimbursement, where it was made and by who?</p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[102]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals</span><span class="p">[[</span><span class="s1">&#39;document_id&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span> <span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">]]</span><span class="o">.</span> \
-        <span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">create_jarbas_consult_congressperson_meal</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">jarbas_api</span> <span class="o">=</span> <span class="s2">&quot;https://jarbas.serenatadeamor.org/#/applicantId&quot;</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="p">[</span><span class="n">jarbas_api</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">],</span>
+         <span class="s1">&#39;issueDateEnd&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">),</span>
+         <span class="s1">&#39;issueDateStart&#39;</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">),</span>
+         <span class="s1">&#39;subquotaId&#39;</span><span class="p">,</span> <span class="s1">&#39;13&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+
+<span class="n">meals_agg_top20</span> <span class="o">=</span> <span class="n">meals_agg_top20</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">link_jarbas_consult</span><span class="o">=</span><span class="n">meals_agg_top20</span><span class="o">.</span> \
+                                         <span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">create_jarbas_consult_congressperson_meal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Here are the links for those top 20&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">meals_agg_top20</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">_</span><span class="p">][</span><span class="s1">&#39;link_jarbas_consult&#39;</span><span class="p">])</span>
 </pre></div>
 
 </div>
@@ -12798,7 +12768,71 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[102]:</div>
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Here are the links for those top 20
+https://jarbas.serenatadeamor.org/#/applicantId/1798/issueDateEnd/2011-09-06/issueDateStart/2011-09-05/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1862/issueDateEnd/2010-04-28/issueDateStart/2010-04-27/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1689/issueDateEnd/2012-01-13/issueDateStart/2012-01-12/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1689/issueDateEnd/2012-01-18/issueDateStart/2012-01-17/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1689/issueDateEnd/2012-01-07/issueDateStart/2012-01-06/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1872/issueDateEnd/2010-09-01/issueDateStart/2010-08-31/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1689/issueDateEnd/2012-01-12/issueDateStart/2012-01-11/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/2257/issueDateEnd/2011-07-22/issueDateStart/2011-07-21/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1689/issueDateEnd/2015-01-08/issueDateStart/2015-01-07/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1689/issueDateEnd/2012-01-16/issueDateStart/2012-01-15/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/2874/issueDateEnd/2014-11-19/issueDateStart/2014-11-18/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1689/issueDateEnd/2012-01-10/issueDateStart/2012-01-09/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/2437/issueDateEnd/2015-03-16/issueDateStart/2015-03-15/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/2874/issueDateEnd/2014-12-03/issueDateStart/2014-12-02/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/2257/issueDateEnd/2011-08-01/issueDateStart/2011-07-31/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/2874/issueDateEnd/2014-10-02/issueDateStart/2014-10-01/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1947/issueDateEnd/2009-09-13/issueDateStart/2009-09-12/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1947/issueDateEnd/2009-12-12/issueDateStart/2009-12-11/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1689/issueDateEnd/2012-01-06/issueDateStart/2012-01-05/subquotaId/13
+https://jarbas.serenatadeamor.org/#/applicantId/1812/issueDateEnd/2014-03-20/issueDateStart/2014-03-19/subquotaId/13
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Priciest-Meals">Priciest Meals<a class="anchor-link" href="#Priciest-Meals">&#182;</a></h3><p>What was the highest meal reimbursement, where it was made and by who?</p>
+<p>Here are the top 20 priciest meals ever reimbursed.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">priciest_meals</span> <span class="o">=</span> <span class="n">meals</span><span class="p">[[</span><span class="s1">&#39;document_id&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;supplier&#39;</span><span class="p">]]</span><span class="o">.</span> \
+                            <span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">priciest_meals</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[15]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12895,6 +12929,86 @@ div#notebook {
       <td>SALVADOR ZIMBALDI</td>
       <td>HOTEL NACIONAL SA</td>
     </tr>
+    <tr>
+      <th>92214</th>
+      <td>5104194</td>
+      <td>2013-05-09 00:00:00.0</td>
+      <td>4507.00</td>
+      <td>SANDES JÚNIOR</td>
+      <td>AUTO POSTO CAPITAL LTDA</td>
+    </tr>
+    <tr>
+      <th>3207</th>
+      <td>1751733</td>
+      <td>2009-12-28 00:00:00.0</td>
+      <td>4185.13</td>
+      <td>MARIA HELENA</td>
+      <td>HOTELARIA ACCOR BRASIL S/A</td>
+    </tr>
+    <tr>
+      <th>151896</th>
+      <td>5760917</td>
+      <td>2015-08-12 00:00:00.0</td>
+      <td>4178.65</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
+    </tr>
+    <tr>
+      <th>1629</th>
+      <td>1689685</td>
+      <td>2009-10-01 00:00:00.0</td>
+      <td>4004.00</td>
+      <td>MANOEL SALVIANO</td>
+      <td>HOTEL NACIONAL S/A</td>
+    </tr>
+    <tr>
+      <th>12469</th>
+      <td>1714197</td>
+      <td>2009-11-05 00:00:00.0</td>
+      <td>3888.35</td>
+      <td>ARMANDO ABÍLIO</td>
+      <td>AUTO POSTO RONALDÃO LTDA</td>
+    </tr>
+    <tr>
+      <th>151889</th>
+      <td>5736053</td>
+      <td>2015-07-13 00:00:00.0</td>
+      <td>3887.00</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
+    </tr>
+    <tr>
+      <th>84827</th>
+      <td>2360622</td>
+      <td>2012-07-12 00:00:00.0</td>
+      <td>3739.00</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>BAR E RESTAURANTE TIA ZÉLIA LTDA ME</td>
+    </tr>
+    <tr>
+      <th>182767</th>
+      <td>5974689</td>
+      <td>2016-04-17T00:00:00</td>
+      <td>3687.50</td>
+      <td>LIDERANÇA DO PSDB</td>
+      <td>COCO BAMBU LAGO SUL COMERCIO DE ALIMENTOS LTDA</td>
+    </tr>
+    <tr>
+      <th>1624</th>
+      <td>1636450</td>
+      <td>2009-07-31 00:00:00.0</td>
+      <td>3623.84</td>
+      <td>MANOEL SALVIANO</td>
+      <td>VERDE VALE HOTEL S/A</td>
+    </tr>
+    <tr>
+      <th>151884</th>
+      <td>5715997</td>
+      <td>2015-06-19 00:00:00.0</td>
+      <td>3617.41</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>CENTRAL PARK RESTAURANTE E EVENTOS LTDA ME</td>
+    </tr>
   </tbody>
 </table>
 </div>
@@ -12906,21 +13020,15 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Bode-assado">Bode assado<a class="anchor-link" href="#Bode-assado">&#182;</a></h2>
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[103]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">re</span> <span class="k">import</span> <span class="nb">compile</span><span class="p">,</span> <span class="n">search</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">create_jarbas_consult_document_id</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+    <span class="n">jarbas_api</span> <span class="o">=</span> <span class="s2">&quot;https://jarbas.serenatadeamor.org/#/documentId&quot;</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="p">[</span><span class="n">jarbas_api</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">])]</span>
+    <span class="k">return</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12930,7 +13038,72 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[104]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">priciest_meals</span> <span class="o">=</span> <span class="n">priciest_meals</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">link_jarbas_consult</span><span class="o">=</span><span class="n">priciest_meals</span><span class="o">.</span> \
+                                         <span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">create_jarbas_consult_document_id</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Here are the links for those top 20&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">priciest_meals</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">_</span><span class="p">][</span><span class="s1">&#39;link_jarbas_consult&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Here are the links for those top 20
+https://jarbas.serenatadeamor.org/#/documentId/5857053
+https://jarbas.serenatadeamor.org/#/documentId/5588112
+https://jarbas.serenatadeamor.org/#/documentId/1689682
+https://jarbas.serenatadeamor.org/#/documentId/2383218
+https://jarbas.serenatadeamor.org/#/documentId/5954206
+https://jarbas.serenatadeamor.org/#/documentId/5834088
+https://jarbas.serenatadeamor.org/#/documentId/5573885
+https://jarbas.serenatadeamor.org/#/documentId/5056362
+https://jarbas.serenatadeamor.org/#/documentId/1717750
+https://jarbas.serenatadeamor.org/#/documentId/2195568
+https://jarbas.serenatadeamor.org/#/documentId/5104194
+https://jarbas.serenatadeamor.org/#/documentId/1751733
+https://jarbas.serenatadeamor.org/#/documentId/5760917
+https://jarbas.serenatadeamor.org/#/documentId/1689685
+https://jarbas.serenatadeamor.org/#/documentId/1714197
+https://jarbas.serenatadeamor.org/#/documentId/5736053
+https://jarbas.serenatadeamor.org/#/documentId/2360622
+https://jarbas.serenatadeamor.org/#/documentId/5974689
+https://jarbas.serenatadeamor.org/#/documentId/1636450
+https://jarbas.serenatadeamor.org/#/documentId/5715997
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Roasted-goat">Roasted goat<a class="anchor-link" href="#Roasted-goat">&#182;</a></h2><p>Some congress people seem to be very fond of roasted goat</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">meals</span><span class="p">)</span>
@@ -12945,7 +13118,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[104]:</div>
+<div class="prompt output_prompt">Out[18]:</div>
 
 
 
@@ -12961,10 +13134,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[112]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bode</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;BODE&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bode</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="s1">&#39;BODE&#39;</span><span class="p">)</span>
 <span class="n">bode_bool</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">meals</span><span class="p">)):</span>
     <span class="k">if</span> <span class="n">bode</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">meals</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">_</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">]):</span>
@@ -12980,1541 +13153,17 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[144]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">bode_meals</span> <span class="o">=</span> <span class="n">meals</span><span class="p">[</span><span class="n">bode_bool</span><span class="p">]</span>
 <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;congressperson_id&#39;</span><span class="p">,</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">,</span> <span class="s1">&#39;supplier&#39;</span><span class="p">,</span> <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span> <span class="s1">&#39;document_id&#39;</span><span class="p">]</span>
 <span class="n">bode_meals_grouped</span> <span class="o">=</span> <span class="n">bode_meals</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
-<span class="n">bode_meals_grouped</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
 
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[144]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>index</th>
-      <th>year</th>
-      <th>applicant_id</th>
-      <th>document_id</th>
-      <th>reimbursement_value_total</th>
-      <th>total_net_value</th>
-      <th>reimbursement_numbers</th>
-      <th>congressperson_name</th>
-      <th>congressperson_id</th>
-      <th>congressperson_document</th>
-      <th>...</th>
-      <th>issue_date</th>
-      <th>document_value</th>
-      <th>remark_value</th>
-      <th>net_values</th>
-      <th>month</th>
-      <th>installment</th>
-      <th>passenger</th>
-      <th>leg_of_the_trip</th>
-      <th>batch_number</th>
-      <th>reimbursement_values</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2031</th>
-      <td>27773</td>
-      <td>2009</td>
-      <td>137</td>
-      <td>1723164</td>
-      <td>NaN</td>
-      <td>92.18</td>
-      <td>3129</td>
-      <td>GONZAGA PATRIOTA</td>
-      <td>74419</td>
-      <td>143.0</td>
-      <td>...</td>
-      <td>2009-11-15 00:00:00.0</td>
-      <td>99.22</td>
-      <td>7.04</td>
-      <td>92.18</td>
-      <td>11</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>437960</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2032</th>
-      <td>27774</td>
-      <td>2009</td>
-      <td>137</td>
-      <td>1724236</td>
-      <td>NaN</td>
-      <td>7.04</td>
-      <td>3137</td>
-      <td>GONZAGA PATRIOTA</td>
-      <td>74419</td>
-      <td>143.0</td>
-      <td>...</td>
-      <td>2009-11-15 00:00:00.0</td>
-      <td>7.04</td>
-      <td>0.00</td>
-      <td>7.04</td>
-      <td>11</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>437960</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2208</th>
-      <td>36156</td>
-      <td>2009</td>
-      <td>1455</td>
-      <td>1660201</td>
-      <td>NaN</td>
-      <td>14.00</td>
-      <td>3046</td>
-      <td>LUIS CARLOS HEINZE</td>
-      <td>73483</td>
-      <td>500.0</td>
-      <td>...</td>
-      <td>2009-07-09 00:00:00.0</td>
-      <td>14.00</td>
-      <td>0.00</td>
-      <td>14.00</td>
-      <td>7</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>419418</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2234</th>
-      <td>36236</td>
-      <td>2009</td>
-      <td>1455</td>
-      <td>1676470</td>
-      <td>NaN</td>
-      <td>20.00</td>
-      <td>3079</td>
-      <td>LUIS CARLOS HEINZE</td>
-      <td>73483</td>
-      <td>500.0</td>
-      <td>...</td>
-      <td>2009-08-23 00:00:00.0</td>
-      <td>20.00</td>
-      <td>0.00</td>
-      <td>20.00</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>424313</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2241</th>
-      <td>36245</td>
-      <td>2009</td>
-      <td>1455</td>
-      <td>1676509</td>
-      <td>NaN</td>
-      <td>14.00</td>
-      <td>3079</td>
-      <td>LUIS CARLOS HEINZE</td>
-      <td>73483</td>
-      <td>500.0</td>
-      <td>...</td>
-      <td>2009-08-31 00:00:00.0</td>
-      <td>14.00</td>
-      <td>0.00</td>
-      <td>14.00</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>424313</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2261</th>
-      <td>36452</td>
-      <td>2009</td>
-      <td>1455</td>
-      <td>1703745</td>
-      <td>NaN</td>
-      <td>14.00</td>
-      <td>3109</td>
-      <td>LUIS CARLOS HEINZE</td>
-      <td>73483</td>
-      <td>500.0</td>
-      <td>...</td>
-      <td>2009-09-11 00:00:00.0</td>
-      <td>14.00</td>
-      <td>0.00</td>
-      <td>14.00</td>
-      <td>9</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>432250</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2275</th>
-      <td>36545</td>
-      <td>2009</td>
-      <td>1455</td>
-      <td>1722763</td>
-      <td>NaN</td>
-      <td>14.00</td>
-      <td>3129</td>
-      <td>LUIS CARLOS HEINZE</td>
-      <td>73483</td>
-      <td>500.0</td>
-      <td>...</td>
-      <td>2009-10-08 00:00:00.0</td>
-      <td>14.00</td>
-      <td>0.00</td>
-      <td>14.00</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>437831</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2281</th>
-      <td>36684</td>
-      <td>2009</td>
-      <td>1455</td>
-      <td>1749643</td>
-      <td>NaN</td>
-      <td>12.50</td>
-      <td>3168</td>
-      <td>LUIS CARLOS HEINZE</td>
-      <td>73483</td>
-      <td>500.0</td>
-      <td>...</td>
-      <td>2009-11-19 00:00:00.0</td>
-      <td>12.50</td>
-      <td>0.00</td>
-      <td>12.50</td>
-      <td>11</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>446024</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2619</th>
-      <td>41752</td>
-      <td>2009</td>
-      <td>1544</td>
-      <td>1645842</td>
-      <td>NaN</td>
-      <td>39.00</td>
-      <td>3017</td>
-      <td>LUIZ BASSUMA</td>
-      <td>74059</td>
-      <td>182.0</td>
-      <td>...</td>
-      <td>2009-08-09 00:00:00.0</td>
-      <td>39.00</td>
-      <td>0.00</td>
-      <td>39.00</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>415238</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>4213</th>
-      <td>69076</td>
-      <td>2009</td>
-      <td>1710</td>
-      <td>1667521</td>
-      <td>NaN</td>
-      <td>44.50</td>
-      <td>3056</td>
-      <td>ZEZÉU RIBEIRO</td>
-      <td>74145</td>
-      <td>217.0</td>
-      <td>...</td>
-      <td>2009-09-07 00:00:00.0</td>
-      <td>44.50</td>
-      <td>0.00</td>
-      <td>44.50</td>
-      <td>9</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>421639</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>6253</th>
-      <td>93856</td>
-      <td>2009</td>
-      <td>1833</td>
-      <td>1646356</td>
-      <td>NaN</td>
-      <td>100.00</td>
-      <td>3017</td>
-      <td>FERNANDO COELHO FILHO</td>
-      <td>141431</td>
-      <td>158.0</td>
-      <td>...</td>
-      <td>2009-08-07 00:00:00.0</td>
-      <td>100.00</td>
-      <td>0.00</td>
-      <td>100.00</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>415317</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>6864</th>
-      <td>102028</td>
-      <td>2009</td>
-      <td>1856</td>
-      <td>1712629</td>
-      <td>NaN</td>
-      <td>50.00</td>
-      <td>3120</td>
-      <td>JOÃO CARLOS BACELAR</td>
-      <td>141458</td>
-      <td>187.0</td>
-      <td>...</td>
-      <td>2009-09-23 00:00:00.0</td>
-      <td>50.00</td>
-      <td>0.00</td>
-      <td>50.00</td>
-      <td>9</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>434841</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>8644</th>
-      <td>122708</td>
-      <td>2009</td>
-      <td>1924</td>
-      <td>1656921</td>
-      <td>NaN</td>
-      <td>51.04</td>
-      <td>3042</td>
-      <td>ROBERTO BRITTO</td>
-      <td>141529</td>
-      <td>211.0</td>
-      <td>...</td>
-      <td>2009-08-22 00:00:00.0</td>
-      <td>51.04</td>
-      <td>0.00</td>
-      <td>51.04</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>418446</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>8656</th>
-      <td>122734</td>
-      <td>2009</td>
-      <td>1924</td>
-      <td>1677315</td>
-      <td>NaN</td>
-      <td>73.02</td>
-      <td>3073</td>
-      <td>ROBERTO BRITTO</td>
-      <td>141529</td>
-      <td>211.0</td>
-      <td>...</td>
-      <td>2009-09-20 00:00:00.0</td>
-      <td>73.02</td>
-      <td>0.00</td>
-      <td>73.02</td>
-      <td>9</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>424564</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>8659</th>
-      <td>122747</td>
-      <td>2009</td>
-      <td>1924</td>
-      <td>1691378</td>
-      <td>NaN</td>
-      <td>60.00</td>
-      <td>3093</td>
-      <td>ROBERTO BRITTO</td>
-      <td>141529</td>
-      <td>211.0</td>
-      <td>...</td>
-      <td>2009-10-03 00:00:00.0</td>
-      <td>60.00</td>
-      <td>0.00</td>
-      <td>60.00</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>428635</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9608</th>
-      <td>134752</td>
-      <td>2009</td>
-      <td>1960</td>
-      <td>1663229</td>
-      <td>NaN</td>
-      <td>120.00</td>
-      <td>3052</td>
-      <td>ANA ARRAES</td>
-      <td>141377</td>
-      <td>140.0</td>
-      <td>...</td>
-      <td>2009-08-15 00:00:00.0</td>
-      <td>120.00</td>
-      <td>0.00</td>
-      <td>120.00</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>420345</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9911</th>
-      <td>139849</td>
-      <td>2009</td>
-      <td>1970</td>
-      <td>1651145</td>
-      <td>NaN</td>
-      <td>84.37</td>
-      <td>3027</td>
-      <td>JOSEPH BANDEIRA</td>
-      <td>4929</td>
-      <td>565.0</td>
-      <td>...</td>
-      <td>2009-08-14 00:00:00.0</td>
-      <td>84.37</td>
-      <td>0.00</td>
-      <td>84.37</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>416827</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9921</th>
-      <td>139887</td>
-      <td>2009</td>
-      <td>1970</td>
-      <td>1661621</td>
-      <td>NaN</td>
-      <td>81.62</td>
-      <td>3048</td>
-      <td>JOSEPH BANDEIRA</td>
-      <td>4929</td>
-      <td>565.0</td>
-      <td>...</td>
-      <td>2009-08-24 00:00:00.0</td>
-      <td>81.62</td>
-      <td>0.00</td>
-      <td>81.62</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>419813</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9922</th>
-      <td>139888</td>
-      <td>2009</td>
-      <td>1970</td>
-      <td>1661637</td>
-      <td>NaN</td>
-      <td>91.50</td>
-      <td>3051</td>
-      <td>JOSEPH BANDEIRA</td>
-      <td>4929</td>
-      <td>565.0</td>
-      <td>...</td>
-      <td>2009-08-26 00:00:00.0</td>
-      <td>91.50</td>
-      <td>0.00</td>
-      <td>91.50</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>419814</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9938</th>
-      <td>139932</td>
-      <td>2009</td>
-      <td>1970</td>
-      <td>1673022</td>
-      <td>NaN</td>
-      <td>47.30</td>
-      <td>3068</td>
-      <td>JOSEPH BANDEIRA</td>
-      <td>4929</td>
-      <td>565.0</td>
-      <td>...</td>
-      <td>2009-09-04 00:00:00.0</td>
-      <td>47.30</td>
-      <td>0.00</td>
-      <td>47.30</td>
-      <td>9</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>423304</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9960</th>
-      <td>140004</td>
-      <td>2009</td>
-      <td>1970</td>
-      <td>1700862</td>
-      <td>NaN</td>
-      <td>180.00</td>
-      <td>3107</td>
-      <td>JOSEPH BANDEIRA</td>
-      <td>4929</td>
-      <td>565.0</td>
-      <td>...</td>
-      <td>2009-10-17 00:00:00.0</td>
-      <td>180.00</td>
-      <td>0.00</td>
-      <td>180.00</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>431355</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9961</th>
-      <td>140005</td>
-      <td>2009</td>
-      <td>1970</td>
-      <td>1700872</td>
-      <td>NaN</td>
-      <td>165.00</td>
-      <td>3107</td>
-      <td>JOSEPH BANDEIRA</td>
-      <td>4929</td>
-      <td>565.0</td>
-      <td>...</td>
-      <td>2009-10-18 00:00:00.0</td>
-      <td>165.00</td>
-      <td>0.00</td>
-      <td>165.00</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>431355</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9989</th>
-      <td>140098</td>
-      <td>2009</td>
-      <td>1970</td>
-      <td>1732594</td>
-      <td>NaN</td>
-      <td>85.50</td>
-      <td>3143</td>
-      <td>JOSEPH BANDEIRA</td>
-      <td>4929</td>
-      <td>565.0</td>
-      <td>...</td>
-      <td>2009-10-30 00:00:00.0</td>
-      <td>85.50</td>
-      <td>0.00</td>
-      <td>85.50</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>440603</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>15947</th>
-      <td>206963</td>
-      <td>2010</td>
-      <td>137</td>
-      <td>1882756</td>
-      <td>NaN</td>
-      <td>440.00</td>
-      <td>3367</td>
-      <td>GONZAGA PATRIOTA</td>
-      <td>74419</td>
-      <td>143.0</td>
-      <td>...</td>
-      <td>2010-06-18 00:00:00.0</td>
-      <td>440.00</td>
-      <td>0.00</td>
-      <td>440.00</td>
-      <td>6</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>483439</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>15952</th>
-      <td>206977</td>
-      <td>2010</td>
-      <td>137</td>
-      <td>1905263</td>
-      <td>NaN</td>
-      <td>480.00</td>
-      <td>3391</td>
-      <td>GONZAGA PATRIOTA</td>
-      <td>74419</td>
-      <td>143.0</td>
-      <td>...</td>
-      <td>2010-08-02 00:00:00.0</td>
-      <td>480.00</td>
-      <td>0.00</td>
-      <td>480.00</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>489467</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>16638</th>
-      <td>219753</td>
-      <td>2010</td>
-      <td>153</td>
-      <td>1788491</td>
-      <td>NaN</td>
-      <td>98.89</td>
-      <td>3254</td>
-      <td>JAIRO CARNEIRO</td>
-      <td>74547</td>
-      <td>597.0</td>
-      <td>...</td>
-      <td>2010-02-26 00:00:00.0</td>
-      <td>98.89</td>
-      <td>0.00</td>
-      <td>98.89</td>
-      <td>2</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>457197</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>16841</th>
-      <td>222309</td>
-      <td>2010</td>
-      <td>1544</td>
-      <td>1875090</td>
-      <td>NaN</td>
-      <td>73.00</td>
-      <td>3359</td>
-      <td>LUIZ BASSUMA</td>
-      <td>74059</td>
-      <td>182.0</td>
-      <td>...</td>
-      <td>2010-06-20 00:00:00.0</td>
-      <td>73.00</td>
-      <td>0.00</td>
-      <td>73.00</td>
-      <td>6</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>481515</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>16850</th>
-      <td>222353</td>
-      <td>2010</td>
-      <td>1544</td>
-      <td>1885867</td>
-      <td>NaN</td>
-      <td>47.50</td>
-      <td>3370</td>
-      <td>LUIZ BASSUMA</td>
-      <td>74059</td>
-      <td>182.0</td>
-      <td>...</td>
-      <td>2010-07-04 00:00:00.0</td>
-      <td>47.50</td>
-      <td>0.00</td>
-      <td>47.50</td>
-      <td>7</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>484279</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>16892</th>
-      <td>222632</td>
-      <td>2010</td>
-      <td>1544</td>
-      <td>1946822</td>
-      <td>NaN</td>
-      <td>37.00</td>
-      <td>3461</td>
-      <td>LUIZ BASSUMA</td>
-      <td>74059</td>
-      <td>182.0</td>
-      <td>...</td>
-      <td>2010-09-10 00:00:00.0</td>
-      <td>37.00</td>
-      <td>0.00</td>
-      <td>37.00</td>
-      <td>9</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>500580</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>17927</th>
-      <td>236857</td>
-      <td>2010</td>
-      <td>1612</td>
-      <td>1836387</td>
-      <td>NaN</td>
-      <td>20.00</td>
-      <td>3323</td>
-      <td>MAURÍCIO RANDS</td>
-      <td>74045</td>
-      <td>138.0</td>
-      <td>...</td>
-      <td>2010-04-21 00:00:00.0</td>
-      <td>20.00</td>
-      <td>0.00</td>
-      <td>20.00</td>
-      <td>4</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>471793</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>170832</th>
-      <td>1377491</td>
-      <td>2016</td>
-      <td>137</td>
-      <td>6136125</td>
-      <td>NaN</td>
-      <td>82.50</td>
-      <td>5591</td>
-      <td>GONZAGA PATRIOTA</td>
-      <td>74419</td>
-      <td>143.0</td>
-      <td>...</td>
-      <td>2016-10-08T00:00:00</td>
-      <td>82.50</td>
-      <td>0.00</td>
-      <td>82.50</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1334003</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>170833</th>
-      <td>1377492</td>
-      <td>2016</td>
-      <td>137</td>
-      <td>6136127</td>
-      <td>NaN</td>
-      <td>85.00</td>
-      <td>5591</td>
-      <td>GONZAGA PATRIOTA</td>
-      <td>74419</td>
-      <td>143.0</td>
-      <td>...</td>
-      <td>2016-10-14T00:00:00</td>
-      <td>85.00</td>
-      <td>0.00</td>
-      <td>85.00</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1334003</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>170834</th>
-      <td>1377493</td>
-      <td>2016</td>
-      <td>137</td>
-      <td>6136129</td>
-      <td>NaN</td>
-      <td>82.50</td>
-      <td>5591</td>
-      <td>GONZAGA PATRIOTA</td>
-      <td>74419</td>
-      <td>143.0</td>
-      <td>...</td>
-      <td>2016-10-15T00:00:00</td>
-      <td>82.50</td>
-      <td>0.00</td>
-      <td>82.50</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1334003</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>170835</th>
-      <td>1377494</td>
-      <td>2016</td>
-      <td>137</td>
-      <td>6136132</td>
-      <td>NaN</td>
-      <td>85.00</td>
-      <td>5591</td>
-      <td>GONZAGA PATRIOTA</td>
-      <td>74419</td>
-      <td>143.0</td>
-      <td>...</td>
-      <td>2016-10-21T00:00:00</td>
-      <td>85.00</td>
-      <td>0.00</td>
-      <td>85.00</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1334003</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>170836</th>
-      <td>1377495</td>
-      <td>2016</td>
-      <td>137</td>
-      <td>6136137</td>
-      <td>NaN</td>
-      <td>82.50</td>
-      <td>5591</td>
-      <td>GONZAGA PATRIOTA</td>
-      <td>74419</td>
-      <td>143.0</td>
-      <td>...</td>
-      <td>2016-10-22T00:00:00</td>
-      <td>82.50</td>
-      <td>0.00</td>
-      <td>82.50</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1334003</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>171326</th>
-      <td>1382253</td>
-      <td>2016</td>
-      <td>1458</td>
-      <td>5914177</td>
-      <td>NaN</td>
-      <td>45.00</td>
-      <td>5345</td>
-      <td>POMPEO DE MATTOS</td>
-      <td>73486</td>
-      <td>516.0</td>
-      <td>...</td>
-      <td>2016-02-13T00:00:00</td>
-      <td>45.00</td>
-      <td>0.00</td>
-      <td>45.00</td>
-      <td>2</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1264083</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>173560</th>
-      <td>1399523</td>
-      <td>2016</td>
-      <td>1782</td>
-      <td>5964720</td>
-      <td>NaN</td>
-      <td>28.71</td>
-      <td>5411</td>
-      <td>ANTONIO BULHÕES</td>
-      <td>141383</td>
-      <td>333.0</td>
-      <td>...</td>
-      <td>2016-02-26T00:00:00</td>
-      <td>35.09</td>
-      <td>6.38</td>
-      <td>28.71</td>
-      <td>2</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1280328</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>173565</th>
-      <td>1399535</td>
-      <td>2016</td>
-      <td>1782</td>
-      <td>5964795</td>
-      <td>NaN</td>
-      <td>35.09</td>
-      <td>5411</td>
-      <td>ANTONIO BULHÕES</td>
-      <td>141383</td>
-      <td>333.0</td>
-      <td>...</td>
-      <td>2016-02-15T00:00:00</td>
-      <td>35.09</td>
-      <td>0.00</td>
-      <td>35.09</td>
-      <td>2</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1280331</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>173569</th>
-      <td>1399556</td>
-      <td>2016</td>
-      <td>1782</td>
-      <td>6001047</td>
-      <td>NaN</td>
-      <td>35.09</td>
-      <td>5449</td>
-      <td>ANTONIO BULHÕES</td>
-      <td>141383</td>
-      <td>333.0</td>
-      <td>...</td>
-      <td>2016-03-11T00:00:00</td>
-      <td>35.09</td>
-      <td>0.00</td>
-      <td>35.09</td>
-      <td>3</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1292165</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>173636</th>
-      <td>1399688</td>
-      <td>2016</td>
-      <td>1782</td>
-      <td>6169580</td>
-      <td>NaN</td>
-      <td>40.59</td>
-      <td>5637</td>
-      <td>ANTONIO BULHÕES</td>
-      <td>141383</td>
-      <td>333.0</td>
-      <td>...</td>
-      <td>2016-11-04T00:00:00</td>
-      <td>40.59</td>
-      <td>0.00</td>
-      <td>40.59</td>
-      <td>11</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1345480</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>176813</th>
-      <td>1426474</td>
-      <td>2016</td>
-      <td>2225</td>
-      <td>5986257</td>
-      <td>NaN</td>
-      <td>154.00</td>
-      <td>5435</td>
-      <td>ARTHUR OLIVEIRA MAIA</td>
-      <td>160600</td>
-      <td>192.0</td>
-      <td>...</td>
-      <td>2016-04-02T00:00:00</td>
-      <td>154.00</td>
-      <td>0.00</td>
-      <td>154.00</td>
-      <td>4</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1287060</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>178775</th>
-      <td>1438724</td>
-      <td>2016</td>
-      <td>2264</td>
-      <td>5984491</td>
-      <td>NaN</td>
-      <td>57.20</td>
-      <td>5433</td>
-      <td>PASTOR EURICO</td>
-      <td>160642</td>
-      <td>155.0</td>
-      <td>...</td>
-      <td>2016-05-01T00:00:00</td>
-      <td>57.20</td>
-      <td>0.00</td>
-      <td>57.20</td>
-      <td>5</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1286380</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>178782</th>
-      <td>1438733</td>
-      <td>2016</td>
-      <td>2264</td>
-      <td>6002881</td>
-      <td>NaN</td>
-      <td>93.50</td>
-      <td>5451</td>
-      <td>PASTOR EURICO</td>
-      <td>160642</td>
-      <td>155.0</td>
-      <td>...</td>
-      <td>2016-05-22T00:00:00</td>
-      <td>93.50</td>
-      <td>0.00</td>
-      <td>93.50</td>
-      <td>5</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1292367</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>178809</th>
-      <td>1438803</td>
-      <td>2016</td>
-      <td>2264</td>
-      <td>6048054</td>
-      <td>NaN</td>
-      <td>48.00</td>
-      <td>5498</td>
-      <td>PASTOR EURICO</td>
-      <td>160642</td>
-      <td>155.0</td>
-      <td>...</td>
-      <td>2016-07-09T00:00:00</td>
-      <td>48.00</td>
-      <td>0.00</td>
-      <td>48.00</td>
-      <td>7</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1306686</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>178824</th>
-      <td>1438840</td>
-      <td>2016</td>
-      <td>2264</td>
-      <td>6061984</td>
-      <td>NaN</td>
-      <td>104.39</td>
-      <td>5514</td>
-      <td>PASTOR EURICO</td>
-      <td>160642</td>
-      <td>155.0</td>
-      <td>...</td>
-      <td>2016-07-26T00:00:00</td>
-      <td>104.39</td>
-      <td>0.00</td>
-      <td>104.39</td>
-      <td>7</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1310791</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>178887</th>
-      <td>1438978</td>
-      <td>2016</td>
-      <td>2264</td>
-      <td>6140191</td>
-      <td>NaN</td>
-      <td>137.28</td>
-      <td>5597</td>
-      <td>PASTOR EURICO</td>
-      <td>160642</td>
-      <td>155.0</td>
-      <td>...</td>
-      <td>2016-10-27T00:00:00</td>
-      <td>137.28</td>
-      <td>0.00</td>
-      <td>137.28</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1335505</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>180349</th>
-      <td>1449855</td>
-      <td>2016</td>
-      <td>2341</td>
-      <td>6084017</td>
-      <td>NaN</td>
-      <td>24.50</td>
-      <td>5534</td>
-      <td>ARNALDO JORDY</td>
-      <td>160602</td>
-      <td>18.0</td>
-      <td>...</td>
-      <td>2016-08-10T00:00:00</td>
-      <td>24.50</td>
-      <td>0.00</td>
-      <td>24.50</td>
-      <td>8</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1317676</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>183196</th>
-      <td>1470047</td>
-      <td>2016</td>
-      <td>2813</td>
-      <td>6062270</td>
-      <td>NaN</td>
-      <td>112.42</td>
-      <td>5513</td>
-      <td>PAULÃO</td>
-      <td>171617</td>
-      <td>170.0</td>
-      <td>...</td>
-      <td>2016-07-22T00:00:00</td>
-      <td>112.42</td>
-      <td>0.00</td>
-      <td>112.42</td>
-      <td>7</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1310980</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>187501</th>
-      <td>1501306</td>
-      <td>2016</td>
-      <td>2964</td>
-      <td>5922876</td>
-      <td>NaN</td>
-      <td>54.77</td>
-      <td>5360</td>
-      <td>MARINALDO ROSENDO</td>
-      <td>178919</td>
-      <td>152.0</td>
-      <td>...</td>
-      <td>2016-01-18T00:00:00</td>
-      <td>54.77</td>
-      <td>0.00</td>
-      <td>54.77</td>
-      <td>1</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1266857</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>187520</th>
-      <td>1501372</td>
-      <td>2016</td>
-      <td>2964</td>
-      <td>5982295</td>
-      <td>NaN</td>
-      <td>85.62</td>
-      <td>5497</td>
-      <td>MARINALDO ROSENDO</td>
-      <td>178919</td>
-      <td>152.0</td>
-      <td>...</td>
-      <td>2016-04-19T00:00:00</td>
-      <td>85.62</td>
-      <td>0.00</td>
-      <td>85.62</td>
-      <td>4</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1285681</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>187565</th>
-      <td>1501503</td>
-      <td>2016</td>
-      <td>2964</td>
-      <td>6139368</td>
-      <td>NaN</td>
-      <td>102.94</td>
-      <td>5600</td>
-      <td>MARINALDO ROSENDO</td>
-      <td>178919</td>
-      <td>152.0</td>
-      <td>...</td>
-      <td>2016-10-20T00:00:00</td>
-      <td>102.94</td>
-      <td>0.00</td>
-      <td>102.94</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1335164</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>187569</th>
-      <td>1501510</td>
-      <td>2016</td>
-      <td>2964</td>
-      <td>6140741</td>
-      <td>NaN</td>
-      <td>93.90</td>
-      <td>5596</td>
-      <td>MARINALDO ROSENDO</td>
-      <td>178919</td>
-      <td>152.0</td>
-      <td>...</td>
-      <td>2016-11-03T00:00:00</td>
-      <td>93.90</td>
-      <td>0.00</td>
-      <td>93.90</td>
-      <td>11</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1335672</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>187573</th>
-      <td>1501535</td>
-      <td>2016</td>
-      <td>2964</td>
-      <td>6151244</td>
-      <td>NaN</td>
-      <td>101.88</td>
-      <td>5615</td>
-      <td>MARINALDO ROSENDO</td>
-      <td>178919</td>
-      <td>152.0</td>
-      <td>...</td>
-      <td>2016-11-18T00:00:00</td>
-      <td>101.88</td>
-      <td>0.00</td>
-      <td>101.88</td>
-      <td>11</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1339151</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>187589</th>
-      <td>1501601</td>
-      <td>2016</td>
-      <td>2964</td>
-      <td>6180565</td>
-      <td>NaN</td>
-      <td>89.25</td>
-      <td>5651</td>
-      <td>MARINALDO ROSENDO</td>
-      <td>178919</td>
-      <td>152.0</td>
-      <td>...</td>
-      <td>2016-12-26T00:00:00</td>
-      <td>89.25</td>
-      <td>0.00</td>
-      <td>89.25</td>
-      <td>12</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1349244</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>194432</th>
-      <td>1559517</td>
-      <td>2016</td>
-      <td>831</td>
-      <td>5963677</td>
-      <td>NaN</td>
-      <td>94.96</td>
-      <td>5413</td>
-      <td>RUBENS BUENO</td>
-      <td>73466</td>
-      <td>460.0</td>
-      <td>...</td>
-      <td>2016-04-06T00:00:00</td>
-      <td>94.96</td>
-      <td>0.00</td>
-      <td>94.96</td>
-      <td>4</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1279938</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>194528</th>
-      <td>1559762</td>
-      <td>2016</td>
-      <td>831</td>
-      <td>6124674</td>
-      <td>NaN</td>
-      <td>157.30</td>
-      <td>5580</td>
-      <td>RUBENS BUENO</td>
-      <td>73466</td>
-      <td>460.0</td>
-      <td>...</td>
-      <td>2016-10-12T00:00:00</td>
-      <td>157.30</td>
-      <td>0.00</td>
-      <td>157.30</td>
-      <td>10</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1330544</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>194778</th>
-      <td>1561444</td>
-      <td>2016</td>
-      <td>995</td>
-      <td>5898172</td>
-      <td>NaN</td>
-      <td>28.00</td>
-      <td>5352</td>
-      <td>CLAUDIO CAJADO</td>
-      <td>74537</td>
-      <td>186.0</td>
-      <td>...</td>
-      <td>2016-01-20T00:00:00</td>
-      <td>28.00</td>
-      <td>0.00</td>
-      <td>28.00</td>
-      <td>1</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1258809</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>196256</th>
-      <td>1571835</td>
-      <td>2017</td>
-      <td>2468</td>
-      <td>6214010</td>
-      <td>NaN</td>
-      <td>108.60</td>
-      <td>5730</td>
-      <td>SEVERINO NINHO</td>
-      <td>167614</td>
-      <td>573.0</td>
-      <td>...</td>
-      <td>2017-02-17T00:00:00</td>
-      <td>108.60</td>
-      <td>0.00</td>
-      <td>108.60</td>
-      <td>2</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1359942</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>196627</th>
-      <td>1574997</td>
-      <td>2017</td>
-      <td>2964</td>
-      <td>6189928</td>
-      <td>NaN</td>
-      <td>84.69</td>
-      <td>5688</td>
-      <td>MARINALDO ROSENDO</td>
-      <td>178919</td>
-      <td>152.0</td>
-      <td>...</td>
-      <td>2017-01-24T00:00:00</td>
-      <td>84.69</td>
-      <td>0.00</td>
-      <td>84.69</td>
-      <td>1</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1351786</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>196631</th>
-      <td>1575010</td>
-      <td>2017</td>
-      <td>2964</td>
-      <td>6196054</td>
-      <td>NaN</td>
-      <td>87.19</td>
-      <td>5704</td>
-      <td>MARINALDO ROSENDO</td>
-      <td>178919</td>
-      <td>152.0</td>
-      <td>...</td>
-      <td>2017-01-19T00:00:00</td>
-      <td>87.19</td>
-      <td>0.00</td>
-      <td>87.19</td>
-      <td>1</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1353801</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-<p>536 rows × 32 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[145]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bode_meals_grouped</span> <span class="o">=</span> <span class="n">bode_meals_grouped</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;expense&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">bode_meals_grouped</span> <span class="o">=</span> <span class="n">bode_meals_grouped</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;expense&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="n">bode_meals_grouped</span> <span class="o">=</span> <span class="n">bode_meals_grouped</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;expense&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">bode_meals_grouped</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">bode_meals_top20</span> <span class="o">=</span> <span class="n">bode_meals_grouped</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">bode_meals_top20</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -14526,7 +13175,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[145]:</div>
+<div class="prompt output_prompt">Out[20]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -14737,13 +13386,1036 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bode_meals_top20</span> <span class="o">=</span> <span class="n">bode_meals_top20</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">link_jarbas_consult</span><span class="o">=</span><span class="n">bode_meals_top20</span><span class="o">.</span> \
+                                         <span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">create_jarbas_consult_document_id</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Here are the links for those top 20&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">bode_meals_top20</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">_</span><span class="p">][</span><span class="s1">&#39;link_jarbas_consult&#39;</span><span class="p">])</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Here are the links for those top 20
+https://jarbas.serenatadeamor.org/#/documentId/2006450
+https://jarbas.serenatadeamor.org/#/documentId/1905263
+https://jarbas.serenatadeamor.org/#/documentId/1882756
+https://jarbas.serenatadeamor.org/#/documentId/5476790
+https://jarbas.serenatadeamor.org/#/documentId/2249894
+https://jarbas.serenatadeamor.org/#/documentId/2249881
+https://jarbas.serenatadeamor.org/#/documentId/5061745
+https://jarbas.serenatadeamor.org/#/documentId/2249896
+https://jarbas.serenatadeamor.org/#/documentId/2385459
+https://jarbas.serenatadeamor.org/#/documentId/5303369
+https://jarbas.serenatadeamor.org/#/documentId/5247138
+https://jarbas.serenatadeamor.org/#/documentId/2415343
+https://jarbas.serenatadeamor.org/#/documentId/5368496
+https://jarbas.serenatadeamor.org/#/documentId/2244667
+https://jarbas.serenatadeamor.org/#/documentId/2347164
+https://jarbas.serenatadeamor.org/#/documentId/2415342
+https://jarbas.serenatadeamor.org/#/documentId/2347168
+https://jarbas.serenatadeamor.org/#/documentId/2241841
+https://jarbas.serenatadeamor.org/#/documentId/2451431
+https://jarbas.serenatadeamor.org/#/documentId/2249890
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Gas-usage">Gas usage<a class="anchor-link" href="#Gas-usage">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fuel</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Fuels and lubricants&#39;</span><span class="p">]</span>
+<span class="n">fuel</span> <span class="o">=</span> <span class="n">fuel</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">fuel</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">fuel</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fuel</span><span class="p">[</span><span class="s1">&#39;issue_date_day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fuel</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">date</span><span class="p">:</span> <span class="n">date</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
+<span class="n">fuel</span><span class="p">[</span><span class="s1">&#39;issue_date_month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fuel</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">date</span><span class="p">:</span> <span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">)</span>
+<span class="n">fuel</span><span class="p">[</span><span class="s1">&#39;issue_date_year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fuel</span><span class="p">[</span><span class="s1">&#39;issue_date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">date</span><span class="p">:</span> <span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fuel</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[24]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>year</th>
+      <th>applicant_id</th>
+      <th>document_id</th>
+      <th>reimbursement_value_total</th>
+      <th>total_net_value</th>
+      <th>reimbursement_numbers</th>
+      <th>congressperson_name</th>
+      <th>congressperson_id</th>
+      <th>congressperson_document</th>
+      <th>...</th>
+      <th>net_values</th>
+      <th>month</th>
+      <th>installment</th>
+      <th>passenger</th>
+      <th>leg_of_the_trip</th>
+      <th>batch_number</th>
+      <th>reimbursement_values</th>
+      <th>issue_date_day</th>
+      <th>issue_date_month</th>
+      <th>issue_date_year</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>2009</td>
+      <td>1001</td>
+      <td>1564212</td>
+      <td>NaN</td>
+      <td>130.00</td>
+      <td>2888</td>
+      <td>DILCEU SPERAFICO</td>
+      <td>73768</td>
+      <td>444.0</td>
+      <td>...</td>
+      <td>130.00</td>
+      <td>4</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>388810</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>4.0</td>
+      <td>2009.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>2009</td>
+      <td>1001</td>
+      <td>1568056</td>
+      <td>NaN</td>
+      <td>170.00</td>
+      <td>2894</td>
+      <td>DILCEU SPERAFICO</td>
+      <td>73768</td>
+      <td>444.0</td>
+      <td>...</td>
+      <td>170.00</td>
+      <td>4</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>390158</td>
+      <td>NaN</td>
+      <td>14.0</td>
+      <td>4.0</td>
+      <td>2009.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4</td>
+      <td>2009</td>
+      <td>1001</td>
+      <td>1568098</td>
+      <td>NaN</td>
+      <td>100.11</td>
+      <td>2894</td>
+      <td>DILCEU SPERAFICO</td>
+      <td>73768</td>
+      <td>444.0</td>
+      <td>...</td>
+      <td>100.11</td>
+      <td>4</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>390158</td>
+      <td>NaN</td>
+      <td>9.0</td>
+      <td>4.0</td>
+      <td>2009.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>7</td>
+      <td>2009</td>
+      <td>1001</td>
+      <td>1571739</td>
+      <td>NaN</td>
+      <td>93.40</td>
+      <td>2896</td>
+      <td>DILCEU SPERAFICO</td>
+      <td>73768</td>
+      <td>444.0</td>
+      <td>...</td>
+      <td>93.40</td>
+      <td>3</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>391417</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>3.0</td>
+      <td>2009.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>8</td>
+      <td>2009</td>
+      <td>1001</td>
+      <td>1571742</td>
+      <td>NaN</td>
+      <td>116.53</td>
+      <td>2896</td>
+      <td>DILCEU SPERAFICO</td>
+      <td>73768</td>
+      <td>444.0</td>
+      <td>...</td>
+      <td>116.53</td>
+      <td>3</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>391417</td>
+      <td>NaN</td>
+      <td>20.0</td>
+      <td>3.0</td>
+      <td>2009.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 35 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_id&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span><span class="s1">&#39;issue_date_month&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;issue_date_year&#39;</span><span class="p">]</span>
+<span class="n">fuel_grouped</span> <span class="o">=</span> <span class="n">fuel</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+<span class="n">fuel_aggregation</span> <span class="o">=</span> <span class="n">fuel_grouped</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s1">&#39;expenses&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">})</span>
+<span class="n">fuel_aggregation</span><span class="p">[</span><span class="s1">&#39;expenses&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fuel_aggregation</span><span class="p">[</span><span class="s1">&#39;expenses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+<span class="n">fuel_aggregation</span> <span class="o">=</span> <span class="n">fuel_aggregation</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span><span class="s1">&#39;expenses&#39;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fa</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">fuel_aggregation</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
+<span class="n">fa</span> <span class="o">=</span> <span class="n">fa</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">link_jarbas_consult</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">fa</span> <span class="o">=</span> <span class="n">fa</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">issue_date_year</span><span class="o">=</span><span class="n">fa</span><span class="p">[</span><span class="s1">&#39;issue_date_year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span>
+<span class="n">fa</span> <span class="o">=</span> <span class="n">fa</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">issue_date_month</span><span class="o">=</span><span class="n">fa</span><span class="p">[</span><span class="s1">&#39;issue_date_month&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fa</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[27]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>applicant_id</th>
+      <th>congressperson_id</th>
+      <th>congressperson_name</th>
+      <th>issue_date_month</th>
+      <th>issue_date_year</th>
+      <th>sum</th>
+      <th>expenses</th>
+      <th>link_jarbas_consult</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1936</td>
+      <td>141541</td>
+      <td>SÉRGIO PETECÃO</td>
+      <td>11</td>
+      <td>2010</td>
+      <td>17801.90</td>
+      <td>4</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3053</td>
+      <td>178838</td>
+      <td>CÉSAR MESSIAS</td>
+      <td>10</td>
+      <td>2016</td>
+      <td>15585.41</td>
+      <td>13</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3041</td>
+      <td>178997</td>
+      <td>MOSES RODRIGUES</td>
+      <td>10</td>
+      <td>2016</td>
+      <td>15451.82</td>
+      <td>6</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3041</td>
+      <td>178997</td>
+      <td>MOSES RODRIGUES</td>
+      <td>7</td>
+      <td>2016</td>
+      <td>13798.35</td>
+      <td>6</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1933</td>
+      <td>141522</td>
+      <td>SABINO CASTELO BRANCO</td>
+      <td>12</td>
+      <td>2011</td>
+      <td>13500.00</td>
+      <td>3</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1973</td>
+      <td>4930</td>
+      <td>SILVIO COSTA</td>
+      <td>10</td>
+      <td>2010</td>
+      <td>12290.20</td>
+      <td>3</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1133</td>
+      <td>73781</td>
+      <td>NELSON MEURER</td>
+      <td>7</td>
+      <td>2016</td>
+      <td>11988.32</td>
+      <td>2</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>3016</td>
+      <td>178864</td>
+      <td>ADAIL CARNEIRO</td>
+      <td>12</td>
+      <td>2016</td>
+      <td>11932.72</td>
+      <td>2</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2968</td>
+      <td>178853</td>
+      <td>CAETANO</td>
+      <td>10</td>
+      <td>2016</td>
+      <td>11840.00</td>
+      <td>2</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>3053</td>
+      <td>178838</td>
+      <td>CÉSAR MESSIAS</td>
+      <td>3</td>
+      <td>2016</td>
+      <td>11677.07</td>
+      <td>8</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2916</td>
+      <td>178907</td>
+      <td>FRANCISCO CHAPADINHA</td>
+      <td>11</td>
+      <td>2016</td>
+      <td>11289.96</td>
+      <td>6</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2916</td>
+      <td>178907</td>
+      <td>FRANCISCO CHAPADINHA</td>
+      <td>12</td>
+      <td>2016</td>
+      <td>11263.02</td>
+      <td>4</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2326</td>
+      <td>160643</td>
+      <td>DR. JORGE SILVA</td>
+      <td>10</td>
+      <td>2016</td>
+      <td>11062.78</td>
+      <td>3</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2916</td>
+      <td>178907</td>
+      <td>FRANCISCO CHAPADINHA</td>
+      <td>6</td>
+      <td>2016</td>
+      <td>10972.09</td>
+      <td>10</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>3053</td>
+      <td>178838</td>
+      <td>CÉSAR MESSIAS</td>
+      <td>5</td>
+      <td>2016</td>
+      <td>10847.61</td>
+      <td>28</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2331</td>
+      <td>160620</td>
+      <td>WASHINGTON REIS</td>
+      <td>8</td>
+      <td>2015</td>
+      <td>10439.65</td>
+      <td>18</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2899</td>
+      <td>178868</td>
+      <td>ODORICO MONTEIRO</td>
+      <td>3</td>
+      <td>2016</td>
+      <td>9859.75</td>
+      <td>12</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2899</td>
+      <td>178868</td>
+      <td>ODORICO MONTEIRO</td>
+      <td>8</td>
+      <td>2016</td>
+      <td>9628.92</td>
+      <td>11</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>3016</td>
+      <td>178864</td>
+      <td>ADAIL CARNEIRO</td>
+      <td>5</td>
+      <td>2016</td>
+      <td>9193.76</td>
+      <td>2</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>1309</td>
+      <td>74456</td>
+      <td>MANOEL SALVIANO</td>
+      <td>8</td>
+      <td>2013</td>
+      <td>9000.00</td>
+      <td>2</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>According to CEAP's Ato de Mesa document, it is only allowed to spend 6k of reais with fuels and lubricants:</p>
+<blockquote><p>IX - combustíveis e lubrificantes, até o limite inacumulável de R$ 6.000,00 (seis mil reais) mensais; (Inciso com 
+redação dada pelo Ato da Mesa no 49, de 3/9/2015)</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">create_jarbas_consult_fuel_and_lubricants</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+    <span class="n">jarbas_api</span> <span class="o">=</span> <span class="s2">&quot;https://jarbas.serenatadeamor.org/#/applicantId&quot;</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="p">[</span><span class="n">jarbas_api</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">],</span>
+         <span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;issue_date_month&#39;</span><span class="p">])),</span>
+         <span class="s1">&#39;subquotaId&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;issue_date_year&#39;</span><span class="p">]))]</span>
+    <span class="k">return</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="above-the-6k-gas-quota">above the 6k gas quota<a class="anchor-link" href="#above-the-6k-gas-quota">&#182;</a></h3><p>Here I'll point the same 20 cases displayed above. Those are the top 20 highiest values spent on fuel</p>
+<p>Here are the Jarbas search that lead to the top 20 above mentioned</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fa_above6k</span> <span class="o">=</span> <span class="n">fa</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">fa_above6k</span> <span class="o">=</span> <span class="n">fa_above6k</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">link_jarbas_consult</span><span class="o">=</span><span class="n">fa_above6k</span><span class="o">.</span> \
+                               <span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">create_jarbas_consult_fuel_and_lubricants</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fa_above6k</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">_</span><span class="p">][</span><span class="s1">&#39;link_jarbas_consult&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>https://jarbas.serenatadeamor.org/#/applicantId/1936/month/11/subquotaId/3/year/2010
+https://jarbas.serenatadeamor.org/#/applicantId/3053/month/10/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3041/month/10/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3041/month/7/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/1933/month/12/subquotaId/3/year/2011
+https://jarbas.serenatadeamor.org/#/applicantId/1973/month/10/subquotaId/3/year/2010
+https://jarbas.serenatadeamor.org/#/applicantId/1133/month/7/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3016/month/12/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2968/month/10/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3053/month/3/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2916/month/11/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2916/month/12/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2326/month/10/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2916/month/6/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3053/month/5/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2331/month/8/subquotaId/3/year/2015
+https://jarbas.serenatadeamor.org/#/applicantId/2899/month/3/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2899/month/8/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3016/month/5/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/1309/month/8/subquotaId/3/year/2013
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Exactly-6k-spent-on-fuel">Exactly 6k spent on fuel<a class="anchor-link" href="#Exactly-6k-spent-on-fuel">&#182;</a></h3><p>Here are the top 20 most recent reimbursements that ask for exactly 6,000 reais.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fa_exc6k</span> <span class="o">=</span> <span class="n">fa</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;issue_date_year&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;sum == 6000&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">fa_exc6k</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[30]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>applicant_id</th>
+      <th>congressperson_id</th>
+      <th>congressperson_name</th>
+      <th>issue_date_month</th>
+      <th>issue_date_year</th>
+      <th>sum</th>
+      <th>expenses</th>
+      <th>link_jarbas_consult</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>757</td>
+      <td>995</td>
+      <td>74537</td>
+      <td>CLAUDIO CAJADO</td>
+      <td>2</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>751</td>
+      <td>958</td>
+      <td>74212</td>
+      <td>ANÍBAL GOMES</td>
+      <td>2</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>688</td>
+      <td>1829</td>
+      <td>141428</td>
+      <td>FÁBIO FARIA</td>
+      <td>2</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>687</td>
+      <td>1829</td>
+      <td>141428</td>
+      <td>FÁBIO FARIA</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>677</td>
+      <td>1706</td>
+      <td>73931</td>
+      <td>ZÉ GERALDO</td>
+      <td>2</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>700</td>
+      <td>1874</td>
+      <td>141483</td>
+      <td>LINDOMAR GARÇON</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>749</td>
+      <td>958</td>
+      <td>74212</td>
+      <td>ANÍBAL GOMES</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>743</td>
+      <td>3059</td>
+      <td>137070</td>
+      <td>VICENTINHO JÚNIOR</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>723</td>
+      <td>2336</td>
+      <td>160576</td>
+      <td>CÉSAR HALUM</td>
+      <td>3</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>722</td>
+      <td>2336</td>
+      <td>160576</td>
+      <td>CÉSAR HALUM</td>
+      <td>2</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>720</td>
+      <td>2336</td>
+      <td>160576</td>
+      <td>CÉSAR HALUM</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>717</td>
+      <td>2288</td>
+      <td>160569</td>
+      <td>WALDENOR PEREIRA</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>714</td>
+      <td>2245</td>
+      <td>160536</td>
+      <td>MARCO TEBALDI</td>
+      <td>2</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>655</td>
+      <td>1133</td>
+      <td>73781</td>
+      <td>NELSON MEURER</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>363</td>
+      <td>3095</td>
+      <td>124411</td>
+      <td>MAURO PEREIRA</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>14</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>314</td>
+      <td>2817</td>
+      <td>171620</td>
+      <td>RENATO ANDRADE</td>
+      <td>2</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>19</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>397</td>
+      <td>2271</td>
+      <td>160674</td>
+      <td>HUGO MOTTA</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>11</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>506</td>
+      <td>1050</td>
+      <td>74665</td>
+      <td>JAIME MARTINS</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>5</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>424</td>
+      <td>3038</td>
+      <td>178945</td>
+      <td>ROSANGELA GOMES</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>10</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>442</td>
+      <td>2951</td>
+      <td>178955</td>
+      <td>LUIZ CLÁUDIO</td>
+      <td>2</td>
+      <td>2017</td>
+      <td>6000.0</td>
+      <td>9</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are the links for these top 20</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fa_exc6k</span> <span class="o">=</span> <span class="n">fa</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">fa_exc6k</span> <span class="o">=</span> <span class="n">fa_exc6k</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">link_jarbas_consult</span><span class="o">=</span><span class="n">fa_exc6k</span><span class="o">.</span> \
+                           <span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">create_jarbas_consult_fuel_and_lubricants</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fa_exc6k</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">_</span><span class="p">][</span><span class="s1">&#39;link_jarbas_consult&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>https://jarbas.serenatadeamor.org/#/applicantId/1936/month/11/subquotaId/3/year/2010
+https://jarbas.serenatadeamor.org/#/applicantId/3053/month/10/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3041/month/10/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3041/month/7/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/1933/month/12/subquotaId/3/year/2011
+https://jarbas.serenatadeamor.org/#/applicantId/1973/month/10/subquotaId/3/year/2010
+https://jarbas.serenatadeamor.org/#/applicantId/1133/month/7/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3016/month/12/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2968/month/10/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3053/month/3/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2916/month/11/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2916/month/12/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2326/month/10/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2916/month/6/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3053/month/5/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2331/month/8/subquotaId/3/year/2015
+https://jarbas.serenatadeamor.org/#/applicantId/2899/month/3/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/2899/month/8/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/3016/month/5/subquotaId/3/year/2016
+https://jarbas.serenatadeamor.org/#/applicantId/1309/month/8/subquotaId/3/year/2013
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
