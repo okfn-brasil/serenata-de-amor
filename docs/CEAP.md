@@ -1,11 +1,14 @@
-Artigo 1 - Pode utilizar, além da cota calculada para o seu estado, um adicional de R$ 1353,04 reais
-* O deputado que for:
-  * Líder ou vice-líder de partido político, bloco parlamentar ou da Minoria
-  * Líder ou vice-líder do Governo na Câmara dos Deputados ou Congresso Nacional.
-  * Presidente ou Vice-Presidente de Comissão Permanente
-  * Representantes de Partidos Políticos **com menos de um centésimo** da composição da Câmara dos Deputados
+Artigo 1 - Pode utilizar, além da cota calculada para o seu estado, um adicional:
+1. De R$ 1353,04, o deputado que for:
+  * Líder de partido político, bloco parlamentar, da Minoria, ou do Governo na Câmara dos Deputados ou no Congresso Nacional.
+  * Vice-líder de Partido Político ou Bloco Parlamentar.
+  * Presidente ou Vice-Presidente de Comissão Permanente.
+  * Representantes de Partidos Políticos **com menos de um centésimo** da composição da Câmara dos Deputados.
+2. De R$ 902,02, o deputado que for:
+  * Vice-líder da Minoria.
+  * Vice-líder do Governo na Câmara dos Deputados ou no Congresso Nacional.
 * Se um mesmo deputado ocupa mais de um cargo simultaneamente, o valor **não se acumula**
-* Deputado que for representar o Brasil em missão no mercosul pode gastar mais 20% do valor da menor cota, por viagem
+* Deputado que for representar o Brasil em missão parlamentar do mercosul pode gastar mais 20% do valor da menor cota, por viagem
 
 Artigo 2 - Atende as seguintes despesas:
 * Passagens aéreas
@@ -15,7 +18,7 @@ Artigo 2 - Atende as seguintes despesas:
   * Aluguel, condomínio, IPTU e seguro contra incêndio
   * Serviço de energia elétrica, água e esgoto
   * Aluguel de móveis e equipamentos, junto com material de expediente e suprimentos de informática
-  * Assinatura de TV a cabo ou similar, e internet
+  * Assinatura de TV a cabo ou similar, e acesso à internet
   * Locação e assinatura de licença de uso software
 * Assinatura de publicações (revistas, jornais, ...)
 * Alimentação do parlamentar (**apenas do parlamentar**)
@@ -30,7 +33,7 @@ Artigo 2 - Atende as seguintes despesas:
 * Contratação **para apoio da atividade parlamentar** de consultoria e trabalhos técnicos, permitindo pesquisa socioeconômica
 * Divulgação da atividade parlamentar, **exceto nos 120 dias anteriores à eleição federal, estadual ou municipal**, exceto se o deputado não for candidato.
 * Participação em cursos, palestras, seminários, simpósios, congressos ou eventos do mesmo gênero, **realizado por instituição especializada, até o limite de 25% do valor da menor cota mensal (R$ 7697.16) por mês**
-* Complementação do auxílio moradia (hotel ou aluguel), **até R$ 1747,00 reais mensais**]
+* Complementação do auxílio moradia (hotel ou aluguel), **até R$ 1747,00 reais mensais**
 
 Artigo 3 - A cota pode ser usada da seguinte forma:
 * Por meio de serviços disponibilizados pela Câmara dos Deputados
@@ -39,7 +42,7 @@ Artigo 4 - Reembolso é efetuado mediante requerimento padrão, assinado pelo pa
 * O material foi recebido, e em caso de serviço, atestando que o serviço foi realizado
 * O objeto do gasto obedece aos limites estabelecidos na legislação
 * A documentação é autêntica e legítima
-1. Os reembolsos relativos a cota são de caracterizados como benefícios, isto é, não fazem parte do salário do parlamentar.
+1. Os reembolsos relativos à cota são caracterizados como indenizações, isto é, não fazem parte do salário do parlamentar.
 2. Só pode ser ressarcida despesa comprovada por documento original, **em primeira via**, quitado e em nome do deputado ressalvado quando:
   * Conta telefônica: apenas a apresentação da folha de rosto, acompanhado do comprovante de pagamento
   * Contas de água, esgoto, telefone e energia elétrica, bem como condomínio e IPTU, em nome de proprietário do imóvel, **desde que o endereço do documento coincida com o imóvel cadastrado junto à Coordenação de Gestão de Cota Parlamentar**
@@ -51,6 +54,7 @@ Artigo 4 - Reembolso é efetuado mediante requerimento padrão, assinado pelo pa
 4. Recibo de pessoa física:
   * Aluguel de imóvel
   * Aluguel ou frete de aeronave ou embarcação, que deve conter a identificação de quem usou o serviço, especificação da data e trecho percorrido e número da permissão para o uso do serviço.
+  * Serviços de taxi, contendo o beneficiário do serviço, a data da prestação do serviço, o trecho percorrido e número da permissão para o uso do serviço.
 1. Essas notas devem estar em sistema informatizado próprio
 2. Os registros dos comprovantes de despesa, relacionados em requerimento padrão
 3. Imagens digitalizadas dos comprovantes
