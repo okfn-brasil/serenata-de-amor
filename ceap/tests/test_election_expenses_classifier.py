@@ -3,13 +3,13 @@ from unittest import TestCase
 import numpy as np
 import pandas as pd
 
-from rosie.election_expenses_classifier import ElectionExpensesClassifier
+from ceap.classifiers.election_expenses_classifier import ElectionExpensesClassifier
 
 
 class TestElectionExpensesClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('tests/fixtures/election_expenses_classifier.csv',
+        self.dataset = pd.read_csv('ceap/tests/fixtures/election_expenses_classifier.csv',
                                    dtype={'name': np.str, 'legal_entity': np.str})
         self.subject = ElectionExpensesClassifier()
 

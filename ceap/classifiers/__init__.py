@@ -3,16 +3,16 @@ import os.path
 import numpy as np
 from sklearn.externals import joblib
 
-from rosie.dataset import Dataset
-from rosie.election_expenses_classifier import ElectionExpensesClassifier
-from rosie.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
-from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
-from rosie.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
-from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
-from rosie.irregular_companies_classifier import IrregularCompaniesClassifier
+from ceap.classifiers.dataset import Dataset
+from ceap.classifiers.election_expenses_classifier import ElectionExpensesClassifier
+from ceap.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
+from ceap.classifiers.meal_price_outlier_classifier import MealPriceOutlierClassifier
+from ceap.classifiers.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
+from ceap.classifiers.traveled_speeds_classifier import TraveledSpeedsClassifier
+from ceap.classifiers.irregular_companies_classifier import IrregularCompaniesClassifier
 
 
-class Rosie:
+class Ceap:
     CLASSIFIERS = {
         MealPriceOutlierClassifier: 'meal_price_outlier',
         MonthlySubquotaLimitClassifier: 'over_monthly_subquota_limit',
@@ -66,4 +66,4 @@ class Rosie:
 
 def main(target_directory='/tmp/serenata-data'):
     dataset = Dataset(target_directory).get()
-    Rosie(dataset, target_directory).run_classifiers()
+    Ceap(dataset, target_directory).run_classifiers()

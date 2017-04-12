@@ -18,15 +18,15 @@ def help():
 
 
 def run():
-    import rosie
+    from ceap import classifiers
     target_directory = argv[2] if len(argv) >= 3 else '/tmp/serenata-data/'
-    rosie.main(target_directory)
+    classifiers.main(target_directory)
 
 
 def test():
     import unittest
     loader = unittest.TestLoader()
-    tests = loader.discover('tests')
+    tests = loader.discover('ceap/tests')
     testRunner = unittest.runner.TextTestRunner()
     testRunner.run(tests)
 

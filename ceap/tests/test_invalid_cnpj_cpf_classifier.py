@@ -3,13 +3,13 @@ from unittest import TestCase
 import numpy as np
 import pandas as pd
 
-from rosie.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
+from ceap.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
 
 
 class TestInvalidCnpjCpfClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('tests/fixtures/invalid_cnpj_cpf_classifier.csv',
+        self.dataset = pd.read_csv('ceap/tests/fixtures/invalid_cnpj_cpf_classifier.csv',
                                    dtype={'cnpj_cpf': np.str})
         self.subject = InvalidCnpjCpfClassifier()
 
