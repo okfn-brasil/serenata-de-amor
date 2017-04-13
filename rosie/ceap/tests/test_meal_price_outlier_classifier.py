@@ -16,7 +16,7 @@ class TestMealPriceOutlierClassifier(TestCase):
         self.subject = MealPriceOutlierClassifier()
         self.subject.fit(self.dataset)
 
-    @patch('ceap.classifiers.meal_price_outlier_classifier.KMeans')
+    @patch('rosie.ceap.classifiers.meal_price_outlier_classifier.KMeans')
     def test_predict_returns_a_prediction_for_each_observation(self, kmeans_mock):
         kmeans_mock.return_value.predict.return_value = np.ones(3)
         self.subject.fit(self.dataset)

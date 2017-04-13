@@ -16,8 +16,8 @@ class TestDataset(TestCase):
         copy2('rosie/ceap/tests/fixtures/reimbursements.xz', temp_path)
         self.subject = Dataset(temp_path)
 
-    @patch('ceap.classifiers.dataset.CEAPDataset')
-    @patch('ceap.classifiers.dataset.fetch')
+    @patch('rosie.ceap.classifiers.dataset.CEAPDataset')
+    @patch('rosie.ceap.classifiers.dataset.fetch')
     def test_get_performs_a_left_merge_between_reimbursements_and_companies(self, _ceap_dataset, _fetch):
         dataset = self.subject.get()
         self.assertEqual(5, len(dataset))
