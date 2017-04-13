@@ -4,16 +4,16 @@ from unittest import TestCase
 from unittest.mock import patch
 from shutil import copy2
 
-from ceap.classifiers import Dataset
+from rosie.ceap.classifiers import Dataset
 
 
 class TestDataset(TestCase):
 
     def setUp(self):
         temp_path = mkdtemp()
-        copy2('ceap/tests/fixtures/companies.xz',
+        copy2('rosie/ceap/tests/fixtures/companies.xz',
               os.path.join(temp_path, Dataset.COMPANIES_DATASET))
-        copy2('ceap/tests/fixtures/reimbursements.xz', temp_path)
+        copy2('rosie/ceap/tests/fixtures/reimbursements.xz', temp_path)
         self.subject = Dataset(temp_path)
 
     @patch('ceap.classifiers.dataset.CEAPDataset')

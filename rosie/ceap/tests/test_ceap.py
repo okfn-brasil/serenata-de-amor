@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 
-from ceap.classifiers import Ceap
+from rosie.ceap.classifiers import Ceap
 
 
 class TestCeap(TestCase):

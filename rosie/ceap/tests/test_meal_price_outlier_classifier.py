@@ -5,13 +5,13 @@ import numpy as np
 import pandas as pd
 from numpy.testing import assert_array_equal
 
-from ceap.classifiers.meal_price_outlier_classifier import MealPriceOutlierClassifier
+from rosie.ceap.classifiers.meal_price_outlier_classifier import MealPriceOutlierClassifier
 
 
 class TestMealPriceOutlierClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('ceap/tests/fixtures/meal_price_outlier_classifier.csv',
+        self.dataset = pd.read_csv('rosie/ceap/tests/fixtures/meal_price_outlier_classifier.csv',
                                    dtype={'cnpj_cpf': np.str})
         self.subject = MealPriceOutlierClassifier()
         self.subject.fit(self.dataset)
