@@ -1,50 +1,50 @@
-Article 1 - It can use, above the calculated quota for it's State, an extra of:
-1. BRL 1353,04, the Congress Person who's:
+Article 1 - Above the calculated quota for their state they can use:
+1. BRL 1,353.04, the congressperson who is:
   * Leader of a political party, parliament block, Minority, or leader of the Government in the Chamber of Deputies or the National Congress.
   * Vice-leader of a political party or parliament block.
   * President or vice-president of a Permanent Comission.
-  * Representative of political parties **with less members than a hundredth** of the total number of Congress People in the Chamber of Deputies.
-2. BRL 902,02, the Congress Person who's:
+  * Representative of political parties **with less members than a hundredth** of the total number of congressperson in the Chamber of Deputies.
+2. BRL 902.02, the congressperson who is:
   * Vice-leader of the Minority
   * Vice-leader of the Government in the Chamber of Deputies or the National Congress.
-* If the same Congress Person occupies more than one of the above positions simultaneously, the extra quota **cannot be multiplied**.
-* The Congress Person that represents Brazil in a Mercosul parliamentary mission can spend an extra 20% of the smallest quota, for each trip.
+* If the same congressperson occupies more than one of the above positions simultaneously **the quotas are not cumulative**.
+* For each trip, the congressperson that represents Brazil in a Mercosul parliamentary mission can spend an extra 20% of the smallest quota.
 
 Article 2 - The quota can be used to cover the following expenses:
 * Airline tickes
 * Telephony services
-* Postal services and products, but **not the purchase of postal stamps and shipping of postal cards**
-* Maintain an office to support the parliamentary activities, including:
+* Postal services and products, **excluding the purchase of postal stamps and shipping of postal cards**
+* Maintenance of an office to support the parliamentary activities including:
   * Rental, condominium, IPTU (tax) and Fire insurance fees
   * Energy, water and sewer bills
   * Rental of furniture and equipments, maintenance materials and computer supplies
   * Paid TV subscriptions and internet services
   * Software license purchases and subscriptions
 * Subscription to newspapers, magazines and similar...
-* Expenses with meals for the Congress Person (**only for the Congress Person**)
-* Lodging for the Congress Person, **except at Distrito Federal**
+* Expenses with meals for the congressperson (**only for the congressperson**)
+* Lodging for the congressperson, **except at Distrito Federal**
 * Transportation expenses
   * Rent or chartering of aircrafts and ships
   * Terrestrial, maritime and fluvial transport tickets
-  * Rent or chartering of cars, **up to BRL 10.900,00 per month**
-  * Taxi services, parking fees and tolls, **up to BRL 2.700,00 per month (total sum of all three services)**
-* Fuel and car lubricants, **up to BRL 6.000,00 per month**
-* Private security services from a specialized company, **up to BRL 8.700,00 per month**
+  * Rent or chartering of cars, **up to BRL 10,900.00 per month**
+  * Taxi services, parking fees and tolls, **up to BRL 2,700.00 per month (total sum of all three services)**
+* Fuel and car lubricants, **up to BRL 6,000.00 per month**
+* Private security services from a specialized company, **up to BRL 8,700.00 per month**
 * Hire personel **to support parliamentary activities** for consulting and technical works, allowing socioeconomic researchs
-* Publicity for the parliamentary activities, **except on the previous 120 days before federal, state or municipal election days**. Congress People that are not candidates for those elections are exempt.
-* Entries to courses, lectures, seminars, symposiums, congresses or other events of the same kind, **organized by a specialized institution**, up to 25% of the smallest monthly quota (BRL 7697,16), per month**.
-* Complement the housing assistance (hotels or rent), up to **BRL 1747,00 per month**
+* Publicity for the parliamentary activities, **except on the previous 120 days before federal, state or municipal election days**. The congressperson that is not a candidate on any of those elections is exempt.
+* Entries to courses, lectures, seminars, symposiums, congresses or other events of the same kind, **organized by a specialized institution**, up to 25% of the smallest monthly quota (BRL 7,697.16), per month**.
+* Complement the housing assistance (hotels or rent), up to **BRL 1,747.00 per month**
 
-Article 3 - The usage of the quota must be made:
+Article 3 - The quota must be used:
 * By means of services offered by the Chamber of Deputies
-* By refund, including the case of expenses incurred by electronic means
+* Through refunds, including the case of expenses incurred by electronic means
 
-Article 4 - The refund is made by a standard requirement, signed by the Congress Person, who takes full responsibility for the expense, and acknowledges that:
-* All materials were delivered, and in case of a service, certifies that the service was concluded
+Article 4 - The refund is requested through a standard requirement signed by the congressperson, who takes full responsibility for the expense and acknowledges that:
+* All products were delivered, and in case of a service, certifies that the service was concluded
 * The objects or services related to the expenses complies with the limits stated in the legislation
 * The documentation is authentic
-1. The refunds regarding the quota are characterized as restitutions, i.e., they are not part of the Congress Person's salary.
-2. Expenses can only be refunded upon verification of **the first print** of the original invoice document, paid and addressed to the Congress Person, except for:
+1. The refunds regarding the quota are characterized as restitutions, i.e., they are not part of the congressperson's salary.
+2. Expenses can only be refunded upon verification of **the first print** of the original invoice document, paid and addressed to the congressperson, except for:
   * Telephone bill: requires the cover page and the invoice, only
   * Water, sewer, telephone and eletric bills, condominium fees and IPTU (tax), addressed to the owner of the realty, **if the address matches the property registered at the Coordination for Parliamentary Quotas Management**
   * Can be verified based on a paid simple invoice, even if **it's not addressed to the beneficiary of the product**
@@ -60,39 +60,39 @@ Article 4 - The refund is made by a standard requirement, signed by the Congress
 2. The records of the receipts must be listed on a standard requirement
 3. Digital images of the receipts must be stored in the system
 4. In case of rent or chartering of an aircraft, the document **must specify the distance traveled, flight time and aircraft prefix for the employed aircraft**
-5. **The expenses for the acquisition of permanent materials won't be reimbursed** (Those acquisitions whose durations exceeds two years. For example: tables, machines, tapestry, laboratory equipments, tools, vehicles, etc. Source: National Treasury), **as well as expenses with food** (Purchases from grocery stores and supermarkets are not allowed. The Congress Person can use CEAP only for restaurants, bars, cafes and similars.)
+5. **The expenses for the acquisition of permanent materials won't be reimbursed** (Those acquisitions whose durations exceeds two years. For example: tables, machines, tapestry, laboratory equipments, tools, vehicles, etc. Source: National Treasury), **as well as expenses with food** (Purchases from grocery stores and supermarkets are not allowed. The congressperson can use CEAP only for restaurants, bars, cafes and similars.)
 6. **The document must be presented within 90 days** of the day of the delivery of the product or service
-7. **There is no refund if the good acquired or the service provided is owned by the Congress Person or it's relatives, up to 3rd degree relations**
+7. **There is no refund if the good acquired or the service provided is owned by the congressperson or its relatives, up to 3rd degree relationships**
 
 Regarding the usage to attend to courses, lectures, seminars, symposiums, congresses or other events of the same kind:
-* To be eligible for reimbursement, the Congress Person cannot be absent from sessions and meetings during the period of the event. In case of absence, the Congress Person will be charged a proportional value to the absence time
+* To be eligible for reimbursement, the congressperson cannot be absent from sessions and meetings during the period of the event. In case of absence, the congressperson will be charged a proportional value to the absence time
 * **Expenses with basic education, university graduations and postgraduations are not eligible for reimbursement**
-* The Congress Person must present documents proving that he/she attended to the event, issued by the institution responsible for the organization of the event, and a detailed report of the activities during the period.
+* The congressperson must present documents proving that he/she attended to the event, issued by the institution responsible for the organization of the event, and a detailed report of the activities during the period.
 
 Article 5. Regarding the air transportation services and postal products, they can be processed if they have an associated Air Pass Requisition (RPA) and Postal Service Requisition (RSP)
 * Both are valid until the last business day of the respective financial year;
-* **Both will be issued by the quota control system and must be signed by the Congress Person or government employee**
+* **Both will be issued by the quota control system and must be signed by the congressperson or government employee**
 * The travel ticket is provided upon presentation of the RPA, and **can only be acquired from previously registered companies***
-* The ticket must be issued for the Congress Person or accredited government employee
+* The ticket must be issued for the congressperson or accredited government employee
 * The purchase of tickets for advisors must be registered in the system by the first business day of the first month after the ticket's issue date
 * The RPA and the ticket cannot be converted into flight credit orders on airline companies
 
 Article 6. The accredited air transportation companies must report, whenever required, detailed information of the issued tickets
-Article 7. If the issued ticket violates any policies, it's corresponding cost will be automatically deducted from the responsible's payroll
-Article 8. Expenses with telephony will only be refunded when proven that the Congress Person is responsible for those expenses.
+Article 7. If the issued ticket violates any policies, its corresponding cost will be automatically deducted from the responsible's payroll
+Article 8. Expenses with telephony will only be refunded when proven that the congressperson is responsible for those expenses.
 * All telecommunication expenses eligible for refunds are related to general communication, such as internet access, rent and setup of equipment for voice or data communication
 * Telephony expenses are verified upon presentation of the bill's cover page and the invoice.
-* In case of loss, it is possible to prove the expenses by presenting the bill, reissued by the provider, and a document stating the loss, signed by the Congress Person.
+* In case of loss, it is possible to prove the expenses by presenting the bill, reissued by the provider, and a document stating the loss, signed by the congressperson.
 
-Article 9. It's not allowed to rent properties owned by the Congress Person or any entities which he/she participates
+Article 9. It's not allowed to rent properties owned by the congressperson or any entities which he/she participates
 Article 10. **The rental contracts of movable assets do not allow for the purchase of that asset using the quota**
 * Rent of cars doesn't include chauffeur services, and can only be provided by legal companies, allowing for the addition of the insurance.
 * The car must be a property of the company, proven by presenting the Vehicle's Registry and Licensing Certificate (CRVL)
 * The refund is limited to 10% of the vehicle's market price according to the FIPE table
 
 Article 11. The quota is calculated proportionally to the effective service time of each month.
-* If a Congress Person is substituted, preference for the quota is given to who's attending, and if both are attending, the quota is given to the mandate holder, or in case of a succession of substitutes, the quota is given to the first ancestor in the substitution order
-* If the Congress Person is substituted, there is no reduction in the quota.
+* If a congressperson is substituted, preference for the quota is given to who's attending, and if both are attending, the quota is given to the mandate holder, or in case of a succession of substitutes, the quota is given to the first ancestor in the substitution order
+* If the congressperson is substituted, there is no reduction in the quota.
 
 Article 12. **The usage of the quota is restricted to the mandate period**, as long as a substitute is not summoned
 Article 13. **The balance doesn't accumulate over the financial year**

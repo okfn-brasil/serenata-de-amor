@@ -8,7 +8,7 @@ Artigo 1 - Pode utilizar, além da cota calculada para o seu estado, um adiciona
   * Vice-líder da Minoria.
   * Vice-líder do Governo na Câmara dos Deputados ou no Congresso Nacional.
 * Se um mesmo deputado ocupa mais de um cargo simultaneamente, o valor **não se acumula**
-* Deputado que for representar o Brasil em missão parlamentar do mercosul pode gastar mais 20% do valor da menor cota, por viagem
+* Deputado que for representar o Brasil em missão parlamentar no Mercosul pode gastar mais 20% do valor da menor cota, por viagem
 
 Artigo 2 - Atende as seguintes despesas:
 * Passagens aéreas
