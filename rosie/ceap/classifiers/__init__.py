@@ -3,13 +3,13 @@ import os.path
 import numpy as np
 from sklearn.externals import joblib
 
-from ceap.classifiers.dataset import Dataset
-from ceap.classifiers.election_expenses_classifier import ElectionExpensesClassifier
-from ceap.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
-from ceap.classifiers.meal_price_outlier_classifier import MealPriceOutlierClassifier
-from ceap.classifiers.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
-from ceap.classifiers.traveled_speeds_classifier import TraveledSpeedsClassifier
-from ceap.classifiers.irregular_companies_classifier import IrregularCompaniesClassifier
+from rosie.ceap.classifiers.dataset import Dataset
+from rosie.ceap.classifiers.election_expenses_classifier import ElectionExpensesClassifier
+from rosie.ceap.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
+from rosie.ceap.classifiers.meal_price_outlier_classifier import MealPriceOutlierClassifier
+from rosie.ceap.classifiers.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
+from rosie.ceap.classifiers.traveled_speeds_classifier import TraveledSpeedsClassifier
+from rosie.ceap.classifiers.irregular_companies_classifier import IrregularCompaniesClassifier
 
 
 class Ceap:

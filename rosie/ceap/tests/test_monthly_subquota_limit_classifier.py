@@ -4,13 +4,13 @@ import numpy as np
 import pandas as pd
 from numpy.testing import assert_array_equal
 
-from ceap.classifiers.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
+from rosie.ceap.classifiers.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 
 
 class TestMonthlySubquotaLimitClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('ceap/tests/fixtures/monthly_subquota_limit_classifier.csv',
+        self.dataset = pd.read_csv('rosie/ceap/tests/fixtures/monthly_subquota_limit_classifier.csv',
                                    dtype={'subquota_number': np.str})
         self.subject = MonthlySubquotaLimitClassifier()
         self.subject.fit_transform(self.dataset)
