@@ -4,7 +4,7 @@ from unittest import TestCase
 from unittest.mock import patch
 from shutil import copy2
 
-from rosie.chamber_of_deputies.classifiers import Dataset
+from rosie.chamber_of_deputies.classifiers.dataset import Dataset
 
 
 class TestDataset(TestCase):

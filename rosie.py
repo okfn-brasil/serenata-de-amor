@@ -18,9 +18,9 @@ def help():
 
 
 def run():
-    from rosie.chamber_of_deputies import classifiers
+    from rosie import chamber_of_deputies
     target_directory = argv[2] if len(argv) >= 3 else '/tmp/serenata-data/'
-    classifiers.main(target_directory)
+    chamber_of_deputies.main(target_directory)
 
 
 def test():
