@@ -122,7 +122,7 @@ if args:
 
     print('%i CNPJ\'s to be fetched' % len(cnpj_list_to_import))
 
-    for cnpj in cnpj_list[:3]:
+    for cnpj in cnpj_list:
         result = fetch_cnpj_info(cnpj)
         if result != None and result['status'] == 'OK':
             info_dataset = info_dataset.append(result, ignore_index=True)
