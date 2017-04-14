@@ -3,16 +3,16 @@ import os.path
 import numpy as np
 from sklearn.externals import joblib
 
-from rosie.ceap.classifiers.dataset import Dataset
-from rosie.ceap.classifiers.election_expenses_classifier import ElectionExpensesClassifier
-from rosie.ceap.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
-from rosie.ceap.classifiers.meal_price_outlier_classifier import MealPriceOutlierClassifier
-from rosie.ceap.classifiers.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
-from rosie.ceap.classifiers.traveled_speeds_classifier import TraveledSpeedsClassifier
-from rosie.ceap.classifiers.irregular_companies_classifier import IrregularCompaniesClassifier
+from rosie.chamber_of_deputies.classifiers.dataset import Dataset
+from rosie.chamber_of_deputies.classifiers.election_expenses_classifier import ElectionExpensesClassifier
+from rosie.chamber_of_deputies.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
+from rosie.chamber_of_deputies.classifiers.meal_price_outlier_classifier import MealPriceOutlierClassifier
+from rosie.chamber_of_deputies.classifiers.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
+from rosie.chamber_of_deputies.classifiers.traveled_speeds_classifier import TraveledSpeedsClassifier
+from rosie.chamber_of_deputies.classifiers.irregular_companies_classifier import IrregularCompaniesClassifier
 
 
-class Ceap:
+class ChamberOfDeputies:
     CLASSIFIERS = {
         MealPriceOutlierClassifier: 'meal_price_outlier',
         MonthlySubquotaLimitClassifier: 'over_monthly_subquota_limit',
@@ -66,4 +66,4 @@ class Ceap:
 
 def main(target_directory='/tmp/serenata-data'):
     dataset = Dataset(target_directory).get()
-    Ceap(dataset, target_directory).run_classifiers()
+    ChamberOfDeputies(dataset, target_directory).run_classifiers()
