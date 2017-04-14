@@ -2,6 +2,7 @@ import json
 import numpy as np
 import os
 import pandas as pd
+from datetime import datetime, timedelta
 
 def decompose_main_activity(value):
     struct = json.loads(value.replace('\'', '"'))
@@ -23,6 +24,20 @@ def decompose_secondary_activities(value):
         return pd.Series()
 
 
+def decompose_partners_list(value):
+    struct = json.loads(value.replace('\'', '"'))
+    if struct and len(struct) > 0:
+        new_attributes = [pd.Series(partner). \
+            rename_axis({
+                'nome_rep_legal': 'partner_%i_legal_representative_name' % (index + 1),
+                'qual_rep_legal': 'partner_%i_legal_representative_qualification' % (index + 1),
+                'nome': 'partner_%i_name' % (index + 1),
+                'qual': 'partner_%i_qualification' % (index + 1),})
+            for index, partner in enumerate(struct)]
+        return pd.concat(new_attributes)
+    else:
+        return pd.Series()
+
 
 data = pd.read_csv(os.path.join('data', 'cnpj-info.xz'),
                    dtype={'atividade_principal': np.str,
@@ -32,8 +47,10 @@ data = pd.read_csv(os.path.join('data', 'cnpj-info.xz'),
                           'email': np.str,
                           'message': np.str,
                           'motivo_situacao': np.str,
-                          'situacao_especial': np.str})
+                          'situacao_especial': np.str,
+                          'qsa': np.str})
 data = data.drop_duplicates('cnpj')
+
 data.rename(columns={
     'abertura': 'opening',
     'atividade_principal': 'main_activity',
@@ -61,7 +78,7 @@ data.rename(columns={
 
 categories = (
     'legal_entity',
-    'message',
+    # 'message', #only when record has error
     'responsible_federative_entity',
     'situation_reason',
     'situation',
@@ -74,14 +91,19 @@ for key in categories:
 
 data['main_activity'] = data['main_activity'].fillna('{}')
 data['secondary_activities'] = data['secondary_activities'].fillna('{}')
+data['qsa'] = data['qsa'].fillna('{}')
 
 data = pd.concat([
-    data.drop(['main_activity', 'secondary_activities'], axis=1),
+    data.drop(['main_activity', 'secondary_activities', 'qsa'], axis=1),
     data['main_activity'].apply(decompose_main_activity),
-    data['secondary_activities'].apply(decompose_secondary_activities)],
+    data['secondary_activities'].apply(decompose_secondary_activities),
+    data['qsa'].apply(decompose_partners_list)],
     axis=1)
 
-data.to_csv(os.path.join('data', 'companies.xz'),
+data.to_csv(os.path.join('data', '{0}-{1}-{2}-companies.xz'.format(
+                                                datetime.today().strftime("%Y"),
+                                                datetime.today().strftime("%m"),
+                                                datetime.today().strftime("%d"))),
             compression='xz',
             encoding='utf-8',
             index=False)
