@@ -5,18 +5,18 @@ import numpy as np
 import pandas as pd
 from numpy.testing import assert_array_equal
 
-from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
+from rosie.chamber_of_deputies.classifiers.meal_price_outlier_classifier import MealPriceOutlierClassifier
 
 
 class TestMealPriceOutlierClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('tests/fixtures/meal_price_outlier_classifier.csv',
+        self.dataset = pd.read_csv('rosie/chamber_of_deputies/tests/fixtures/meal_price_outlier_classifier.csv',
                                    dtype={'cnpj_cpf': np.str})
         self.subject = MealPriceOutlierClassifier()
         self.subject.fit(self.dataset)
 
-    @patch('rosie.meal_price_outlier_classifier.KMeans')
+    @patch('rosie.chamber_of_deputies.classifiers.meal_price_outlier_classifier.KMeans')
     def test_predict_returns_a_prediction_for_each_observation(self, kmeans_mock):
         kmeans_mock.return_value.predict.return_value = np.ones(3)
         self.subject.fit(self.dataset)

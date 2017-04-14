@@ -3,13 +3,13 @@ from unittest import TestCase
 import numpy as np
 import pandas as pd
 
-from rosie.irregular_companies_classifier import IrregularCompaniesClassifier
+from rosie.chamber_of_deputies.classifiers.irregular_companies_classifier import IrregularCompaniesClassifier
 
 
 class TestIrregularCompaniesClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('tests/fixtures/irregular_companies_classifier.csv',
+        self.dataset = pd.read_csv('rosie/chamber_of_deputies/tests/fixtures/irregular_companies_classifier.csv',
                                    dtype={'cnpj': np.str})
         self.subject = IrregularCompaniesClassifier()
 
