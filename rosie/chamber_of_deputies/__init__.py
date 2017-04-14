@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 from sklearn.externals import joblib
 
-from rosie.chamber_of_deputies.classifiers.dataset import Dataset
+from rosie.chamber_of_deputies.dataset import Dataset
 from rosie.chamber_of_deputies.classifiers.election_expenses_classifier import ElectionExpensesClassifier
 from rosie.chamber_of_deputies.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
 from rosie.chamber_of_deputies.classifiers.meal_price_outlier_classifier import MealPriceOutlierClassifier
