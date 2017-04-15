@@ -1,5 +1,6 @@
+from concurrent import futures
 import json
-from optparse import OptionParser
+import argparse
 import time
 import random
 import itertools
@@ -13,6 +14,7 @@ import requests.exceptions
 import re
 
 INFO_DATASET_PATH = os.path.join('data', 'cnpj-info.xz')
+global cnpj_list, num_threads, proxies_list
 
 datasets_cols = {'reimbursements': 'cnpj_cpf',
                  'current-year': 'cnpj_cpf',
@@ -68,26 +70,20 @@ def remaining_cnpjs(cnpj_list_to_import, info_dataset):
 
 
 def fetch_cnpj_info(cnpj, timeout=50):
-    candidate_proxies = ['http://191.101.153.227:8080',
-                         'http://144.76.238.105:80',
-                         'http://77.174.87.85:80',
-                         'http://138.68.239.154:3128',
-                         'http://84.196.169.161:80',
-                         'http://181.215.238.132:8080',
-                         None]
     url = 'http://receitaws.com.br/v1/cnpj/%s' % cnpj
-    print('Fetching %s' % cnpj)
+
     try:
         result = requests.get(url,
                               timeout=timeout,
-                            #   proxies={'http': random.choice(candidate_proxies)}
-                              )
+                              proxies={'http': random.choice(proxies_list + [None])})
         if result.status_code == 200:
+            cnpj_list.remove(cnpj)
             return result.json()
         elif result.status_code == 429:
             print(result.text)
             print('Sleeping 60 seconds to try again.')
             time.sleep(60)
+            print('Thread starting fetch again. {} CNPJs remaining.'.format(len(cnpj_list)))
         else:
             print(result.text)
     except requests.exceptions.Timeout as e:
@@ -96,7 +92,7 @@ def fetch_cnpj_info(cnpj, timeout=50):
         print(e)
 
 
-def extract_dataset_name(filepath):
+def extract_file_name_from_args(filepath):
     date = re.compile('\d+-\d+-\d+-').findall(os.path.basename(filepath))
     if date:
         filename_without_date = os.path.basename(filepath).replace(date[0], '')
@@ -105,27 +101,53 @@ def extract_dataset_name(filepath):
     return filename_without_date[:filename_without_date.rfind('.')]
 
 
-parser = OptionParser()
-(options, args) = parser.parse_args()
+parser = argparse.ArgumentParser()
+parser.add_argument('-t', '--threads',
+                    type=int,
+                    default=10,
+                    help='number of threads to use in fetch process')
+parser.add_argument('-p', '--proxies',
+                    nargs='*',
+                    help='proxies list to distribuite requests in fetch process')
+parser.add_argument('args',
+                    nargs='+',
+                    help='source files from where to get CNPJs to fetch')
+args = parser.parse_args()
 
-if args:
+if args.args:
+    num_threads = args.threads
+    proxies_list = ['http://' + proxy for proxy in args.proxies]
     filesNotFound = list(filter(lambda file: not os.path.exists(file) or
-                                             datasets_cols.get(extract_dataset_name(file.lower())) is None, args))
+                                             datasets_cols.get(extract_file_name_from_args(file.lower())) is None, args.args))
     filesFound = list(filter(lambda file: os.path.exists(file) and
-                                          datasets_cols.get(extract_dataset_name(file.lower())), args))
+                                          datasets_cols.get(extract_file_name_from_args(file.lower())), args.args))
     cnpj_list_to_import = list(itertools.chain.from_iterable(
             map(lambda file: read_cnpj_list_to_import(file,
-                                                      datasets_cols.get(extract_dataset_name(file.lower()))),
+                                                      datasets_cols.get(extract_file_name_from_args(file.lower()))),
                 filesFound)))
     info_dataset = load_info_dataset()
     cnpj_list = remaining_cnpjs(cnpj_list_to_import, info_dataset)
 
-    print('%i CNPJ\'s to be fetched' % len(cnpj_list_to_import))
+    print('%i CNPJ\'s to be fetched' % len(cnpj_list))
+    print('starting fetch. {0} worker threads and {1} http proxies'.format(num_threads, len(proxies_list)))
 
-    for cnpj in cnpj_list:
-        result = fetch_cnpj_info(cnpj)
-        if result != None and result['status'] == 'OK':
-            info_dataset = info_dataset.append(result, ignore_index=True)
+    with futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+        future_to_cnpj_info = dict((executor.submit(fetch_cnpj_info, cnpj), cnpj)
+                                   for cnpj in cnpj_list)
+
+        last_saving_point = 0
+        for future in futures.as_completed(future_to_cnpj_info):
+            cnpj = future_to_cnpj_info[future]
+            if future.exception() is not None:
+                print('%r raised an exception: %s' % (cnpj, future.exception()))
+            elif future.result() is not None and future.result()['status'] == 'OK':
+                info_dataset = info_dataset.append(future.result(), ignore_index=True)
+                if last_saving_point < divmod(len(info_dataset.index), 100)[0]:
+                    last_saving_point = divmod(len(info_dataset.index), 100)[0]
+                    info_dataset.to_csv(INFO_DATASET_PATH,
+                                        compression='xz',
+                                        encoding='utf-8',
+                                        index=False)
 
     info_dataset.to_csv(INFO_DATASET_PATH,
                         compression='xz',
@@ -140,10 +162,10 @@ if args:
         for file in datasets_cols:
             print('File: %s | Column: %s' % (file, datasets_cols[file]))
 
-    print('%i CNPJ\'s listed in file' % len(set(cnpj_list_to_import)))
+    print('%i CNPJ\'s listed in file(s)' % len(set(cnpj_list_to_import)))
     cnpj_list = remaining_cnpjs(cnpj_list_to_import, info_dataset)
     print('%i CNPJ\'s remaining' % len(cnpj_list))
 else:
     print('no files to fetch CNPJ\'s')
     print('usage: fetch_cnpj_info.py \'filename\'')
-    print('ex: fetch_cnpj_info.py \'./data/2016-12-10-reimbursements.xz 2016-12-14-amendments.xz\' ')
+    print('ex: fetch_cnpj_info.py \'./data/2016-12-10-reimbursements.xz 2016-12-14-amendments.xz\' -p 177.67.84.135:8080 177.67.82.80:8080 -t 10')
