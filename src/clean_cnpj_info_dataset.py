@@ -31,6 +31,7 @@ def decompose_partners_list(value):
             rename_axis({
                 'nome_rep_legal': 'partner_%i_legal_representative_name' % (index + 1),
                 'qual_rep_legal': 'partner_%i_legal_representative_qualification' % (index + 1),
+                'pais_origem': 'partner_%i_contry_origin' % (index + 1),
                 'nome': 'partner_%i_name' % (index + 1),
                 'qual': 'partner_%i_qualification' % (index + 1),})
             for index, partner in enumerate(struct)]
