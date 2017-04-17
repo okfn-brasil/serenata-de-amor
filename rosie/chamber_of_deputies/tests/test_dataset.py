@@ -4,7 +4,7 @@ from unittest import TestCase
 from unittest.mock import patch
 from shutil import copy2
 
-from rosie.chamber_of_deputies.classifiers import Dataset
+from rosie.chamber_of_deputies.dataset import Dataset
 
 
 class TestDataset(TestCase):
@@ -16,8 +16,8 @@ class TestDataset(TestCase):
         copy2('rosie/chamber_of_deputies/tests/fixtures/reimbursements.xz', temp_path)
         self.subject = Dataset(temp_path)
 
-    @patch('rosie.chamber_of_deputies.classifiers.dataset.CEAPDataset')
-    @patch('rosie.chamber_of_deputies.classifiers.dataset.fetch')
+    @patch('rosie.chamber_of_deputies.dataset.CEAPDataset')
+    @patch('rosie.chamber_of_deputies.dataset.fetch')
     def test_get_performs_a_left_merge_between_reimbursements_and_companies(self, _ceap_dataset, _fetch):
         dataset = self.subject.get()
         self.assertEqual(5, len(dataset))

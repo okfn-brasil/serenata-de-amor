@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 
-from rosie.chamber_of_deputies.classifiers import ChamberOfDeputies
+from rosie.chamber_of_deputies import ChamberOfDeputies
 
 
 class TestChamberOfDeputies(TestCase):
@@ -22,12 +22,12 @@ class TestChamberOfDeputies(TestCase):
         self.dataset = pd.DataFrame().append(row, ignore_index=True)
         self.subject = ChamberOfDeputies(self.dataset, mkdtemp())
 
-    @patch('rosie.chamber_of_deputies.classifiers.joblib')
+    @patch('rosie.chamber_of_deputies.joblib')
     def test_load_trained_model_trains_model_when_not_persisted(self, _):
         model = self.subject.load_trained_model(MagicMock)
         model.fit.assert_called_once_with(self.dataset)
 
-    @patch('rosie.chamber_of_deputies.classifiers.joblib')
+    @patch('rosie.chamber_of_deputies.joblib')
     def test_load_trained_model_doesnt_train_model_when_already_persisted(self, _):
         Path(os.path.join(self.subject.data_path, 'magicmock.pkl')).touch()
         model = self.subject.load_trained_model(MagicMock)
