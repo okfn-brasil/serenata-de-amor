@@ -35,7 +35,7 @@ class Core:
             self.predict(model, name)
 
         output = os.path.join(self.data_path, 'suspicions.xz')
-        kwargs = (compression='xz', encoding='utf-8', index=False)
+        kwargs = dict(compression='xz', encoding='utf-8', index=False)
         self.suspicions.to_csv(output, **kwargs)
 
     def load_trained_model(self, classifier):
