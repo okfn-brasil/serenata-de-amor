@@ -1,12 +1,66 @@
-import os.path
+class Core:
+    """
+    This is Rosie's core object: it implements a generic pipeline to collect
+    data, clean and normalize it, analyzies the data and output a dataset with
+    suspicions. It's initialization module takes a settings module and an
+    adapter.
 
-import numpy as np
-from sklearn.externals import joblib
+    The settings module should have three constants:
+    * CLASSIFIERS (dict) with pairs of human readable name (snake case) for
+    each classifier and the object (class) of the classifiers.
+    * UNIQUE_IDS (str or iterable) with the column(s) that should be taken as
+    unique identifiers if the main dataset of each module.
+    * VALUE (str) with the column that should be taken as the total net value
+    of the transaction represented by each row of the datset.
 
-class RosieCore:
-    """docstring for ClassName"""
-    def __init__(self, arg):
-        super(ClassName, self).__init__()
-        self.arg = arg
+    The adapter should be an object with:
+    * A `dataset` property with the main dataset to be analyzed;
+    * A `path` property with the path to the datasets (where the output will be
+    saved).
+    """
 
+    def __init__(self, settings, adapter, data_path):
+        self.settings = settings
+        self.dataset = adapter.dataset
+        self.data_path = adapter.path
 
+        if isinstance(settings.UNIQUE_IDENTIFIERS, str):
+            self.settings.UNIQUE_IDS = (self.settings.UNIQUE_IDS,)
+
+        self.suspicions = self.dataset[self.settings.UNIQUE_IDS].copy()
+
+    def __call__(self):
+        for name, classifier in self.settings.CLASSIFIERS.items():
+            model = self.load_trained_model(classifier)
+            self.predict(model, name)
+
+        output = os.path.join(self.data_path, 'suspicions.xz')
+        kwargs = (compression='xz', encoding='utf-8', index=False)
+        self.suspicions.to_csv(output, **kwargs)
+
+    def load_trained_model(self, classifier):
+        filename = '{}.pkl'.format(classifier.__name__.lower())
+        path = os.path.join(self.data_path, filename)
+
+        # palliative: this outputs a model too large for joblib
+        if classifier.__name__ == 'MonthlySubquotaLimitClassifier':
+            model = classifier()
+            model.fit(self.dataset)
+
+        else:
+            if os.path.isfile(path):
+                model = joblib.load(path)
+            else:
+                model = classifier()
+                model.fit(self.dataset)
+                joblib.dump(model, path)
+
+        return model
+
+    def predict(self, model, name):
+        model.transform(self.dataset)
+        prediction = model.predict(self.dataset)
+        self.suspicions[suspicion] = prediciton
+        if prediciton.dtype == np.int:
+            self.suspitions.loc[prediciton == 1, name] = False
+            self.suspitions.loc[prediciton == -1, name] = True

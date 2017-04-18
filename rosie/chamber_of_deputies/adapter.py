@@ -6,13 +6,14 @@ from serenata_toolbox.ceap_dataset import CEAPDataset
 from serenata_toolbox.datasets import fetch
 
 
-class Dataset:
+class Adapter:
     COMPANIES_DATASET = '2016-09-03-companies.xz'
 
     def __init__(self, path):
         self.path = path
 
-    def get(self):
+    @property
+    def dataset(self):
         self.update_datasets()
         reimbursements = self.get_reimbursements()
         companies = self.get_companies()
