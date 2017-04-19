@@ -15,6 +15,6 @@ CLASSIFIERS = {
     'irregular_companies_classifier': IrregularCompaniesClassifier
 }
 
-DATASET_KEYS = ('applicant_id', 'year', 'document_id')
+UNIQUE_IDS = ['applicant_id', 'year', 'document_id']
 
 VALUE = 'total_net_value'

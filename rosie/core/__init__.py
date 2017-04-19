@@ -1,3 +1,8 @@
+import os.path
+
+import numpy as np
+from sklearn.externals import joblib
+
 class Core:
     """
     This is Rosie's core object: it implements a generic pipeline to collect
@@ -19,14 +24,10 @@ class Core:
     saved).
     """
 
-    def __init__(self, settings, adapter, data_path):
+    def __init__(self, settings, adapter):
         self.settings = settings
         self.dataset = adapter.dataset
         self.data_path = adapter.path
-
-        if isinstance(settings.UNIQUE_IDENTIFIERS, str):
-            self.settings.UNIQUE_IDS = (self.settings.UNIQUE_IDS,)
-
         self.suspicions = self.dataset[self.settings.UNIQUE_IDS].copy()
 
     def __call__(self):
