@@ -59,12 +59,11 @@ class GooglePlacesURL:
         query = (('placeid', place),)
         return self.url('details', query)
 
-    def nearby(self, keyword):
+    def nearby(self, keyword, location):
         """
         :param keywork: (str) category to search places
         :return: (str) URL to do a nearby Google Places search
         """
-        location = '{},{}'.format(self.latitude, self.longitude)
         query = (
             ('location', location),
             ('keyword', keyword),
@@ -158,7 +157,9 @@ class SexPlacesNearBy:
             args = (keyword, self.company_name, self.company.get('cnpj'))
             logging.info(msg.format(*args))
 
-        url = self.url.nearby(keyword)
+
+        location = '{},{}'.format(self.latitude, self.longitude)
+        url = self.url.nearby(keyword, location)
         try:
             response = await aiohttp.request('GET', url)
         except aiohttp.TimeoutError:
