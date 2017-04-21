@@ -21,7 +21,7 @@ from aiohttp import request
 from geopy.distance import vincenty
 
 
-DTYPE = dict(cnpj=np.str)
+DTYPE = dict(cnpj=np.str, cnpj_cpf=np.str)
 LOG_FORMAT = '[%(levelname)s] %(asctime)s: %(message)s'
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
@@ -63,8 +63,8 @@ class SexPlacesNearBy:
 
     async def get_all_places(self):
         """
-        Use aiohttp to get the closest place to the company according to each
-        keyworn. Returns `None`, the results are saved on self.places.
+        Use asyncio to get the closest place to the company according to each
+        keyword. Returns `None`, the results are saved on self.places.
         """
         tasks = [self.load_place(k) for k in self.KEYWORDS]
         await asyncio.gather(*tasks)
@@ -135,7 +135,7 @@ class SexPlacesNearBy:
 
     def parse(self, keyword, content):
         """
-        Return a dictonary with information of the nearest sex place
+        Return a dictionary with information of the nearest sex place
         around a given company.
         :param keyword: (str) keyword used by the request
         :param content: (str) content of the response to the request
@@ -363,14 +363,28 @@ def load_newest_dataset(pattern, usecols, na_value=''):
     return dataset
 
 
-def get_remaining_companies(companies_path):
+def get_companies(companies_path):
     """
     Compares YYYY-MM-DD-companies.xz with the newest
     YYYY-MM-DD-sex-place-distances.xz and returns a DataFrame with only
-    unfetched companies.
+    the rows matching the search criteria, excluding already fetched companies.
     """
-    cols = ('cnpj', 'trade_name', 'name', 'latitude', 'longitude')
+    cols = ('cnpj', 'trade_name', 'name', 'latitude', 'longitude', 'state', 'city')
     companies = load_newest_dataset(companies_path, cols)
+    companies['cnpj'] = companies['cnpj'].str.replace(r'\D', '')
+    cols = ('total_net_value', 'cnpj_cpf', 'term')
+    reimbursements = load_newest_dataset('data/*-reimbursements.xz', cols)
+    reimbursements = reimbursements.query((
+        '(term == 2015) & '
+        '(total_net_value > 200)'
+    ))
+    companies = pd.merge(companies, reimbursements, left_on='cnpj', right_on='cnpj_cpf')
+    del(reimbursements)
+    companies.drop_duplicates('cnpj', inplace=True)
+    companies = companies.query((
+        '(state == "SP") & '
+        '(city.str.upper() == "SAO PAULO")'
+    ))
     sex_places = load_newest_dataset('**/*sex-place-distances.xz', ('cnpj',))
 
     if sex_places is None or sex_places.empty:
@@ -391,7 +405,7 @@ def is_new_dataset(output):
 
 
 def convert_to_lzma(csv_output, xz_output):
-    pd.read_csv(csv_output, dtype=DTYPE).to_csv(xz_output, compression='xz')
+    pd.read_csv(csv_output, dtype=DTYPE).to_csv(xz_output, compression='xz', index=False)
     os.remove(csv_output)
 
 def shutdown():
@@ -418,7 +432,7 @@ def main(companies_path, max_requests=500, sample_size=None):
     xz_output = os.path.join(directory, name.format(today, 'xz'))
 
     # get companies
-    companies = get_remaining_companies(companies_path)
+    companies = get_companies(companies_path)
     if sample_size:
         companies = companies.sample(sample_size)
 
