@@ -400,6 +400,11 @@ def get_companies(companies_path, **kwargs):
     query = 'city.str.upper() == "{}"'.format(city.upper())
     companies = companies.query(query)
 
+    # clean up companies
+    del(companies['cnpj_cpf'])
+    del(companies['term'])
+    del(companies['total_net_value'])
+    del(companies['city'])
 
     # load sexplaces & filter remaining companies
     cols = ('cnpj', )
