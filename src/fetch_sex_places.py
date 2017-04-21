@@ -15,9 +15,9 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 import aiofiles
+import aiohttp
 import pandas as pd
 import numpy as np
-from aiohttp import request
 from geopy.distance import vincenty
 
 
@@ -107,77 +107,67 @@ class SexPlacesNearBy:
     def company_name(self):
         return self.company.get('trade_name') or self.company.get('name')
 
-    async def get_all_places(self):
-        """
-        Use asyncio to get the closest place to the company according to each
-        keyword. Returns `None`, the results are saved on self.places.
-        """
-        tasks = [self.load_place(k) for k in self.KEYWORDS]
-        await asyncio.gather(*tasks)
+    @property
+    def valid(self):
+        try:
+            coords = map(float, (self.latitude, self.longitude))
+        except ValueError:
+            return False
+
+        if any(map(math.isnan, coords)):
+            return False
+
+        return True
 
     async def get_closest(self):
         """
-        Gets the closest place find in reads self.places, queries for its
-        details and returns a dict with all the info on that place.
+        Start the requests to store a place per self.KEYWORD in self.places.
+        Then gets the closest place found, queries for its details and returns
+        a dict with the details for that place.
         """
-        if not self.is_valid():
+        if not self.valid:
+            msg = 'No geolocation information for company: {} ({})'
+            logging.info(msg.format(self.company_name, self.company['cnpj']))
             return None
 
-        await self.get_all_places()
+        tasks = [self.load_place(k) for k in self.KEYWORDS]
+        await asyncio.gather(*tasks)
         ordered = sorted(self.places, key=lambda x: x['distance'])
 
         for place in ordered:
             place = await self.load_details(place)
             name = place.get('name', '').lower()
 
-            if place['keyword'] == 'motel' and 'hotel' in name:
+            if place.get('keyword') == 'motel' and 'hotel' in name:
                 pass  # google returns hotels when looking for a motel
 
             else:
-                prefix = '💋 ' if place['distance'] < 5 else ''
+                prefix = '💋 ' if place.get('distance') < 5 else ''
                 msg = '{}Found something interesting {:.2f}m away from {}…'
                 args = (prefix, place.get('distance'), self.company_name)
                 logging.info(msg.format(*args))
                 self.closest = place
                 return place
 
-    @staticmethod
-    def is_valid_coordinate(coord):
-        try:
-            as_float = float(coord)
-        except ValueError:
-            return False
-
-        return False if math.isnan(as_float) else True
-
-    def is_valid(self):
-        coords = (self.latitude, self.longitude)
-        if not all(map(self.is_valid_coordinate, coords)):
-            msg = 'No geolocation information for company: {} ({})'
-            logging.info(msg.format(self.company_name, self.company['cnpj']))
-            return False
-
-        return True
-
-    async def load_place(self, keyword):
+    async def load_place(self, keyword, print_status=False):
         """
         Given a keyword it loads the place returned by the API to self.places.
         """
-        keyword, content = await self.get(keyword)
-        place = self.parse(keyword, content)
-        if place and isinstance(place.get('distance'), float):
-            self.places.append(place)
-
-    async def get(self, keyword, print_status=False):
         if print_status:
             msg = 'Looking for a {} near {} ({})…'
             args = (keyword, self.company_name, self.company.get('cnpj'))
             logging.info(msg.format(*args))
 
-        content = await response.text()
-        return keyword, content
         url = self.url.nearby(keyword)
         try:
+            response = await aiohttp.request('GET', url)
+        except aiohttp.TimeoutError:
+            logging.info('Timeout raised for {}'.format(url))
+        else:
+            content = await response.text()
+            place = self.parse(keyword, content)
+            if place and isinstance(place.get('distance'), float):
+                self.places.append(place)
 
     def parse(self, keyword, content):
         """
@@ -212,7 +202,7 @@ class SexPlacesNearBy:
             * `NOT_FOUND` indicates that the referenced location was not found
               in the Places database.<Paste>
 
-        Source: https://developers.google.com/places/web-service/details
+        Source: https://developers.googlefetchplaces/web-service/details
         """
         response = json.loads(content)
         status = response.get('status')
@@ -258,9 +248,16 @@ class SexPlacesNearBy:
         if not place_id:
             return place
 
-        response = await request('GET', self.details_url(place_id))
-        content = await response.text()
+        # request place details
+        try:
+            response = await aiohttp.request('GET', self.url.details(place_id))
+        except aiohttp.TimeoutError:
+            logging.info('Timeout raised for {}'.format(url))
+            return place
+        else:
+            content = await response.text()
 
+        # parse place details
         try:
             details = json.loads(content)
         except ValueError:
