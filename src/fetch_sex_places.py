@@ -27,9 +27,54 @@ LOG_FORMAT = '[%(levelname)s] %(asctime)s: %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
 
 
-class SexPlacesNearBy:
+class GooglePlacesURL:
 
     BASE_URL = 'https://maps.googleapis.com/maps/api/place/'
+
+    def __init__(self, key):
+        self.key = key
+
+    def url(self, endpoint, query=None, format='json'):
+        """
+        :param endpoint: (str) Google Places API endpoint name (e.g. details)
+        :param query: (tuple) tuples with key/values pairs for the URL query
+        :param format: (str) output format (default is `json`)
+        :return: (str) URL to do an authenticated Google Places request
+        """
+        key = ('key', self.key)
+        query = tuple(chain(query, (key,))) if query else (key)
+        parts = (
+            self.BASE_URL,
+            endpoint,
+            '/{}?'.format(format),
+            urlencode(query)
+        )
+        return ''.join(parts)
+
+    def details(self, place):
+        """
+        :param place: (int or str) ID of the place in Google Place
+        :return: (str) URL to do a place details Google Places search
+        """
+        query = (('placeid', place),)
+        return self.url('details', query)
+
+    def nearby(self, keyword):
+        """
+        :param keywork: (str) category to search places
+        :return: (str) URL to do a nearby Google Places search
+        """
+        location = '{},{}'.format(self.latitude, self.longitude)
+        query = (
+            ('location', location),
+            ('keyword', keyword),
+            ('rankby', 'distance'),
+        )
+        return self.url('nearbysearch', query)
+
+
+class SexPlacesNearBy:
+
     KEYWORDS = ('acompanhantes',
                 'adult entertainment club',
                 'adult entertainment store',
@@ -50,8 +95,9 @@ class SexPlacesNearBy:
         """
         settings = RawConfigParser()
         settings.read('config.ini')
+        self.url = GooglePlacesURL(key or settings.get('Google', 'APIKey'))
+
         self.company = company
-        self.key = key or settings.get('Google', 'APIKey')
         self.latitude = self.company['latitude']
         self.longitude = self.company['longitude']
         self.places = []
@@ -128,10 +174,10 @@ class SexPlacesNearBy:
             args = (keyword, self.company_name, self.company.get('cnpj'))
             logging.info(msg.format(*args))
 
-        url = self.nearby_url(keyword)
-        response = await request('GET', url)
         content = await response.text()
         return keyword, content
+        url = self.url.nearby(keyword)
+        try:
 
     def parse(self, keyword, content):
         """
@@ -230,44 +276,6 @@ class SexPlacesNearBy:
             phone=result.get('formatted_phone_number', '')
         ))
         return place
-
-    def details_url(self, place):
-        """
-        :param place: (int or str) ID of the place in Google Place
-        :return: (str) URL to do a place details Google Places search
-        """
-        query = (('placeid', place),)
-        return self.google_places_url('details', query)
-
-    def nearby_url(self, keyword):
-        """
-        :param keywork: (str) category to search places
-        :return: (str) URL to do a nearby Google Places search
-        """
-        location = '{},{}'.format(self.latitude, self.longitude)
-        query = (
-            ('location', location),
-            ('keyword', keyword),
-            ('rankby', 'distance'),
-        )
-        return self.google_places_url('nearbysearch', query)
-
-    def google_places_url(self, endpoint, query=None, format='json'):
-        """
-        :param endpoint: (str) Google Places API endpoint name (e.g. details)
-        :param query: (tuple) tuples with key/values pairs for the URL query
-        :param format: (str) output format (default is `json`)
-        :return: (str) URL to do an authenticated Google Places request
-        """
-        key = ('key', self.key)
-        query = tuple(chain(query, (key,))) if query else (key)
-        parts = (
-            self.BASE_URL,
-            endpoint,
-            '/{}?'.format(format),
-            urlencode(query)
-        )
-        return ''.join(parts)
 
 
 async def write_to_csv(path, place=None, **kwargs):
