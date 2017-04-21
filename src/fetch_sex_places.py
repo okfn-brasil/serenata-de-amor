@@ -365,7 +365,7 @@ def is_new_dataset(output):
 
 
 def convert_to_lzma(csv_output, xz_output):
-    pd.read_csv(csv_output, dtype=DTYPE).to_csv(xz_output, compression='xz')
+    pd.read_csv(csv_output, dtype=DTYPE).to_csv(xz_output, compression='xz', index=False)
     os.remove(csv_output)
 
 
