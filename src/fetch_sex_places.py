@@ -368,30 +368,42 @@ def load_newest_dataset(pattern, usecols, na_value=''):
     return dataset
 
 
-def get_companies(companies_path):
+def get_companies(companies_path, **kwargs):
     """
     Compares YYYY-MM-DD-companies.xz with the newest
     YYYY-MM-DD-sex-place-distances.xz and returns a DataFrame with only
     the rows matching the search criteria, excluding already fetched companies.
+
+    Keyword arguments are expected: term (int), value (float) and city (str)
     """
-    cols = ('cnpj', 'trade_name', 'name', 'latitude', 'longitude', 'state', 'city')
+    filters = tuple(map(kwargs.get, ('term', 'value', 'city')))
+    if not all(filters):
+        raise TypeError('get_companies expects term, value and city as kwargs')
+    term, value, city = filters
+
+    # load companies
+    cols = ('cnpj', 'trade_name', 'name', 'latitude', 'longitude', 'city')
     companies = load_newest_dataset(companies_path, cols)
     companies['cnpj'] = companies['cnpj'].str.replace(r'\D', '')
+
+    # load & fiter reimbursements
     cols = ('total_net_value', 'cnpj_cpf', 'term')
     reimbursements = load_newest_dataset('data/*-reimbursements.xz', cols)
-    reimbursements = reimbursements.query((
-        '(term == 2015) & '
-        '(total_net_value > 200)'
-    ))
-    companies = pd.merge(companies, reimbursements, left_on='cnpj', right_on='cnpj_cpf')
+    query = '(term == {}) & (total_net_value >= {})'.format(term, value)
+    reimbursements = reimbursements.query(query)
+
+    # load & filter companies
+    on = dict(left_on='cnpj', right_on='cnpj_cpf')
+    companies = pd.merge(companies, reimbursements, **on)
     del(reimbursements)
     companies.drop_duplicates('cnpj', inplace=True)
-    companies = companies.query((
-        '(state == "SP") & '
-        '(city.str.upper() == "SAO PAULO")'
-    ))
-    sex_places = load_newest_dataset('**/*sex-place-distances.xz', ('cnpj',))
+    query = 'city.str.upper() == "{}"'.format(city.upper())
+    companies = companies.query(query)
 
+
+    # load sexplaces & filter remaining companies
+    cols = ('cnpj', )
+    sex_places = load_newest_dataset('data/*-sex-place-distances.xz', cols)
     if sex_places is None or sex_places.empty:
         return companies
 
@@ -423,7 +435,10 @@ def shutdown():
     for task in asyncio.Task.all_tasks():
         task.cancel()
 
-def main(companies_path, max_requests=500, sample_size=None):
+
+def main(companies_path, max_requests=500, sample_size=None, filters=None):
+    if not filters:
+        filters = dict()
 
     if not os.path.exists(companies_path):
         logging.info('File not found: {}'.format(companies_path))
@@ -437,7 +452,7 @@ def main(companies_path, max_requests=500, sample_size=None):
     xz_output = os.path.join(directory, name.format(today, 'xz'))
 
     # get companies
-    companies = get_companies(companies_path)
+    companies = get_companies(companies_path, **filters)
     if sample_size:
         companies = companies.sample(sample_size)
 
@@ -465,13 +480,34 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=description)
     parser.add_argument('companies_path', help='Companies .xz datset')
     parser.add_argument(
-        '--max-parallel-requests', '-m', type=int, default=500,
+        '--max-parallel-requests', '-r', type=int, default=500,
         help='Max parallel requests (default: 500)'
     )
     parser.add_argument(
         '--sample-size', '-s', type=int, default=None,
         help='Limit fetching to a given sample size (default: None)'
     )
-
+    parser.add_argument(
+        '--city', '-c', required=True,
+        help='Limit fetching to a given city (required)'
+    )
+    parser.add_argument(
+        '--min-value', '-m', type=float, required=True,
+        help='Limit fetching to expensed higher to a minimum amount (required)'
+    )
+    parser.add_argument(
+        '--term', '-t', type=int, required=True,
+        help='Limit fetching to a given term (required)'
+    )
     args = parser.parse_args()
-    main(args.companies_path, args.max_parallel_requests, args.sample_size)
+
+    # max parallel requests must be at least 13 (requests needed per company)
+    if args.max_parallel_requests < 13:
+        args.max_parallel_requests = 13
+
+    main(
+        args.companies_path,
+        args.max_parallel_requests,
+        args.sample_size,
+        dict(term=args.term, city=args.city, value=args.min_value)
+    )
