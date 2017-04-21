@@ -396,7 +396,7 @@ def convert_to_lzma(csv_output, xz_output):
 
 def shutdown():
     """
-    Something is wrong and it does nt worth it to keep running. This method
+    Something is wrong and it does not worth it to keep running. This method
     cancels all pending coroutines so the script can wrap up data collection
     and move on (that is to say, compress the output we've got so far as an
     .xz file).
