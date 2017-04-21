@@ -61,7 +61,7 @@ class Core:
     def predict(self, model, name):
         model.transform(self.dataset)
         prediction = model.predict(self.dataset)
-        self.suspicions[suspicion] = prediciton
-        if prediciton.dtype == np.int:
-            self.suspitions.loc[prediciton == 1, name] = False
-            self.suspitions.loc[prediciton == -1, name] = True
+        self.suspicions[name] = prediction
+        if prediction.dtype == np.int:
+            self.suspicions.loc[prediction == 1, name] = False
+            self.suspicions.loc[prediction == -1, name] = True
