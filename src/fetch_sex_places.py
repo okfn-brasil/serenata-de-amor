@@ -416,7 +416,7 @@ def is_new_dataset(output):
         return True
 
     # convert previous database from xz to csv
-    pd.read_csv(sex_places, dtype=DTYPE).to_csv(output)
+    pd.read_csv(sex_places, dtype=DTYPE).to_csv(output, index=False)
     os.remove(sex_places)
     return False
 
