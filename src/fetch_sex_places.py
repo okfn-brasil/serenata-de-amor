@@ -301,7 +301,7 @@ async def write_to_csv(path, place=None, **kwargs):
             await fh.write(obj.getvalue())
 
 
-async def write_place(company, output, semaphore):
+async def fetch_place(company, output, semaphore):
     """
     Gets a company (dict), finds the closest place nearby and write the result
     to a CSV file.
@@ -330,7 +330,7 @@ async def main_coro(companies, output, max_requests):
     # write CSV data
     for company_row in companies.itertuples(index=True):
         company = dict(company_row._asdict())  # _asdict() returns OrderedDict
-        tasks.append(write_place(company, output, semaphore))
+        tasks.append(fetch_place(company, output, semaphore))
 
     await asyncio.wait(tasks)
 
