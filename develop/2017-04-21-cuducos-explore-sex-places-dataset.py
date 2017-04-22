@@ -15,18 +15,24 @@
 
 import numpy as np
 import pandas as pd
+from serenata_toolbox.datasets import fetch
 
 DTYPE = dict(cnpj=np.str, cnpj_cpf=np.str)
 
 
 # In[2]:
 
+fetch('2017-04-21-sex-place-distances.xz', '../data')
+
+
+# In[3]:
+
 companies = pd.read_csv('../data/2016-09-03-companies.xz', dtype=DTYPE, low_memory=False)
 companies.cnpj = companies.cnpj.str.replace(r'\D', '')
 companies.shape
 
 
-# In[3]:
+# In[4]:
 
 sex_places = pd.read_csv('../data/2017-04-21-sex-place-distances.xz', dtype=DTYPE)
 sex_places.shape
@@ -34,7 +40,7 @@ sex_places.shape
 
 # This dataset has all sort of ditances between companies and the closest sex place:
 
-# In[4]:
+# In[5]:
 
 sex_places.distance.describe()
 
@@ -43,13 +49,13 @@ sex_places.distance.describe()
 # 
 # From this sample (n=2245) 81 places are at least 3m away from the venue in which at least a congressperson made an expense since 2015:
 
-# In[5]:
+# In[6]:
 
 close_enough = sex_places.query('distance < 3')
 close_enough.shape
 
 
-# In[6]:
+# In[7]:
 
 close_enough.head()
 
@@ -58,7 +64,7 @@ close_enough.head()
 # 
 # Let's generate some Jarbas links to take a closer look at them!
 
-# In[7]:
+# In[8]:
 
 link = 'https://jarbas.serenatadeamor.org/#/cnpjCpf/{}'
 cnpjs = (place.cnpj for _, place in close_enough.iterrows())
@@ -70,24 +76,24 @@ for cnpj in cnpjs:
 # 
 # Two CNPJs were assigned to a night club called Villa Gorini:
 
-# In[8]:
+# In[9]:
 
 close_enough[close_enough.cnpj == '03874976000181'].iloc[0]
 
 
-# In[9]:
+# In[10]:
 
 close_enough[close_enough.cnpj == '17084369000122'].iloc[0]
 
 
 # However the point here is that Google Places API seems rather imprecise when looking for an address that has a KM instead of a street number:
 
-# In[10]:
+# In[11]:
 
 companies[companies.cnpj == '03874976000181'].iloc[0].address
 
 
-# In[11]:
+# In[12]:
 
 companies[companies.cnpj == '17084369000122'].iloc[0].address
 
@@ -98,7 +104,7 @@ companies[companies.cnpj == '17084369000122'].iloc[0].address
 # 
 # [Yume Espaço Terapêutico](https://jarbas.serenatadeamor.org/#/cnpjCpf/14310257000154) is another example of a false positive.
 
-# In[12]:
+# In[13]:
 
 close_enough.iloc[66]
 
@@ -109,7 +115,7 @@ close_enough.iloc[66]
 # 
 # Finally [CONTRASTE EDITORA E INDUSTRIA GRAFICA EIRELI](https://jarbas.serenatadeamor.org/#/cnpjCpf/33867664000101) has very appealling picures in Jarbas (actually in Google Street View). 
 
-# In[13]:
+# In[14]:
 
 close_enough.iloc[-1]
 
