@@ -38,6 +38,13 @@ $ ./setup
 
 The `activate serenata_de_amor` command must be run every time you enter the project folder to start working.
 
+**If you use Windows** skip the last two commands, run _Command Prompt_ as _Administrator_ and use:
+
+```console
+$ activate serenata_de_amor
+$ python setup
+```
+
 #### Common (virtual) environment issues
 
 In some environments Jupyter might not be able to access packages from the Conda environment (basically… for some reason). If this is the case we recommend you to ensure you are using Anaconda 4.1.0 or higher, delete the old environment and follow these steps:
