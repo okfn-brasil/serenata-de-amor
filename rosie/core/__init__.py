@@ -13,10 +13,10 @@ class Core:
     The settings module should have three constants:
     * CLASSIFIERS (dict) with pairs of human readable name (snake case) for
     each classifier and the object (class) of the classifiers.
-    * UNIQUE_IDS (str or iterable) with the column(s) that should be taken as
-    unique identifiers if the main dataset of each module.
-    * VALUE (str) with the column that should be taken as the total net value
-    of the transaction represented by each row of the datset.
+    * COLUMNS: UNIQUE_IDS (str or iterable) with the column(s) that should be taken as
+    unique identifiers if the main dataset of each module. And VALUE (str) with the column
+    that should be taken as the total net value of the transaction represented
+    by each row of the datset.
 
     The adapter should be an object with:
     * A `dataset` property with the main dataset to be analyzed;
@@ -28,7 +28,7 @@ class Core:
         self.settings = settings
         self.dataset = adapter.dataset
         self.data_path = adapter.path
-        self.suspicions = self.dataset[self.settings.UNIQUE_IDS].copy()
+        self.suspicions = self.dataset[self.settings.COLUMNS['unique_ids']].copy()
 
     def __call__(self):
         for name, classifier in self.settings.CLASSIFIERS.items():
