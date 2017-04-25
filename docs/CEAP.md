@@ -1,3 +1,5 @@
+[Portuguese version](https://github.com/datasciencebr/serenata-de-amor/blob/master/docs/CEAP_pt_BR.md)
+
 Article 1 - Above the calculated quota for their state they can use:
 1. BRL 1,353.04, the congressperson who is:
   * Leader of a political party, parliament block, Minority, or leader of the Government in the Chamber of Deputies or the National Congress.
