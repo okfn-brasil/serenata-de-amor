@@ -1,22 +1,10 @@
-import configparser
 import os
-import tinys3
 
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
-access_key = settings.get('Amazon', 'AccessKey')
-secret_key = settings.get('Amazon', 'SecretKey')
-bucket = settings.get('Amazon', 'Bucket')
-region = settings.get('Amazon', 'Region')
+from serenata_toolbox.datasets import Datasets
 
-connection = tinys3.Connection(access_key,
-                               secret_key,
-                               default_bucket=bucket,
-                               endpoint='%s.amazonaws.com' % region)
+datasets = Datasets('data')
 
-files = set(name for name in os.listdir('data') if not name.startswith('.'))
-files_in_bucket = set(attrs['key'] for attrs in connection.list(None, bucket))
-for filename in (files - files_in_bucket):
-    filepath = 'data/' + filename
-    print(filepath)
-    connection.upload(filename, open(filepath, 'rb'))
+for file_name in datasets.pending:
+    file_path = os.path.join(datasets.local.directory, file_name)
+    print('Uploading {}…'.format(file_path))
+    datasets.remote.upload(file_path)
