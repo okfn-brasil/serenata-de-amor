@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "dokku": {
+      "predeploy": "yarn assets && python manage.py collectstatic --no-input"
+    }
+  }
+}
