@@ -3,6 +3,35 @@ import numpy as np
 import os
 import pandas as pd
 
+from optparse import OptionParser
+
+CNPJ_CPF_CSV_PATH = os.path.join('data', 'cnpj-info.xz')
+COMPANIES_CSV_PATH = os.path.join('data', 'companies.xz')
+
+parser = OptionParser()
+parser.add_option("--cnpj", dest="cnpj_cpf", metavar="FILE",
+                  help="file to read the cnpj/cpf from")
+parser.add_option("--companies", dest="companies", metavar="FILE",
+                  help="file to read the companies from")
+(options, args) = parser.parse_args()
+
+if options['cnpj_cpf']:
+    CNPJ_CPF_CSV_PATH = os.path.join('data', 'cnpj-info.xz')
+
+if options['companies']:
+    COMPANIES_CSV_PATH = os.path.join('data', 'companies.xz')
+
+no_named_args = (not options['cnpj_cpf']) and (not options['companies'])
+
+if no_named_args and len(args) == 2:
+    CNPJ_CPF_CSV_PATH, COMPANIES_CSV_PATH = args
+elif no_named_args and len(args) != 2:
+    print("The script expects to either receive named args or")
+    print("two unnamed args, falling to default values")
+elif not os.path.exists(CNPJ_CPF_CSV_PATH):
+    print("No file found at {}, falling to default.".format(CNPJ_CPF_CSV_PATH))
+
+
 def decompose_main_activity(value):
     struct = json.loads(value.replace('\'', '"'))
     if struct:
@@ -24,7 +53,7 @@ def decompose_secondary_activities(value):
 
 
 
-data = pd.read_csv(os.path.join('data', 'cnpj-info.xz'),
+data = pd.read_csv(CNPJ_CPF_CSV_PATH,
                    dtype={'atividade_principal': np.str,
                           'atividades_secundarias': np.str,
                           'complemento': np.str,
@@ -81,7 +110,7 @@ data = pd.concat([
     data['secondary_activities'].apply(decompose_secondary_activities)],
     axis=1)
 
-data.to_csv(os.path.join('data', 'companies.xz'),
+data.to_csv(COMPANIES_CSV_PATH,
             compression='xz',
             encoding='utf-8',
             index=False)
