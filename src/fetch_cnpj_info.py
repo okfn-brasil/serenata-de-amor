@@ -16,7 +16,7 @@ import logging
 from datetime import datetime, timedelta
 
 LOGGER_NAME = 'fetch_cnpj'
-TEMP_DATASET_PATH = os.path.join('data', 'companies-parcial.xz')
+TEMP_DATASET_PATH = os.path.join('data', 'companies-partial.xz')
 INFO_DATASET_PATH = os.path.join('data', '{0}-{1}-{2}-companies.xz')
 global logger, cnpj_list, num_threads, proxies_list
 
@@ -40,7 +40,7 @@ def configure_logger(verbosity):
 def transform_and_translate_data(json_data):
     """
     Transform main activity, secondary activity and partners list in
-    multi columns and translate coluns names.
+    multi columns and translate column names.
     """
 
     try:
