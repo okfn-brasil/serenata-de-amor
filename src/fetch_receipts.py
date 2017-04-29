@@ -185,7 +185,7 @@ def download(receipt):
     os.makedirs(os.path.dirname(receipt.path), exist_ok=True)
     if not os.path.exists(receipt.path):
         try:
-            file_name, header = urlretrieve(receipt.url, receipt.path)
+            _, header = urlretrieve(receipt.url, receipt.path)
             return ('ok', receipt, header)
         except HTTPError as e:
             return ('error', receipt, repr(e))

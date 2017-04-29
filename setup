@@ -3,12 +3,16 @@
 import pip
 from shutil import copyfile, which
 import subprocess
+import sys
 
 copyfile('config.ini.example', 'config.ini')
 
 pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
-subprocess.call(['conda', 'config', '--add', 'channels', 'conda-forge'])
-subprocess.call(['conda', 'install', '--yes', '--file', 'conda_requirements.txt'])
+try:
+    subprocess.call(['conda', 'config', '--add', 'channels', 'conda-forge'])
+    subprocess.call(['conda', 'install', '--yes', '--file', 'conda_requirements.txt'])
+except:
+    sys.exit('ERROR: Please, install Anaconda. (Take a look in CONTRIBUTING.md)')
 
 if which('unzip') == None:
     print('The following executables are needed and were not found: unzip')

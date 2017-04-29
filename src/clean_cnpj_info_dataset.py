@@ -8,8 +8,8 @@ def decompose_main_activity(value):
     if struct:
         return pd.Series(struct[0]). \
             rename_axis({'code': 'main_activity_code', 'text': 'main_activity'})
-    else:
-        return pd.Series({}, index=['main_activity_code', 'main_activity'])
+
+    return pd.Series({}, index=['main_activity_code', 'main_activity'])
 
 def decompose_secondary_activities(value):
     struct = json.loads(value.replace('\'', '"'))
@@ -19,8 +19,8 @@ def decompose_secondary_activities(value):
                          'text': 'secondary_activity_%i' % (index + 1)})
             for index, activity in enumerate(struct)]
         return pd.concat(new_attributes)
-    else:
-        return pd.Series()
+
+    return pd.Series()
 
 
 
