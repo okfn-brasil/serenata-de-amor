@@ -1,21 +1,15 @@
-#!/usr/bin/env python3
+#!/usr/bin/bash
 
-import pip
-from shutil import copyfile, which
-import subprocess
+cp config.ini.example config.ini
 
-copyfile('config.ini.example', 'config.ini')
+pip install --upgrade -r requirements.txt
+conda pip config --add channels conda-forge
+conda install --yes --file conda_requirements.txt
 
-pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
-subprocess.call(['conda', 'config', '--add', 'channels', 'conda-forge'])
-subprocess.call(['conda', 'install', '--yes', '--file', 'conda_requirements.txt'])
+if ! which unzip 1>/dev/null 2>/dev/null; then
+    echo "The following executables are needed and were not found: unzip"
+fi
 
-if which('unzip') == None:
-    print('The following executables are needed and were not found: unzip')
+echo "Downloading datasets (this might take several minutes depending on your internet connection)"
 
-print('Downloading datasets (this might take several minutes depending on your internet connection)')
-
-
-# This is imported here because serenata_toolbox is only installed when pip.main is called (line 9)
-from serenata_toolbox.datasets import fetch_latest_backup
-fetch_latest_backup('data/')
+python3 ./src/fetch_datasets.py
