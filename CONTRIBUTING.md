@@ -11,12 +11,12 @@ Also you should read [this article](https://datasciencebr.com/how-does-one-contr
 
 A lot of discussions about ideas take place in the [Issues](https://github.com/datasciencebr/serenata-de-amor/issues) section. There you can catch up with what's going on and also suggest new ideas.
 
-1. _Fork_ this repository
+1. [Fork](https://github.com/datasciencebr/serenata-de-amor/fork) this repository
 2. Clone the repository: `git clone http://github.com/[YOUR_GITHUB_USER]/serenata-de-amor.git`
 3. Create your branch: `$ git checkout -b new-stuff`
 4. Commit your changes: `$ git commit -am 'My cool contribution'`
-5. Push to the branch to your fork: `$ git push origin new-stuff`
-6. Create a new _Pull Request_
+5. Push the branch to your fork: `$ git push origin new-stuff`
+6. Create a new [Pull Request](https://github.com/datasciencebr/serenata-de-amor/compare)
 
 ## Environment
 
@@ -89,7 +89,7 @@ $ docker-compose run --rm jupyter bash
 
 If you plan to use Neo4j in your analysis and you don't have it installed, the easiest way to put it running is using `Docker`. If you prefer to install in a traditional way, please refer to Neo4j website for more information about [installation steps](https://neo4j.com/).
 
-Please refer to `2017-02-12-marcusrehm-neo4j-guide` and `2017-02-12-marcusrehm-neo4j-example2` notebooks for more information on how to use it.
+Please refer to [2017-02-12-marcusrehm-neo4j-guide](develop/2017-02-12-marcusrehm-neo4j-guide.ipynb) and [2017-02-12-marcusrehm-neo4j-example2](develop/2017-02-12-marcusrehm-neo4j-example2.ipynb) notebooks for more information on how to use it.
 
 Neo4j integration in Jupyter notebooks is based on Nichole White's work. It can be found [here](https://github.com/nicolewhite/neo4j-jupyter).
 
@@ -217,5 +217,5 @@ You can read more about these datasets at:
 - [companies-with-federal-sanctions-datasets.md](docs/companies-with-federal-sanctions-datasets.md)
 
 The notebook with the analysis are:
-- 2016-12-12-marcusrehm-federal-budget-companies-with-sanctions.ipynb
-- 2017-01-15-marcusrehm-congressperson-reimbursements-from-companies-with-sanctions.ipynb
+- [2016-12-12-marcusrehm-federal-budget-companies-with-sanctions.ipynb](develop/2016-12-12-marcusrehm-federal-budget-companies-with-sanctions.ipynb)
+- [2017-01-15-marcusrehm-congressperson-reimbursements-from-companies-with-sanctions.ipynb](develop/2017-01-15-marcusrehm-congressperson-reimbursements-from-companies-with-sanctions.ipynb)
