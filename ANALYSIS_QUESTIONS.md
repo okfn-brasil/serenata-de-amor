@@ -1,10 +1,9 @@
-# Analysis questions
+# Possible research questions
 
-- Qual período do ano há mais gastos?
-- Qual a relação entre o perfil de gastos e assiduidade do parlamentar?
-- Quais os partidos que mais gastam em SC?
-- Em média, qual deputado gasta mais?
-- Os deputados gastam mais no seus aniversário?
-- Gastos com "pousadas" são reembolsados?
-- Qual a profissão que gasta mais?
-- Nível de escolaridade que gasta mais?
+- In which period of the year congressmen spend more?
+- Is there a relation between spending patterns and session attendance?
+- Which party spends more, in average, in Santa Catarina?
+- In average, which are the top spenders?
+- Do congressmen spend more on their birthdays?
+- Which professions are associated with most spending?
+- Do education level relates with spending patterns?
