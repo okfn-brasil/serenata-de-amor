@@ -16,10 +16,10 @@ parser.add_option("--companies", dest="companies", metavar="FILE",
 (options, args) = parser.parse_args()
 
 if options['cnpj_cpf']:
-    CNPJ_CPF_CSV_PATH = os.path.join('data', 'cnpj-info.xz')
+    CNPJ_CPF_CSV_PATH = options['cnpj_cpf']
 
 if options['companies']:
-    COMPANIES_CSV_PATH = os.path.join('data', 'companies.xz')
+    COMPANIES_CSV_PATH = options['companies']
 
 no_named_args = (not options['cnpj_cpf']) and (not options['companies'])
 
