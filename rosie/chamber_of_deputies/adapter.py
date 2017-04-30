@@ -33,6 +33,10 @@ class Adapter:
     def prepare_dataset(self):
         columns = {v: k for k, v in COLUMNS.items()}
         self._dataset.rename(columns=columns, inplace=True)
+        self._dataset['document_type'].replace({3: None}, inplace=True)
+        self._dataset['document_type'] = self._dataset['document_type'].astype('category')
+        types = ['bill_of_sale', 'simple_receipt', 'expense_made_abroad']
+        self._dataset['document_type'].cat.rename_categories(types, inplace=True)
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)

@@ -17,4 +17,4 @@ class InvalidCnpjCpfClassifier(TransformerMixin):
         return np.r_[X.apply(self.__is_invalid, axis=1)]
 
     def __is_invalid(self, row):
-        return (row['document_type'] in [0, 1]) & (not cpfcnpj.validate(str(row['recipient_id'])))
+        return (row['document_type'] in ['bill_of_sale', 'simple_receipt']) & (not cpfcnpj.validate(str(row['recipient_id'])))
