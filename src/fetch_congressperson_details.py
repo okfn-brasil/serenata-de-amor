@@ -101,12 +101,7 @@ class CongresspersonDetails:
 
         content = str(page.content.decode('utf-8'))
 
-        data = self.parse_repository(content, congress_id)
-
-        if not data:
-            print('error!')
-
-        return data
+        return self.parse_repository(content, congress_id)
 
     def get_civil_names(self):
         congresspeople_ids = self.get_all_congresspeople_ids()
