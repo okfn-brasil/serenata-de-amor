@@ -6,6 +6,12 @@ from serenata_toolbox.ceap_dataset import CEAPDataset
 from serenata_toolbox.datasets import fetch
 
 
+COLUMNS = {
+  'net_value': 'total_net_value',
+  'recipient_id': 'cnpj_cpf',
+  'recipient': 'supplier',
+}
+
 class Adapter:
     COMPANIES_DATASET = '2016-09-03-companies.xz'
 
@@ -17,10 +23,16 @@ class Adapter:
         self.update_datasets()
         reimbursements = self.get_reimbursements()
         companies = self.get_companies()
-        return pd.merge(reimbursements, companies,
-                        how='left',
-                        left_on='cnpj_cpf',
-                        right_on='cnpj')
+        self._dataset = pd.merge(reimbursements, companies,
+                                 how='left',
+                                 left_on='cnpj_cpf',
+                                 right_on='cnpj')
+        self.prepare_dataset()
+        return self._dataset
+
+    def prepare_dataset(self):
+        columns = {v: k for k, v in COLUMNS.items()}
+        self._dataset.rename(columns=columns, inplace=True)
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)

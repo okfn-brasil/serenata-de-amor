@@ -12,7 +12,7 @@ class TestMealPriceOutlierClassifier(TestCase):
 
     def setUp(self):
         self.dataset = pd.read_csv('rosie/chamber_of_deputies/tests/fixtures/meal_price_outlier_classifier.csv',
-                                   dtype={'cnpj_cpf': np.str})
+                                   dtype={'recipient_id': np.str})
         self.subject = MealPriceOutlierClassifier()
         self.subject.fit(self.dataset)
 
@@ -25,9 +25,9 @@ class TestMealPriceOutlierClassifier(TestCase):
     def test_predict_outlier_for_common_cnpjs_when_value_is_greater_than_mean_plus_3_stds(self):
         row = pd.Series({'applicant_id': 444,
                          'subquota_description': 'Congressperson meal',
-                         'cnpj_cpf': '67661714000111',
-                         'supplier': 'B Restaurant',
-                         'total_net_value': 178})
+                         'recipient_id': '67661714000111',
+                         'recipient': 'B Restaurant',
+                         'net_value': 178})
         X = pd.DataFrame().append(row, ignore_index=True)
         prediction = self.subject.predict(X)
         self.assertEqual(-1, prediction[0])
@@ -35,9 +35,9 @@ class TestMealPriceOutlierClassifier(TestCase):
     def test_predict_inlier_for_common_cnpjs_when_value_is_less_than_mean_plus_3_stds(self):
         row = pd.Series({'applicant_id': 444,
                          'subquota_description': 'Congressperson meal',
-                         'cnpj_cpf': '67661714000111',
-                         'supplier': 'B Restaurant',
-                         'total_net_value': 177})
+                         'recipient_id': '67661714000111',
+                         'recipient': 'B Restaurant',
+                         'net_value': 177})
         X = pd.DataFrame().append(row, ignore_index=True)
         prediction = self.subject.predict(X)
         self.assertEqual(1, prediction[0])
@@ -45,9 +45,9 @@ class TestMealPriceOutlierClassifier(TestCase):
     def test_predict_outlier_for_non_common_cnpjs_when_value_is_greater_than_mean_plus_4_stds(self):
         row = pd.Series({'applicant_id': 444,
                          'subquota_description': 'Congressperson meal',
-                         'cnpj_cpf': '22412242000125',
-                         'supplier': 'D Restaurant',
-                         'total_net_value': 178})
+                         'recipient_id': '22412242000125',
+                         'recipient': 'D Restaurant',
+                         'net_value': 178})
         X = pd.DataFrame().append(row, ignore_index=True)
         prediction = self.subject.predict(X)
         self.assertEqual(-1, prediction[0])
@@ -55,9 +55,9 @@ class TestMealPriceOutlierClassifier(TestCase):
     def test_predict_inlier_for_non_common_cnpjs_when_value_is_less_than_mean_plus_4_stds(self):
         row = pd.Series({'applicant_id': 444,
                          'subquota_description': 'Congressperson meal',
-                         'cnpj_cpf': '22412242000125',
-                         'supplier': 'D Restaurant',
-                         'total_net_value': 177})
+                         'recipient_id': '22412242000125',
+                         'recipient': 'D Restaurant',
+                         'net_value': 177})
         X = pd.DataFrame().append(row, ignore_index=True)
         prediction = self.subject.predict(X)
         self.assertEqual(1, prediction[0])

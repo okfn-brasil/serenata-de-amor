@@ -10,7 +10,7 @@ class TestInvalidCnpjCpfClassifier(TestCase):
 
     def setUp(self):
         self.dataset = pd.read_csv('rosie/core/tests/fixtures/invalid_cnpj_cpf_classifier.csv',
-                                   dtype={'cnpj_cpf': np.str})
+                                   dtype={'recipient_id': np.str})
         self.subject = InvalidCnpjCpfClassifier()
 
     def test_is_valid_cnpj(self):

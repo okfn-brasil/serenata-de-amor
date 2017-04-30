@@ -1,4 +1,4 @@
-applicant_id,congressperson_id,issue_date,subquota_description,cnpj_cpf,latitude,longitude
+applicant_id,congressperson_id,issue_date,subquota_description,recipient_id,latitude,longitude
 999,999,2016-01-01,Congressperson meal,08378940000120,-9.9753770,-67.8248977
 999,999,2016-01-01,Congressperson meal,08378940000120,-9.9753770,-67.8248977
 999,999,2016-01-01,Congressperson meal,08378940000120,-9.9753770,-67.8248977

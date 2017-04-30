@@ -62,7 +62,7 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
 
 
     def __create_columns(self):
-        self._X['net_value_int'] = (self._X['total_net_value'] * 100).apply(int)
+        self._X['net_value_int'] = (self._X['net_value'] * 100).apply(int)
 
         self._X['coerced_issue_date'] = \
             pd.to_datetime(self._X['issue_date'], errors='coerce')

@@ -18,9 +18,9 @@ class TestChamberOfDeputies(TestCase):
         row = pd.Series({'applicant_id': 444,
                          'document_id': 999,
                          'subquota_description': 'Congressperson meal',
-                         'cnpj_cpf': '67661714000111',
-                         'supplier': 'B Restaurant',
-                         'total_net_value': 178,
+                         'recipient_id': '67661714000111',
+                         'recipient': 'B Restaurant',
+                         'net_value': 178,
                          'year': 2016})
         self.dataset = pd.DataFrame().append(row, ignore_index=True)
         self.temp_dir = mkdtemp()

@@ -1,4 +1,4 @@
-applicant_id,subquota_description,cnpj_cpf,supplier,total_net_value
+applicant_id,subquota_description,recipient_id,recipient,net_value
 999,Congressperson meal,47667414122,João da Silva,9999999
 999,Congressperson meal,24624607000100,Hotel X,30
 999,Congressperson meal,24624607000101,Y Hotels,30
