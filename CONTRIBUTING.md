@@ -178,6 +178,8 @@ fetch_latest_backup('data/')
 ##### Purchase suppliers
 1. `src/fetch_purchase_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchase-suppliers.xz`.
 
+##### Congresspeople details
+1. `src/fetch_congressperson_details.py` collects personal details (civil name, birth date and gender) from congresspeople. The file is named as follows: `YYYY-MM-DD-congressperson-details.xz`.
 
 ### Datasets (`data/`)
 
