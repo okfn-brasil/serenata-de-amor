@@ -21,12 +21,12 @@ class Adapter:
     @property
     def dataset(self):
         self.update_datasets()
-        reimbursements = self.get_reimbursements()
+        self.get_reimbursements()
         companies = self.get_companies()
-        self._dataset = pd.merge(reimbursements, companies,
-                                 how='left',
-                                 left_on='cnpj_cpf',
-                                 right_on='cnpj')
+        self._dataset = self._dataset.merge(companies,
+                                            how='left',
+                                            left_on='cnpj_cpf',
+                                            right_on='cnpj')
         self.prepare_dataset()
         return self._dataset
 
@@ -44,22 +44,21 @@ class Adapter:
         fetch(self.COMPANIES_DATASET, self.path)
 
     def get_reimbursements(self):
-        dataset = \
-            pd.read_csv(os.path.join(self.path, 'reimbursements.xz'),
-                        dtype={'applicant_id': np.str,
-                               'cnpj_cpf': np.str,
-                               'congressperson_id': np.str,
-                               'subquota_number': np.str},
-                        low_memory=False)
-        dataset['issue_date'] = pd.to_datetime(dataset['issue_date'],
-                                               errors='coerce')
-        return dataset
+        path = os.path.join(self.path, 'reimbursements.xz')
+        self._dataset = pd.read_csv(path,
+                                    dtype={'applicant_id': np.str,
+                                           'cnpj_cpf': np.str,
+                                           'congressperson_id': np.str,
+                                           'subquota_number': np.str},
+                                    low_memory=False)
+        self._dataset['issue_date'] = pd.to_datetime(
+            self._dataset['issue_date'], errors='coerce')
+        return self._dataset
 
     def get_companies(self):
-        dataset = pd.read_csv(os.path.join(self.path, self.COMPANIES_DATASET),
-                              dtype={'cnpj': np.str},
-                              low_memory=False)
+        path = os.path.join(self.path, self.COMPANIES_DATASET)
+        dataset = pd.read_csv(path, dtype={'cnpj': np.str}, low_memory=False)
         dataset['cnpj'] = dataset['cnpj'].str.replace(r'\D', '')
-        dataset['situation_date'] = pd.to_datetime(dataset['situation_date'],
-                                                   errors='coerce')
+        dataset['situation_date'] = pd.to_datetime(
+            dataset['situation_date'], errors='coerce')
         return dataset
