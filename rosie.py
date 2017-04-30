@@ -10,7 +10,7 @@ def entered_command(argv):
 def help():
     message = (
         'Usages:',
-        '  python rosie.py run <module> [<path to output directory>]',
+        '  python rosie.py run chamber_of_deputies [<path to output directory>]',
         '  python rosie.py test',
     )
     print('\n'.join(message))
