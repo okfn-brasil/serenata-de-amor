@@ -15,7 +15,6 @@ CLASSIFIERS = {
     'irregular_companies_classifier': IrregularCompaniesClassifier
 }
 
-COLUMNS = {
-  'value': 'total_net_value',
-  'unique_ids': ['applicant_id', 'year', 'document_id'],
-}
+UNIQUE_IDS = ['applicant_id', 'year', 'document_id']
+
+VALUE = 'total_net_value'
