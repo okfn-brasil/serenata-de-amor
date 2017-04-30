@@ -12,4 +12,4 @@ fi
 
 echo "Downloading datasets (this might take several minutes depending on your internet connection)"
 
-python3 ./src/fetch_datasets.py
+python ./src/fetch_datasets.py
