@@ -7,10 +7,11 @@ from serenata_toolbox.datasets import fetch
 
 
 COLUMNS = {
-  'net_value': 'total_net_value',
-  'recipient_id': 'cnpj_cpf',
-  'recipient': 'supplier',
+    'net_value': 'total_net_value',
+    'recipient_id': 'cnpj_cpf',
+    'recipient': 'supplier',
 }
+
 
 class Adapter:
     COMPANIES_DATASET = '2016-09-03-companies.xz'
@@ -31,12 +32,22 @@ class Adapter:
         return self._dataset
 
     def prepare_dataset(self):
+        self.rename_columns()
+        self.rename_categories()
+
+    def rename_columns(self):
         columns = {v: k for k, v in COLUMNS.items()}
         self._dataset.rename(columns=columns, inplace=True)
+
+    def rename_categories(self):
         self._dataset['document_type'].replace({3: None}, inplace=True)
-        self._dataset['document_type'] = self._dataset['document_type'].astype('category')
+        self._dataset['document_type'] = self._dataset['document_type'].astype(
+            'category')
         types = ['bill_of_sale', 'simple_receipt', 'expense_made_abroad']
-        self._dataset['document_type'].cat.rename_categories(types, inplace=True)
+        self._dataset['document_type'].cat.rename_categories(
+            types, inplace=True)
+        meal_rows = self._dataset['subquota_description'] == 'Congressperson meal'
+        self._dataset.loc[meal_rows, 'subquota_description'] = 'Meal'
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)
