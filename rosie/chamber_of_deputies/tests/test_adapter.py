@@ -5,21 +5,21 @@ from unittest import TestCase
 from unittest.mock import patch
 from shutil import copy2
 
-from rosie.chamber_of_deputies.adapter import Adapter
+from rosie.chamber_of_deputies.adapter import Adapter as subject_class
 
 
-class TestDataset(TestCase):
+class TestAdapter(TestCase):
 
     def setUp(self):
         self.temp_path = mkdtemp()
         fixtures = os.path.join('rosie', 'chamber_of_deputies', 'tests', 'fixtures')
         copies = (
-            ('companies.xz', Adapter.COMPANIES_DATASET),
+            ('companies.xz', subject_class.COMPANIES_DATASET),
             ('reimbursements.xz', 'reimbursements.xz')
         )
         for source, target in copies:
             copy2(os.path.join(fixtures, source), os.path.join(self.temp_path, target))
-        self.subject = Adapter(self.temp_path)
+        self.subject = subject_class(self.temp_path)
 
     def tearDown(self):
         shutil.rmtree(self.temp_path)
