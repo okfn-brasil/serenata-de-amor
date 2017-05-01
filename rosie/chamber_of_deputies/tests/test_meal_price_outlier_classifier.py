@@ -24,7 +24,7 @@ class TestMealPriceOutlierClassifier(TestCase):
 
     def test_predict_outlier_for_common_cnpjs_when_value_is_greater_than_mean_plus_3_stds(self):
         row = pd.Series({'applicant_id': 444,
-                         'subquota_description': 'Congressperson meal',
+                         'category': 'Meal',
                          'recipient_id': '67661714000111',
                          'recipient': 'B Restaurant',
                          'net_value': 178})
@@ -34,7 +34,7 @@ class TestMealPriceOutlierClassifier(TestCase):
 
     def test_predict_inlier_for_common_cnpjs_when_value_is_less_than_mean_plus_3_stds(self):
         row = pd.Series({'applicant_id': 444,
-                         'subquota_description': 'Congressperson meal',
+                         'category': 'Meal',
                          'recipient_id': '67661714000111',
                          'recipient': 'B Restaurant',
                          'net_value': 177})
@@ -44,7 +44,7 @@ class TestMealPriceOutlierClassifier(TestCase):
 
     def test_predict_outlier_for_non_common_cnpjs_when_value_is_greater_than_mean_plus_4_stds(self):
         row = pd.Series({'applicant_id': 444,
-                         'subquota_description': 'Congressperson meal',
+                         'category': 'Meal',
                          'recipient_id': '22412242000125',
                          'recipient': 'D Restaurant',
                          'net_value': 178})
@@ -54,7 +54,7 @@ class TestMealPriceOutlierClassifier(TestCase):
 
     def test_predict_inlier_for_non_common_cnpjs_when_value_is_less_than_mean_plus_4_stds(self):
         row = pd.Series({'applicant_id': 444,
-                         'subquota_description': 'Congressperson meal',
+                         'category': 'Meal',
                          'recipient_id': '22412242000125',
                          'recipient': 'D Restaurant',
                          'net_value': 177})

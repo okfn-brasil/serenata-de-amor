@@ -60,7 +60,7 @@ class MealPriceOutlierClassifier(TransformerMixin):
         return _X['y']
 
     def __applicable_rows(self, X):
-        return (X['subquota_description'] == 'Congressperson meal') & \
+        return (X['category'] == 'Meal') & \
             (X['recipient_id'].str.len() == 14) & \
             (~X['recipient'].apply(self.__normalize_string).str.contains(self.HOTEL_REGEX))
 

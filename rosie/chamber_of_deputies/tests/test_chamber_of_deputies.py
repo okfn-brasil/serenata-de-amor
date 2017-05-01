@@ -17,10 +17,6 @@ class TestChamberOfDeputies(TestCase):
     def setUp(self):
         row = pd.Series({'applicant_id': 444,
                          'document_id': 999,
-                         'subquota_description': 'Congressperson meal',
-                         'recipient_id': '67661714000111',
-                         'recipient': 'B Restaurant',
-                         'net_value': 178,
                          'year': 2016})
         self.dataset = pd.DataFrame().append(row, ignore_index=True)
         self.temp_dir = mkdtemp()

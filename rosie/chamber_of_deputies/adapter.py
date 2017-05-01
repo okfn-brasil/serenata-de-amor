@@ -7,6 +7,7 @@ from serenata_toolbox.datasets import fetch
 
 
 COLUMNS = {
+    'category': 'subquota_description',
     'net_value': 'total_net_value',
     'recipient_id': 'cnpj_cpf',
     'recipient': 'supplier',
@@ -46,8 +47,8 @@ class Adapter:
         types = ['bill_of_sale', 'simple_receipt', 'expense_made_abroad']
         self._dataset['document_type'].cat.rename_categories(
             types, inplace=True)
-        meal_rows = self._dataset['subquota_description'] == 'Congressperson meal'
-        self._dataset.loc[meal_rows, 'subquota_description'] = 'Meal'
+        self._dataset['category'] = self._dataset['category'].replace(
+            {'Congressperson meal': 'Meal'})
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)

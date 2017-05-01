@@ -30,7 +30,7 @@ class TestAdapter(TestCase):
     @patch('rosie.chamber_of_deputies.adapter.CEAPDataset')
     @patch('rosie.chamber_of_deputies.adapter.fetch')
     def test_get_performs_a_left_merge_between_reimbursements_and_companies(self, fetch, ceap):
-        self.assertEqual(5, len(self.subject.dataset))
+        self.assertEqual(6, len(self.subject.dataset))
         self.assertEqual(1, self.subject.dataset['legal_entity'].isnull().sum())
 
     @patch('rosie.chamber_of_deputies.adapter.CEAPDataset')
@@ -39,7 +39,7 @@ class TestAdapter(TestCase):
         """
         * Rename columns.
         * Make `document_type` a category column.
-        * Rename values for subquota_description.
+        * Rename values for `category`.
         """
         dataset = self.subject.dataset
         self.assertTrue(set(ADAPTER_COLUMNS.keys()).issubset(set(dataset.columns)))
@@ -48,6 +48,6 @@ class TestAdapter(TestCase):
                          dataset['document_type'].cat.categories.tolist())
         fixture = pd.read_csv(os.path.join(self.fixtures_path, 'reimbursements.xz'))
         meal_rows = fixture \
-            .query('subquota_description == "Congressperson meal"')['subquota_description'].index
+            .query('subquota_description == "Congressperson meal"').index
         self.assertEqual(['Meal'],
-                         dataset.loc[meal_rows, 'subquota_description'].unique().tolist())
+                         dataset.loc[meal_rows, 'category'].unique().tolist())
