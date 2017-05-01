@@ -7,7 +7,20 @@ from sklearn.cluster import KMeans
 
 
 class MealPriceOutlierClassifier(TransformerMixin):
+    """
+    Meal Price Outlier classifier.
 
+    Dataset
+    -------
+    applicant_id : string column
+        A personal identifier code for every person making expenses.
+
+    net_value : float column
+        The value of the expense.
+
+    recipient_id : string column
+        A CNPJ (Brazilian company ID) or CPF (Brazilian personal tax ID).
+    """
 
     HOTEL_REGEX = r'hote(?:(?:ls?)|is)'
     CLUSTER_KEYS = ['mean', 'std']

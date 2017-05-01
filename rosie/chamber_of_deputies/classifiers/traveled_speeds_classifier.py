@@ -8,6 +8,31 @@ from sklearn.utils.validation import check_is_fitted
 
 
 class TraveledSpeedsClassifier(TransformerMixin):
+    """
+    Traveled Speeds classifier.
+
+    Dataset
+    -------
+    applicant_id : category column
+        A personal identifier code for every person making expenses.
+
+    category : category column
+        Category of the expense. The model will be applied just in rows where
+        the value is equal to "Meal".
+
+    is_party_expense : bool column
+        If the row corresponds to a party expense or not. The model will be
+        applied just in rows where the value is equal to `False`.
+
+    issue_date : datetime column
+        Date when the expense was made.
+
+    latitude : float column
+        Latitude of the place where the expense was made.
+
+    longitude : float column
+        Longitude of the place where the expense was made.
+    """
 
     AGG_KEYS = ['applicant_id', 'issue_date']
 

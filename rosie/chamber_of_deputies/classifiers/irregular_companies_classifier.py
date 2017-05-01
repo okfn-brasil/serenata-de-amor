@@ -5,6 +5,24 @@ from sklearn.base import TransformerMixin
 
 
 class IrregularCompaniesClassifier(TransformerMixin):
+    """
+    Irregular Companies classifier.
+
+    Check for the official state of the company in the
+    Brazilian Federal Revenue and reports for rows with companies unauthorized
+    to sell products or services.
+
+    Dataset
+    -------
+    issue_date : datetime column
+        Date when the expense was made.
+
+    situation : string column
+        Situation of the company according to the Brazilian Federal Revenue.
+
+    situation_date : datetime column
+        Date when the situation was last updated.
+    """
 
     def fit(self, X):
         return self
