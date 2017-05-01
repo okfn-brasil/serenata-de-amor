@@ -40,6 +40,7 @@ class TestAdapter(TestCase):
         * Rename columns.
         * Make `document_type` a category column.
         * Rename values for `category`.
+        * Create `is_party_expense` column.
         """
         dataset = self.subject.dataset
         self.assertTrue(set(ADAPTER_COLUMNS.keys()).issubset(set(dataset.columns)))
@@ -51,3 +52,6 @@ class TestAdapter(TestCase):
             .query('subquota_description == "Congressperson meal"').index
         self.assertEqual(['Meal'],
                          dataset.loc[meal_rows, 'category'].unique().tolist())
+        party_expense_rows = fixture[fixture['congressperson_id'].isnull()].index
+        self.assertEqual([True],
+                         dataset.loc[party_expense_rows, 'is_party_expense'].unique().tolist())

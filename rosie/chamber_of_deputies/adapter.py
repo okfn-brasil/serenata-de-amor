@@ -49,6 +49,8 @@ class Adapter:
             types, inplace=True)
         self._dataset['category'] = self._dataset['category'].replace(
             {'Congressperson meal': 'Meal'})
+        self._dataset['is_party_expense'] = \
+            self._dataset['congressperson_id'].isnull()
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)
