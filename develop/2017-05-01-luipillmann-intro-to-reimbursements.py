@@ -15,6 +15,9 @@
 # - Who were the top spenders of all time in absolute terms?
 # - Who were the most hired suppliers by amount paid?
 # - Which are the most expensive individual reimbursements?
+# 
+# Questions are not explicitly answered (e.g. written answers). Charts and tables are provided for free interpretation.
+# 
 # ---
 
 # In[1]:
@@ -196,23 +199,66 @@ plt.title('Total reimbursements issued per congressperson (all years)')
 
 
 # ### Who were the most hired suppliers by amount paid?
-# This table shows the top service providers by amount received in total (all years)
+# This analysis identifies suppliers by their unique CNPJ. It is worth noting that, commonly, some telecom carriers use different CNPJ for its subsidiaries in different states (e.g. TIM SP, TIM Sul, etc).
 
 # In[18]:
 
-r.groupby(['cnpj_cpf', 'supplier', 'subquota_description'])    .sum()    .sort_values(by='total_net_value', ascending=False)    .head(20)
+sp = r.groupby(['cnpj_cpf', 'supplier', 'subquota_description'])        .sum()        .drop(['year', 'month'], 1)        .sort_values(by='total_net_value', ascending=False)
 
+sp.reset_index(inplace=True)  
+sp = sp.set_index('cnpj_cpf')
 
-# #### Which congressmen hired the top supplier?
+sp.head()
+
 
 # In[19]:
 
-r.groupby(['supplier', 'cnpj_cpf', 'subquota_description', 'congressperson_name'])    .sum()    .sort_values(by='total_net_value', ascending=False)    .loc['DOUGLAS CUNHA DA SILVA ME']    .total_net_value
+cnpj = r.groupby('cnpj_cpf')        .sum()        .drop(['year', 'month'], 1)        .sort_values(by='total_net_value', ascending=False)
+
+cnpj.head()
+
+
+# In[20]:
+
+# Adds supplier name besides total_net_value in cnpj df
+
+cnpj['supplier'] = ''  # Creates empty column
+cnpj = cnpj.head(1000)  # Gets only first 1000 for this analysis
+
+
+# In[21]:
+
+# Looks up for supplier names in sp df and fills cnpj df (it takes a while to compute...)
+
+for i in range(len(cnpj)):
+    try:
+        cnpj.set_value(cnpj.index[i], 'supplier', sp.loc[cnpj.index[i]].supplier.iloc[0])
+    except:
+        cnpj.set_value(cnpj.index[i], 'supplier', sp.loc[cnpj.index[i]].supplier)
+
+cnpj.head(10)
+
+
+# In[22]:
+
+# Fixes better indexing to plot in a copy
+sp2 = cnpj.set_index('supplier')
+
+sp2.head(30)    .plot(kind='bar')
+
+plt.title('Most hired suppliers (unique CNPJ) by total amount paid (R$)')
+
+
+# #### Which congressmen hired the top supplier and how much did they pay?
+
+# In[23]:
+
+r.groupby(['cnpj_cpf', 'congressperson_name'])    .sum()    .sort_values(by='total_net_value', ascending=False)    .loc['02558157000162']    .total_net_value    .head(20)
 
 
 # ### Which are the most expensive individual reimbursements?
 
-# In[20]:
+# In[24]:
 
 r = r.sort_values(by='total_net_value', ascending=False)
 r.head(20)
