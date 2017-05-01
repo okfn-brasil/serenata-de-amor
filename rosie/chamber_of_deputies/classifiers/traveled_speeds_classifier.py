@@ -64,7 +64,8 @@ class TraveledSpeedsClassifier(TransformerMixin):
         return (X['category'] == 'Meal') & \
             (-73.992222 < X['longitude']) & (X['longitude'] < -34.7916667) & \
             (-33.742222 < X['latitude']) & (X['latitude'] < 5.2722222) & \
-            X[['congressperson_id', 'latitude', 'longitude']].notnull().all(axis=1)
+            ~X['is_party_expense'] & \
+            X[['latitude', 'longitude']].notnull().all(axis=1)
 
     def __calculate_sum_distances(self, X):
         coordinate_list = X[['latitude', 'longitude']].values
