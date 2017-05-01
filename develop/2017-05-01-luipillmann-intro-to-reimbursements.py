@@ -7,8 +7,8 @@
 # 
 # It aims to provide an example of basic analyses and visualization by exploring topics such as:
 # 
-# - Evolution of avarege monthly spending along the years
-# - Avarege monthly spending per congressperson along the years
+# - Evolution of average monthly spending along the years
+# - Average monthly spending per congressperson along the years
 # - Seasonality in reimbursements
 # - Reimbursements by type of spending
 # - Which party has the most spending congressmen?
@@ -57,7 +57,7 @@ r.head()
 
 # ## Questions & answers
 
-# ### Evolution of avarege monthly spending along the years
+# ### Evolution of average monthly spending along the years
 # Are congressmen spending more today in relation to past years?
 
 # #### How many congressmen in each year?
@@ -98,7 +98,7 @@ a.monthly_value_per_congressmen.plot(kind='bar')
 plt.title('Fluctuation of average monthly CEAP spending along the years (R$)')
 
 
-# ### Avarege monthly spending per congressperson along the years
+# ### Average monthly spending per congressperson along the years
 # This table shows the data above detailed per congressperson.
 
 # In[8]:
