@@ -13,6 +13,7 @@ import requests
 import requests.exceptions
 import re
 import logging
+import json
 from datetime import datetime, timedelta
 
 LOGGER_NAME = 'fetch_cnpj'
@@ -21,11 +22,11 @@ INFO_DATASET_PATH = os.path.join('data', '{0}-{1}-{2}-companies.xz')
 global logger, cnpj_list, num_threads, proxies_list
 
 # source files mapped for extract cnpj
-datasets_cols = {'reimbursements': 'cnpj_cpf',
-                 'current-year': 'cnpj_cpf',
-                 'last-year': 'cnpj_cpf',
-                 'previous-years': 'cnpj_cpf',
-                 'amendments': 'amendment_beneficiary'}
+
+with open('table_config.json') as json_file:
+    json_config = json.load(json_file)
+
+datasets_cols = json_config['cnpj_cpf']
 
 
 def configure_logger(verbosity):
