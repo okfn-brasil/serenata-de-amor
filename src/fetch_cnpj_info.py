@@ -23,7 +23,8 @@ global logger, cnpj_list, num_threads, proxies_list
 
 # source files mapped for extract cnpj
 
-with open('table_config.json') as json_file:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                       'table_config.json')) as json_file:
     json_config = json.load(json_file)
 
 datasets_cols = json_config['cnpj_cpf']
