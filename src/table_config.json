@@ -1,0 +1,9 @@
+{
+    "cnpj_cpf": {
+        "reimbursements": "cnpj_cpf",
+        "current-year": "cnpj_cpf",
+        "last-year": "cnpj_cpf",
+        "previous-years": "cnpj_cpf",
+        "amendments": "amendment_beneficiary"
+    }
+}

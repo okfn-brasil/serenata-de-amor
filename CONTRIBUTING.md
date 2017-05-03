@@ -148,8 +148,7 @@ fetch_latest_backup('data/')
 
 
 ##### Suppliers information (CNPJ)
-1. `src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info.
-1. `src/clean_cnpj_info_dataset.py` clean up and translate the supplier info dataset.
+1. `src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info, after that, cleans up and translates the dataset.
 1. `src/geocode_addresses.py` iterates over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
 1. `src/fetch_sex_places.py` fetches the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (use `--help` for further instructions).
 
