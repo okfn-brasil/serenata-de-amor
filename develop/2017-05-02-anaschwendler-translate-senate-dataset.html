@@ -11767,7 +11767,7 @@ div#notebook {
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-05-02-senado_2017.csv&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">encoding</span> <span class="o">=</span> <span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/senate_2017.csv&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">encoding</span> <span class="o">=</span> <span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -11968,7 +11968,7 @@ Name: 0, dtype: object</pre>
         <span class="s1">&#39;fornecedor&#39;</span><span class="p">:</span> <span class="s1">&#39;supplier&#39;</span><span class="p">,</span>
         <span class="s1">&#39;documento&#39;</span><span class="p">:</span> <span class="s1">&#39;document_id&#39;</span><span class="p">,</span>
         <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;detalhamento&#39;</span><span class="p">:</span> <span class="s1">&#39;expense_detais&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;detalhamento&#39;</span><span class="p">:</span> <span class="s1">&#39;expense_details&#39;</span><span class="p">,</span>
         <span class="s1">&#39;valor_reembolsado&#39;</span><span class="p">:</span> <span class="s1">&#39;reimbursement_value&#39;</span><span class="p">,</span>
     <span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -11983,7 +11983,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Expense-types-translation">Expense types translation<a class="anchor-link" href="#Expense-types-translation">&#182;</a></h1>
+<h2 id="Expense-types-translation">Expense types translation<a class="anchor-link" href="#Expense-types-translation">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12077,7 +12077,7 @@ Name: 0, dtype: object</pre>
       <th>supplier</th>
       <th>document_id</th>
       <th>date</th>
-      <th>expense_detais</th>
+      <th>expense_details</th>
       <th>reimbursement_value</th>
     </tr>
   </thead>
@@ -12186,7 +12186,7 @@ cnpj_cpf                                              05.914.650/0001-66
 supplier                                ELETROBRÁS DISTRIBUIÇÃO RONDÔNIA
 document_id                                                    000034079
 date                                                          18/01/2017
-expense_detais         Despesa com pagamento de energia elétrica para...
+expense_details        Despesa com pagamento de energia elétrica para...
 reimbursement_value                                                   97
 Name: 0, dtype: object</pre>
 </div>
@@ -12197,18 +12197,21 @@ Name: 0, dtype: object</pre>
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Dataset-properties">Dataset properties<a class="anchor-link" href="#Dataset-properties">&#182;</a></h2><p>The Federal Senate datasets are divided by years, we have data from the year <code>2008 - 2013</code>. It had experienced a few changes through time. So I'll be telling this dataset properties below:</p>
+<ul>
+<li>Until 2013 there wasn't a expense details field, but the other older dataset already have this field, but empty.</li>
+<li>Until 2010 there wasn't the <code>National air, water and land transport</code> and <code>Private Security Services</code> categories of expense type, so when we start translating all the data we need to check if the dataset has those categories.</li>
+<li>Studying the datasets to what we are doing by now, we can start using the <code>cnpj_cpf</code> classifier from the begining, since the data is pretty good to use.</li>
+</ul>
+<p>This is a <code>work in progress</code> we are aiming to be adding it soon to our project.</p>
 
 </div>
 </div>
-</div>
-
 </div>
     </div>
   </div>
