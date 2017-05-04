@@ -2,7 +2,7 @@ import os
 
 import numpy as np
 import pandas as pd
-from serenata_toolbox.ceap_dataset import CEAPDataset
+from serenata_toolbox.chamber_of_deputies.chamber_of_deputies_dataset import ChamberOfDeputiesDataset
 from serenata_toolbox.datasets import fetch
 
 
@@ -56,11 +56,11 @@ class Adapter:
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)
-        ceap = CEAPDataset(self.path)
-        ceap.fetch()
-        ceap.convert_to_csv()
-        ceap.translate()
-        ceap.clean()
+        chamber_of_deputies = ChamberOfDeputiesDataset(self.path)
+        chamber_of_deputies.fetch()
+        chamber_of_deputies.convert_to_csv()
+        chamber_of_deputies.translate()
+        chamber_of_deputies.clean()
         fetch(self.COMPANIES_DATASET, self.path)
 
     def get_reimbursements(self):
