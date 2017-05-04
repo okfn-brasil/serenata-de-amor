@@ -15,6 +15,10 @@ class MealPriceOutlierClassifier(TransformerMixin):
     applicant_id : string column
         A personal identifier code for every person making expenses.
 
+    category : category column
+        Category of the expense. The model will be applied just in rows where
+        the value is equal to "Meal".
+
     net_value : float column
         The value of the expense.
 

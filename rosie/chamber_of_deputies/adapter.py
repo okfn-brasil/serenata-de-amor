@@ -41,12 +41,14 @@ class Adapter:
         self._dataset.rename(columns=columns, inplace=True)
 
     def rename_categories(self):
+        # There's no documented type for `3`, thus we assume it's an input error
         self._dataset['document_type'].replace({3: None}, inplace=True)
         self._dataset['document_type'] = self._dataset['document_type'].astype(
             'category')
         types = ['bill_of_sale', 'simple_receipt', 'expense_made_abroad']
         self._dataset['document_type'].cat.rename_categories(
             types, inplace=True)
+        # Classifiers expect a more broad category name for meals
         self._dataset['category'] = self._dataset['category'].replace(
             {'Congressperson meal': 'Meal'})
         self._dataset['is_party_expense'] = \
