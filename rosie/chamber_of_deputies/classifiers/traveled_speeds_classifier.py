@@ -8,6 +8,31 @@ from sklearn.utils.validation import check_is_fitted
 
 
 class TraveledSpeedsClassifier(TransformerMixin):
+    """
+    Traveled Speeds classifier.
+
+    Dataset
+    -------
+    applicant_id : category column
+        A personal identifier code for every person making expenses.
+
+    category : category column
+        Category of the expense. The model will be applied just in rows where
+        the value is equal to "Meal".
+
+    is_party_expense : bool column
+        If the row corresponds to a party expense or not. The model will be
+        applied just in rows where the value is equal to `False`.
+
+    issue_date : datetime column
+        Date when the expense was made.
+
+    latitude : float column
+        Latitude of the place where the expense was made.
+
+    longitude : float column
+        Longitude of the place where the expense was made.
+    """
 
     AGG_KEYS = ['applicant_id', 'issue_date']
 
@@ -61,10 +86,11 @@ class TraveledSpeedsClassifier(TransformerMixin):
         return X
 
     def __applicable_rows(self, X):
-        return (X['subquota_description'] == 'Congressperson meal') & \
+        return (X['category'] == 'Meal') & \
             (-73.992222 < X['longitude']) & (X['longitude'] < -34.7916667) & \
             (-33.742222 < X['latitude']) & (X['latitude'] < 5.2722222) & \
-            X[['congressperson_id', 'latitude', 'longitude']].notnull().all(axis=1)
+            ~X['is_party_expense'] & \
+            X[['latitude', 'longitude']].notnull().all(axis=1)
 
     def __calculate_sum_distances(self, X):
         coordinate_list = X[['latitude', 'longitude']].values

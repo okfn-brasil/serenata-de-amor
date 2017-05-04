@@ -16,5 +16,3 @@ CLASSIFIERS = {
 }
 
 UNIQUE_IDS = ['applicant_id', 'year', 'document_id']
-
-VALUE = 'total_net_value'

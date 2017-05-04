@@ -6,6 +6,18 @@ from sklearn.base import TransformerMixin
 
 
 class MonthlySubquotaLimitClassifier(TransformerMixin):
+    """
+    Monthly Subquota Limit classifier.
+
+    Dataset
+    -------
+    issue_date : datetime column
+        Date when the expense was made.
+
+    net_value : float column
+        The value of the expense.
+    """
+
     KEYS = ['applicant_id', 'month', 'year']
 
     def fit(self, X):
@@ -62,7 +74,7 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
 
 
     def __create_columns(self):
-        self._X['net_value_int'] = (self._X['total_net_value'] * 100).apply(int)
+        self._X['net_value_int'] = (self._X['net_value'] * 100).apply(int)
 
         self._X['coerced_issue_date'] = \
             pd.to_datetime(self._X['issue_date'], errors='coerce')

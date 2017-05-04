@@ -1,4 +1,4 @@
-applicant_id,subquota_number,issue_date,year,month,total_net_value
+applicant_id,subquota_number,issue_date,year,month,net_value
 1,120,2015-03-01,2015,3,10500
 1,120,2015-03-01,2015,3,401
 2,120,2015-04-01,2015,4,10500

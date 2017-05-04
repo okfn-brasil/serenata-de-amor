@@ -12,7 +12,7 @@ class TestTraveledSpeedsClassifier(TestCase):
 
     def setUp(self):
         self.dataset = pd.read_csv('rosie/chamber_of_deputies/tests/fixtures/traveled_speeds_classifier.csv',
-                                   dtype={'cnpj_cpf': np.str})
+                                   dtype={'recipient_id': np.str})
         self.subject = TraveledSpeedsClassifier()
         self.subject.fit(self.dataset)
 
