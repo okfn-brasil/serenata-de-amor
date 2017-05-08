@@ -1,4 +1,4 @@
-Django==1.11
+Django==1.11.1
 brotlipy==0.6.0
 dj-database-url==0.4.2
 django-assets==0.12
