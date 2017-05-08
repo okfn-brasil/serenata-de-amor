@@ -186,7 +186,7 @@ python -m pip install -r requirements.txt
 
 ##### Python's `lzma` module
 
-In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` or in macOS with `$ brew install xz` — but you mihght have to re-compile your Python.
+In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` or in macOS with `$ brew install xz` — but you might have to re-compile your Python.
 
 
 #### Settings
@@ -237,7 +237,7 @@ $ python manage.py companies <path to companies.xz>
 $ python manage.py ceapdatasets
 ```
 
-You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
+You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/serenata-toolbox).
 
 #### Generate static files
 
