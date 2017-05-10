@@ -23,8 +23,9 @@ TEMP_PATH= mkdtemp()
 
 FILENAME_PREFIX= 'consulta_cand_'
 TSE_CANDIDATES_URL= 'http://agencia.tse.jus.br/estatistica/sead/odsele/consulta_cand/'
-OUTPUT_DATASET_PATH= os.path.join(os.pardir,'data','2017-03-31-tse-candidates.xz')
-
+TODAY= pd.datetime.today().date().isoformat()
+OUTPUT_FILENAME= TODAY+'-tse-candidates.xz'
+OUTPUT_DATASET_PATH= os.path.join(os.pardir,'data',OUTPUT_FILENAME)
 # setting year range from 2004 to 2016. this will be modified further to 'from 1994 to 2016'
 year_list= [str(year) for year in (range(2004,2017,2))]
 
