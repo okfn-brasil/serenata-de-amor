@@ -19,47 +19,49 @@ import zipfile
 import glob
 
 from tempfile import mkdtemp
-TEMP_PATH= mkdtemp()
+TEMP_PATH = mkdtemp()
 
-FILENAME_PREFIX= 'consulta_cand_'
-TSE_CANDIDATES_URL= 'http://agencia.tse.jus.br/estatistica/sead/odsele/consulta_cand/'
-TODAY= pd.datetime.today().date().isoformat()
-OUTPUT_FILENAME= TODAY+'-tse-candidates.xz'
-OUTPUT_DATASET_PATH= os.path.join(os.pardir,'data',OUTPUT_FILENAME)
-# setting year range from 2004 up to now. this will be modified further to include yearsfrom 1994 to 2002
-year_list= [str(year) for year in (range(2004,TODAY.year+1,2))]
+FILENAME_PREFIX = 'consulta_cand_'
+TSE_CANDIDATES_URL = 'http://agencia.tse.jus.br/estatistica/sead/odsele/consulta_cand/'
+TODAY = pd.datetime.today().date().isoformat()
+OUTPUT_FILENAME = TODAY + '-tse-candidates.xz'
+OUTPUT_DATASET_PATH = os.path.join(os.pardir, 'data', OUTPUT_FILENAME)
+# setting year range from 2004 up to now. this will be modified further to
+# include yearsfrom 1994 to 2002
+year_list = [str(year) for year in (range(2004, TODAY.year + 1, 2))]
 
 # Download files
 for year in year_list:
-    filename= '{}{}.zip'.format(FILENAME_PREFIX, year)
-    file_url= TSE_CANDIDATES_URL+filename
-    output_file= os.path.join(TEMP_PATH,filename)
-    urllib.request.urlretrieve(file_url,output_file)
+    filename = '{}{}.zip'.format(FILENAME_PREFIX, year)
+    file_url = TSE_CANDIDATES_URL + filename
+    output_file = os.path.join(TEMP_PATH, filename)
+    urllib.request.urlretrieve(file_url, output_file)
 
 # Unzip downloaded files
 for year in year_list:
-    filename= FILENAME_PREFIX+year+'.zip'
-    filepath= os.path.join(TEMP_PATH,filename)
-    zip_ref= zipfile.ZipFile(filepath, 'r')
+    filename = FILENAME_PREFIX + year + '.zip'
+    filepath = os.path.join(TEMP_PATH, filename)
+    zip_ref = zipfile.ZipFile(filepath, 'r')
     zip_ref.extractall(TEMP_PATH)
     zip_ref.close()
 
 # ### Adding the headers
 # The following headers were extracted from LEIAME.pdf in consulta_cand_2016.zip.
-# headers commented with (*) can be used in the future to integrate with other TSE datasets
-header_consulta_cand_till2010=[
+# headers commented with (*) can be used in the future to integrate with
+# other TSE datasets
+header_consulta_cand_till2010 = [
     "DATA_GERACAO",
     "HORA_GERACAO",
     "ANO_ELEICAO",
-    "NUM_TURNO",# (*)
-    "DESCRICAO_ELEICAO",# (*)
+    "NUM_TURNO",  # (*)
+    "DESCRICAO_ELEICAO",  # (*)
     "SIGLA_UF",
-    "SIGLA_UE",# (*)
+    "SIGLA_UE",  # (*)
     "DESCRICAO_UE",
-    "CODIGO_CARGO",# (*)
+    "CODIGO_CARGO",  # (*)
     "DESCRICAO_CARGO",
     "NOME_CANDIDATO",
-    "SEQUENCIAL_CANDIDATO",# (*)
+    "SEQUENCIAL_CANDIDATO",  # (*)
     "NUMERO_CANDIDATO",
     "CPF_CANDIDATO",
     "NOME_URNA_CANDIDATO",
@@ -91,21 +93,21 @@ header_consulta_cand_till2010=[
     "DESPESA_MAX_CAMPANHA",
     "COD_SIT_TOT_TURNO",
     "DESC_SIT_TOT_TURNO",
-    ]
+]
 
-header_consulta_cand_at2012=[
+header_consulta_cand_at2012 = [
     "DATA_GERACAO",
     "HORA_GERACAO",
     "ANO_ELEICAO",
-    "NUM_TURNO",# (*)
-    "DESCRICAO_ELEICAO",# (*)
+    "NUM_TURNO",  # (*)
+    "DESCRICAO_ELEICAO",  # (*)
     "SIGLA_UF",
-    "SIGLA_UE",# (*)
+    "SIGLA_UE",  # (*)
     "DESCRICAO_UE",
-    "CODIGO_CARGO",# (*)
+    "CODIGO_CARGO",  # (*)
     "DESCRICAO_CARGO",
     "NOME_CANDIDATO",
-    "SEQUENCIAL_CANDIDATO",# (*)
+    "SEQUENCIAL_CANDIDATO",  # (*)
     "NUMERO_CANDIDATO",
     "CPF_CANDIDATO",
     "NOME_URNA_CANDIDATO",
@@ -138,21 +140,21 @@ header_consulta_cand_at2012=[
     "COD_SIT_TOT_TURNO",
     "DESC_SIT_TOT_TURNO",
     "NM_EMAIL",
-    ]
+]
 
-header_consulta_cand_from2014=[
+header_consulta_cand_from2014 = [
     "DATA_GERACAO",
     "HORA_GERACAO",
     "ANO_ELEICAO",
-    "NUM_TURNO",# (*)
-    "DESCRICAO_ELEICAO",# (*)
+    "NUM_TURNO",  # (*)
+    "DESCRICAO_ELEICAO",  # (*)
     "SIGLA_UF",
-    "SIGLA_UE",# (*)
+    "SIGLA_UE",  # (*)
     "DESCRICAO_UE",
-    "CODIGO_CARGO",# (*)
+    "CODIGO_CARGO",  # (*)
     "DESCRICAO_CARGO",
     "NOME_CANDIDATO",
-    "SEQUENCIAL_CANDIDATO",# (*)
+    "SEQUENCIAL_CANDIDATO",  # (*)
     "NUMERO_CANDIDATO",
     "CPF_CANDIDATO",
     "NOME_URNA_CANDIDATO",
@@ -187,56 +189,77 @@ header_consulta_cand_from2014=[
     "COD_SIT_TOT_TURNO",
     "DESC_SIT_TOT_TURNO",
     "NM_EMAIL",
-    ]
+]
 
 
-sel_columns=[
+sel_columns = [
     "ANO_ELEICAO",
-    "NUM_TURNO",# (*)
-    "DESCRICAO_ELEICAO",# (*)
+    "NUM_TURNO",  # (*)
+    "DESCRICAO_ELEICAO",  # (*)
     "SIGLA_UF",
     "DESCRICAO_UE",
     "DESCRICAO_CARGO",
     "NOME_CANDIDATO",
-    "SEQUENCIAL_CANDIDATO",# (*)
+    "SEQUENCIAL_CANDIDATO",  # (*)
     "CPF_CANDIDATO",
     "NUM_TITULO_ELEITORAL_CANDIDATO",
     "DESC_SIT_TOT_TURNO",
-    ]
+]
 
-###Concatenate all files in one pandas dataframe
-cand_df=pd.DataFrame()
+# Concatenate all files in one pandas dataframe
+cand_df = pd.DataFrame()
 for year in year_list:
-    filesname=FILENAME_PREFIX+year+'*.txt'
-    filespath=os.path.join(TEMP_PATH,filesname)
-    files_of_the_year= sorted(glob.glob(filespath))
+    filesname = FILENAME_PREFIX + year + '*.txt'
+    filespath = os.path.join(TEMP_PATH, filesname)
+    files_of_the_year = sorted(glob.glob(filespath))
     for file_i in files_of_the_year:
-        # the following cases do not take into account next elections. hopefully, TSE will add headers to the files
+        # the following cases do not take into account next elections.
+        # hopefully, TSE will add headers to the files
         if ('2014' in file_i) or ('2016' in file_i):
-            cand_df_i= pd.read_csv(file_i,sep=';',header=None,dtype=np.str,names=header_consulta_cand_from2014,encoding='iso-8859-1')
+            cand_df_i = pd.read_csv(
+                file_i,
+                sep=';',
+                header=None,
+                dtype=np.str,
+                names=header_consulta_cand_from2014,
+                encoding='iso-8859-1')
         elif ('2012' in file_i):
-            cand_df_i= pd.read_csv(file_i,sep=';',header=None,dtype=np.str,names=header_consulta_cand_at2012,encoding='iso-8859-1')
+            cand_df_i = pd.read_csv(
+                file_i,
+                sep=';',
+                header=None,
+                dtype=np.str,
+                names=header_consulta_cand_at2012,
+                encoding='iso-8859-1')
         else:
-            cand_df_i= pd.read_csv(file_i,sep=';',header=None,dtype=np.str,names=header_consulta_cand_till2010,encoding='iso-8859-1')
-        cand_df= cand_df.append(cand_df_i[sel_columns])
+            cand_df_i = pd.read_csv(
+                file_i,
+                sep=';',
+                header=None,
+                dtype=np.str,
+                names=header_consulta_cand_till2010,
+                encoding='iso-8859-1')
+        cand_df = cand_df.append(cand_df_i[sel_columns])
 
-cand_df.index= cand_df.reset_index().index # this index contains no useful information
+# this index contains no useful information
+cand_df.index = cand_df.reset_index().index
 
-###Translation
-headers_translation={
+# Translation
+headers_translation = {
     'ANO_ELEICAO': 'year',
-    'NUM_TURNO': 'phase', # first round or runoff
+    'NUM_TURNO': 'phase',  # first round or runoff
     'DESCRICAO_ELEICAO': 'description',
     'SIGLA_UF': 'state',
     'DESCRICAO_UE': 'location',
     'DESCRICAO_CARGO': 'post',
     'NOME_CANDIDATO': 'name',
-    'SEQUENCIAL_CANDIDATO': 'electoral_id', # This is not to be used as unique identifier
+    # This is not to be used as unique identifier
+    'SEQUENCIAL_CANDIDATO': 'electoral_id',
     'CPF_CANDIDATO': 'cpf',
     'NUM_TITULO_ELEITORAL_CANDIDATO': 'voter_id',
     'DESC_SIT_TOT_TURNO': 'result',
 }
-post_translation={
+post_translation = {
     'VEREADOR': 'city_councilman',
     'VICE-PREFEITO': 'vice_mayor',
     'PREFEITO': 'mayor',
@@ -253,7 +276,7 @@ post_translation={
     'VICE-PRESIDENTE': 'president',
     'PRESIDENTE': 'vice_president',
 }
-result_translation={
+result_translation = {
     'SUPLENTE': 'alternate',
     'NÃO ELEITO': 'not_elected',
     '#NULO#': 'null',
@@ -273,9 +296,14 @@ result_translation={
     'CASSADO COM RECURSO': 'rejected',
 }
 
-cand_df= cand_df.rename(columns=headers_translation)
-cand_df.post= cand_df.post.map(post_translation)
-cand_df.result= cand_df.result.map(result_translation)
+cand_df = cand_df.rename(columns=headers_translation)
+cand_df.post = cand_df.post.map(post_translation)
+cand_df.result = cand_df.result.map(result_translation)
 
 # Exporting data
-cand_df.to_csv(OUTPUT_DATASET_PATH,encoding='utf-8',compression='xz',header=True,index=False)
+cand_df.to_csv(
+    OUTPUT_DATASET_PATH,
+    encoding='utf-8',
+    compression='xz',
+    header=True,
+    index=False)
