@@ -26,8 +26,8 @@ TSE_CANDIDATES_URL= 'http://agencia.tse.jus.br/estatistica/sead/odsele/consulta_
 TODAY= pd.datetime.today().date().isoformat()
 OUTPUT_FILENAME= TODAY+'-tse-candidates.xz'
 OUTPUT_DATASET_PATH= os.path.join(os.pardir,'data',OUTPUT_FILENAME)
-# setting year range from 2004 to 2016. this will be modified further to 'from 1994 to 2016'
-year_list= [str(year) for year in (range(2004,2017,2))]
+# setting year range from 2004 up to now. this will be modified further to include yearsfrom 1994 to 2002
+year_list= [str(year) for year in (range(2004,TODAY.year+1,2))]
 
 # Download files
 for year in year_list:
@@ -221,6 +221,61 @@ for year in year_list:
         cand_df= cand_df.append(cand_df_i[sel_columns])
 
 cand_df.index= cand_df.reset_index().index # this index contains no useful information
+
+###Translation
+headers_translation={
+    'ANO_ELEICAO': 'year',
+    'NUM_TURNO': 'round', # first round or runoff
+    'DESCRICAO_ELEICAO': 'description',
+    'SIGLA_UF': 'state',
+    'DESCRICAO_UE': 'location',
+    'DESCRICAO_CARGO': 'post',
+    'NOME_CANDIDATO': 'name',
+    'SEQUENCIAL_CANDIDATO': 'electoral_id', # This is not to be used as unique identifier
+    'CPF_CANDIDATO': 'cpf',
+    'NUM_TITULO_ELEITORAL_CANDIDATO': 'voter_id',
+    'DESC_SIT_TOT_TURNO': 'result',
+}
+post_translation={
+    'VEREADOR': 'city_councilman',
+    'VICE-PREFEITO': 'vice_mayor',
+    'PREFEITO': 'mayor',
+    'DEPUTADO ESTADUAL': 'state_deputy',
+    'DEPUTADO FEDERAL': 'federal_deputy',
+    'DEPUTADO DISTRITAL': 'district_deputy',
+    'SENADOR': 'senator',
+    'VICE-GOVERNADOR': 'vice_governor',
+    'GOVERNADOR': 'governor',
+    '2º SUPLENTE SENADOR': 'senate_second_alternate',
+    '1º SUPLENTE SENADO': 'senate_first_alternate',
+    '2º SUPLENTE': 'senate_second_alternate',
+    '1º SUPLENTE': 'senate_first_alternate',
+    'VICE-PRESIDENTE': 'president',
+    'PRESIDENTE': 'vice_president',
+}
+result_translation={
+    'SUPLENTE': 'alternate',
+    'NÃO ELEITO': 'not_elected',
+    '#NULO#': 'null',
+    'ELEITO': 'elected',
+    'ELEITO POR QP': 'elected_by_party_quota',
+    'MÉDIA': 'elected',
+    'ELEITO POR MÉDIA': 'elected',
+    '#NE#': 'null',
+    'REGISTRO NEGADO ANTES DA ELEIÇÃO': 'rejected',
+    'INDEFERIDO COM RECURSO': 'rejected',
+    'RENÚNCIA/FALECIMENTO/CASSAÇÃO ANTES DA ELEIÇÃO': 'rejected',
+    '2º TURNO': 'runoff',
+    'SUBSTITUÍDO': 'replaced',
+    'REGISTRO NEGADO APÓS A ELEIÇÃO': 'rejected',
+    'RENÚNCIA/FALECIMENTO COM SUBSTITUIÇÃO': 'replaced',
+    'RENÚNCIA/FALECIMENTO/CASSAÇÃO APÓS A ELEIÇÃO': 'rejected',
+    'CASSADO COM RECURSO': 'rejected',
+}
+
+cand_df= cand_df.rename(columns=headers_translation)
+cand_df.post= cand_df.post.map(post_translation)
+cand_df.result= cand_df.result.map(result_translation)
 
 # Exporting data
 cand_df.to_csv(OUTPUT_DATASET_PATH,encoding='utf-8',compression='xz',header=True,index=False)
