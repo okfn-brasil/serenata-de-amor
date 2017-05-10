@@ -20,9 +20,7 @@ DATASET_PATH= os.path.join(os.pardir,'data','2017-05-10-tse-candidates.xz')
 # In[3]:
 
 # Loading csv
-cand_df=pd.read_csv(DATASET_PATH,encoding='utf-8',dtype=str)
-
-
+cand_df=pd.read_csv(DATASET_PATH,encoding='utf-8',dtype='category',)# setting dtype to category instead of str cuts by more than a half RAM usage
 cand_df.columns
 
 
@@ -60,7 +58,12 @@ politicians_df.sort_values('name')
 
 # If we want to keep only the list of politicians we keep only cpf and name and remove the duplicates
 
-# In[9]:
+# In[8]:
 
 politicians_df[['cpf','name']].drop_duplicates().sort_values('name')
+
+
+# In[ ]:
+
+
 

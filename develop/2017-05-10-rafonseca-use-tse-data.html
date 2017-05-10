@@ -11791,9 +11791,7 @@ In this script we filter the candidates in order to obtain a dataframe containin
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Loading csv</span>
-<span class="n">cand_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATASET_PATH</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
-
-
+<span class="n">cand_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATASET_PATH</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;category&#39;</span><span class="p">,)</span><span class="c1"># setting dtype to category instead of str cuts by more than a half RAM usage</span>
 <span class="n">cand_df</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
 
@@ -11867,58 +11865,58 @@ ELEIÇÕES 2010                              22577
 ELEICOES 2006                              20790
 ELEIÇÕES SUPLEMENTARES 2008                  990
 JUARA                                         14
-ELEIÇÃO SUPLEMENTAR CAMAMU-BA                 13
 Eleição Suplementar de Foz do Iguaçu          13
-ELEIÇÃO SUPLEMENTAR MOSSORÓ-RN                12
+ELEIÇÃO SUPLEMENTAR CAMAMU-BA                 13
  ELEIÇÃO SUPLEMENTAR DE MARITUBA/PA           12
+ELEIÇÃO SUPLEMENTAR MOSSORÓ-RN                12
+Eleição Suplementar de Gravataí               12
 MAJORITÁRIA - CRICIÚMA                        12
 NOVA ELEIÇÃO SANTANA DO PARNAÍBA              12
-Eleição Suplementar de Gravataí               12
 ELEIÇÃO SUPLEMENTAR - PIRES DO RIO            11
 ELEIÇÃO SUPLEMENTAR AMAPARI-AP                11
-NOVA ELEIÇÃO DESCALVADO                       10
-Eleição Suplementar de Piraí do Sul           10
-NOVA ELEIÇÃO PIRANGI                          10
-ELEIÇÃO SUPLEMENTAR DE PAULO DE FARIA         10
-SUPLEMENTAR BELA VISTA                        10
-ELEIÇÃO SUPLEMENTAR DE SANTA MARIA            10
 ELEIÇÃO SUPLEMENTAR GUARAPARI 2012            10
 NOVA ELEIÇÃO - ELDORADO 7ABR2013              10
-ELEIÇÃO SUPLEMENTAR - GOIATUBA                 9
+Eleição Suplementar de Piraí do Sul           10
+NOVA ELEIÇÃO PIRANGI                          10
+ELEIÇÃO SUPLEMENTAR DE SANTA MARIA            10
+SUPLEMENTAR BELA VISTA                        10
+NOVA ELEIÇÃO DESCALVADO                       10
+ELEIÇÃO SUPLEMENTAR DE PAULO DE FARIA         10
 ELEIÇÃO SUPL. DE ÁGUA AZUL DO NORTE            9
-Eleição Suplementar de Calçoene-AP             9
 ELEIÇÃO SUPL. DE ÁGUA DOCE DO NORTE ES         9
+Eleição Suplementar de Calçoene-AP             9
+ELEIÇÃO SUPLEMENTAR - GOIATUBA                 9
                                            ...  
-NOVA ELEIÇÃO OSVALDO CRUZ                      4
-ELEIÇÃO MAJORITÁRIA_SERRA DO MEL/RN            4
-ELEIÇÃO SUPLEMENTAR DE CARNAUBAIS-RN           4
-Eleição Suplementar Quatiguá                   4
-PLEBISCITO                                     4
-Eleição Suplementar São Vicente do Sul         4
-ELEIÇÃO SUPLEMENTAR DE MACARANI                4
-MAJORITÁRIA - MAXIMILIANO DE ALMEIDA           4
-ELEIÇÃO SUPLEM. BREJO DA MADRE DE DEUS         4
-SÃO SEBASTIÃO DA VARGEM ALEGRE ZE 178          4
-SANTA HELENA DE MINAS MG - 4ª ZE               4
-MAJORITÁRIA - JAQUIRANA                        4
-NOVA ELEIÇÃO TABATINGA                         4
-Nova Eleição 2017 Bom Jardim da Serra          4
-NOVA ELEIÇÃO - CORONEL MACEDO 7ABR2013         4
-ELEICAO SUPLEM. DE BOA VISTA DO GURUPI         4
-MAJORITÁRIA - BALN RINCÃO                      4
-ELEIÇÃO SUPLEMENTAR - SÃO DOMINGOS             4
-MAJORITÁRIA - SÃO JOSÉ DAS MISSÕES             4
-ELEIÇÃO SUPLEMENTAR ARARIPE/CE                 4
-ELEIÇÃO SUPLEMENTAR - CABECEIRAS               4
-ÁGUA BOA MG - 67ª ZE                           4
-ELEIÇÃO SUPLEMENTAR - CAIÇARA DO NORTE         4
-MAJORITÁRIA - TANGARÁ                          4
-Eleição Suplementar de Arvorezinha             4
 SUPLEMENTAR SIMÕES                             4
+MAJORITÁRIA - FORTALEZA DOS VALOS              4
+MAJORITÁRIA - EUGÊNIO DE CASTRO                4
+MAJORITÁRIA - ERECHIM                          4
+MAJORITÁRIA - DOM FELICIANO                    4
+ELEIÇÃO SUPLEMENTAR JOAQUIM TÁVORA             4
+ELEIÇÃO SUPLEMENTAR JUNDIAÍ DO SUL             4
+ELEIÇÃO SUPLEMENTAR SANTA INÊS                 4
+ELEIÇÃO SUPLEMENTAR SÃO DOMINGOS               4
+ELEIÇÃO SUPLEMENTAR TACURU                     4
 Eleição Suplementar Cristiano Otoni            4
-MAJORITÁRIA - SÃO JOSÉ DO OURO                 4
-MAJORITÁRIA - COLINAS                          2
+SÃO SEBASTIÃO DA VARGEM ALEGRE ZE 178          4
+Eleição Suplementar Nova Laranjeiras           4
+Eleição Suplementar Quatiguá                   4
+Eleição Suplementar São Vicente do Sul         4
+Eleição Suplementar Taguatinga-TO              4
+Eleição Suplementar de Arvorezinha             4
+Eleição Suplementar de Butiá                   4
+Eleição Suplementar de Salto do Jacuí          4
+Eleição Suplementar de São Vendelino           4
+MAJORITÁRIA - ALM TAMANDARÉ DO SUL             4
+MAJORITÁRIA - AUGUSTO PESTANA                  4
+MAJORITÁRIA - BALN RINCÃO                      4
+MAJORITÁRIA - BARRA DO RIO AZUL                4
+MAJORITÁRIA - BENEDITO NOVO                    4
+MAJORITÁRIA - CRISSIUMAL                       4
+MAJORITÁRIA - DEZESSEIS DE NOVEMBRO            4
+Eleição Suplementar Ervália                    4
 NOVA ELEIÇÃO PEDRINHAS PAULISTA                2
+MAJORITÁRIA - COLINAS                          2
 Name: description, dtype: int64
 	 state 
 
@@ -11984,32 +11982,32 @@ SÃO GONÇALO                    2082
 JABOATÃO DOS GUARARAPES        2040
 CONTAGEM                       2036
                               ...  
-POCO DAS ANTAS                   21
-SALVADOR DAS MISSOES             21
-CAPITAO                          21
-SAO FERNANDO                     21
-SAO LUIS DO PIAUI                21
 VERE                             21
-SAO PEDRO DO BUTIA               20
-BETANIA                          20
-BETANIA DO PIAUI                 20
-JOSE DA PENHA                    20
+POCO DAS ANTAS                   21
+CAPITAO                          21
+SAO LUIS DO PIAUI                21
+SAO FERNANDO                     21
+SALVADOR DAS MISSOES             21
 SAO JOSE DA BOA VISTA            20
+FIGUEIROPOLIS D&#39;OESTE            20
 ITAPORA DO TOCANTINS             20
 CAMPINAS DO PIAUI                20
+BETANIA DO PIAUI                 20
+BETANIA                          20
 SANTA CECILIA DO SUL             20
-FIGUEIROPOLIS D&#39;OESTE            20
+SAO PEDRO DO BUTIA               20
+JOSE DA PENHA                    20
 SAGRADA FAMILIA                  19
 UNIAO DA SERRA                   19
-ALMIRANTE TAMANDARE DO SUL       18
-NOVA CANDELARIA                  18
 BELA VISTA DO PIAUI              18
-BRACO DO TROMBUDO                18
 IBIACA                           18
+ALMIRANTE TAMANDARE DO SUL       18
 PAJEU DO PIAUI                   18
+NOVA CANDELARIA                  18
+BRACO DO TROMBUDO                18
 CAMPOS DE JULIO                  17
-JOAO DIAS                        16
 AGUA SANTA                       16
+JOAO DIAS                        16
 CAMPINA DAS MISSOES              15
 NOVA MARILANDIA                  14
 ENEAS MARQUES                    13
@@ -12028,72 +12026,72 @@ senator                        706
 vice_governor                  666
 governor                       628
 senate_first_alternate         209
-president                       35
 vice_president                  35
+president                       35
 Name: post, dtype: int64
 	 name 
 
-LUIZ CARLOS DA SILVA               338
-JOSE CARLOS DA SILVA               320
-MARIA APARECIDA DA SILVA           306
-JOSÉ CARLOS DA SILVA               258
-JOÃO BATISTA DA SILVA              254
-ANTONIO CARLOS DA SILVA            240
-JOSE CARLOS DOS SANTOS             208
-LUIZ CARLOS DOS SANTOS             186
-ANTONIO PEREIRA DA SILVA           181
-CARLOS ROBERTO DA SILVA            174
-ANTONIO CARLOS DOS SANTOS          172
-MARCOS ANTONIO DA SILVA            171
-CARLOS ALBERTO DA SILVA            166
-JOSE ANTONIO DA SILVA              160
-JOÃO BATISTA DE OLIVEIRA           157
-MARIA APARECIDA DOS SANTOS         157
-FRANCISCO DE ASSIS DA SILVA        155
-LUIZ CARLOS DE OLIVEIRA            153
-CARLOS ALBERTO DOS SANTOS          148
-JOSE CARLOS DE OLIVEIRA            143
-JOÃO BATISTA DOS SANTOS            142
-JOSÉ CARLOS DOS SANTOS             137
-RAIMUNDO NONATO DA SILVA           136
-LUIZ ANTONIO DA SILVA              132
-MARIA JOSE DA SILVA                131
-JOAO BATISTA DA SILVA              131
-PAULO ROBERTO DA SILVA             129
-PAULO SERGIO DA SILVA              127
-JOSÉ PEREIRA DA SILVA              123
-ANTONIO FERREIRA DA SILVA          121
-                                  ... 
-ANTONIA DA SILVA MARQUES             1
-VERA LÚCIA GUIMARÃES DA SILVA        1
-CASSIO EDUARDO GROVERMANN            1
-JOAO GONÇALVES DA CRUZ FILHO         1
-PEDRO ALONSO SALES                   1
-AFONSO SANTOS FREIRE                 1
-JOÃO MENDES DE GODOI                 1
-ARINA PEREIRA DE MARAFIGO            1
-LAIR ANTUNES TEIXEIRA FILHO          1
-EBERSON GONÇALVES DA COSTA           1
-IDEGLAN GOMES DA SILVA               1
-ANTÔNIO JOSÉ LOURENÇO                1
-JOIS ANTONIO DE SOUZA                1
-ANTÔNIO BENEDITO                     1
-MARCIO GLEI NEVES DE ARAÚJO          1
-GILDA MARA MARCONDES PENHA           1
-MARIA LIBANIA DA ROCHA               1
-ZAQUEU ALVES DE JESUS PEREIRA        1
-NÉLIO VILELA RABELO                  1
-JOÃO ARNALDO DOS SANTOS              1
-WERLANY LENA PEREIRA  DE FRANÇA      1
-SOLMAR SIBÉRIO HUBNER                1
-OTAVIANO FREIRE DE LIMA              1
-JOÃO MORAIS SEABRA                   1
-MARCIANA GOMES FERREIRA              1
-CELIA MARIA SIQUEIRA                 1
-ANDRE CILIRO DOS SANTOS JUNIOR       1
-DIEGO SOUZA DE ARRUDA                1
-AYLANNE BALIZA BARROS                1
-JOSE ROBERTO MORRONE                 1
+LUIZ CARLOS DA SILVA                338
+JOSE CARLOS DA SILVA                320
+MARIA APARECIDA DA SILVA            306
+JOSÉ CARLOS DA SILVA                258
+JOÃO BATISTA DA SILVA               254
+ANTONIO CARLOS DA SILVA             240
+JOSE CARLOS DOS SANTOS              208
+LUIZ CARLOS DOS SANTOS              186
+ANTONIO PEREIRA DA SILVA            181
+CARLOS ROBERTO DA SILVA             174
+ANTONIO CARLOS DOS SANTOS           172
+MARCOS ANTONIO DA SILVA             171
+CARLOS ALBERTO DA SILVA             166
+JOSE ANTONIO DA SILVA               160
+JOÃO BATISTA DE OLIVEIRA            157
+MARIA APARECIDA DOS SANTOS          157
+FRANCISCO DE ASSIS DA SILVA         155
+LUIZ CARLOS DE OLIVEIRA             153
+CARLOS ALBERTO DOS SANTOS           148
+JOSE CARLOS DE OLIVEIRA             143
+JOÃO BATISTA DOS SANTOS             142
+JOSÉ CARLOS DOS SANTOS              137
+RAIMUNDO NONATO DA SILVA            136
+LUIZ ANTONIO DA SILVA               132
+JOAO BATISTA DA SILVA               131
+MARIA JOSE DA SILVA                 131
+PAULO ROBERTO DA SILVA              129
+PAULO SERGIO DA SILVA               127
+JOSÉ PEREIRA DA SILVA               123
+ANTONIO FERREIRA DA SILVA           121
+                                   ... 
+LUIZ HENRIQUE BARBOZA DA SILVA        1
+LUIZ HENRIQUE CAETANO CELLURALE       1
+LUIZ HENRIQUE BRUNETTI                1
+LUIZ HENRIQUE BRITO BELO              1
+LUIZ HENRIQUE BORELLI                 1
+LUIZ HENRIQUE BONATTI                 1
+LUIZ HENRIQUE BISPO OLIVEIRA          1
+LUIZ HENRIQUE BESTEN                  1
+LUIZ HENRIQUE BERTOLO                 1
+LUIZ HENRIQUE BERLITZ                 1
+LUIZ HENRIQUE BERCÊ                   1
+LUIZ HENRIQUE BELLATO                 1
+LUIZ HENRIQUE BATISTA NASCIMENTO      1
+LUIZ HENRIQUE BARRETTI DE ARAUJO      1
+LUIZ HENRIQUE BARBOSA RAMOS           1
+LUIZ HENRIQUE ALVES MARTINS           1
+LUIZ HENRIQUE BARBOSA NUNES           1
+LUIZ HENRIQUE BARBOSA DO CARMO        1
+LUIZ HENRIQUE BARBOSA DA SILVA        1
+LUIZ HENRIQUE BANAI                   1
+LUIZ HENRIQUE AZEM                    1
+LUIZ HENRIQUE AVILA DE MEIRELLES      1
+LUIZ HENRIQUE AREAS                   1
+LUIZ HENRIQUE ARAÚJO DE LIMA          1
+LUIZ HENRIQUE ARANTES                 1
+LUIZ HENRIQUE ANTUNES BARBOSA         1
+LUIZ HENRIQUE AMORIM                  1
+LUIZ HENRIQUE AMELIO                  1
+LUIZ HENRIQUE ALVES PEREIRA           1
+ VANDERLEI SILVA                      1
 Name: name, dtype: int64
 	 electoral_id 
 
@@ -12102,190 +12100,190 @@ Name: name, dtype: int64
 28              2081
 11              2076
 31              2073
+25              2071
 22              2071
 14              2071
-25              2071
 12              2068
 37              2068
 29              2067
 30              2066
-10              2065
-20              2065
 13              2065
-24              2064
+20              2065
+10              2065
 21              2064
+24              2064
 38              2062
 23              2061
 32              2060
 40              2059
-36              2058
 41              2058
+36              2058
 33              2058
 34              2055
 18              2054
 39              2052
-17              2052
 19              2052
+17              2052
 35              2051
                 ... 
-90000024220        1
-180000011895       1
-120000006698       1
-120000008518       1
-140000007066       1
-170000022258       1
-250000009130       1
-50000047885        1
-170000001710       1
-270000009697       1
-50000038991        1
-240000018988       1
-130000081742       1
-200000011640       1
-130000091005       1
-130000091612       1
-100000022377       1
-150000013676       1
-250000013509       1
-90000013304        1
-90000008513        1
-130000043572       1
-130000030067       1
-210000019197       1
-130000032010       1
-200000011647       1
-200000003870       1
-130000042580       1
-250000072227       1
-66520              1
+20000005107        1
+20000005106        1
+20000005105        1
+20000005104        1
+20000005103        1
+20000005102        1
+20000005101        1
+20000005100        1
+20000005099        1
+20000005098        1
+20000005005        1
+20000005004        1
+20000005003        1
+20000005001        1
+20000004959        1
+20000005000        1
+20000004999        1
+20000004998        1
+20000004997        1
+20000004996        1
+20000004995        1
+20000004994        1
+20000004966        1
+20000004965        1
+20000004964        1
+20000004963        1
+20000004962        1
+20000004961        1
+20000004960        1
+210000016370       1
 Name: electoral_id, dtype: int64
 	 cpf 
 
 #NULO#         782
 00000000000     23
-89219961504      9
-08654680792      9
 00247570125      9
-21891583034      9
-34175504249      9
-07166109653      9
+08654680792      9
 01311846794      9
+21891583034      9
 81824726791      9
-26838194805      8
-21387268864      8
+07166109653      9
+34175504249      9
+89219961504      9
 46392319700      8
-13521039668      8
-21578621453      8
-34388800163      8
-71063129753      8
-70162000782      8
-93565968834      8
-82334196991      8
-80333958772      8
-67167870978      8
+86132687904      8
+03912868204      8
 27450660300      8
-53433696187      8
-01850105391      8
-07290623762      8
-28812325823      8
-42787262449      8
+80333958772      8
+11811455204      8
+46418954653      8
+21729697372      8
+10636994104      8
+13521039668      8
+02518619887      8
+33396671015      8
 08682607972      8
-08850727747      8
+70162000782      8
+47686340600      8
+20912340282      8
+53433696187      8
+15044162876      8
+28812325823      8
+01850105391      8
               ... 
-15225720234      1
-53150465915      1
-21848670125      1
-95085165691      1
-35871497802      1
-13492010652      1
-85279960497      1
-01676856862      1
-62113852934      1
-52895033900      1
-56885040991      1
-01884615074      1
-07132598767      1
-03363184484      1
-42292760606      1
-15173054549      1
-39231518704      1
-28051495802      1
-00477813607      1
-60957824220      1
-06913055790      1
-49740946615      1
-54669251104      1
-13032780306      1
-06313012836      1
-32968965468      1
-10915311534      1
-68177160630      1
-47496720500      1
-16816492846      1
+37901192534      1
+37901337877      1
+37903136100      1
+37904310600      1
+95725652491      1
+37903993968      1
+37903926691      1
+37903861620      1
+37903799053      1
+37903683500      1
+37903667491      1
+37903390678      1
+37903314220      1
+37903233904      1
+37903152300      1
+37903004549      1
+37901370572      1
+37902637882      1
+37902469807      1
+37902245291      1
+37902024600      1
+37902024287      1
+37901982772      1
+95725814491      1
+37901796049      1
+37901610808      1
+37901559268      1
+37901478500      1
+37901435100      1
+29200253920      1
 Name: cpf, dtype: int64
 	 voter_id 
 
 #NI#            246
 000000000000     12
-006956330256      9
 096204260353      9
-000138731082      9
-008976591473      9
-001332522500      9
-051255330329      9
-078197990566      9
 018043040469      9
-025572421031      8
-168338600124      8
-004865942240      8
-005099541740      8
-100679880191      8
-001405310744      8
-000089892534      8
-094962970396      8
-027078800191      8
-046162330205      8
-268189670167      8
-009710700914      8
-011603861201      8
-024849210990      8
-260155360159      8
-024058181511      8
-068832520141      8
-059745140329      8
-116572130124      8
+051255330329      9
+008976591473      9
+078197990566      9
+006956330256      9
+000138731082      9
+001332522500      9
+003620941287      8
+189071530124      8
+021272620604      8
 004423681929      8
+038345361163      8
+004865942240      8
+024849210990      8
+001405310744      8
+000605301414      8
+039174640361      8
+027078800191      8
+000089892534      8
+046162330205      8
+086309170108      8
+260155360159      8
+022149500230      8
+168338600124      8
+000428982313      8
+013019921490      8
+030649460930      8
                ... 
-201760840132      1
-090537870248      1
-052851620612      1
-009867610590      1
-008418210779      1
-087366890248      1
-015655991074      1
-117206030221      1
-041494290868      1
-027641181007      1
-091453760230      1
-042561161171      1
-038441410515      1
-004545850701      1
-011388041082      1
-205753970132      1
-116877780124      1
-012499101023      1
-297723700175      1
-013300292160      1
-063591281066      1
-106475360337      1
-015003081465      1
-061436360647      1
-037572300302      1
-057722031104      1
-034411861805      1
-148206080256      1
-072689021317      1
-010479452372      1
+050681950884      1
+050682060671      1
+050688260809      1
+050688171007      1
+050687930205      1
+050687851392      1
+050687571139      1
+263469910132      1
+050687121031      1
+050686650884      1
+050686471007      1
+050686050841      1
+050685801350      1
+050685770850      1
+050685560221      1
+050685191082      1
+050685181007      1
+050684541007      1
+050684190310      1
+050684090744      1
+050683720213      1
+050683620345      1
+050683350671      1
+050683280949      1
+263470030124      1
+050682910515      1
+050682380850      1
+050682360698      1
+050682190990      1
+995997040175      1
 Name: voter_id, dtype: int64
 	 result 
 
@@ -12961,7 +12959,7 @@ We use 'result' to figure out who has been elected. It is better to use the desc
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">politicians_df</span><span class="p">[[</span><span class="s1">&#39;cpf&#39;</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
@@ -12975,7 +12973,7 @@ We use 'result' to figure out who has been elected. It is better to use the desc
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -13301,6 +13299,19 @@ We use 'result' to figure out who has been elected. It is better to use the desc
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
 </div>
 </div>
 
