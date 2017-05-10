@@ -165,6 +165,9 @@ fetch_latest_backup('data/')
  - Agreements:  `YYYY-MM-DD-agreements.xz`
  - Amendments: `YYYY-MM-DD-amendments.xz`
 
+##### Electoral information
+1. `src/fetch_tse_data.py` downloads datasets files from TSE website and organize them in the dataset `data/YYYY-MM-DD-tse-candidates.xz`.
+
 ##### Companies and Non-Profit Entities with sanctions (CEIS, CEPIM and CNEP).
 
 1. `src/fetch_federal_sanctions.py` downloads all three datasets files (CEIS, CEPIM and CNEP) from official source. The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
@@ -187,6 +190,9 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/YYYY-MM-DD-congressperson_relatives.xz` contains data on the relatives of congresspeople and the nature of their relationship.
 1. `data/YYYY-MM-DD-congressperson_relatives_raw.xz` also contains data on the relatives of congresspeople, but is only created if `src/get_family_names.py` fails to handle some names.
 1. `data/YYYY-MM-DD-sex-place-distances` contains data from the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (including distance in meters) — this dataset is just a sample (check [this notebook](develop/2017-04-21-cuducos-explore-sex-places-dataset.ipynb) for details).
+1. `data/YYYY-MM-DD-tse-candidates.xz` contains information about politicians candidacy over the last years. Can be used to extract a list of all politicians in Brazil.
+
+>>>>>>> 3e2ad7d587701b2b3817f49777acb4a320cbb782
 
 ## Four moments
 
