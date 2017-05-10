@@ -62,8 +62,3 @@ politicians_df.sort_values('name')
 
 politicians_df[['cpf','name']].drop_duplicates().sort_values('name')
 
-
-# In[ ]:
-
-
-
