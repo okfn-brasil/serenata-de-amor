@@ -225,7 +225,7 @@ cand_df.index= cand_df.reset_index().index # this index contains no useful infor
 ###Translation
 headers_translation={
     'ANO_ELEICAO': 'year',
-    'NUM_TURNO': 'round', # first round or runoff
+    'NUM_TURNO': 'phase', # first round or runoff
     'DESCRICAO_ELEICAO': 'description',
     'SIGLA_UF': 'state',
     'DESCRICAO_UE': 'location',
