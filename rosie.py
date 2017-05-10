@@ -35,7 +35,8 @@ def test():
     tests = loader.discover('rosie')
     testRunner = unittest.runner.TextTestRunner()
     result = testRunner.run(tests)
-    return not result.wasSuccessful()
+    if not result.wasSuccessful():
+        exit(1)
 
 
 commands = {'run': run, 'test': test}
