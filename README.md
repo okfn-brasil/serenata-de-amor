@@ -35,7 +35,7 @@ $ ./setup
 $ python rosie.py run
 ```
 
-The toolbox expects to find Amazon credentials in a `config.ini` file. If You get an error of missing `config.ini` you can just copy the `config.ini.example` to a `config.ini` and everything will run smoothly.
+The toolbox expects to find Amazon credentials in a `config.ini` file. If You get an error of missing `config.ini` you can just copy the `config.ini.example` to a `config.ini` and everything will run smoothly (don't bother about `AccessKey` and `SecretKey` unless you're planning to upload files to S3).
 
 A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
 
