@@ -90,25 +90,14 @@ class SameDayReimbursementSerializer(serializers.ModelSerializer):
 
 class ReceiptSerializer(serializers.ModelSerializer):
 
-    reimbursement = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
-
-    def get_reimbursement(self, obj):
-        return dict(
-            year=obj.year,
-            applicant_id=obj.applicant_id,
-            document_id=obj.document_id
-        )
 
     def get_url(self, obj):
         return obj.receipt_url
 
     class Meta:
         model = Reimbursement
-        fields = (
-            'reimbursement',
-            'url',
-        )
+        fields = ('url',)
 
 
 class ApplicantSerializer(serializers.ModelSerializer):

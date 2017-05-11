@@ -44,35 +44,24 @@ class TestListApi(TestCase):
         for d in data:
             Reimbursement.objects.create(**d)
 
-        url_name = 'api:reimbursement-list'
-        self.all = resolve_url(url_name)
-        self.by_year = resolve_url(url_name, year=1970)
-        self.by_applicant = resolve_url(url_name, year=1970, applicant_id=13)
+        self.url = resolve_url('api:reimbursement-list')
 
     def test_status(self):
-        urls = (self.all, self.by_year, self.by_applicant)
-        for resp in map(lambda url: self.client.get(url), urls):
-            with self.subTest():
-                self.assertEqual(200, resp.status_code)
+        resp = self.client.get(self.url)
+        self.assertEqual(200, resp.status_code)
 
     def test_content_general(self):
         self.assertEqual(4, Reimbursement.objects.count())
-        self.assertEqual(4, self._count_results(self.all))
-
-    def test_content_by_year(self):
-        self.assertEqual(3, self._count_results(self.by_year))
-
-    def test_content_by_applicant_id(self):
-        self.assertEqual(2, self._count_results(self.by_applicant))
+        self.assertEqual(4, self._count_results(self.url))
 
     def test_ordering(self):
-        resp = self.client.get(self.all)
+        resp = self.client.get(self.url)
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(4, len(content['results']))
         self.assertEqual('1969-12-31', content['results'][3]['issue_date'])
 
     def test_content_with_filters(self):
-        url = self.all + (
+        url = self.url + (
             '?cnpj_cpf=22222222222'
             '&subquota_id=22'
             '&order_by=probability'
@@ -85,7 +74,7 @@ class TestListApi(TestCase):
         self.assertEqual(None, content['results'][2]['probability'])
 
     def test_content_with_date_filters(self):
-        url = self.all + (
+        url = self.url + (
             '?issue_date_start=1970-01-01'
             '&issue_date_end=1970-02-01'
         )
@@ -99,7 +88,7 @@ class TestListApi(TestCase):
         extra = sample_reimbursement_data.copy()
         extra['document_id'] = 0
         Reimbursement.objects.create(**extra)
-        url = self.all + '?document_id=42,84+126,+168'
+        url = self.url + '?document_id=42,84+126,+168'
         resp = self.client.get(url)
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(4, len(content['results']))
@@ -114,8 +103,7 @@ class TestRetrieveApi(TestCase):
 
     def setUp(self):
         Reimbursement.objects.create(**sample_reimbursement_data)
-        unique_id = {'year': 1970, 'applicant_id': 13, 'document_id': 42}
-        url = resolve_url('api:reimbursement-detail', **unique_id)
+        url = resolve_url('api:reimbursement-detail', document_id=42)
         self.resp = self.client.get(url)
         self.maxDiff = 2 ** 11
 
@@ -167,18 +155,14 @@ class TestReceiptApi(TestCase):
 
     def setUp(self):
         self.obj = Reimbursement.objects.create(**sample_reimbursement_data)
-        self.unique_id = {'year': 1970, 'applicant_id': 13, 'document_id': 42}
-        self.url = resolve_url('api:reimbursement-receipt', **self.unique_id)
+        self.url = resolve_url('api:reimbursement-receipt', document_id=42)
         self.expected_receipt_url = 'http://www.camara.gov.br/cota-parlamentar/documentos/publ/13/1970/42.pdf'
 
     @patch('jarbas.core.models.head')
     def test_fetch_existing_receipt(self, mocked_head):
         mocked_head.return_value.status_code = 200
         resp = self.client.get(self.url)
-        expected = dict(
-            reimbursement=self.unique_id,
-            url=self.expected_receipt_url
-        )
+        expected = dict(url=self.expected_receipt_url)
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, content)
 
@@ -187,11 +171,7 @@ class TestReceiptApi(TestCase):
         mocked_head.return_value.status_code = 404
         cache.clear()
         resp = self.client.get(self.url)
-        expected = self.unique_id.copy()
-        expected = dict(
-            reimbursement=self.unique_id,
-            url=None
-        )
+        expected = dict(url=None)
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, content)
 
@@ -202,9 +182,6 @@ class TestReceiptApi(TestCase):
         self.obj.save()
         mocked_head.return_value.status_code = 200
         resp = self.client.get(self.url + '?force')
-        expected = dict(
-            reimbursement=self.unique_id,
-            url=self.expected_receipt_url
-        )
+        expected = dict(url=self.expected_receipt_url)
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, content)

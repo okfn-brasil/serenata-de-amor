@@ -28,6 +28,7 @@ class TestApplicant(TestCase):
         secondary_data = sample_reimbursement_data.copy()
         secondary_data['applicant_id'] = 42
         secondary_data['congressperson_name'] = 'John Doe'
+        secondary_data['document_id'] = 13
         Reimbursement.objects.create(**secondary_data)
         resp = self.client.get(self.url)
 
@@ -43,6 +44,7 @@ class TestApplicant(TestCase):
         secondary_data = sample_reimbursement_data.copy()
         secondary_data['applicant_id'] = 42
         secondary_data['congressperson_name'] = 'John Doe'
+        secondary_data['document_id'] = 13
         Reimbursement.objects.create(**secondary_data)
         resp = self.client.get(self.url + '?q=doe')
 
@@ -55,6 +57,7 @@ class TestApplicant(TestCase):
             dict(congressperson_name='Roger That', applicant_id=13)
         ]
         secondary_data = sample_reimbursement_data.copy()
+        secondary_data['document_id'] = 13
         secondary_data['year'] = 1971
         Reimbursement.objects.create(**secondary_data)
         resp = self.client.get(self.url)
