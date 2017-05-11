@@ -7,16 +7,11 @@ from django.db.models import Q
 
 class ReimbursementQuerySet(models.QuerySet):
 
-    def same_day(self, **kwargs):
-        keys = ('year', 'applicant_id', 'document_id')
-        unique_id = {k: v for k, v in kwargs.items()}
-        if not all(map(unique_id.get, keys)):
-            msg = 'A same_day queryset requires the kwargs: ' + ', '.join(keys)
-            raise TypeError(msg)
-
-        return self.exclude(**unique_id).filter(
-            issue_date=self.filter(**unique_id).values('issue_date'),
-            applicant_id=unique_id['applicant_id']
+    def same_day_as(self, document_id):
+        pk = dict(document_id=document_id)
+        return self.exclude(**pk).filter(
+            issue_date=self.filter(**pk).values('issue_date'),
+            applicant_id=self.filter(**pk).values('applicant_id')
         )
 
     def order_by_probability(self):
