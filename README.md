@@ -78,6 +78,10 @@ This request will list:
 
 Also you can pass more than one value per field (e.g. `document_id=111111,222222`).
 
+##### `GET /api/reimbursement/<document_id>/same_day/`
+
+Lists all reimbursements of expenses from the same day as `document_id`.
+
 ### Subquota
 
 Subqoutas are categories of expenses that can be reimbursed by congresspeople.
