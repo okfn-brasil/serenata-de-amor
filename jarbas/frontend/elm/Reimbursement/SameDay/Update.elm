@@ -4,34 +4,26 @@ import Reimbursement.RelatedTable.Update exposing (Msg, loadUrl)
 import String
 
 
-type alias UniqueId =
-    { applicantId : Int
-    , year : Int
-    , documentId : Int
-    }
-
-
 {-| Creates an URL from an UniqueId:
 
-    >>> getUrl { year = 2016, applicantId = 13,  documentId = 42 }
-    "/api/reimbursement/2016/13/42/same_day/?format=json"
+    >>> getUrl 42
+    "/api/reimbursement/42/same_day/?format=json"
 
 -}
-getUrl : UniqueId -> String
-getUrl uniqueId =
+getUrl : Int -> String
+getUrl documentId =
     String.join
         "/"
         [ "/api"
         , "reimbursement"
-        , uniqueId.year |> toString
-        , uniqueId.applicantId |> toString
-        , uniqueId.documentId |> toString
+        , toString documentId
         , "same_day/?format=json"
         ]
+        |> Debug.log "url"
 
 
-load : UniqueId -> Cmd Msg
-load uniqueId =
-    uniqueId
+load : Int -> Cmd Msg
+load documentId =
+    documentId
         |> getUrl
         |> loadUrl

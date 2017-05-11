@@ -49,13 +49,6 @@ onlyDigits value =
     String.filter Char.isDigit value
 
 
-toUniqueId : Reimbursement -> SameDay.UniqueId
-toUniqueId reimbursement =
-    SameDay.UniqueId reimbursement.applicantId
-        reimbursement.year
-        reimbursement.documentId
-
-
 toSameSubquotaFilter : Reimbursement -> SameSubquota.Filter
 toSameSubquotaFilter reimbursement =
     SameSubquota.Filter reimbursement.applicantId
@@ -204,7 +197,7 @@ update msg model =
 
                 sameDayCmds : List (Cmd Msg)
                 sameDayCmds =
-                    Array.map (toUniqueId >> SameDay.load)
+                    Array.map (.documentId >> SameDay.load)
                         newModel.results.reimbursements
                         |> Array.toIndexedList
                         |> List.map (\( idx, cmd ) -> Cmd.map (SameDayMsg idx) cmd)
