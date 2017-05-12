@@ -27,6 +27,8 @@ class ReimbursementListView(ListAPIView):
         filters = {k: v for k, v in zip(params, values) if v}
 
         # filter queryset
+        if self.request.query_params.get('suspicions'):
+            self.queryset = self.queryset.suspicions()
         if filters:
             self.queryset = self.queryset.tuple_filter(**filters)
 

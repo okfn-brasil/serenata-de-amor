@@ -29,6 +29,9 @@ class ReimbursementQuerySet(models.QuerySet):
         self = self.values(field, order_by_field).order_by(order_by_field)
         return self.distinct()
 
+    def suspicions(self):
+        return self.exclude(suspicions=None)
+
     def tuple_filter(self, **kwargs):
         filters = {_rename_key(k): v for k, v in _str_to_tuple(kwargs).items()}
         for key, values in filters.items():
@@ -40,14 +43,14 @@ class ReimbursementQuerySet(models.QuerySet):
 def _str_to_tuple(filters):
     """
     Transform string values form a dictionary in tuples. For example:
-            {
+        {
             'document': '42,3',
             'year': '1994,1996',
             'applicant': '1'
         }
 
     Becomes:
-            {
+        {
             'document': (42, 3),
             'year': (1994, 1996),
             'applicant': (1, ),
