@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-       - "staticfiles:/code/staticfiles"
+       - "assets:/code/staticfiles"
        - "./:/code"
     environment:
        - SECRET_KEY=lets-rock
