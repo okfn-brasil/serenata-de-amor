@@ -19,7 +19,7 @@ from datetime import date
 FIRST_YEAR = 2008
 NEXT_YEAR = date.today().year + 1
 
-filenames = ['../data/2017-05-09-federal-senate-{}.xz'.format(year) for year in range(FIRST_YEAR, NEXT_YEAR)]
+filenames = ['../../../serenata-data/2017-05-09-federal-senate-{}.xz'.format(year) for year in range(FIRST_YEAR, NEXT_YEAR)]
 
 dataset = pd.DataFrame()
 
@@ -41,6 +41,7 @@ dataset.head()
 # In[4]:
 
 dataset['date'] = pd.to_datetime(dataset['date'], errors='coerce')
+dataset['cnpj_cpf'] = dataset['cnpj_cpf'].str.replace(r'\D', '')
 
 
 # In[5]:
