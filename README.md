@@ -31,13 +31,13 @@ Each `Reimbursement` object is a reimbursement claimed by a congressperson and i
 
 ##### `GET /api/reimbursement/<document_id>/`
 
-Details from a specific reimbursement. If `receipt_url` wasn't fecthed yet, the server **won't** try to fetche it automatically.
+Details from a specific reimbursement. If `receipt_url` wasn't fetched yet, the server **won't** try to fetche it automatically.
 
 ##### `GET /api/reimbursement/<document_id>/receipt/`
 
 URL of the digitalized version of the receipt of this specific reimbursement.
 
-If `receipt_url` wasn't fecthed yet, the server **will** try to fetch it automatically.
+If `receipt_url` wasn't fetched yet, the server **will** try to fetch it automatically.
 
 If you append the parameter `force` (i.e. `GET /api/reimbursement/<document_id>/receipt/?force=1`) the server will re-fetch the receipt URL.
 
