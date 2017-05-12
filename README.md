@@ -31,7 +31,7 @@ Each `Reimbursement` object is a reimbursement claimed by a congressperson and i
 
 ##### `GET /api/reimbursement/<document_id>/`
 
-Details from a specific reimbursement. If `receipt_url` wasn't fetched yet, the server **won't** try to fetche it automatically.
+Details from a specific reimbursement. If `receipt_url` wasn't fetched yet, the server **won't** try to fetch it automatically.
 
 ##### `GET /api/reimbursement/<document_id>/receipt/`
 
