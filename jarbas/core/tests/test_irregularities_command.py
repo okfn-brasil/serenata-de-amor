@@ -16,77 +16,56 @@ class TestCommand(TestCase):
 class TestSerializer(TestCommand):
 
     def test_serializer(self):
-        expected = [
-            {
-                'applicant_id': 13,
-                'document_id': 42,
-                'year': 1970
-            },
-            {
-                'probability': 0.38,
-                'suspicions': {
-                    'hypothesis_1': True,
-                    'hypothesis_3': True
-                }
+        expected = {
+            'document_id': 42,
+            'probability': 0.38,
+            'suspicions': {
+                'hypothesis_1': True,
+                'hypothesis_3': True
             }
-        ]
+        }
+
         input = {
-            'applicant_id': '13',
             'document_id': '42',
             'hypothesis_1': 'True',
             'hypothesis_2': 'False',
             'hypothesis_3': 'True',
-            'probability': '0.38',
-            'year': '1970'
+            'probability': '0.38'
         }
-        self.assertEqual(list(self.command.serialize(input)), expected)
+        self.assertEqual(self.command.serialize(input), expected)
 
     def test_serializer_without_probability(self):
-        expected = [
-            {
-                'applicant_id': 13,
-                'document_id': 42,
-                'year': 1970
-            },
-            {
-                'probability': None,
-                'suspicions': {
-                    'hypothesis_1': True,
-                    'hypothesis_3': True
-                }
+        expected = {
+            'document_id': 42,
+            'probability': None,
+            'suspicions': {
+                'hypothesis_1': True,
+                'hypothesis_3': True
             }
-        ]
+        }
+
         input = {
-            'applicant_id': '13',
             'document_id': '42',
             'hypothesis_1': 'True',
             'hypothesis_2': 'False',
-            'hypothesis_3': 'True',
-            'year': '1970'
+            'hypothesis_3': 'True'
         }
-        self.assertEqual(list(self.command.serialize(input)), expected)
+        self.assertEqual(self.command.serialize(input), expected)
 
     def test_serializer_without_suspicions(self):
-        expected = [
-            {
-                'applicant_id': 13,
-                'document_id': 42,
-                'year': 1970
-            },
-            {
-                'probability': None,
-                'suspicions': None
-            }
-        ]
+        expected = {
+            'document_id': 42,
+            'probability': None,
+            'suspicions': None
+        }
+
         input = {
-            'applicant_id': '13',
             'document_id': '42',
             'hypothesis_1': 'False',
             'hypothesis_2': 'False',
-            'hypothesis_3': 'False',
-            'year': '1970'
+            'hypothesis_3': 'False'
         }
-        self.assertEqual(list(self.command.serialize(input)), expected)
+        self.assertEqual(self.command.serialize(input), expected)
 
 class TestCustomMethods(TestCommand):
 
@@ -103,11 +82,14 @@ class TestCustomMethods(TestCommand):
     def test_schedule_update_existing_record(self, get):
         reimbursement = Reimbursement()
         get.return_value = reimbursement
-        unique_id = {'pk' : 42}
-        content = {'probability': 0.618, 'suspicions': {'answer': 42}}
+        content = {
+            'document_id' : 42,
+            'probability': 0.618,
+            'suspicions': {'answer': 42}
+        }
         self.command.queue = []
-        self.command.schedule_update((unique_id, content))
-        get.assert_called_once_with(pk=42)
+        self.command.schedule_update(content)
+        get.assert_called_once_with(document_id=42)
         self.assertEqual(0.618, reimbursement.probability)
         self.assertEqual({'answer': 42}, reimbursement.suspicions)
         self.assertEqual([reimbursement], self.command.queue)
@@ -115,10 +97,10 @@ class TestCustomMethods(TestCommand):
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_non_existing_record(self, get):
         get.side_effect = Reimbursement.DoesNotExist
-        unique_id = {'pk' : 42}
+        content = {'document_id' : 42}
         self.command.queue = []
-        self.command.schedule_update((unique_id, ''))
-        get.assert_called_once_with(pk=42)
+        self.command.schedule_update(content)
+        get.assert_called_once_with(document_id=42)
         self.assertEqual([], self.command.queue)
 
     @patch('jarbas.core.management.commands.irregularities.bulk_update')

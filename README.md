@@ -25,21 +25,21 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
 
 ### Reimbursement
 
-Each `Reimbursement` object is a reimbursement claim made by a congressperson. Each reimbursement isidentified by an unique combination of `year`, `applicant_id` and `document_id`.
+Each `Reimbursement` object is a reimbursement claimed by a congressperson and identified publicly by its `document_id`.
 
 #### Retrieving a specific reimbursement
 
-##### `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/`
+##### `GET /api/reimbursement/<document_id>/`
 
-Details from a specific reimbursement. If `receipt_url` wasn't fecthed yet, the server **won't** try to fetche it.
+Details from a specific reimbursement. If `receipt_url` wasn't fetched yet, the server **won't** try to fetch it automatically.
 
-##### `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/receipt/`
+##### `GET /api/reimbursement/<document_id>/receipt/`
 
 URL of the digitalized version of the receipt of this specific reimbursement.
 
-If `receipt_url` wasn't fecthed yet, the server **will** try to fetch it.
+If `receipt_url` wasn't fetched yet, the server **will** try to fetch it automatically.
 
-If you append the parameter `force` (i.e. `GET /api/reimbursement/<year>/<applicant_id>/<document_id>/receipt/?force`) the server will re-fetch the receipt URL.
+If you append the parameter `force` (i.e. `GET /api/reimbursement/<document_id>/receipt/?force=1`) the server will re-fetch the receipt URL.
 
 Not all receipts are available, so this URL can be `null`.
 
@@ -48,14 +48,6 @@ Not all receipts are available, so this URL can be `null`.
 ##### `GET /api/reimbursement/`
 
 Lists all reimbursements.
-
-##### `GET /api/reimbursement/<year>/`
-
-Lists all reimbursements from a specific `year`.
-
-##### `GET /api/reimbursement/<year>/<applicant_id>/`
-
-Lists all reimbursements from a specific `year` and `applicant_id`.
 
 ##### Filtering
 
@@ -75,7 +67,7 @@ All these endpoints accepts any combination of the following parameters:
 For example:
 
 ```
-GET /api/reimbursement/2016/?cnpj_cpf=11111111111111&subquota_id=42&order_by=probability
+GET /api/reimbursement/?year=2016&cnpj_cpf=11111111111111&subquota_id=42&order_by=probability
 ```
 
 This request will list:
@@ -86,6 +78,10 @@ This request will list:
 * sorted by the highest probability
 
 Also you can pass more than one value per field (e.g. `document_id=111111,222222`).
+
+##### `GET /api/reimbursement/<document_id>/same_day/`
+
+Lists all reimbursements of expenses from the same day as `document_id`.
 
 ### Subquota
 

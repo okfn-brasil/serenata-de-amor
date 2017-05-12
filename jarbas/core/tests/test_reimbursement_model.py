@@ -21,7 +21,7 @@ class TestCreate(TestReimbursement):
         Reimbursement.objects.create(**self.data)
         self.assertEqual(1, Reimbursement.objects.count())
 
-    def test_unique_together(self):
+    def test_unique_document_id(self):
         Reimbursement.objects.create(**self.data)
         with self.assertRaises(IntegrityError):
             Reimbursement.objects.create(**self.data)
@@ -66,17 +66,8 @@ class TestManager(TestReimbursement):
         data3['issue_date'] = '1970-12-31'
         Reimbursement.objects.create(**data3)
 
-        unique_id = dict(
-            year=1970,
-            applicant_id=13,
-            document_id=84
-        )
-        qs = Reimbursement.objects.same_day(**unique_id)
+        qs = Reimbursement.objects.same_day_as(84)
         self.assertEqual(2, qs.count())
-
-    def test_same_day_error(self):
-        with self.assertRaises(TypeError):
-            Reimbursement.objects.same_day(year=2016, document_id=42)
 
     def test_suspicions(self):
         data = self.data.copy()
@@ -121,12 +112,7 @@ class TestCustomMethods(TestReimbursement):
 
     def test_repr(self):
         obj = Reimbursement.objects.create(**self.data)
-        expected = (
-            'Reimbursement('
-            'year=1970, '
-            'applicant_id=13, '
-            'document_id=42)'
-        )
+        expected = 'Reimbursement(document_id=42)'
         self.assertEqual(expected, obj.__repr__())
 
 

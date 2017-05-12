@@ -27,9 +27,10 @@ class Receipt:
 
 
 class Reimbursement(models.Model):
+    document_id = models.IntegerField('Document ID', db_index=True, unique=True)
+
     year = models.IntegerField('Year', db_index=True)
     applicant_id = models.IntegerField('Applicant ID', db_index=True)
-    document_id = models.IntegerField('Document ID', db_index=True)
 
     total_reimbursement_value = models.DecimalField('Total reimbusrsement value', max_digits=10, decimal_places=3, blank=True, null=True)
     total_net_value = models.DecimalField('Total net value', max_digits=10, decimal_places=3, db_index=True)
@@ -78,7 +79,6 @@ class Reimbursement(models.Model):
 
     class Meta:
         ordering = ['-issue_date']
-        unique_together = ('year', 'applicant_id', 'document_id')
 
     def get_receipt_url(self, force=False, bulk=False):
         if self.receipt_url:
@@ -119,12 +119,7 @@ class Reimbursement(models.Model):
         return list(map(lambda x: cast(x), parts)) if cast else parts
 
     def __repr__(self):
-        unique_id = (
-            'year={year}, '
-            'applicant_id={applicant_id}, '
-            'document_id={document_id}'
-        ).format(**self.__dict__)
-        return 'Reimbursement({})'.format(unique_id)
+        return 'Reimbursement(document_id={})'.format(self.document_id)
 
 
 class Activity(models.Model):

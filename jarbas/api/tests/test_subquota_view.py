@@ -26,6 +26,7 @@ class TestSubquota(TestCase):
 
         cache.clear()
         secondary_data = sample_reimbursement_data.copy()
+        secondary_data['document_id'] = 13
         secondary_data['year'] = 1971
         secondary_data['subquota_id'] = 42
         secondary_data['subquota_description'] = 'Another subquota'
@@ -42,6 +43,7 @@ class TestSubquota(TestCase):
         ]
 
         secondary_data = sample_reimbursement_data.copy()
+        secondary_data['document_id'] = 13
         secondary_data['year'] = 1971
         secondary_data['subquota_id'] = 42
         secondary_data['subquota_description'] = 'Another subquota'
@@ -57,6 +59,7 @@ class TestSubquota(TestCase):
             dict(subquota_description='Subquota description', subquota_id=4)
         ]
         secondary_data = sample_reimbursement_data.copy()
+        secondary_data['document_id'] = 13
         secondary_data['year'] = 1971
         Reimbursement.objects.create(**secondary_data)
         resp = self.client.get(self.url)

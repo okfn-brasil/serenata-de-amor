@@ -5,20 +5,12 @@ from jarbas.api import serializers
 from jarbas.core.models import Reimbursement, Company
 
 
-class MultipleFieldLookupMixin(object):
-
-    def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        filter = {k: self.kwargs[k] for k in self.lookup_fields}
-        return get_object_or_404(queryset, **filter)
-
-
 class ReimbursementListView(ListAPIView):
 
     queryset = Reimbursement.objects.all()
     serializer_class = serializers.ReimbursementSerializer
 
-    def get(self, request, year=None, applicant_id=None):
+    def get(self, request):
 
         # get filtering parameters from query string
         params = (
@@ -34,12 +26,6 @@ class ReimbursementListView(ListAPIView):
         values = map(self.request.query_params.get, params)
         filters = {k: v for k, v in zip(params, values) if v}
 
-        # select year and applicant ID from the URL path (not query string)
-        if year:
-            filters['year'] = year
-        if applicant_id:
-            filters['applicant_id'] = applicant_id
-
         # filter queryset
         if self.request.query_params.get('suspicions'):
             self.queryset = self.queryset.suspicions()
@@ -54,16 +40,16 @@ class ReimbursementListView(ListAPIView):
         return super().get(request)
 
 
-class ReimbursementDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
+class ReimbursementDetailView(RetrieveAPIView):
 
-    lookup_fields = ('year', 'applicant_id', 'document_id')
+    lookup_field = 'document_id'
     queryset = Reimbursement.objects.all()
     serializer_class = serializers.ReimbursementSerializer
 
 
-class ReceiptDetailView(MultipleFieldLookupMixin, RetrieveAPIView):
+class ReceiptDetailView(RetrieveAPIView):
 
-    lookup_fields = ('year', 'applicant_id', 'document_id')
+    lookup_field = 'document_id'
     queryset = Reimbursement.objects.all()
     serializer_class = serializers.ReceiptSerializer
 
@@ -79,7 +65,7 @@ class SameDayReimbursementListView(ListAPIView):
     serializer_class = serializers.SameDayReimbursementSerializer
 
     def get_queryset(self):
-        return Reimbursement.objects.same_day(**self.kwargs)
+        return Reimbursement.objects.same_day_as(**self.kwargs)
 
 
 class ApplicantListView(ListAPIView):

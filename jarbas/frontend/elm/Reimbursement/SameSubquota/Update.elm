@@ -15,27 +15,18 @@ type alias Filter =
 {-| Creates an URL from a Filter:
 
     >>> getUrl { year = 2016, applicantId = 13,  subquotaId = 42, month = 2 }
-    "/api/reimbursement/2016/13/?format=json&month=2&subquota_id=42"
+    "/api/reimbursement/?applicant_id=13&year=2016&month=2&subquota_id=42&format=json"
 
 -}
 getUrl : Filter -> String
 getUrl filter =
-    let
-        base : String
-        base =
-            String.concat
-                [ "/api/reimbursement/"
-                , toString filter.year
-                , "/"
-                , toString filter.applicantId
-                , "/"
-                ]
-    in
-        url base
-            [ ( "format", "json" )
-            , ( "month", toString filter.month )
-            , ( "subquota_id", toString filter.subquotaId )
-            ]
+    url "/api/reimbursement/"
+        [ ( "applicant_id", toString filter.applicantId )
+        , ( "year", toString filter.year )
+        , ( "month", toString filter.month )
+        , ( "subquota_id", toString filter.subquotaId )
+        , ( "format", "json" )
+        ]
 
 
 load : Filter -> Cmd Msg
