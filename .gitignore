@@ -1,5 +1,6 @@
 # development environment
 .coverage
+.env
 .floo
 *.sqlite3
 htmlcov/
