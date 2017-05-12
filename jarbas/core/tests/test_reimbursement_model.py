@@ -78,6 +78,15 @@ class TestManager(TestReimbursement):
         with self.assertRaises(TypeError):
             Reimbursement.objects.same_day(year=2016, document_id=42)
 
+    def test_suspicions(self):
+        data = self.data.copy()
+        data['document_id'] = 42 * 2
+        del data['suspicions']
+        del data['probability']
+        Reimbursement.objects.create(**data)
+        Reimbursement.objects.create(**self.data)
+        self.assertEqual(1, Reimbursement.objects.suspicions().count())
+
 
 class TestCustomMethods(TestReimbursement):
 

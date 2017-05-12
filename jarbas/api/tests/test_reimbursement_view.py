@@ -18,6 +18,7 @@ class TestListApi(TestCase):
             sample_reimbursement_data.copy(),
             sample_reimbursement_data.copy(),
             sample_reimbursement_data.copy(),
+            sample_reimbursement_data.copy(),
             sample_reimbursement_data.copy()
         ]
 
@@ -41,8 +42,17 @@ class TestListApi(TestCase):
         data[3]['year'] = 1983
         data[3]['issue_date'] = '1970-02-01'
 
-        for d in data:
-            Reimbursement.objects.create(**d)
+        data[4]['applicant_id'] = 13 * 5
+        data[4]['cnpj_cpf'] = '22222222222'
+        data[4]['document_id'] = 42 * 5
+        data[4]['subquota_id'] = 22
+        data[4]['year'] = 1983
+        data[4]['issue_date'] = '1960-02-01'
+        del data[4]['probability']
+        del data[4]['suspicions']
+
+        for fixture in data:
+            Reimbursement.objects.create(**fixture)
 
         url_name = 'api:reimbursement-list'
         self.all = resolve_url(url_name)
@@ -56,8 +66,8 @@ class TestListApi(TestCase):
                 self.assertEqual(200, resp.status_code)
 
     def test_content_general(self):
-        self.assertEqual(4, Reimbursement.objects.count())
-        self.assertEqual(4, self._count_results(self.all))
+        self.assertEqual(5, Reimbursement.objects.count())
+        self.assertEqual(5, self._count_results(self.all))
 
     def test_content_by_year(self):
         self.assertEqual(3, self._count_results(self.by_year))
@@ -68,7 +78,7 @@ class TestListApi(TestCase):
     def test_ordering(self):
         resp = self.client.get(self.all)
         content = loads(resp.content.decode('utf-8'))
-        self.assertEqual(4, len(content['results']))
+        self.assertEqual(5, len(content['results']))
         self.assertEqual('1969-12-31', content['results'][3]['issue_date'])
 
     def test_content_with_filters(self):
@@ -76,6 +86,7 @@ class TestListApi(TestCase):
             '?cnpj_cpf=22222222222'
             '&subquota_id=22'
             '&order_by=probability'
+            '&suspicions=1'
         )
         resp = self.client.get(url)
         content = loads(resp.content.decode('utf-8'))

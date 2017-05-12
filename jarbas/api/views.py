@@ -41,6 +41,8 @@ class ReimbursementListView(ListAPIView):
             filters['applicant_id'] = applicant_id
 
         # filter queryset
+        if self.request.query_params.get('suspicions'):
+            self.queryset = self.queryset.suspicions()
         if filters:
             self.queryset = self.queryset.tuple_filter(**filters)
 

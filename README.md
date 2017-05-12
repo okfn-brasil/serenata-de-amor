@@ -68,6 +68,7 @@ All these endpoints accepts any combination of the following parameters:
 * `issue_date_end` (exclusive)
 * `month`
 * `subquota_id`
+* `suspicions` (_boolean_, basically any value parses to `True`)
 * `year`
 * `order_by`: `issue_date` (default) or `probability` (both descending)
 
