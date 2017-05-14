@@ -29,9 +29,7 @@ services:
           - apps
 
   elm:
-    build:
-      context: .
-      dockerfile: Dockerfile-elm
+    image: felipedemorais/auto-jarbas-frontend
     volumes:
       - "./:/code"
       - "/code/node_modules"
@@ -39,9 +37,7 @@ services:
     command: [yarn, watch]
 
   nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile-nginx
+    image: felipedemorais/aut-jarbas-nginx
     volumes:
       - "assets:/opt/jarbas/staticfiles"
     ports:
