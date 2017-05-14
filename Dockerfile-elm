@@ -11,4 +11,4 @@ COPY gulpfile.js gulpfile.js
 RUN yarn install --pure-lockfile
 
 COPY jarbas jarbas
-CMD yarn assets
+CMD ["yarn", "assets"]
