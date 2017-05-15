@@ -7,19 +7,20 @@
 # What we need to see:
 # - [x] Concat all the nine datasets
 # - [x] Fix the `date` field to datetime
-# - [ ] Clean the `cnpj_cpf` field
-# - [ ] Check the dataset peculiarities
-# - [ ] Check if a `group_by` is necessary
+# - [x] Clean the `cnpj_cpf` field
+# - [x] Check the dataset peculiarities
+# - [x] Check if a `group_by` is necessary
 
 # In[1]:
 
 import pandas as pd
+import numpy as np
 from datetime import date
 
 FIRST_YEAR = 2008
 NEXT_YEAR = date.today().year + 1
 
-filenames = ['../../../serenata-data/2017-05-09-federal-senate-{}.xz'.format(year) for year in range(FIRST_YEAR, NEXT_YEAR)]
+filenames = ['../data/2017-05-09-federal-senate-{}.xz'.format(year) for year in range(FIRST_YEAR, NEXT_YEAR)]
 
 dataset = pd.DataFrame()
 
@@ -82,3 +83,10 @@ print(len(dataset['document_id'].unique()))
 # * which means that 184004 of the have `document_id` field and NOT ALL OF THEM ARE UNIQUE, so we need to check if the reimbursements are made like `chamber_of_deputies` and we need to group them by `document_id`. 
 # * The datasets have no `cnpj_cpf`, `supplier`, `document_id`, `date`, `expense_details` fields from 2008 until the beggining of 2009.
 # * The datasets only have complete information after 2011.
+
+# ## Decisions
+# 
+# After all those analysis we decided that we will only clean up the `date` and `cnpj_cpf` and after that we will make another study with all the things that we can discover exploring the fields.
+# That is what will be done, if you want, you can check the progress in [this PR](https://github.com/datasciencebr/serenata-toolbox/pull/53)
+# 
+# Thanks @jtemporal and @cuducos for all feedbacks given <3

@@ -11783,9 +11783,9 @@ What we need to see:</p>
 <ul>
 <li>[x] Concat all the nine datasets</li>
 <li>[x] Fix the <code>date</code> field to datetime</li>
-<li>[ ] Clean the <code>cnpj_cpf</code> field</li>
-<li>[ ] Check the dataset peculiarities</li>
-<li>[ ] Check if a <code>group_by</code> is necessary</li>
+<li>[x] Clean the <code>cnpj_cpf</code> field</li>
+<li>[x] Check the dataset peculiarities</li>
+<li>[x] Check if a <code>group_by</code> is necessary</li>
 </ul>
 
 </div>
@@ -11797,12 +11797,13 @@ What we need to see:</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">date</span>
 
 <span class="n">FIRST_YEAR</span> <span class="o">=</span> <span class="mi">2008</span>
 <span class="n">NEXT_YEAR</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span>
 
-<span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;../../../serenata-data/2017-05-09-federal-senate-</span><span class="si">{}</span><span class="s1">.xz&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">FIRST_YEAR</span><span class="p">,</span> <span class="n">NEXT_YEAR</span><span class="p">)]</span>
+<span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;../data/2017-05-09-federal-senate-</span><span class="si">{}</span><span class="s1">.xz&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">FIRST_YEAR</span><span class="p">,</span> <span class="n">NEXT_YEAR</span><span class="p">)]</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
@@ -11838,7 +11839,7 @@ What we need to see:</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>203406</pre>
+<pre>203547</pre>
 </div>
 
 </div>
@@ -11869,19 +11870,6 @@ What we need to see:</p>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -12011,19 +11999,6 @@ What we need to see:</p>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -12139,19 +12114,6 @@ What we need to see:</p>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -12267,7 +12229,7 @@ What we need to see:</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>19536</pre>
+<pre>19543</pre>
 </div>
 
 </div>
@@ -12298,7 +12260,7 @@ What we need to see:</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>183870</pre>
+<pre>184004</pre>
 </div>
 
 </div>
@@ -12327,7 +12289,7 @@ What we need to see:</p>
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>143490
+<pre>143582
 </pre>
 </div>
 </div>
@@ -12355,6 +12317,18 @@ What we need to see:</p>
 <li>The datasets have no <code>cnpj_cpf</code>, <code>supplier</code>, <code>document_id</code>, <code>date</code>, <code>expense_details</code> fields from 2008 until the beggining of 2009.</li>
 <li>The datasets only have complete information after 2011.</li>
 </ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Decisions">Decisions<a class="anchor-link" href="#Decisions">&#182;</a></h2><p>After all those analysis we decided that we will only clean up the <code>date</code> and <code>cnpj_cpf</code> and after that we will make another study with all the things that we can discover exploring the fields.
+That is what will be done, if you want, you can check the progress in <a href="https://github.com/datasciencebr/serenata-toolbox/pull/53">this PR</a></p>
+<p>Thanks @jtemporal and @cuducos for all feedbacks given &lt;3</p>
 
 </div>
 </div>
