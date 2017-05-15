@@ -31,8 +31,11 @@ $ ./setup
 
 #### Running
 
+To run Rosie, you need to select a module to be called.
+For example, if you want to run `chamber_of_deputies` module, you should run this command:
+
 ```console
-$ python rosie.py run
+$ python rosie.py run chamber_of_deputies
 ```
 
 The toolbox expects to find Amazon credentials in a `config.ini` file. If You get an error of missing `config.ini` you can just copy the `config.ini.example` to a `config.ini` and everything will run smoothly (don't bother about `AccessKey` and `SecretKey` unless you're planning to upload files to S3).
@@ -42,7 +45,7 @@ A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted 
 Also a target directory (where files are saved) can de passed — for example:
 
 ```console
-$ python rosie.py run /my/serenata/directory/
+$ python rosie.py run chamber_of_deputies /my/serenata/directory/
 ```
 
 #### Test suite
