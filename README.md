@@ -35,7 +35,7 @@ To run Rosie, you need to select a module to be called.
 For example, if you want to run `chamber_of_deputies` module, you should run this command:
 
 ```console
-$ python rosie.py run `chamber_of_deputies`
+$ python rosie.py run chamber_of_deputies
 ```
 
 A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
@@ -43,7 +43,7 @@ A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted 
 Also a target directory (where files are saved) can de passed — for example:
 
 ```console
-$ python rosie.py run `chamber_of_deputies` /my/serenata/directory/
+$ python rosie.py run chamber_of_deputies /my/serenata/directory/
 ```
 
 #### Test suite
