@@ -148,7 +148,7 @@ make run.devel
 or
 
 ```console
-docker-compose up -d --build
+docker-compose up -d
 docker-compose run --rm jarbas python manage.py migrate
 docker-compose run --rm jarbas python manage.py ceapdatasets
 docker-compose run --rm jarbas python manage.py collectstatic --no-input
