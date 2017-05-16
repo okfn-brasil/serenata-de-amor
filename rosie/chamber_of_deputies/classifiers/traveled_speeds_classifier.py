@@ -70,8 +70,8 @@ class TraveledSpeedsClassifier(TransformerMixin):
         distances_traveled = X.groupby(self.AGG_KEYS) \
             .apply(self.__calculate_sum_distances).reset_index() \
             .rename(columns={0: 'distance_traveled'})
-        expenses = X.groupby(self.AGG_KEYS)['applicant_id'] \
-            .agg({'expenses': len}).reset_index()
+        expenses = X.groupby(self.AGG_KEYS)['applicant_id'].agg(len) \
+            .rename('expenses').reset_index()
         _X = pd.merge(distances_traveled, expenses,
                       left_on=self.AGG_KEYS,
                       right_on=self.AGG_KEYS)
