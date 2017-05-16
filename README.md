@@ -14,7 +14,7 @@ To achieve this goal, unprecedented, we invite everyone to train the intelligenc
 
 ## Before contributing
 
-**[Visit out official website](http://serenata.datasciencebr.com/)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
+**[Visit our official website](http://serenata.datasciencebr.com/)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
 
 ## Support Serenata de Amor
 
@@ -26,5 +26,5 @@ We [were crowdfunded](https://catarse.me/serenata) to operate for the first two 
 
 
 ## License
-  
+
 The project Serenata de Amor Operation is available under the [MIT license](LICENSE).
