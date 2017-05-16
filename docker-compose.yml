@@ -1,7 +1,7 @@
 version: '2'
 services:
   jarbas:
-    image: felipedemorais/auto-jarbas
+    image: datasciencebr/jarbas-backend
     volumes:
        - "assets:/code/staticfiles"
        - "./:/code"
@@ -29,7 +29,7 @@ services:
           - apps
 
   elm:
-    image: felipedemorais/auto-jarbas-frontend
+    image: datasciencebr/jarbas-frontend
     volumes:
       - "./:/code"
       - "/code/node_modules"
@@ -37,7 +37,7 @@ services:
     command: [yarn, watch]
 
   nginx:
-    image: felipedemorais/aut-jarbas-nginx
+    image: datasciencebr/jarbas-server
     volumes:
       - "assets:/opt/jarbas/staticfiles"
     ports:
