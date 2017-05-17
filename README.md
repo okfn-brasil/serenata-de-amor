@@ -139,7 +139,8 @@ cp contrib/.env.sample .env
 
 ### Using Docker
 
-If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and make, just run:
+#### Requirements
+[Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)), just run:
 
 ```console
 make run.devel
@@ -217,6 +218,8 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 * `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
 * `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
+
+To use GOOGLE_STREET_VIEW_API_KEY just export it in a local environment variable, so when you run Jarbas it will get from the local environment variable.
 
 #### Migrations
 
