@@ -28,8 +28,10 @@ class Core:
         self.settings = settings
         self.dataset = adapter.dataset
         self.data_path = adapter.path
-        self.suspicions = self.dataset.copy()
-        # self.suspicions = self.dataset[self.settings.UNIQUE_IDS].copy()
+        if (UNIQUE_IDS):
+            self.suspicions = self.dataset[self.settings.UNIQUE_IDS].copy()
+        else:
+            self.suspicions = self.dataset.copy()
 
     def __call__(self):
         for name, classifier in self.settings.CLASSIFIERS.items():
