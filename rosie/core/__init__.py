@@ -28,7 +28,7 @@ class Core:
         self.settings = settings
         self.dataset = adapter.dataset
         self.data_path = adapter.path
-        if (UNIQUE_IDS):
+        if self.settings.UNIQUE_IDS:
             self.suspicions = self.dataset[self.settings.UNIQUE_IDS].copy()
         else:
             self.suspicions = self.dataset.copy()
