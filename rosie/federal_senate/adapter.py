@@ -17,13 +17,25 @@ class Adapter:
 
     @property
     def dataset(self):
-        self.update_datasets()
+        path = self.update_datasets()
+        self._dataset = pd.read_csv(path, dtype={'cnpj': np.str}, low_memory=False)
         self.prepare_dataset()
+
+        return self._dataset
+
+    def prepare_dataset(self):
+        self.rename_columns()
+
+    def rename_columns(self):
+        columns = {v: k for k, v in COLUMNS.items()}
+        self._dataset.rename(columns=columns, inplace=True)
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)
         federal_senate = FederalSenateDataset(self.path)
         federal_senate.fetch()
         federal_senate.translate()
-        federal_senate.clean()
+        federal_senate_reimbursements_path = federal_senate.clean()
+
+        return federal_senate_reimbursements_path
 
