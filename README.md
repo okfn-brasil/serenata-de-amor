@@ -136,7 +136,8 @@ cp contrib/.env.sample .env
 
 ### Using Docker
 
-If you have [Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and make, just run:
+#### Requirements
+[Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)), just run:
 
 ```console
 make run.devel
@@ -145,7 +146,7 @@ make run.devel
 or
 
 ```console
-docker-compose up -d --build
+docker-compose up -d
 docker-compose run --rm jarbas python manage.py migrate
 docker-compose run --rm jarbas python manage.py ceapdatasets
 docker-compose run --rm jarbas python manage.py collectstatic --no-input
@@ -167,6 +168,10 @@ docker-compose run --rm jarbas python manage.py irregularities contrib/sample-da
 
 You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
 
+To add a fresh new reimbursements.xz brewed by [Rosie](https://github.com/datasciencebr/rosie) or from [toolbox](https://github.com/datasciencebr/rosie), you just need to have this file inside project folder and give the path at the end of the command, as bellow:
+```
+docker-compose run --rm jarbas python manage.py reimbursements PATH_TO_YOUR_FRESH_NEW_REIMBURSEMENTS.xz
+```
 
 ### Local install
 
@@ -214,6 +219,8 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 * `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
 * `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
+
+To use GOOGLE_STREET_VIEW_API_KEY just export it in a local environment variable, so when you run Jarbas it will get from the local environment variable.
 
 #### Migrations
 

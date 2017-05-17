@@ -3,7 +3,6 @@ COPY requirements.txt /requirements.txt
 RUN python -m pip install -U pip
 RUN python -m pip install -r requirements.txt
 RUN apt-get update && apt-get install -y postgresql postgresql-contrib
-COPY .env /code/.env
 COPY manage.py /code/manage.py
 COPY jarbas /code/jarbas
 WORKDIR /code
