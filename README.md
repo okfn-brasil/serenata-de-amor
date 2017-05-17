@@ -171,6 +171,10 @@ docker-compose run --rm jarbas python manage.py irregularities contrib/sample-da
 
 You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
 
+To add a fresh new reimbursements.xz brewed by [Rosie](https://github.com/datasciencebr/rosie) or from [toolbox](https://github.com/datasciencebr/rosie), you just need to have this file inside project folder and give the path at the end of the command, as bellow:
+```
+docker-compose run --rm jarbas python manage.py reimbursements PATH_TO_YOUR_FRESH_NEW_REIMBURSEMENTS.xz
+```
 
 ### Local install
 
