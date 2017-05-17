@@ -3,19 +3,11 @@
 
 # # Exploratory Descriptive Analysis of Local Transportation
 # 
-# This is an Exploratory Descriptive Analysis of expenditure with local transportation. We already created three separated notebooks to explore the data of the subquotas 'Taxi, toll and parking', 'Automotive vehicle renting or charter' and 'Fuels and lubricants'. In this notebook, we will join the analysis of this subquotas.
+# This is an Exploratory Descriptive Analysis of expenditure with local transportation. In this notebook, we will join the analysis of the subquotas "Taxi, toll and parking", "Automotive vehicle renting or charter" and "Fuels and lubricants".
 # 
-# The subquota 'Automotive vehicle renting or charter' changed in the time. It started like 'Automotive vehicle renting or watercraft charter' and in October/2013 was split in 'Watercraft renting or charter' and 'Automotive vehicle renting or charter'. 
-# 
-# The previous notebooks are in:
-# 
-# 'Automotive vehicle renting or charter': https://github.com/datasciencebr/serenata-de-amor/pull/206/commits/6afda4344c6565ec01536242353730b14f2ebaee
-# 
-# 'Taxi, toll and parking': https://github.com/datasciencebr/serenata-de-amor/blob/master/develop/2017-03-15-fabiocorreacordeiro-taxi-descriptive-analysis.ipynb
-# 
-# 'Fuels and lubricants': https://github.com/datasciencebr/serenata-de-amor/pull/203/commits/2635528e4faa9d94562e08972164ddba2173b15d
+# The subquota "Automotive vehicle renting or charter" changed in the time. It started like "Automotive vehicle renting or watercraft charter" and in October/2013 was split in "Watercraft renting or charter" and "Automotive vehicle renting or charter". 
 
-# In[89]:
+# In[7]:
 
 get_ipython().magic('matplotlib inline')
 import matplotlib.pyplot as plt
@@ -25,9 +17,9 @@ import seaborn as sns
 import math
 
 
-# In[90]:
+# In[8]:
 
-data = pd.read_csv('../data/2017-03-14-reimbursements.xz',
+data = pd.read_csv('../data/2017-03-15-reimbursements.xz',
                    parse_dates=[16],
                    low_memory=False,
                    dtype={'document_id': np.str,
@@ -40,7 +32,7 @@ data = pd.read_csv('../data/2017-03-14-reimbursements.xz',
 
 # First step is subset the data of local transportation of all reimbursements
 
-# In[91]:
+# In[9]:
 
 taxi = data[(data['subquota_description'] == 'Taxi, toll and parking')]
 fuel = data[(data['subquota_description'] == 'Fuels and lubricants')]
@@ -49,7 +41,7 @@ rent_car = data[(data['subquota_description'] == 'Automotive vehicle renting or 
 rent_boat = data[(data['subquota_description'] =='Watercraft renting or charter')]
 
 
-# In[92]:
+# In[10]:
 
 transportation = pd.DataFrame()
 transportation = transportation.append(taxi)
@@ -61,23 +53,23 @@ transportation = transportation.append(rent_boat)
 
 # Then, we will analyse total expenses by month.
 
-# In[93]:
+# In[11]:
 
 transportation_month = transportation.groupby(['year',
                                                'month']).agg({'total_net_value':sum})
 
 
-# In[94]:
+# In[12]:
 
 transportation_month.plot()
 plt.title('Total Expenses with local transportation')
 
 
-# Here we can observe that the total expenses didn't change so much. There was an increase in 2015/16 when the limit of 'Fuels and lubricants' raised to R$6,000.
+# Here we can observe that the total expenses didn't change so much. There was an increase in 2015/16 when the limit of "Fuels and lubricants" raised to R$6,000.
 
-# Now we will analyze the total expenses by month for each subquota. It necessary to pay attention when each subquota started, 'Taxi, toll and parking' started in October/2013, the same date when 'Automotive vehicle renting or watercraft charter' was split. There are 'Fuels and lubricants' reimbursement since 2009.
+# Now we will analyze the total expenses by month for each subquota. It necessary to pay attention when each subquota started, "Taxi, toll and parking" started in October/2013, the same date when "Automotive vehicle renting or watercraft charter" was split. There are "Fuels and lubricants" reimbursement since 2009.
 
-# In[95]:
+# In[13]:
 
 taxi_month = taxi.groupby(['year','month']).agg({'total_net_value':sum})
 fuel_month = fuel.groupby(['year','month']).agg({'total_net_value':sum})
@@ -86,7 +78,7 @@ rent_car_month = rent_car.groupby(['year','month']).agg({'total_net_value':sum})
 rent_boat_month = rent_boat.groupby(['year','month']).agg({'total_net_value':sum})
 
 
-# In[96]:
+# In[14]:
 
 taxi_month.plot()
 plt.title('Total Expenses in "Taxi, toll and parking"')
@@ -111,7 +103,7 @@ plt.ylim([0, 2500000])
 
 # Now we will check the mean of all expenses per congressman.
 
-# In[97]:
+# In[15]:
 
 transportation_mean = transportation.groupby(['year',
                                               'month',
@@ -121,15 +113,15 @@ transportation_mean = transportation_mean.groupby(['year',
                                                    'month']).agg({'total_net_value':'mean'})
 
 
-# In[98]:
+# In[48]:
 
 transportation_mean.plot()
-plt.title('Mean of Expenses with local transportation')
+plt.title('Mean of Expenses with Local Transportation')
 
 
 # And mean per subquota.
 
-# In[99]:
+# In[17]:
 
 #'Taxi, toll and parking'
 taxi_mean = taxi.groupby(['year',
@@ -173,7 +165,7 @@ rent_boat_mean = rent_boat_mean.groupby(['year',
                                          'month']).agg({'total_net_value':'mean'})
 
 
-# In[100]:
+# In[18]:
 
 taxi_mean.plot()
 plt.title('Mean Expenses in "Taxi, toll and parking"')
@@ -200,7 +192,7 @@ plt.ylim([0, 27000])
 
 # # "Fuels and lubricants"
 
-# When we read the legislation about CEAP (http://www2.camara.leg.br/legin/int/atomes/2009/atodamesa-43-21-maio-2009-588364-normaatualizada-cd-mesa.pdf) the Art 2°, § 1° said:
+# When we read the legislation about [CEAP](http://www2.camara.leg.br/legin/int/atomes/2009/atodamesa-43-21-maio-2009-588364-normaatualizada-cd-mesa.pdf) the Art 2°, § 1° said:
 # 
 # *"§ 1º As despesas estabelecidas nos incisos I, VII e VIII poderão ser realizadas por assessores, assim entendidos os servidores efetivos, os ocupantes de cargos de natureza especial ou secretários parlamentares vinculados à Câmara dos Deputados.*
 # 
@@ -210,22 +202,22 @@ plt.ylim([0, 27000])
 
 # Now we will try to find some reimbursements suspects in subquota "Fuel and lubricants". We will use the worst case acceptable to find a limit to expenses, any reimbursement greater than this limit we will consider a suspect reimbursement.
 # 
-# ### We will consider suspecting all reimbursements that exceed the max cost of R$948,90.
+# ### We will consider suspecting all reimbursements that exceed the max cost of R$917.00.
 # 
 # The max cost was calculate using the worst case that is possible to fill a gas and lubricant tank of a car. We used the biggest gas tank in Brazilian market (Ford F-250 with 110l tank),
-# the cost of gas in the most expense gas station in Brazil (R4,70) and 10l of most expensive lubricant (R$40). Most of the service stations don't charge to change lubricants.
+# the cost of gas in the most expense gas station in Brazil (R4.70) and 10l of most expensive lubricant (R$40.00). Most of the service stations don't charge to change lubricants.
 # 
-# Fonts: 
+# Sources: 
 # 
-# Tanks size: https://panelinhanet.wordpress.com/2013/02/20/combustivel-quantos-litros-cabem-no-tanque-do-seu-veiculo/ in 18/mar/2017 
+# [Cost of gas](http://www.anp.gov.br/preco/prc/Resumo_Semanal_Combustiveis.asp in 25/apr/2017)
 # 
-# Cost of gas: http://www.anp.gov.br/preco/prc/Resumo_Semanal_Combustiveis.asp in 25/apr/2017 
+# [Lubricant capacity](http://www.autoideia.com.br/capacidade_oleo_motor_automoveis&codmar=ford)
 # 
-# Lubricant capacity: http://www.autoideia.com.br/capacidade_oleo_motor_automoveis&codmar=ford 
+# [Cost of lubricant](http://www.mercadomineiro.com.br/pesquisa/oleo-lubrificante-pesquisa-precos)
 # 
-# Cost of lubricant: http://www.mercadomineiro.com.br/pesquisa/oleo-lubrificante-pesquisa-precos
+# [Tanks size](https://panelinhanet.wordpress.com/2013/02/20/combustivel-quantos-litros-cabem-no-tanque-do-seu-veiculo/)  in 18/mar/2017 
 
-# In[101]:
+# In[19]:
 
 fuel_cost = 4.70
 fuel_capacity = 110
@@ -235,42 +227,42 @@ max_cost = fuel_cost*fuel_capacity + lubricant_cost*lubricant_capacity
 max_cost
 
 
-# In[102]:
+# In[20]:
 
 fuel_outliers = fuel[fuel['total_net_value'] > max_cost].sort_values('total_net_value', ascending=False)
 sns.distplot(fuel_outliers['total_net_value'],bins=100)
 plt.title('Reimbursements of "Fuels and lubricants" greater than Max Cost')
 
 
-# In[103]:
+# In[21]:
 
 fuel_outliers['total_net_value'].sum()
 
 
-# In[104]:
+# In[22]:
 
 fuel_outliers['total_net_value'].describe()
 
 
 # If we want to be benevolent with the congresspeople we would admit that these reimbursements were the payment of full month, and they agree with the gas station to pay all in only one payment. So let's calculate the max cost of a month.
 # 
-# Using the same logic of worst case, we will consider that the congresspeople drove the same distance that a taxi driver in São Paulo. In São Paulo there is 3.491 taxi drivers work for a taxi company and they drive 20.000.000 km per month. It's about 5,729km per month for each driver.
+# Using the same logic of worst case, we will consider that the congresspeople drove the same distance that a taxi driver in São Paulo. In São Paulo there is 3,491 taxi drivers work for a taxi company and they drive 20,000,000 km per month. It's about 5,729km per month for each driver.
 # 
-# Consumption of gas of Ford F-250 - 6,93 Km/L
+# Consumption of gas of Ford F-250 - 6.93 Km/L
 # 
-# Most expensive cost of gas on Brasília - R$3,88/L
+# Most expensive cost of gas on Brasília - R$3.88/L
 # 
 # ### The max cost for a full month is R$3,207.
 # 
-# Fonts:
+# Sources:
 # 
-# Statistics of Taxi in SP - http://www.adetax.com.br/index.php/informacoes-e-servicos/estatisticas/
+# [Statistics of Taxi in SP](http://www.adetax.com.br/index.php/informacoes-e-servicos/estatisticas/)
 # 
-# Ford F-250 - http://www.vrum.com.br/fichatecnica/Ford/F_250/2002/003114-3
+# [Ford F-250](http://www.vrum.com.br/fichatecnica/Ford/F_250/2002/003114-3)
 # 
-# Cost of gas: http://www.anp.gov.br/preco/prc/Resumo_Semanal_Combustiveis.asp in 25/apr/2017 
+# [Cost of gas](http://www.anp.gov.br/preco/prc/Resumo_Semanal_Combustiveis.asp in 25/apr/2017)
 
-# In[105]:
+# In[23]:
 
 fuel_cost = 3.88
 distance = 5729
@@ -281,7 +273,7 @@ max_cost_month
 
 # Now we will divide the suspects reimbursements in Red Flag (above monthly max cost) and yellow flag (above a max cost for a single tank but below a monthly cost).
 
-# In[106]:
+# In[24]:
 
 fuel_outliers_redflag = fuel_outliers[fuel_outliers['total_net_value'] >= max_cost_month].sort_values('total_net_value', ascending=False)
 fuel_outliers_redflag['suspect'] = "Fuel Red Flag"
@@ -289,17 +281,17 @@ sns.distplot(fuel_outliers_redflag['total_net_value'],bins=100)
 plt.title('Reimbursements of "Fuels and lubricants" greater than Max Cost of a Full Month')
 
 
-# In[107]:
+# In[25]:
 
 fuel_outliers_redflag['total_net_value'].sum()
 
 
-# In[108]:
+# In[26]:
 
 fuel_outliers_redflag['total_net_value'].describe()
 
 
-# In[109]:
+# In[27]:
 
 fuel_outliers_yellowflag = fuel_outliers[fuel_outliers['total_net_value'] < max_cost_month].sort_values('total_net_value', ascending=False)
 fuel_outliers_yellowflag['suspect'] = "Fuel Yellow Flag"
@@ -307,21 +299,21 @@ sns.distplot(fuel_outliers_yellowflag['total_net_value'],bins=100)
 plt.title('Reimbursements of "Fuels and lubricants" greater than Max Cost for a single Tank, but less than Max Cost of a Full Month')
 
 
-# In[110]:
+# In[28]:
 
 fuel_outliers_yellowflag['total_net_value'].sum()
 
 
-# In[111]:
+# In[29]:
 
 fuel_outliers_yellowflag['total_net_value'].describe()
 
 
-# ### We found 9,094 reimbursements (R$37,9 millions - Red Flag) without justification to be so expensive and other 15,769 (R29,5 millions - Yellow Flag) very suspect.
+# ### We found 9,359 reimbursements (R$39.2 millions - Red Flag) without justification to be so expensive and other 16,338 (R30.6 millions - Yellow Flag) very suspect.
 
 # Until now we checked the expenses of single reimbursements, next step is to check if the sum of all reimbursements in a month is greater than the monthly max cost.
 
-# In[112]:
+# In[49]:
 
 fuel_congressperson = fuel.groupby(['congressperson_id',
                                     'year',
@@ -341,46 +333,46 @@ del fuel_outlier_monthlycost['cong_year_month']
 fuel_outlier_monthlycost['suspect'] = "Fuel monthly"
 
 
-# In[113]:
+# In[31]:
 
 sns.distplot(fuel_outlier_monthlycost['total_net_value'],bins=100)
 plt.title('Reimbursements of "Fuels and lubricants" that its monthly sum is greater than Max Cost of a Full Month')
 
 
-# In[114]:
+# In[32]:
 
 fuel_outlier_monthlycost['total_net_value'].sum()
 
 
-# In[115]:
+# In[33]:
 
 fuel_outlier_monthlycost['total_net_value'].describe()
 
 
-# ### We found 290,202 reimbursements (R$33,6 millions) that its monthly sum was greater than Max Cost of a Full Month. 
+# ### We found 297,947 reimbursements (R$34.7 millions) that its monthly sum was greater than Max Cost of a Full Month. 
 
-# # 'Automotive vehicle renting or charter'
+# # "Automotive vehicle renting or charter"
 
-# In the case of 'Automotive vehicle renting or charter' the car rented could be used by the congressman or by an advisor.
+# In the case of "Automotive vehicle renting or charter" the car rented could be used by the congressman or by an advisor.
 # 
 # In this case, we will try to determine a moral limit. If the congressman paid more to rent a car than the cost to buy a car it isn't morally acceptable. So, we will use how a yearly limit for use of this subquota the price of one car. If the congressman buys a car per year, at the end of his mandate he could have a small fleet in his cabinet.
 # 
 # We will use the price in dec/2016 of the most seller car in Brazil.
 # 
-# Onix - R$ 37.980,00
+# Onix - R$ 37,980.00
 # 
-# Fonts:
+# Sources:
 # 
-# Most seller car: http://exame.abril.com.br/negocios/os-50-carros-mais-vendidos-em-2016/
+# [Most seller car](http://exame.abril.com.br/negocios/os-50-carros-mais-vendidos-em-2016/)
 # 
-# Car cost: http://veiculos.fipe.org.br?carro/gm-chevrolet/12-2016/004423-7/32000/g/spmzgw4lwhp (FIP code004423-7, in dec/2016)
+# [Car cost](http://veiculos.fipe.org.br?carro/gm-chevrolet/12-2016/004423-7/32000/g/spmzgw4lwhp) FIP code004423-7, in dec/2016
 
-# In[116]:
+# In[34]:
 
 car_cost = 37980
 
 
-# In[117]:
+# In[35]:
 
 rent_car_congressperson = rent_car.groupby(['congressperson_id',
                                     'year',]).agg({'total_net_value':sum})
@@ -396,31 +388,31 @@ del rent_car_outlier['cong_year']
 rent_car_outlier['suspect'] = "Rent car monthly"
 
 
-# In[118]:
+# In[36]:
 
 sns.distplot(rent_car_outlier['total_net_value'],bins=100)
 plt.title('Reimbursements of "Automotive vehicle renting or charter" that its yearly sum is greater than a Car Cost')
 
 
-# In[119]:
+# In[37]:
 
 rent_car_outlier['total_net_value'].sum()
 
 
-# In[120]:
+# In[38]:
 
 rent_car_outlier['total_net_value'].describe()
 
 
-# ### We found 11,867 reimbursements (R$55 millions) that its yearly sum was greater than a Car Cost. 
+# ### We found 13,205 reimbursements (R$60 millions) that its yearly sum was greater than a Car Cost. 
 
-# # 'Automotive vehicle renting or watercraft charter' and 'Watercraft renting or charter'
+# # "Automotive vehicle renting or watercraft charter" and "Watercraft renting or charter"
 
-# We can see when the subquota 'Automotive vehicle renting or watercraft charter' was split almost all its expenses were about car rent. How the main purpose of rent a boat and rent a car is the same for a congressman, we will use the same limit for this two subquotas, the cost of one car R$37,890.
+# We can see when the subquota "Automotive vehicle renting or watercraft charter" was split almost all its expenses were about car rent. How the main purpose of rent a boat and rent a car is the same for a congressman, we will use the same limit for this two subquotas, the cost of one car R$37,890.
 
-# 'Automotive vehicle renting or watercraft charter'
+# "Automotive vehicle renting or watercraft charter"
 
-# In[121]:
+# In[39]:
 
 rent_car_and_boat_congressperson = rent_car_and_boat.groupby(['congressperson_id',
                                     'year',]).agg({'total_net_value':sum})
@@ -436,27 +428,27 @@ del rent_car_and_boat_outlier['cong_year']
 rent_car_and_boat_outlier['suspect'] = "Rent car and boat monthly"
 
 
-# In[122]:
+# In[40]:
 
 sns.distplot(rent_car_and_boat_outlier['total_net_value'],bins=100)
 plt.title('Reimbursements of "Automotive vehicle renting or watercraft charter" that its yearly sum is greater than a Car Cost')
 
 
-# In[123]:
+# In[41]:
 
 rent_car_and_boat_outlier['total_net_value'].sum()
 
 
-# In[124]:
+# In[42]:
 
 rent_car_and_boat_outlier['total_net_value'].describe()
 
 
-# ### We found 70,091 reimbursements (R$76,2 millions) that its yearly sum was greater than a Car Cost. 
+# ### We found 69,985 reimbursements (R$75.5 millions) that its yearly sum was greater than a Car Cost. 
 
-# 'Watercraft renting or charter'
+# "Watercraft renting or charter"
 
-# In[125]:
+# In[43]:
 
 rent_boat_congressperson = rent_boat.groupby(['congressperson_id',
                                     'year',]).agg({'total_net_value':sum})
@@ -472,29 +464,29 @@ del rent_boat_outlier['cong_year']
 rent_boat_outlier['suspect'] = "Rent boat monthly"
 
 
-# In[126]:
+# In[44]:
 
 sns.distplot(rent_boat_outlier['total_net_value'],bins=100)
 plt.title('Reimbursements of "Watercraft renting or charter" that its yearly sum is greater than a Car Cost')
 
 
-# In[127]:
+# In[45]:
 
 rent_boat_outlier['total_net_value'].sum()
 
 
-# In[128]:
+# In[46]:
 
 rent_boat_outlier['total_net_value'].describe()
 
 
-# ### We found 15 reimbursements (R$251,400) that its yearly sum was greater than a Car Cost. 
+# ### We found 13 reimbursements (R$196,300) that its yearly sum was greater than a Car Cost. 
 
 # # The Suspects
 
 # In this last part we will analize the suspects reimbursements
 
-# In[158]:
+# In[51]:
 
 suspects_reimbursements = pd.DataFrame()
 suspects_reimbursements = suspects_reimbursements.append(fuel_outliers_redflag)
@@ -503,66 +495,61 @@ suspects_reimbursements = suspects_reimbursements.append(fuel_outlier_monthlycos
 suspects_reimbursements = suspects_reimbursements.append(rent_car_outlier)
 suspects_reimbursements = suspects_reimbursements.append(rent_car_and_boat_outlier)
 suspects_reimbursements = suspects_reimbursements.append(rent_boat_outlier)
-suspects_reimbursements = suspects_reimbursements.sort('total_net_value', ascending=False)
+suspects_reimbursements = suspects_reimbursements.sort_values('total_net_value', ascending=False)
 suspects_reimbursements.head()
 
 
-# In[140]:
+# In[52]:
 
 sns.distplot(suspects_reimbursements['total_net_value'],bins=100)
 
 
-# In[141]:
+# In[53]:
 
 suspects_reimbursements['total_net_value'].sum()
 
 
-# In[142]:
+# In[54]:
 
 suspects_reimbursements['total_net_value'].describe()
 
 
 # Who are these congresspeople?
 
-# In[154]:
+# In[56]:
 
-suspects_congresspeople = suspects_reimbursements.groupby(['congressperson_name']).agg({'total_net_value':sum}).sort('total_net_value',ascending=False)
+suspects_congresspeople = suspects_reimbursements.groupby(['congressperson_name']).agg({'total_net_value':sum}).sort_values('total_net_value',ascending=False)
 suspects_congresspeople.head()
 
 
-# In[134]:
+# In[57]:
 
 sns.distplot(suspects_congresspeople,bins=100)
 
 
-# In[160]:
+# In[58]:
 
 suspects_congresspeople['total_net_value'].describe()
 
 
-# Who are these companies?
+# Which are these companies?
 
-# In[ ]:
+# In[61]:
 
-Who are these companies
-
-
-# In[153]:
-
-suspects_companies = suspects_reimbursements.groupby(['cnpj_cpf']).agg({'total_net_value':sum}).sort('total_net_value',ascending=False)
+suspects_companies = suspects_reimbursements.groupby(['cnpj_cpf']).agg({'total_net_value':sum}).sort_values('total_net_value',ascending=False)
 suspects_companies.head()
 
 
-# In[136]:
+# In[62]:
 
 sns.distplot(suspects_companies,bins=100)
 
 
-# In[161]:
+# In[63]:
 
 suspects_companies['total_net_value'].describe()
 
 
 # # Conclusion
 
-# ### After to analyze six kinds of suspects reimbursement we found R$232 million to be investigated. There are 1,023 congresspeople and 24,240 companies in this list.
+# ### After to analyze six kinds of suspects reimbursement we found R$240 million to be investigated. There are 1,031 congresspeople and 24,517 companies in this list.
