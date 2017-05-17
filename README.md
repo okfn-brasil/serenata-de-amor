@@ -20,6 +20,7 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
 1. [Installing](#installing)
     1. [Using Docker](#using-docker)
     1. [Local install](#local-install)
+    1. [Settings](#settings)
 
 ## JSON API endpoints
 
@@ -127,17 +128,10 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 
 ## Installing
 
-If you have some issues with settings, maybe [this section can be helpful](#settings).
-The best way to get started is by copying the `contrib/.env.sample` as `.env`:
-
-```console
-cp contrib/.env.sample .env
-```
 
 ### Using Docker
 
-#### Requirements
-[Docker](https://docs.docker.com/engine/installation/) (with [Docker Compose](https://docs.docker.com/compose/install/)), just run:
+With [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)) installed just run:
 
 ```console
 make run.devel
@@ -168,18 +162,19 @@ docker-compose run --rm jarbas python manage.py irregularities contrib/sample-da
 
 You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
 
-To add a fresh new reimbursements.xz brewed by [Rosie](https://github.com/datasciencebr/rosie) or from [toolbox](https://github.com/datasciencebr/rosie), you just need to have this file inside project folder and give the path at the end of the command, as bellow:
+To add a fresh new `reimbursements.xz` brewed by [Rosie](https://github.com/datasciencebr/rosie) or made with our [toolbox](https://github.com/datasciencebr/rosie), you just need to have this file **inside project folder** and give the path at the end of the command, as bellow:
 ```
-docker-compose run --rm jarbas python manage.py reimbursements PATH_TO_YOUR_FRESH_NEW_REIMBURSEMENTS.xz
+docker-compose run --rm jarbas python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
 ```
+
+To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
+
 
 ### Local install
 
 #### Requirements
 
-Jarbas requires [Python 3.5](http://python.org), [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org).
-
-Once you have `pip` and `yarn` available install the dependencies:
+Jarbas requires [Python 3.5](http://python.org), [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org). Once you have `pip` and `yarn` available install the dependencies:
 
 ```console
 yarn install
@@ -190,37 +185,11 @@ python -m pip install -r requirements.txt
 
 In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` or in macOS with `$ brew install xz` — but you might have to re-compile your Python.
 
+#### Setup your environment variables
 
-#### Settings
+Basically this means copying `contrib/.env.sample` as `.env` in the project's root folder — but there is [an entire section on that](#settings).
 
-Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
 
-##### Django settings
-
-* `DEBUG` (_bool_) enable or disable [Django debug mode](https://docs.djangoproject.com/en/1.10/ref/settings/#debug)
-* `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
-* `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
-* `USE_X_FORWARDED_HOST` (_bool_) [Whether to use the `X-Forwarded-Host` header](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-USE_X_FORWARDED_HOST)
-* `CACHE_BACKEND` (_str_) [Cache backend](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-CACHES-BACKEND) (e.g. `django.core.cache.backends.memcached.MemcachedCache`)
-* `CACHE_LOCATION` (_str_) [Cache location](https://docs.djangoproject.com/en/1.10/ref/settings/#location) (e.g. `localhost:11211`)
-* `SECURE_PROXY_SSL_HEADER` _(str)_ [Django secure proxy SSL header](https://docs.djangoproject.com/en/1.10/ref/settings/#secure-proxy-ssl-header) (e.g. `HTTP_X_FORWARDED_PROTO,https` transforms in tuple `('HTTP_X_FORWARDED_PROTO', 'https')`)
-
-##### Database
-
-* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
-
-##### Amazon S3 settings
-
-* `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
-* `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
-* `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
-
-##### Google settings
-
-* `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
-* `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
-
-To use GOOGLE_STREET_VIEW_API_KEY just export it in a local environment variable, so when you run Jarbas it will get from the local environment variable.
 
 #### Migrations
 
@@ -266,3 +235,33 @@ $ yarn test
 #### Ready!
 
 Run the server with `$ python manage.py runserver` and load [localhost:8000](http://localhost:8000) in your favorite browser.
+
+
+### Settings
+
+If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
+
+##### Django settings
+
+* `DEBUG` (_bool_) enable or disable [Django debug mode](https://docs.djangoproject.com/en/1.10/ref/settings/#debug)
+* `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
+* `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
+* `USE_X_FORWARDED_HOST` (_bool_) [Whether to use the `X-Forwarded-Host` header](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-USE_X_FORWARDED_HOST)
+* `CACHE_BACKEND` (_str_) [Cache backend](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-CACHES-BACKEND) (e.g. `django.core.cache.backends.memcached.MemcachedCache`)
+* `CACHE_LOCATION` (_str_) [Cache location](https://docs.djangoproject.com/en/1.10/ref/settings/#location) (e.g. `localhost:11211`)
+* `SECURE_PROXY_SSL_HEADER` _(str)_ [Django secure proxy SSL header](https://docs.djangoproject.com/en/1.10/ref/settings/#secure-proxy-ssl-header) (e.g. `HTTP_X_FORWARDED_PROTO,https` transforms in tuple `('HTTP_X_FORWARDED_PROTO', 'https')`)
+
+##### Database
+
+* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
+
+##### Amazon S3 settings
+
+* `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
+* `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
+* `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
+
+##### Google settings
+
+* `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
+* `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
