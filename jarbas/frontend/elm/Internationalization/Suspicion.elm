@@ -36,3 +36,10 @@ electionExpenses =
     TranslationSet
         "Expense in electoral campaign"
         "Gasto com campanha eleitoral"
+
+
+irregularCompany : TranslationSet
+irregularCompany =
+    TranslationSet
+        "Irregular company"
+        "CNPJ irregular"

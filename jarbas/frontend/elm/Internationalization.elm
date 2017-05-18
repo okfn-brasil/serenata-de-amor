@@ -331,6 +331,9 @@ translate lang trans =
                         "election_expenses" ->
                             Suspicion.electionExpenses
 
+                        "irregular_companies_classifier" ->
+                            Suspicion.irregularCompany
+
                         _ ->
                             TranslationSet
                                 suspicion
