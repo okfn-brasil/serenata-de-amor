@@ -6,6 +6,8 @@ USER root
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
                        unzip \
+	               libmagickwand-dev \
+		       ghostscript \
                        libxml2-dev \
                        libxslt-dev \
     && apt-get clean \
@@ -21,7 +23,9 @@ COPY conda_requirements.txt ./
 RUN conda update --yes conda \
     && conda config --add channels Rufone \
     && conda config --add channels conda-forge \
+    && conda config --add channels menpo \
     && conda install --yes --file conda_requirements.txt \
     && conda clean -tipsy
+
 
 COPY docker/jupyter_notebook_config.py /home/jovyan/.jupyter/jupyter_notebook_config.py
