@@ -11,6 +11,7 @@
 # ### In your pip distribution:
 #     wand==0.4.4
 #     ghostscript==0.4.1
+#     opencv3==3.2.0
 #     
 # # Case you are using the Dockerfile it is already there! 
 # # Upload your image and Enjoy!!!
