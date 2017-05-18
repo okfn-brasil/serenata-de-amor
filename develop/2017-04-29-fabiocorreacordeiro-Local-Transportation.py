@@ -552,9 +552,4 @@ suspects_companies['total_net_value'].describe()
 
 # # Conclusion
 
-# ### After to analyze six kinds of suspects reimbursement we found R$240 million to be investigated. There are 1,031 congresspeople and 24,517 companies in this list.
-
-# In[ ]:
-
-
-
+# After to analyze six kinds of suspects reimbursement we found R$240 million to be investigated. There are 1,031 congresspeople and 24,517 companies in this list.
