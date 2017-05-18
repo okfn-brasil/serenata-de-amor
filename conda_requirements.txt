@@ -1,4 +1,4 @@
-beautifulsoup4==4.4.1
+beautifulsoup4==4.5.3
 geopy==1.11.0
 grequests==0.30
 humanize==0.5.1
@@ -7,3 +7,4 @@ nltk==3.2.1
 pandas>=0.18.1
 scikit-learn==0.18.1
 seaborn==0.7.1
+ipython==5.1.0

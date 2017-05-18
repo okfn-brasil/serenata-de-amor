@@ -4,3 +4,6 @@
 __pycache__/
 config.ini
 data
+.idea/
+serenata-de-amor.iml
+**.DS_Store
