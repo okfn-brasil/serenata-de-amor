@@ -7,7 +7,7 @@
 # 
 # The subquota "Automotive vehicle renting or charter" changed in the time. It started like "Automotive vehicle renting or watercraft charter" and in October/2013 was split in "Watercraft renting or charter" and "Automotive vehicle renting or charter". 
 
-# In[7]:
+# In[1]:
 
 get_ipython().magic('matplotlib inline')
 import matplotlib.pyplot as plt
@@ -17,7 +17,7 @@ import seaborn as sns
 import math
 
 
-# In[8]:
+# In[2]:
 
 data = pd.read_csv('../data/2017-03-15-reimbursements.xz',
                    parse_dates=[16],
@@ -32,7 +32,7 @@ data = pd.read_csv('../data/2017-03-15-reimbursements.xz',
 
 # First step is subset the data of local transportation of all reimbursements
 
-# In[9]:
+# In[3]:
 
 taxi = data[(data['subquota_description'] == 'Taxi, toll and parking')]
 fuel = data[(data['subquota_description'] == 'Fuels and lubricants')]
@@ -41,7 +41,7 @@ rent_car = data[(data['subquota_description'] == 'Automotive vehicle renting or 
 rent_boat = data[(data['subquota_description'] =='Watercraft renting or charter')]
 
 
-# In[10]:
+# In[4]:
 
 transportation = pd.DataFrame()
 transportation = transportation.append(taxi)
@@ -53,13 +53,13 @@ transportation = transportation.append(rent_boat)
 
 # Then, we will analyse total expenses by month.
 
-# In[11]:
+# In[5]:
 
 transportation_month = transportation.groupby(['year',
                                                'month']).agg({'total_net_value':sum})
 
 
-# In[12]:
+# In[6]:
 
 transportation_month.plot()
 plt.title('Total Expenses with local transportation')
@@ -69,7 +69,7 @@ plt.title('Total Expenses with local transportation')
 
 # Now we will analyze the total expenses by month for each subquota. It necessary to pay attention when each subquota started, "Taxi, toll and parking" started in October/2013, the same date when "Automotive vehicle renting or watercraft charter" was split. There are "Fuels and lubricants" reimbursement since 2009.
 
-# In[13]:
+# In[7]:
 
 taxi_month = taxi.groupby(['year','month']).agg({'total_net_value':sum})
 fuel_month = fuel.groupby(['year','month']).agg({'total_net_value':sum})
@@ -78,7 +78,7 @@ rent_car_month = rent_car.groupby(['year','month']).agg({'total_net_value':sum})
 rent_boat_month = rent_boat.groupby(['year','month']).agg({'total_net_value':sum})
 
 
-# In[14]:
+# In[8]:
 
 taxi_month.plot()
 plt.title('Total Expenses in "Taxi, toll and parking"')
@@ -103,7 +103,7 @@ plt.ylim([0, 2500000])
 
 # Now we will check the mean of all expenses per congressman.
 
-# In[15]:
+# In[9]:
 
 transportation_mean = transportation.groupby(['year',
                                               'month',
@@ -113,7 +113,7 @@ transportation_mean = transportation_mean.groupby(['year',
                                                    'month']).agg({'total_net_value':'mean'})
 
 
-# In[48]:
+# In[10]:
 
 transportation_mean.plot()
 plt.title('Mean of Expenses with Local Transportation')
@@ -121,7 +121,7 @@ plt.title('Mean of Expenses with Local Transportation')
 
 # And mean per subquota.
 
-# In[17]:
+# In[11]:
 
 #'Taxi, toll and parking'
 taxi_mean = taxi.groupby(['year',
@@ -165,7 +165,7 @@ rent_boat_mean = rent_boat_mean.groupby(['year',
                                          'month']).agg({'total_net_value':'mean'})
 
 
-# In[18]:
+# In[12]:
 
 taxi_mean.plot()
 plt.title('Mean Expenses in "Taxi, toll and parking"')
@@ -217,7 +217,7 @@ plt.ylim([0, 27000])
 # 
 # [Tanks size](https://panelinhanet.wordpress.com/2013/02/20/combustivel-quantos-litros-cabem-no-tanque-do-seu-veiculo/)  in 18/mar/2017 
 
-# In[19]:
+# In[13]:
 
 fuel_cost = 4.70
 fuel_capacity = 110
@@ -227,19 +227,19 @@ max_cost = fuel_cost*fuel_capacity + lubricant_cost*lubricant_capacity
 max_cost
 
 
-# In[20]:
+# In[14]:
 
 fuel_outliers = fuel[fuel['total_net_value'] > max_cost].sort_values('total_net_value', ascending=False)
 sns.distplot(fuel_outliers['total_net_value'],bins=100)
 plt.title('Reimbursements of "Fuels and lubricants" greater than Max Cost')
 
 
-# In[21]:
+# In[15]:
 
 fuel_outliers['total_net_value'].sum()
 
 
-# In[22]:
+# In[16]:
 
 fuel_outliers['total_net_value'].describe()
 
@@ -262,7 +262,7 @@ fuel_outliers['total_net_value'].describe()
 # 
 # [Cost of gas](http://www.anp.gov.br/preco/prc/Resumo_Semanal_Combustiveis.asp in 25/apr/2017)
 
-# In[23]:
+# In[17]:
 
 fuel_cost = 3.88
 distance = 5729
@@ -273,7 +273,7 @@ max_cost_month
 
 # Now we will divide the suspects reimbursements in Red Flag (above monthly max cost) and yellow flag (above a max cost for a single tank but below a monthly cost).
 
-# In[24]:
+# In[18]:
 
 fuel_outliers_redflag = fuel_outliers[fuel_outliers['total_net_value'] >= max_cost_month].sort_values('total_net_value', ascending=False)
 fuel_outliers_redflag['suspect'] = "Fuel Red Flag"
@@ -281,17 +281,17 @@ sns.distplot(fuel_outliers_redflag['total_net_value'],bins=100)
 plt.title('Reimbursements of "Fuels and lubricants" greater than Max Cost of a Full Month')
 
 
-# In[25]:
+# In[19]:
 
 fuel_outliers_redflag['total_net_value'].sum()
 
 
-# In[26]:
+# In[20]:
 
 fuel_outliers_redflag['total_net_value'].describe()
 
 
-# In[27]:
+# In[21]:
 
 fuel_outliers_yellowflag = fuel_outliers[fuel_outliers['total_net_value'] < max_cost_month].sort_values('total_net_value', ascending=False)
 fuel_outliers_yellowflag['suspect'] = "Fuel Yellow Flag"
@@ -299,12 +299,12 @@ sns.distplot(fuel_outliers_yellowflag['total_net_value'],bins=100)
 plt.title('Reimbursements of "Fuels and lubricants" greater than Max Cost for a single Tank, but less than Max Cost of a Full Month')
 
 
-# In[28]:
+# In[22]:
 
 fuel_outliers_yellowflag['total_net_value'].sum()
 
 
-# In[29]:
+# In[23]:
 
 fuel_outliers_yellowflag['total_net_value'].describe()
 
@@ -313,7 +313,7 @@ fuel_outliers_yellowflag['total_net_value'].describe()
 
 # Until now we checked the expenses of single reimbursements, next step is to check if the sum of all reimbursements in a month is greater than the monthly max cost.
 
-# In[49]:
+# In[24]:
 
 fuel_congressperson = fuel.groupby(['congressperson_id',
                                     'year',
@@ -333,18 +333,18 @@ del fuel_outlier_monthlycost['cong_year_month']
 fuel_outlier_monthlycost['suspect'] = "Fuel monthly"
 
 
-# In[31]:
+# In[25]:
 
 sns.distplot(fuel_outlier_monthlycost['total_net_value'],bins=100)
 plt.title('Reimbursements of "Fuels and lubricants" that its monthly sum is greater than Max Cost of a Full Month')
 
 
-# In[32]:
+# In[26]:
 
 fuel_outlier_monthlycost['total_net_value'].sum()
 
 
-# In[33]:
+# In[27]:
 
 fuel_outlier_monthlycost['total_net_value'].describe()
 
@@ -367,12 +367,12 @@ fuel_outlier_monthlycost['total_net_value'].describe()
 # 
 # [Car cost](http://veiculos.fipe.org.br?carro/gm-chevrolet/12-2016/004423-7/32000/g/spmzgw4lwhp) FIP code004423-7, in dec/2016
 
-# In[34]:
+# In[28]:
 
 car_cost = 37980
 
 
-# In[35]:
+# In[29]:
 
 rent_car_congressperson = rent_car.groupby(['congressperson_id',
                                     'year',]).agg({'total_net_value':sum})
@@ -388,18 +388,18 @@ del rent_car_outlier['cong_year']
 rent_car_outlier['suspect'] = "Rent car monthly"
 
 
-# In[36]:
+# In[30]:
 
 sns.distplot(rent_car_outlier['total_net_value'],bins=100)
 plt.title('Reimbursements of "Automotive vehicle renting or charter" that its yearly sum is greater than a Car Cost')
 
 
-# In[37]:
+# In[31]:
 
 rent_car_outlier['total_net_value'].sum()
 
 
-# In[38]:
+# In[32]:
 
 rent_car_outlier['total_net_value'].describe()
 
@@ -412,7 +412,7 @@ rent_car_outlier['total_net_value'].describe()
 
 # "Automotive vehicle renting or watercraft charter"
 
-# In[39]:
+# In[33]:
 
 rent_car_and_boat_congressperson = rent_car_and_boat.groupby(['congressperson_id',
                                     'year',]).agg({'total_net_value':sum})
@@ -428,18 +428,18 @@ del rent_car_and_boat_outlier['cong_year']
 rent_car_and_boat_outlier['suspect'] = "Rent car and boat monthly"
 
 
-# In[40]:
+# In[34]:
 
 sns.distplot(rent_car_and_boat_outlier['total_net_value'],bins=100)
 plt.title('Reimbursements of "Automotive vehicle renting or watercraft charter" that its yearly sum is greater than a Car Cost')
 
 
-# In[41]:
+# In[35]:
 
 rent_car_and_boat_outlier['total_net_value'].sum()
 
 
-# In[42]:
+# In[36]:
 
 rent_car_and_boat_outlier['total_net_value'].describe()
 
@@ -448,7 +448,7 @@ rent_car_and_boat_outlier['total_net_value'].describe()
 
 # "Watercraft renting or charter"
 
-# In[43]:
+# In[37]:
 
 rent_boat_congressperson = rent_boat.groupby(['congressperson_id',
                                     'year',]).agg({'total_net_value':sum})
@@ -464,18 +464,18 @@ del rent_boat_outlier['cong_year']
 rent_boat_outlier['suspect'] = "Rent boat monthly"
 
 
-# In[44]:
+# In[38]:
 
 sns.distplot(rent_boat_outlier['total_net_value'],bins=100)
 plt.title('Reimbursements of "Watercraft renting or charter" that its yearly sum is greater than a Car Cost')
 
 
-# In[45]:
+# In[39]:
 
 rent_boat_outlier['total_net_value'].sum()
 
 
-# In[46]:
+# In[40]:
 
 rent_boat_outlier['total_net_value'].describe()
 
@@ -486,7 +486,7 @@ rent_boat_outlier['total_net_value'].describe()
 
 # In this last part we will analize the suspects reimbursements
 
-# In[51]:
+# In[41]:
 
 suspects_reimbursements = pd.DataFrame()
 suspects_reimbursements = suspects_reimbursements.append(fuel_outliers_redflag)
@@ -499,53 +499,53 @@ suspects_reimbursements = suspects_reimbursements.sort_values('total_net_value',
 suspects_reimbursements.head()
 
 
-# In[52]:
+# In[42]:
 
 sns.distplot(suspects_reimbursements['total_net_value'],bins=100)
 
 
-# In[53]:
+# In[43]:
 
 suspects_reimbursements['total_net_value'].sum()
 
 
-# In[54]:
+# In[44]:
 
 suspects_reimbursements['total_net_value'].describe()
 
 
 # Who are these congresspeople?
 
-# In[56]:
+# In[45]:
 
 suspects_congresspeople = suspects_reimbursements.groupby(['congressperson_name']).agg({'total_net_value':sum}).sort_values('total_net_value',ascending=False)
 suspects_congresspeople.head()
 
 
-# In[57]:
+# In[46]:
 
 sns.distplot(suspects_congresspeople,bins=100)
 
 
-# In[58]:
+# In[47]:
 
 suspects_congresspeople['total_net_value'].describe()
 
 
 # Which are these companies?
 
-# In[61]:
+# In[48]:
 
 suspects_companies = suspects_reimbursements.groupby(['cnpj_cpf']).agg({'total_net_value':sum}).sort_values('total_net_value',ascending=False)
 suspects_companies.head()
 
 
-# In[62]:
+# In[49]:
 
 sns.distplot(suspects_companies,bins=100)
 
 
-# In[63]:
+# In[50]:
 
 suspects_companies['total_net_value'].describe()
 
