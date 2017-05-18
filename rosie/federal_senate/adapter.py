@@ -18,13 +18,18 @@ class Adapter:
     @property
     def dataset(self):
         path = self.update_datasets()
-        self._dataset = pd.read_csv(path, dtype={'cnpj': np.str}, low_memory=False)
+        self._dataset = pd.read_csv(path, dtype={'cnpj_cpf': np.str}, encoding = "utf-8")
         self.prepare_dataset()
 
         return self._dataset
 
     def prepare_dataset(self):
+        self.prepare_cpnj_cpf()
         self.rename_columns()
+
+    def prepare_cpnj_cpf(self):
+        self._dataset = self._dataset[self._dataset['cnpj_cpf'].notnull()]
+        self._dataset['document_type'] = 'simple_receipt'
 
     def rename_columns(self):
         columns = {v: k for k, v in COLUMNS.items()}
