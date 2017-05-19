@@ -1,4 +1,4 @@
-FROM jupyter/datascience-notebook:fa77fe99579b
+FROM jupyter/datascience-notebook:bb222f49222e
 MAINTAINER Serenata de Amor "datasciencebr@gmail.com"
 
 USER root
@@ -19,8 +19,7 @@ RUN pip install --upgrade pip \
 
 COPY conda_requirements.txt ./
 RUN conda update --yes conda \
-    && conda config --add channels Rufone \
-    && conda config --add channels conda-forge \
+    && conda config --add channels bioconda \
     && conda install --yes --file conda_requirements.txt \
     && conda clean -tipsy
 
