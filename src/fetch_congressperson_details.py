@@ -105,12 +105,16 @@ class CongresspersonDetails:
 
     def get_civil_names(self):
         congresspeople_ids = self.get_all_congresspeople_ids()
-        for ind, congress_id in enumerate(congresspeople_ids):
+        for i, congress_id in enumerate(congresspeople_ids):
             if not np.math.isnan(float(congress_id)):
-                percentage = (ind / self.total * 100)
+                percentage = (i / self.total * 100)
                 msg = 'Processed {} out of {} ({:.2f}%)'
-                print(msg.format(ind, self.total, percentage), end='\r')
-                yield dict(self.fetch_data_repository(congress_id))
+                print(msg.format(i, self.total, percentage), end='\r')
+
+                data = self.fetch_data_repository(congress_id)
+
+                if data is not None:
+                    yield dict(data)
 
 
 if __name__ == '__main__':
