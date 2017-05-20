@@ -30,7 +30,6 @@ class Adapter:
         self.rename_columns()
         self.create_columns()
 
-
     def prepare_cnpj_cpf(self):
         self._dataset[self._dataset['cnpj_cpf'].notnull()]
 
