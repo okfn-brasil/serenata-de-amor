@@ -25,7 +25,7 @@ class TestAdapter(TestCase):
     def tearDownClass(cls):
         shutil.rmtree(cls.temp_path)
 
-    def test_prepare_renamed_columns(self):
+    def test_renamed_columns(self):
         self.assertTrue(set(ADAPTER_COLUMNS.keys()).issubset(set(self.dataset.columns)))
 
     def test_created_document_type_column_successfully(self):
