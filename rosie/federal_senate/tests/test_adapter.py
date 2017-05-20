@@ -36,3 +36,6 @@ class TestAdapter(TestCase):
 
     def test_dataset_is_a_pandas_DataFrame(self):
         self.assertIsInstance(self.dataset, pd.core.frame.DataFrame)
+
+    def test_droped_all_null_values(self):
+        self.assertTrue(self.dataset['recipient_id'].all())
