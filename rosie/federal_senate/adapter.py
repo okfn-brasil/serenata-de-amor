@@ -26,7 +26,7 @@ class Adapter:
         return self._dataset
 
     def prepare_dataset(self):
-        self.prepare_cnpj_cpf()
+        self.drop_null_cnpj_cpf()
         self.rename_columns()
         self.create_columns()
 
