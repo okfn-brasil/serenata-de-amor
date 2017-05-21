@@ -62,9 +62,10 @@ def train_test_val_split_idxs(total_rows, percent_test, percent_val):
     if percent_test + percent_val >= 1.0:
         raise ValueError('percent_test and percent_val must sum to less than 1.0')
 
-    row_range = range(total_rows)
-
-    no_test_rows = int(total_rows*(percent_test))
+    row_range = range(len(total_rows))
+    print("{} {}".format(percent_test,len(total_rows)))
+    no_test_rows = total_rows*(percent_test)
+    no_test_rows = int(no_test_rows)
     test_idxs = np.random.choice(row_range, size=no_test_rows, replace=False)
     # remove test indexes
     row_range = [idx for idx in row_range if idx not in test_idxs]
@@ -81,10 +82,10 @@ def train_test_val_split_idxs(total_rows, percent_test, percent_val):
 def gen_bow_features(imgs, test_train_ratio=0.7, K_clusters=500):
 
      img_descs, y = gen_sift_features(imgs)
-     percent_val = 1 - test_train_ratio
-     training_idxs, test_idxs, val_idxs = train_test_val_split_idxs(imgs, test_train_ratio, percent_val)
+     percent_val = 0.99 - test_train_ratio
+     training_idxs, test_idxs, val_idxs = train_test_val_split_idxs(imgs[0], test_train_ratio, percent_val)
      X, cluster_model = cluster_features(img_descs, training_idxs)
-     perform_data_split(X, y, training_idxs, test_idxs, val_idxs)
+     X_train, X_test, y_train, y_test=perform_data_split(X, y, training_idxs, test_idxs, val_idxs)
      return X_train, X_test, y_train, y_test, cluster_model
 
 def gen_sift_features(labeled_img_paths):

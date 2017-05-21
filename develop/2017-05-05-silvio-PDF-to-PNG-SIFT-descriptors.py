@@ -211,7 +211,7 @@ plt.imshow(img3,),plt.show()
 # ##### ---- So, i also will try to combine the sift descriptors and other information. 
 # 
 
-# In[22]:
+# In[1]:
 
 import glob
 from __future__ import print_function
@@ -264,7 +264,7 @@ from sklearn.svm import SVC
 from sklearn.grid_search import GridSearchCV
 
 
-# In[5]:
+# In[2]:
 
 def binary_labeled_img_from_folder(positive_folder, cal101_root='../data/training set/ML/', image_suffix='*.png'):
     """
@@ -293,13 +293,13 @@ def binary_labeled_img_from_folder(positive_folder, cal101_root='../data/trainin
     return np.array(labeled_img_paths)
 
 
-# In[6]:
+# In[3]:
 
 positive_folder = 'wrong'
 imgs = binary_labeled_img_from_folder(positive_folder)
 
 
-# In[ ]:
+# In[4]:
 
 X_train, X_test, y_train, y_test, kmeans = bow.gen_bow_features(imgs, test_train_ratio=0.8, K_clusters=750)
 
