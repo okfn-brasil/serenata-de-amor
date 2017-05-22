@@ -16,7 +16,7 @@ dataset = pd.read_csv('../data/2017-05-17-federal-senate-reimbursements.xz',    
 # In[2]:
 
 dataset = dataset[dataset['cnpj_cpf'].notnull()]
-dataset
+dataset.head()
 
 
 # In[3]:
@@ -44,5 +44,5 @@ dataset.query('valid_cnpj_cpf != True').head()
 # In[5]:
 
 dataset['document_type'] = 'simple_receipt'
-dataset
+dataset.head()
 
