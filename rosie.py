@@ -9,9 +9,11 @@ def entered_command(argv):
 
 def help():
     message = (
-        'Usages:',
+        'Usage:',
         '  python rosie.py run chamber_of_deputies [<path to output directory>]',
+        'Testing:',
         '  python rosie.py test',
+        '  python rosie.py test chamber_of_deputies',
     )
     print('\n'.join(message))
 
@@ -30,11 +32,21 @@ def run():
 
 
 def test():
+    import os
     import unittest
+
     loader = unittest.TestLoader()
-    tests = loader.discover('rosie')
+
+    if len(argv) >= 3:
+        target_module = argv[2]
+        tests_path = os.path.join('rosie', target_module)
+        tests = loader.discover(tests_path)
+    else:
+        tests = loader.discover('rosie')
+
     testRunner = unittest.runner.TextTestRunner()
     result = testRunner.run(tests)
+
     if not result.wasSuccessful():
         exit(1)
 
