@@ -19,7 +19,11 @@ def help():
 
 
 def run():
-    import rosie, rosie.chamber_of_deputies, rosie.federal_senate
+    import rosie
+    import rosie.chamber_of_deputies
+    import rosie.federal_senate
+
+
     if len(argv) >= 3:
         target_module = argv[2]
     else:
