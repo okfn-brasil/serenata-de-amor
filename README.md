@@ -55,7 +55,7 @@ You can either run all tests with:
 $ python rosie.py test
 ```
 
-Or, each of the submodules separately by naming them:
+Or test each submodule a time by passing a name:
 ```console
 $ python rosie.py test core
 $ python rosie.py test chamber_of_deputies
