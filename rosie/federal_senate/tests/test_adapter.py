@@ -26,7 +26,9 @@ class TestAdapter(TestCase):
         shutil.rmtree(cls.temp_path)
 
     def test_renamed_columns(self):
-        self.assertTrue(set(ADAPTER_COLUMNS.keys()).issubset(set(self.dataset.columns)))
+        adapter_keys = ADAPTER_COLUMNS.keys()
+        dataset_keys = self.dataset.columns
+        self.assertTrue(set(adapter_keys).issubset(set(dataset_keys)))
 
     def test_created_document_type_column_successfully(self):
         self.assertIn('document_type', self.dataset.columns)
