@@ -50,6 +50,14 @@ $ python rosie.py run chamber_of_deputies /my/serenata/directory/
 
 #### Test suite
 
+You can either run all tests with:
 ```console
 $ python rosie.py test
+```
+
+Or, each of the submodules separately by naming them:
+```console
+$ python rosie.py test core
+$ python rosie.py test chamber_of_deputies
+$ python rosie.py test federal_senate
 ```
