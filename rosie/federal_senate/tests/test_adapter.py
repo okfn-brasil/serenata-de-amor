@@ -2,28 +2,29 @@ import shutil
 import os
 from tempfile import mkdtemp
 from unittest import TestCase
-from unittest.mock import patch
-from shutil import copy2
 
 import pandas as pd
 
 from rosie.federal_senate.adapter import Adapter as subject_class
 from rosie.federal_senate.adapter import COLUMNS as ADAPTER_COLUMNS
 
-class TestAdapter(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.temp_path = mkdtemp()
-        cls.fixtures_path = os.path.join('rosie', 'federal_senate', 'tests', 'fixtures')
-        copy_name = 'federal_senate_reimbursements.xz'
-        cls.temp_fixture_path = os.path.join(cls.temp_path, copy_name)
-        copy2(os.path.join(cls.fixtures_path, copy_name), cls.temp_fixture_path)
-        cls.subject = subject_class(cls.temp_path)
-        cls.dataset = cls.subject.dataset
+FIXTURE_PATH = os.path.join('rosie',
+                            'federal_senate',
+                            'tests',
+                            'fixtures',
+                            'federal_senate_reimbursements.xz')
 
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(cls.temp_path)
+
+class TestAdapter(TestCase):
+
+    def setUp(self):
+        self.temp_path = mkdtemp()
+        subject = subject_class(self.temp_path)
+        subject.dataset_path = FIXTURE_PATH
+        self.dataset = subject.dataset
+
+    def tearDown(self):
+        shutil.rmtree(self.temp_path)
 
     def test_renamed_columns(self):
         adapter_keys = ADAPTER_COLUMNS.keys()
