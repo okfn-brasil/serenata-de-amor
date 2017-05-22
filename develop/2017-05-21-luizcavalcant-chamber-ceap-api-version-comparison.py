@@ -1,9 +1,9 @@
 
 # coding: utf-8
 
-# # Comparison between Chamber of Deputies CEAP dataset 1.0 and 2.0
+# # Comparison between Chamber of Deputies CEAP datasets 1.0 and 2.0
 # 
-# This notebook compares the old Chamber's CEAP dataset (the huge XML files) with the new one (CSV by year). The mais objective of this comparison is to show we didn't lose any data on the migration from the 1.0 to the much more efficient 2.0 version of the data. This validates changes to serenata-toolbox so we can ditch 1.0 datasets for good and be prepare to their extinction by the Chamber's Open Data team.
+# This notebook compares the old Chamber's CEAP dataset (the huge XML files) with the new one (CSV by year). The main objective of this comparison is to show we didn't lose any data on the migration from the 1.0 to the much more efficient 2.0 version of the data. This validates changes to serenata-toolbox so we can ditch 1.0 datasets for good and be prepare to their extinction by the Chamber's Open Data team.
 # 
 # Let's begin by loading both old and new datasets
 # 
