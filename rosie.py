@@ -37,6 +37,7 @@ def run():
 
 def test():
     import os
+
     import unittest
 
     loader = unittest.TestLoader()
