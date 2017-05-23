@@ -1,8 +1,9 @@
 import math
 
 import numpy as np
-from pycpfcnpj import cpfcnpj
 from sklearn.base import TransformerMixin
+
+from pycpfcnpj import cpfcnpj
 
 
 class InvalidCnpjCpfClassifier(TransformerMixin):
