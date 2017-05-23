@@ -38,8 +38,8 @@ class Adapter:
 
     def create_columns(self):
         # Federate Senate Reimbursments do not have document_type column which
-        # is required by Rosie's core module, so we add all of them as 'simple_receipt'
-        self._dataset['document_type'] = 'simple_receipt'
+        # is required by Rosie's core module, so we add all of them as 'unknown'
+        self._dataset['document_type'] = 'unknown'
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)

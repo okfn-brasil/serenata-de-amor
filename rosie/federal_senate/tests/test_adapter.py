@@ -37,7 +37,7 @@ class TestAdapter(TestCase):
         self.assertIn('document_type', self.dataset.columns)
 
     def test_document_type_value_is_simple_receipt(self):
-        self.assertEqual(self.dataset['document_type'].all(), 'simple_receipt')
+        self.assertEqual(self.dataset['document_type'].all(), 'unknown')
 
     def test_dataset_is_a_pandas_DataFrame(self):
         self.assertIsInstance(self.dataset, pd.core.frame.DataFrame)
