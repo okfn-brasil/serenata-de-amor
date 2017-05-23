@@ -2,9 +2,10 @@ from itertools import combinations
 
 import numpy as np
 import pandas as pd
-from geopy.distance import vincenty as distance
 from sklearn.base import TransformerMixin
 from sklearn.utils.validation import check_is_fitted
+
+from geopy.distance import vincenty as distance
 
 
 class TraveledSpeedsClassifier(TransformerMixin):

@@ -3,6 +3,7 @@ import os.path
 import numpy as np
 from sklearn.externals import joblib
 
+
 class Core:
     """
     This is Rosie's core object: it implements a generic pipeline to collect

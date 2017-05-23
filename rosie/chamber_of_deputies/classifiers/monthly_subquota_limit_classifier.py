@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import numpy as np
 import pandas as pd
 from sklearn.base import TransformerMixin
@@ -56,7 +54,6 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
         ]
         return self
 
-
     def predict(self, X=None):
         self._X['is_over_monthly_subquota_limit'] = False
         for metadata in self.limits:
@@ -68,10 +65,8 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
         results = self._X.loc[self.X.index, 'is_over_monthly_subquota_limit']
         return np.r_[results]
 
-
     def predict_proba(self, X=None):
         return 1.
-
 
     def __create_columns(self):
         self._X['net_value_int'] = (self._X['net_value'] * 100).apply(int)
@@ -84,11 +79,9 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
         reimbursement_month['day'] = 1
         self._X['reimbursement_month'] = pd.to_datetime(reimbursement_month)
 
-
     def __find_surplus_reimbursements(self, data, monthly_limit):
         grouped = data.groupby(self.KEYS).apply(self.__create_cumsum_cols)
         return grouped[grouped['cumsum_net_value'] > monthly_limit]
-
 
     def __create_cumsum_cols(self, subset):
         subset['cumsum_net_value'] = subset['net_value_int'].cumsum()
