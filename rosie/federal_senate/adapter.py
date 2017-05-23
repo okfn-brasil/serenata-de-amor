@@ -16,11 +16,11 @@ class Adapter:
 
     def __init__(self, path):
         self.path = path
-        self.dataset_path = os.path.join(self.path, 'federal_senate_reimbursements.xz')
 
     @property
     def dataset(self):
-        self._dataset = pd.read_csv(self.dataset_path, dtype={'cnpj_cpf': np.str}, encoding='utf-8')
+        path = self.update_datasets()
+        self._dataset = pd.read_csv(path, dtype={'cnpj_cpf': np.str}, encoding='utf-8')
         self.prepare_dataset()
         return self._dataset
 

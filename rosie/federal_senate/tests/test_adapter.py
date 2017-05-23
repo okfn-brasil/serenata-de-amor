@@ -2,6 +2,7 @@ import os
 import shutil
 from tempfile import mkdtemp
 from unittest import TestCase
+from unittest.mock import patch
 
 import pandas as pd
 
@@ -20,8 +21,9 @@ class TestAdapter(TestCase):
     def setUp(self):
         self.temp_path = mkdtemp()
         subject = subject_class(self.temp_path)
-        subject.dataset_path = FIXTURE_PATH
-        self.dataset = subject.dataset
+        with patch.object(subject_class, 'update_datasets') as mocked_update:
+            mocked_update.return_value = FIXTURE_PATH
+            self.dataset = subject.dataset
 
     def tearDown(self):
         shutil.rmtree(self.temp_path)
