@@ -178,6 +178,8 @@ fetch_latest_backup('data/')
 ##### Purchase suppliers
 1. `src/fetch_purchase_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchase-suppliers.xz`.
 
+##### Congresspeople details
+1. `src/fetch_congressperson_details.py` collects personal details (civil name, birth date and gender) from congresspeople. The file is named as follows: `YYYY-MM-DD-congressperson-details.xz`.
 
 ### Datasets (`data/`)
 
@@ -193,6 +195,7 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/YYYY-MM-DD-deputies-advisors.xz` contains data from advisors of each deputy in the current term along with the deputy number and deputy name.
 1. `data/YYYY-MM-DD-sex-place-distances` contains data from the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (including distance in meters) — this dataset is just a sample (check [this notebook](develop/2017-04-21-cuducos-explore-sex-places-dataset.ipynb) for details).
 1. `data/YYYY-MM-DD-tse-candidates.xz` contains information about politicians candidacy over the last years. Can be used to extract a list of all politicians in Brazil.
+1. `data/YYYY-MM-DD-congressperson-details.xz` contains the birth date, gender and civil name of congresspeople.
 
 ## Four moments
 
