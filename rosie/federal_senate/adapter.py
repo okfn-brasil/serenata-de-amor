@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import pandas as pd
+
 from serenata_toolbox.federal_senate.federal_senate_dataset import FederalSenateDataset
 
 COLUMNS = {
