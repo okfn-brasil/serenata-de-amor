@@ -152,7 +152,7 @@ def transform_and_translate_data(json_data):
 
 def load_temp_dataset():
     if os.path.exists(TEMP_DATASET_PATH):
-        return pd.read_csv(TEMP_DATASET_PATH)
+        return pd.read_csv(TEMP_DATASET_PATH, low_memory=False)
     else:
         return pd.DataFrame(columns=['cnpj'])
 
@@ -256,29 +256,27 @@ if args.args:
     print('Starting fetch. {0} worker threads and {1} http proxies'.format(
         num_threads, len(proxies_list)))
 
-    with futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
-        future_to_cnpj_info = dict((executor.submit(fetch_cnpj_info, cnpj), cnpj)
-                                   for cnpj in cnpj_list)
-        last_saving_point = 0
-        for future in futures.as_completed(future_to_cnpj_info):
-            cnpj = future_to_cnpj_info[future]
-            if future.exception() is None and future.result() is not None and future.result()['status'] == 'OK':
-                result_translated = transform_and_translate_data(
-                    future.result())
-                temp_dataset = pd.concat([temp_dataset, result_translated])
-                if last_saving_point < divmod(len(temp_dataset.index), 100)[0]:
-                    last_saving_point = divmod(len(temp_dataset.index), 100)[0]
-                    print('###################################')
-                    print('Saving information already fetched. {0} records'.format(
-                        len(temp_dataset.index)))
-                    temp_dataset.to_csv(TEMP_DATASET_PATH,
-                                        compression='xz',
-                                        encoding='utf-8',
-                                        index=False)
-            else:
-                # Try again in case of error during fetch_cnpj_info
-                future_to_cnpj_info[executor.submit(
-                    fetch_cnpj_info, cnpj)] = cnpj
+    # Try again in case of error during fetch_cnpj_info
+    while len(cnpj_list) > 0:
+        with futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+            future_to_cnpj_info = dict((executor.submit(fetch_cnpj_info, cnpj), cnpj)
+                                       for cnpj in cnpj_list)
+            last_saving_point = 0
+            for future in futures.as_completed(future_to_cnpj_info):
+                cnpj = future_to_cnpj_info[future]
+                if future.exception() is None and future.result() is not None and future.result()['status'] == 'OK':
+                    result_translated = transform_and_translate_data(
+                        future.result())
+                    temp_dataset = pd.concat([temp_dataset, result_translated])
+                    if last_saving_point < divmod(len(temp_dataset.index), 100)[0]:
+                        last_saving_point = divmod(len(temp_dataset.index), 100)[0]
+                        print('###################################')
+                        print('Saving information already fetched. {0} records'.format(
+                            len(temp_dataset.index)))
+                        temp_dataset.to_csv(TEMP_DATASET_PATH,
+                                            compression='xz',
+                                            encoding='utf-8',
+                                            index=False)
 
     temp_dataset.to_csv(TEMP_DATASET_PATH,
                         compression='xz',
