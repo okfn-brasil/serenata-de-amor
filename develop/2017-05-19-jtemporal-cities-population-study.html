@@ -11791,9 +11791,10 @@ div#notebook {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-
+<span class="c1"># We first collected the data with population estimatives, </span>
+<span class="c1"># we can use it later to do some comparisions or to use it later</span>
 <span class="n">cities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;../data/Cidades - estimativa 2013.xlsx&#39;</span><span class="p">,</span>
-                       <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;COD. UF&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span> <span class="s1">&#39;COD. MUNIC&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">},</span>
+                       <span class="n">converters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;COD. UF&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span> <span class="s1">&#39;COD. MUNIC&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span>
                        <span class="n">sheetname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
@@ -11886,19 +11887,6 @@ div#notebook {
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -11913,43 +11901,43 @@ div#notebook {
   <tbody>
     <tr>
       <th>0</th>
-      <td>RO</td>
-      <td>11</td>
-      <td>15</td>
-      <td>Alta Floresta D'Oeste</td>
-      <td>25728</td>
+      <td>TO</td>
+      <td>17</td>
+      <td>251</td>
+      <td>Abreulândia</td>
+      <td>2506</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>RO</td>
-      <td>11</td>
-      <td>379</td>
-      <td>Alto Alegre dos Parecis</td>
-      <td>13827</td>
+      <td>TO</td>
+      <td>17</td>
+      <td>301</td>
+      <td>Aguiarnópolis</td>
+      <td>5820</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>RO</td>
-      <td>11</td>
-      <td>403</td>
-      <td>Alto Paraíso</td>
-      <td>19459</td>
+      <td>TO</td>
+      <td>17</td>
+      <td>350</td>
+      <td>Aliança do Tocantins</td>
+      <td>5686</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>RO</td>
-      <td>11</td>
-      <td>346</td>
-      <td>Alvorada D'Oeste</td>
-      <td>17399</td>
+      <td>TO</td>
+      <td>17</td>
+      <td>400</td>
+      <td>Almas</td>
+      <td>7553</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>RO</td>
-      <td>11</td>
-      <td>23</td>
-      <td>Ariquemes</td>
-      <td>101269</td>
+      <td>TO</td>
+      <td>17</td>
+      <td>707</td>
+      <td>Alvorada</td>
+      <td>8557</td>
     </tr>
   </tbody>
 </table>
@@ -12016,19 +12004,6 @@ div#notebook {
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -12042,20 +12017,20 @@ div#notebook {
   </thead>
   <tbody>
     <tr>
-      <th>1831</th>
-      <td>BA</td>
-      <td>29</td>
-      <td>00108</td>
-      <td>Abaíra</td>
-      <td>9132</td>
-    </tr>
-    <tr>
-      <th>5583</th>
+      <th>4283</th>
       <td>DF</td>
       <td>53</td>
       <td>00108</td>
       <td>Brasília</td>
       <td>2789761</td>
+    </tr>
+    <tr>
+      <th>4671</th>
+      <td>BA</td>
+      <td>29</td>
+      <td>00108</td>
+      <td>Abaíra</td>
+      <td>9132</td>
     </tr>
   </tbody>
 </table>
@@ -12096,19 +12071,6 @@ div#notebook {
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -12121,33 +12083,33 @@ div#notebook {
   <tbody>
     <tr>
       <th>0</th>
-      <td>11</td>
-      <td>00015</td>
-      <td>1100015</td>
+      <td>17</td>
+      <td>00251</td>
+      <td>1700251</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>11</td>
-      <td>00379</td>
-      <td>1100379</td>
+      <td>17</td>
+      <td>00301</td>
+      <td>1700301</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>11</td>
-      <td>00403</td>
-      <td>1100403</td>
+      <td>17</td>
+      <td>00350</td>
+      <td>1700350</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>11</td>
-      <td>00346</td>
-      <td>1100346</td>
+      <td>17</td>
+      <td>00400</td>
+      <td>1700400</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>11</td>
-      <td>00023</td>
-      <td>1100023</td>
+      <td>17</td>
+      <td>00707</td>
+      <td>1700707</td>
     </tr>
   </tbody>
 </table>
@@ -12265,10 +12227,145 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">serenata_toolbox.datasets</span> <span class="k">import</span> <span class="n">fetch</span>
+<span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;2017-05-22-brazilian-cities.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;../data&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Downloading 2017-05-22-brazilian-cities.csv: 100%|██████████| 134K/134K [00:01&lt;00:00, 72.8Kb/s]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">brazilian_cities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-05-22-brazilian-cities.csv&#39;</span><span class="p">)</span>
+<span class="n">brazilian_cities</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[11]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+      <th>state</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>520005</td>
+      <td>Abadia de Goiás</td>
+      <td>GO</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>310010</td>
+      <td>Abadia dos Dourados</td>
+      <td>MG</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>520010</td>
+      <td>Abadiânia</td>
+      <td>GO</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>150010</td>
+      <td>Abaetetuba</td>
+      <td>PA</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>310020</td>
+      <td>Abaeté</td>
+      <td>MG</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">brazilian_cities</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[12]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(5570, 3)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
 </pre></div>
 
 </div>
@@ -12278,10 +12375,141 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">unicodedata</span>
+
+<span class="k">def</span> <span class="nf">normalize_string</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">nfkd_form</span> <span class="o">=</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s1">&#39;NFKD&#39;</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">nfkd_form</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ASCII&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;normalized_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">normalize_string</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;normalized_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;normalized_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">brazilian_cities</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[16]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+      <th>state</th>
+      <th>normalized_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>520005</td>
+      <td>Abadia de Goiás</td>
+      <td>go</td>
+      <td>abadiadegoias</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>310010</td>
+      <td>Abadia dos Dourados</td>
+      <td>mg</td>
+      <td>abadiadosdourados</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>520010</td>
+      <td>Abadiânia</td>
+      <td>go</td>
+      <td>abadiania</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>150010</td>
+      <td>Abaetetuba</td>
+      <td>pa</td>
+      <td>abaetetuba</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>310020</td>
+      <td>Abaeté</td>
+      <td>mg</td>
+      <td>abaete</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Getting-all-cities-that-are-part-of-Transparency-Portal">Getting all cities that are part of Transparency Portal<a class="anchor-link" href="#Getting-all-cities-that-are-part-of-Transparency-Portal">&#182;</a></h2><p>There are some cities that we already know that have a page with transparency and open data. The main object here is to find how many cities have that.</p>
+<p>Pattern: <code>{city}-{state}.portaltp.com.br</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">requests</span> <span class="k">import</span> <span class="n">head</span>
+
+<span class="k">def</span> <span class="nf">get_status</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">head</span><span class="p">(</span><span class="s1">&#39;https://</span><span class="si">{}</span><span class="s1">-</span><span class="si">{}</span><span class="s1">.portaltp.com.br/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span><span class="o">.</span><span class="n">status_code</span>
+    
+<span class="n">status</span> <span class="o">=</span> <span class="n">get_status</span><span class="p">(</span><span class="s1">&#39;colatina&#39;</span><span class="p">,</span> <span class="s1">&#39;es&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+
+<span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;status_portaltp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="p">[[</span><span class="s1">&#39;normalized_name&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">get_status</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;normalized_name&#39;</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]))</span>
 </pre></div>
 
 </div>
