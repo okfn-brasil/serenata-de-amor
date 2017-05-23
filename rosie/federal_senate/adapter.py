@@ -10,6 +10,7 @@ COLUMNS = {
     'recipient': 'supplier',
 }
 
+
 class Adapter:
 
     def __init__(self, path):
