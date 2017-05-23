@@ -11778,7 +11778,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Invalid-CNPJ-or-CPF">Invalid CNPJ or CPF<a class="anchor-link" href="#Invalid-CNPJ-or-CPF">&#182;</a></h1><p><code>cnpj_cpf</code> is the column identifying the company or individual who received the payment made by the congressperson. Having this value empty should mean that it's an expense made outside Brazil, with a company (or person) without a Brazilian ID.</p>
+<h1 id="Invalid-CNPJ-or-CPF-from-Federal-Senate-CEAP">Invalid CNPJ or CPF from Federal Senate CEAP<a class="anchor-link" href="#Invalid-CNPJ-or-CPF-from-Federal-Senate-CEAP">&#182;</a></h1><p><code>cnpj_cpf</code> is the column identifying the company or individual who received the payment made by the congressperson. Having this value empty should mean that it's an expense made outside Brazil, with a company (or person) without a Brazilian ID.</p>
 
 </div>
 </div>
@@ -11791,8 +11791,39 @@ div#notebook {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-05-17-federal-senate-reimbursements.xz&#39;</span><span class="p">,</span>\
-                      <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">serenata_toolbox.datasets</span> <span class="k">import</span> <span class="n">fetch</span>
+
+<span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;2017-05-22-federal-senate-reimbursements.xz&#39;</span><span class="p">,</span> <span class="s1">&#39;../data/&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Downloading 2017-05-22-federal-senate-reimbursements.xz: 100%|██████████| 3.59M/3.59M [00:00&lt;00:00, 6.14Mb/s]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-05-22-federal-senate-reimbursements.xz&#39;</span><span class="p">,</span>\
+                      <span class="n">converters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11802,7 +11833,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()]</span>
@@ -11818,11 +11849,24 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[2]:</div>
+<div class="prompt output_prompt">Out[3]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -11841,69 +11885,69 @@ div#notebook {
   </thead>
   <tbody>
     <tr>
-      <th>2449</th>
-      <td>2009</td>
-      <td>12</td>
-      <td>ACIR GURGACZ</td>
-      <td>Rent of real estate for political office, comp...</td>
-      <td>00494802863</td>
-      <td>GILBERTO PISELO DO NASCIMENTO</td>
+      <th>0</th>
+      <td>2008</td>
+      <td>9</td>
+      <td>ADA MELLO</td>
+      <td>Recruitment of consultancies, advisory service...</td>
+      <td></td>
       <td>NaN</td>
-      <td>2009-11-12</td>
       <td>NaN</td>
-      <td>5000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>12351,52</td>
     </tr>
     <tr>
-      <th>2450</th>
-      <td>2009</td>
-      <td>12</td>
-      <td>ACIR GURGACZ</td>
-      <td>Publicity of parliamentary activity</td>
-      <td>02831112000209</td>
-      <td>INTERCOM INTERMEDIAÇÕES E COMUNICAÇÃO INTEGRAD...</td>
-      <td>000330</td>
-      <td>2009-09-12</td>
-      <td>NaN</td>
-      <td>12620</td>
-    </tr>
-    <tr>
-      <th>2456</th>
-      <td>2009</td>
-      <td>4</td>
-      <td>ADELMIR SANTANA</td>
+      <th>1</th>
+      <td>2008</td>
+      <td>9</td>
+      <td>ADA MELLO</td>
       <td>Locomotion, lodging, food, fuels and lubricants</td>
-      <td>00306597001683</td>
-      <td>Cascol combustíveis para veículos Ltda</td>
-      <td>106471</td>
-      <td>2009-12-04</td>
+      <td></td>
       <td>NaN</td>
-      <td>179,01</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>386,6</td>
     </tr>
     <tr>
-      <th>2457</th>
-      <td>2009</td>
-      <td>4</td>
-      <td>ADELMIR SANTANA</td>
-      <td>Locomotion, lodging, food, fuels and lubricants</td>
-      <td>00358192000102</td>
-      <td>Ribeiro e Pereira Ltda</td>
-      <td>77472</td>
-      <td>2009-04-04</td>
+      <th>2</th>
+      <td>2008</td>
+      <td>10</td>
+      <td>ADA MELLO</td>
+      <td>Recruitment of consultancies, advisory service...</td>
+      <td></td>
       <td>NaN</td>
-      <td>30</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>12351,52</td>
     </tr>
     <tr>
-      <th>2458</th>
-      <td>2009</td>
-      <td>4</td>
-      <td>ADELMIR SANTANA</td>
+      <th>3</th>
+      <td>2008</td>
+      <td>10</td>
+      <td>ADA MELLO</td>
       <td>Locomotion, lodging, food, fuels and lubricants</td>
-      <td>06098111000169</td>
-      <td>Tudo de Bom Comércio de alimentos Ltda</td>
-      <td>10169</td>
-      <td>2009-04-14</td>
+      <td></td>
       <td>NaN</td>
-      <td>215,8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2610,68</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2008</td>
+      <td>11</td>
+      <td>ADA MELLO</td>
+      <td>Recruitment of consultancies, advisory service...</td>
+      <td></td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>12351,52</td>
     </tr>
   </tbody>
 </table>
@@ -11918,7 +11962,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pycpfcnpj</span> <span class="k">import</span> <span class="n">cpfcnpj</span>
@@ -11939,7 +11983,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;valid_cnpj_cpf != True&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -11954,11 +11998,24 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[4]:</div>
+<div class="prompt output_prompt">Out[5]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -11978,73 +12035,73 @@ div#notebook {
   </thead>
   <tbody>
     <tr>
-      <th>3997</th>
-      <td>2009</td>
-      <td>4</td>
-      <td>CRISTOVAM BUARQUE</td>
-      <td>Rent of real estate for political office, comp...</td>
-      <td>00000000000000</td>
-      <td>Secretaria de Estado de Fazenda do GDF</td>
-      <td>20102402</td>
-      <td>2009-06-04</td>
+      <th>0</th>
+      <td>2008</td>
+      <td>9</td>
+      <td>ADA MELLO</td>
+      <td>Recruitment of consultancies, advisory service...</td>
+      <td></td>
       <td>NaN</td>
-      <td>98,28</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>12351,52</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>4029</th>
-      <td>2009</td>
-      <td>5</td>
-      <td>CRISTOVAM BUARQUE</td>
-      <td>Acquisition of consumables for use in the poli...</td>
-      <td>00000000000000</td>
-      <td>TEC Jet - Jato de Tinta e Toner</td>
-      <td>0009</td>
-      <td>2009-05-28</td>
-      <td>NaN</td>
-      <td>15</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>27395</th>
-      <td>2010</td>
-      <td>3</td>
-      <td>JOÃO DURVAL</td>
+      <th>1</th>
+      <td>2008</td>
+      <td>9</td>
+      <td>ADA MELLO</td>
       <td>Locomotion, lodging, food, fuels and lubricants</td>
-      <td>0240900000025</td>
-      <td>Posto Pituba</td>
-      <td>09544</td>
-      <td>2010-03-15</td>
+      <td></td>
       <td>NaN</td>
-      <td>50</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>386,6</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>28584</th>
-      <td>2010</td>
-      <td>5</td>
-      <td>JOSÉ NERY</td>
+      <th>2</th>
+      <td>2008</td>
+      <td>10</td>
+      <td>ADA MELLO</td>
+      <td>Recruitment of consultancies, advisory service...</td>
+      <td></td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>12351,52</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2008</td>
+      <td>10</td>
+      <td>ADA MELLO</td>
       <td>Locomotion, lodging, food, fuels and lubricants</td>
-      <td>0478056500043</td>
-      <td>E. Carvalho Com Navegação Ltda</td>
-      <td>19108</td>
-      <td>2010-05-21</td>
+      <td></td>
       <td>NaN</td>
-      <td>20</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2610,68</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>41257</th>
-      <td>2011</td>
-      <td>4</td>
-      <td>CASILDO MALDANER</td>
-      <td>Acquisition of consumables for use in the poli...</td>
-      <td>7388199700010</td>
-      <td>ECT- Empresa Brasileira de Correios e Telegráfos</td>
-      <td>0018</td>
-      <td>2011-04-27</td>
+      <th>4</th>
+      <td>2008</td>
+      <td>11</td>
+      <td>ADA MELLO</td>
+      <td>Recruitment of consultancies, advisory service...</td>
+      <td></td>
       <td>NaN</td>
-      <td>33</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>12351,52</td>
       <td>False</td>
     </tr>
   </tbody>
@@ -12071,11 +12128,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;document_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;simple_receipt&#39;</span>
-<span class="n">dataset</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;document_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;unknown&#39;</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -12087,108 +12144,24 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[5]:</div>
+<div class="prompt output_prompt">Out[6]:</div>
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>year</th>
-      <th>month</th>
-      <th>congressperson_name</th>
-      <th>expense_type</th>
-      <th>cnpj_cpf</th>
-      <th>supplier</th>
-      <th>document_id</th>
-      <th>date</th>
-      <th>expense_details</th>
-      <th>reimbursement_value</th>
-      <th>valid_cnpj_cpf</th>
-      <th>document_type</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2449</th>
-      <td>2009</td>
-      <td>12</td>
-      <td>ACIR GURGACZ</td>
-      <td>Rent of real estate for political office, comp...</td>
-      <td>00494802863</td>
-      <td>GILBERTO PISELO DO NASCIMENTO</td>
-      <td>NaN</td>
-      <td>2009-11-12</td>
-      <td>NaN</td>
-      <td>5000</td>
-      <td>True</td>
-      <td>simple_receipt</td>
-    </tr>
-    <tr>
-      <th>2450</th>
-      <td>2009</td>
-      <td>12</td>
-      <td>ACIR GURGACZ</td>
-      <td>Publicity of parliamentary activity</td>
-      <td>02831112000209</td>
-      <td>INTERCOM INTERMEDIAÇÕES E COMUNICAÇÃO INTEGRAD...</td>
-      <td>000330</td>
-      <td>2009-09-12</td>
-      <td>NaN</td>
-      <td>12620</td>
-      <td>True</td>
-      <td>simple_receipt</td>
-    </tr>
-    <tr>
-      <th>2456</th>
-      <td>2009</td>
-      <td>4</td>
-      <td>ADELMIR SANTANA</td>
-      <td>Locomotion, lodging, food, fuels and lubricants</td>
-      <td>00306597001683</td>
-      <td>Cascol combustíveis para veículos Ltda</td>
-      <td>106471</td>
-      <td>2009-12-04</td>
-      <td>NaN</td>
-      <td>179,01</td>
-      <td>True</td>
-      <td>simple_receipt</td>
-    </tr>
-    <tr>
-      <th>2457</th>
-      <td>2009</td>
-      <td>4</td>
-      <td>ADELMIR SANTANA</td>
-      <td>Locomotion, lodging, food, fuels and lubricants</td>
-      <td>00358192000102</td>
-      <td>Ribeiro e Pereira Ltda</td>
-      <td>77472</td>
-      <td>2009-04-04</td>
-      <td>NaN</td>
-      <td>30</td>
-      <td>True</td>
-      <td>simple_receipt</td>
-    </tr>
-    <tr>
-      <th>2458</th>
-      <td>2009</td>
-      <td>4</td>
-      <td>ADELMIR SANTANA</td>
-      <td>Locomotion, lodging, food, fuels and lubricants</td>
-      <td>06098111000169</td>
-      <td>Tudo de Bom Comércio de alimentos Ltda</td>
-      <td>10169</td>
-      <td>2009-04-14</td>
-      <td>NaN</td>
-      <td>215,8</td>
-      <td>True</td>
-      <td>simple_receipt</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+
+<div class="output_text output_subarea output_execute_result">
+<pre>year                                                                2008
+month                                                                  9
+congressperson_name                                            ADA MELLO
+expense_type           Recruitment of consultancies, advisory service...
+cnpj_cpf                                                                
+supplier                                                             NaN
+document_id                                                          NaN
+date                                                                 NaN
+expense_details                                                      NaN
+reimbursement_value                                             12351,52
+valid_cnpj_cpf                                                     False
+document_type                                                    unknown
+Name: 0, dtype: object</pre>
 </div>
 
 </div>
