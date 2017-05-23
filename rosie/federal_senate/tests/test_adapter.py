@@ -1,12 +1,12 @@
-import shutil
 import os
+import shutil
 from tempfile import mkdtemp
 from unittest import TestCase
 
 import pandas as pd
 
-from rosie.federal_senate.adapter import Adapter as subject_class
 from rosie.federal_senate.adapter import COLUMNS as ADAPTER_COLUMNS
+from rosie.federal_senate.adapter import Adapter as subject_class
 
 FIXTURE_PATH = os.path.join('rosie',
                             'federal_senate',
