@@ -1,14 +1,14 @@
-import shutil
 import os
+import shutil
+from shutil import copy2
 from tempfile import mkdtemp
 from unittest import TestCase
 from unittest.mock import patch
-from shutil import copy2
 
 import pandas as pd
 
-from rosie.chamber_of_deputies.adapter import Adapter as subject_class
 from rosie.chamber_of_deputies.adapter import COLUMNS as ADAPTER_COLUMNS
+from rosie.chamber_of_deputies.adapter import Adapter as subject_class
 
 
 class TestAdapter(TestCase):
