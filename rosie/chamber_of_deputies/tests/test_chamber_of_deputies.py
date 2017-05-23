@@ -1,5 +1,5 @@
-import shutil
 import os
+import shutil
 from pathlib import Path
 from tempfile import mkdtemp
 from unittest import TestCase

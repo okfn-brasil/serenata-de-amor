@@ -2,9 +2,9 @@ import os
 
 import numpy as np
 import pandas as pd
+
 from serenata_toolbox.chamber_of_deputies.chamber_of_deputies_dataset import ChamberOfDeputiesDataset
 from serenata_toolbox.datasets import fetch
-
 
 COLUMNS = {
     'category': 'subquota_description',
