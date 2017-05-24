@@ -265,9 +265,21 @@ responses
 
 # The result above got me wondering where were those 200 statuses code we've seen before. I tested the code on the command line and they are there. So a little reasearch and I found that apparently it is not possible to run async tasks easily on a jupyter notebook [ref](http://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Asynchronous.html).
 
-# In[ ]:
+# In[38]:
+
+data = brazilian_cities[brazilian_cities['status_code'] == 200]
+data = data.reset_index()
+data.head()
 
 
+# In[39]:
+
+data.shape
+
+
+# In[42]:
+
+data.to_csv('../data/cities-with-tp-url.xz', compression='xz', index=False)
 
 
 # In[ ]:
