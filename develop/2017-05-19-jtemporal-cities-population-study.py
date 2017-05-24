@@ -117,11 +117,13 @@ census_link = "ftp.ibge.gov.br/Censos/Censo_Demografico_2010/resultados/total_po
 # In[10]:
 
 from serenata_toolbox.datasets import fetch
+
 fetch('2017-05-22-brazilian-cities.csv', '../data')
 
 
 # In[11]:
 
+# csv generated with https://github.com/cuducos/brazilian-cities
 brazilian_cities = pd.read_csv('../data/2017-05-22-brazilian-cities.csv')
 brazilian_cities.head()
 
@@ -163,16 +165,112 @@ brazilian_cities.head()
 # 
 # Pattern: `{city}-{state}.portaltp.com.br`
 
+# In[17]:
+
+portal_url = 'https://{}-{}.portaltp.com.br/'
+brazilian_cities['transparency_portal_url'] = brazilian_cities.apply(lambda row: portal_url.format(
+                                                                                        row['normalized_name'],
+                                                                                        row['state']), axis=1)
+brazilian_cities.head(20)
+
+
+# (Getting all of the status code for each city might take a while so we added the prints only for feedback)
+
+# In[18]:
+
+import requests
+    
+def get_status(url):
+    try:
+        print(requests.head(url).status_code)
+        return requests.head(url).status_code
+    except requests.ConnectionError:
+        print(404)
+        return 404
+
+
+# In[19]:
+
+colatina = brazilian_cities[brazilian_cities['code'] == 320150]['transparency_portal_url'].values[0]
+statusOK = get_status(colatina)
+
+abaete = brazilian_cities[brazilian_cities['code'] == 310020]['transparency_portal_url'].values[0]
+statusNOK = get_status(abaete)
+
+
+# In[20]:
+
+br_cities = brazilian_cities.loc[:10,:].copy()
+br_cities.loc[:,'status_code'] = br_cities.apply(lambda x: get_status(x['transparency_portal_url']), axis=1)
+
+
+# In[21]:
+
+br_cities
+
+
+# This will take too long considering we have 5570 cities to address.
+
+# In[22]:
+
+def get_status(url):
+    try:
+        return requests.head(url).status_code
+    except requests.ConnectionError:
+        return 404
+
+
+# With that in mind, the medicine is patience. The following cell will take a long time to run so get a cup of coffee ;)
+
+# In[23]:
+
+brazilian_cities['status_code'] = brazilian_cities['transparency_portal_url'].apply(lambda x: get_status(x))
+
+
+# In[25]:
+
+brazilian_cities.head(10)
+
+
+# Let's try using grequests.
+# 
+# I know that we can find two different status code in the first 10 cities urls test. So let's use those 10 to test grequests ;)
+
+# In[26]:
+
+import grequests
+
+rs = (grequests.get(u) for u in list(br_cities['transparency_portal_url']))
+
+
+# In[27]:
+
+def exception_handler(request, exception):
+    return 404
+
+responses = grequests.map(rs, exception_handler=exception_handler)
+
+
+# In[28]:
+
+codes = [int(x) for x in br_cities['status_code'].values]
+
+print(pd.unique(codes), pd.unique(responses))
+
+
+# In[29]:
+
+responses
+
+
+# The result above got me wondering where were those 200 statuses code we've seen before. I tested the code on the command line and they are there. So a little reasearch and I found that apparently it is not possible to run async tasks easily on a jupyter notebook [ref](http://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Asynchronous.html).
+
 # In[ ]:
 
-from requests import head
 
-def get_status(name, state):
-    return head('https://{}-{}.portaltp.com.br/'.format(name, state)).status_code
-    
-status = get_status('colatina', 'es')
 
-print(status)
 
-brazilian_cities['status_portaltp'] = brazilian_cities[['normalized_name', 'state']].apply(lambda x: get_status(x['normalized_name'], x['state']))
+# In[ ]:
+
+
 
