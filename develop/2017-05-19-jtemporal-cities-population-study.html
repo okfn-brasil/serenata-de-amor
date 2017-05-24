@@ -12286,7 +12286,7 @@ div#notebook {
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Downloading 2017-05-22-brazilian-cities.csv: 100%|██████████| 134K/134K [00:00&lt;00:00, 946Kb/s]
+<pre>Downloading 2017-05-22-brazilian-cities.csv: 100%|██████████| 134K/134K [00:00&lt;00:00, 1.45Mb/s]
 </pre>
 </div>
 </div>
@@ -12820,11 +12820,12 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">colatina</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="p">[</span><span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">320150</span><span class="p">][</span><span class="s1">&#39;transparency_portal_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">statusOK</span> <span class="o">=</span> <span class="n">get_status</span><span class="p">(</span><span class="n">colatina</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">time</span>
+colatina = brazilian_cities[brazilian_cities[&#39;code&#39;] == 320150][&#39;transparency_portal_url&#39;].values[0]
+statusOK = get_status(colatina)
 
-<span class="n">abaete</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="p">[</span><span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">310020</span><span class="p">][</span><span class="s1">&#39;transparency_portal_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">statusNOK</span> <span class="o">=</span> <span class="n">get_status</span><span class="p">(</span><span class="n">abaete</span><span class="p">)</span>
+abaete = brazilian_cities[brazilian_cities[&#39;code&#39;] == 310020][&#39;transparency_portal_url&#39;].values[0]
+statusNOK = get_status(abaete)
 </pre></div>
 
 </div>
@@ -12841,6 +12842,8 @@ div#notebook {
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>200
 404
+CPU times: user 46.2 ms, sys: 9.1 ms, total: 55.3 ms
+Wall time: 2.35 s
 </pre>
 </div>
 </div>
@@ -12854,8 +12857,9 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">br_cities</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span><span class="mi">10</span><span class="p">,:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">br_cities</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">br_cities</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">get_status</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;transparency_portal_url&#39;</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">time</span>
+br_cities = brazilian_cities.loc[:10,:].copy()
+br_cities.loc[:,&#39;status_code&#39;] = br_cities.apply(lambda x: get_status(x[&#39;transparency_portal_url&#39;]), axis=1)
 </pre></div>
 
 </div>
@@ -12881,6 +12885,8 @@ div#notebook {
 200
 404
 404
+CPU times: user 89.7 ms, sys: 12 ms, total: 102 ms
+Wall time: 3.9 s
 </pre>
 </div>
 </div>
@@ -13053,205 +13059,7 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This will take too long considering we have 5570 cities to address.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_status</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">status_code</span>
-    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">404</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>With that in mind, the medicine is patience. The following cell will take a long time to run so get a cup of coffee ;)</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;transparency_portal_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">get_status</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">brazilian_cities</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[25]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>code</th>
-      <th>name</th>
-      <th>state</th>
-      <th>normalized_name</th>
-      <th>transparency_portal_url</th>
-      <th>status_code</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>520005</td>
-      <td>Abadia de Goiás</td>
-      <td>go</td>
-      <td>abadiadegoias</td>
-      <td>https://abadiadegoias-go.portaltp.com.br/</td>
-      <td>404</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>310010</td>
-      <td>Abadia dos Dourados</td>
-      <td>mg</td>
-      <td>abadiadosdourados</td>
-      <td>https://abadiadosdourados-mg.portaltp.com.br/</td>
-      <td>404</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>520010</td>
-      <td>Abadiânia</td>
-      <td>go</td>
-      <td>abadiania</td>
-      <td>https://abadiania-go.portaltp.com.br/</td>
-      <td>404</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>150010</td>
-      <td>Abaetetuba</td>
-      <td>pa</td>
-      <td>abaetetuba</td>
-      <td>https://abaetetuba-pa.portaltp.com.br/</td>
-      <td>404</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>310020</td>
-      <td>Abaeté</td>
-      <td>mg</td>
-      <td>abaete</td>
-      <td>https://abaete-mg.portaltp.com.br/</td>
-      <td>404</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>230010</td>
-      <td>Abaiara</td>
-      <td>ce</td>
-      <td>abaiara</td>
-      <td>https://abaiara-ce.portaltp.com.br/</td>
-      <td>404</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>290020</td>
-      <td>Abaré</td>
-      <td>ba</td>
-      <td>abare</td>
-      <td>https://abare-ba.portaltp.com.br/</td>
-      <td>200</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>410010</td>
-      <td>Abatiá</td>
-      <td>pr</td>
-      <td>abatia</td>
-      <td>https://abatia-pr.portaltp.com.br/</td>
-      <td>404</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>290010</td>
-      <td>Abaíra</td>
-      <td>ba</td>
-      <td>abaira</td>
-      <td>https://abaira-ba.portaltp.com.br/</td>
-      <td>200</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>420005</td>
-      <td>Abdon Batista</td>
-      <td>sc</td>
-      <td>abdonbatista</td>
-      <td>https://abdonbatista-sc.portaltp.com.br/</td>
-      <td>404</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's try using grequests.</p>
+<p>Let's try using <a href="https://pypi.python.org/pypi/grequests">grequests</a>.</p>
 <p>I know that we can find two different status code in the first 10 cities urls test. So let's use those 10 to test grequests ;)</p>
 
 </div>
@@ -13259,7 +13067,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">grequests</span>
@@ -13274,7 +13082,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">exception_handler</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
@@ -13290,7 +13098,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">codes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">br_cities</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
@@ -13321,7 +13129,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">responses</span>
@@ -13336,7 +13144,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[29]:</div>
+<div class="prompt output_prompt">Out[25]:</div>
 
 
 
@@ -13356,165 +13164,86 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The result above got me wondering where were those 200 statuses code we've seen before. I tested the code on the command line and they are there. So a little reasearch and I found that apparently it is not possible to run async tasks easily on a jupyter notebook <a href="http://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Asynchronous.html">ref</a>.</p>
+<p>With that in mind we decided to write a script that generates the infomartion we want: Open Data url for each brazilian city</p>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="p">[</span><span class="n">brazilian_cities</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">200</span><span class="p">]</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>def get_status(url):
+    try:
+        return requests.head(url).status_code
+    except requests.ConnectionError:
+        return 404</p>
 
 </div>
 </div>
 </div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[38]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>index</th>
-      <th>code</th>
-      <th>name</th>
-      <th>state</th>
-      <th>normalized_name</th>
-      <th>transparency_portal_url</th>
-      <th>status_code</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>6</td>
-      <td>290020</td>
-      <td>Abaré</td>
-      <td>ba</td>
-      <td>abare</td>
-      <td>https://abare-ba.portaltp.com.br/</td>
-      <td>200</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>8</td>
-      <td>290010</td>
-      <td>Abaíra</td>
-      <td>ba</td>
-      <td>abaira</td>
-      <td>https://abaira-ba.portaltp.com.br/</td>
-      <td>200</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>34</td>
-      <td>320010</td>
-      <td>Afonso Cláudio</td>
-      <td>es</td>
-      <td>afonsoclaudio</td>
-      <td>https://afonsoclaudio-es.portaltp.com.br/</td>
-      <td>200</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>70</td>
-      <td>320020</td>
-      <td>Alegre</td>
-      <td>es</td>
-      <td>alegre</td>
-      <td>https://alegre-es.portaltp.com.br/</td>
-      <td>200</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>78</td>
-      <td>320030</td>
-      <td>Alfredo Chaves</td>
-      <td>es</td>
-      <td>alfredochaves</td>
-      <td>https://alfredochaves-es.portaltp.com.br/</td>
-      <td>200</td>
-    </tr>
-  </tbody>
-</table>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
 </div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>With that in mind, the medicine is patience. The following cell will take a long time to run so get a cup of coffee ;)</p>
 
 </div>
 </div>
 </div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[39]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(225, 7)</pre>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
 </div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[42]:</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;../data/cities-with-tp-url.xz&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;xz&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>brazilian_cities['status_code'] = brazilian_cities['transparency_portal_url'].apply(lambda x: get_status(x))</p>
 
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>brazilian_cities.head(10)</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>data = brazilian_cities[brazilian_cities['status_code'] == 200]
+data = data.reset_index()
+data.head()</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>data.shape</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>data.to_csv('../data/cities-with-tp-url.xz', compression='xz', index=False)</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">

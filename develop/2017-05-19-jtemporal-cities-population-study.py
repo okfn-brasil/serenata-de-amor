@@ -191,17 +191,12 @@ def get_status(url):
 
 # In[19]:
 
-colatina = brazilian_cities[brazilian_cities['code'] == 320150]['transparency_portal_url'].values[0]
-statusOK = get_status(colatina)
-
-abaete = brazilian_cities[brazilian_cities['code'] == 310020]['transparency_portal_url'].values[0]
-statusNOK = get_status(abaete)
+get_ipython().run_cell_magic('time', '', "colatina = brazilian_cities[brazilian_cities['code'] == 320150]['transparency_portal_url'].values[0]\nstatusOK = get_status(colatina)\n\nabaete = brazilian_cities[brazilian_cities['code'] == 310020]['transparency_portal_url'].values[0]\nstatusNOK = get_status(abaete)")
 
 
 # In[20]:
 
-br_cities = brazilian_cities.loc[:10,:].copy()
-br_cities.loc[:,'status_code'] = br_cities.apply(lambda x: get_status(x['transparency_portal_url']), axis=1)
+get_ipython().run_cell_magic('time', '', "br_cities = brazilian_cities.loc[:10,:].copy()\nbr_cities.loc[:,'status_code'] = br_cities.apply(lambda x: get_status(x['transparency_portal_url']), axis=1)")
 
 
 # In[21]:
@@ -210,40 +205,19 @@ br_cities
 
 
 # This will take too long considering we have 5570 cities to address.
-
-# In[22]:
-
-def get_status(url):
-    try:
-        return requests.head(url).status_code
-    except requests.ConnectionError:
-        return 404
-
-
-# With that in mind, the medicine is patience. The following cell will take a long time to run so get a cup of coffee ;)
-
-# In[23]:
-
-brazilian_cities['status_code'] = brazilian_cities['transparency_portal_url'].apply(lambda x: get_status(x))
-
-
-# In[25]:
-
-brazilian_cities.head(10)
-
-
-# Let's try using grequests.
+# 
+# Let's try using [grequests](https://pypi.python.org/pypi/grequests).
 # 
 # I know that we can find two different status code in the first 10 cities urls test. So let's use those 10 to test grequests ;)
 
-# In[26]:
+# In[22]:
 
 import grequests
 
 rs = (grequests.get(u) for u in list(br_cities['transparency_portal_url']))
 
 
-# In[27]:
+# In[23]:
 
 def exception_handler(request, exception):
     return 404
@@ -251,36 +225,41 @@ def exception_handler(request, exception):
 responses = grequests.map(rs, exception_handler=exception_handler)
 
 
-# In[28]:
+# In[24]:
 
 codes = [int(x) for x in br_cities['status_code'].values]
 
 print(pd.unique(codes), pd.unique(responses))
 
 
-# In[29]:
+# In[25]:
 
 responses
 
 
 # The result above got me wondering where were those 200 statuses code we've seen before. I tested the code on the command line and they are there. So a little reasearch and I found that apparently it is not possible to run async tasks easily on a jupyter notebook [ref](http://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Asynchronous.html).
+# 
+# With that in mind we decided to write a script that generates the infomartion we want: Open Data url for each brazilian city
 
-# In[38]:
+# def get_status(url):
+#     try:
+#         return requests.head(url).status_code
+#     except requests.ConnectionError:
+#         return 404
 
-data = brazilian_cities[brazilian_cities['status_code'] == 200]
-data = data.reset_index()
-data.head()
+# With that in mind, the medicine is patience. The following cell will take a long time to run so get a cup of coffee ;)
 
+# brazilian_cities['status_code'] = brazilian_cities['transparency_portal_url'].apply(lambda x: get_status(x))
 
-# In[39]:
+# brazilian_cities.head(10)
 
-data.shape
+# data = brazilian_cities[brazilian_cities['status_code'] == 200]
+# data = data.reset_index()
+# data.head()
 
+# data.shape
 
-# In[42]:
-
-data.to_csv('../data/cities-with-tp-url.xz', compression='xz', index=False)
-
+# data.to_csv('../data/cities-with-tp-url.xz', compression='xz', index=False)
 
 # In[ ]:
 
