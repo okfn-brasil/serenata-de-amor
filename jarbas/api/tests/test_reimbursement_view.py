@@ -160,6 +160,7 @@ class TestRetrieveApi(TestCase):
             probability=0.5,
             suspicions=suspicions,
             last_update='1970-01-01T00:00:00Z',
+            available_in_latest_dataset=True,
             receipt=dict(fetched=False, url=None)
         )
         self.assertEqual(expected, contents)
