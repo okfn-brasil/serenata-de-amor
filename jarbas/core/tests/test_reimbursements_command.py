@@ -103,29 +103,43 @@ class TestCreate(TestCommand):
         print_count.assert_called_once_with(Reimbursement, count=1)
 
 
+class TestMarkNonUpdated(TestCommand):
+
+    @patch.object(Reimbursement.objects, 'filter')
+    def test_mark_available_in_latest_dataset(self, filter_):
+        self.command.started_at = 42
+        self.command.mark_not_updated_reimbursements()
+        filter_.assert_called_once_with(last_update__lt=self.command.started_at)
+        filter_.return_value.update.assert_called_once_with(available_in_latest_dataset=False)
+
+
 class TestConventionMethods(TestCommand):
 
     @patch('jarbas.core.management.commands.reimbursements.print')
     @patch('jarbas.core.management.commands.reimbursements.Command.reimbursements')
     @patch('jarbas.core.management.commands.reimbursements.Command.create_or_update')
     @patch('jarbas.core.management.commands.reimbursements.Command.print_count')
-    def test_handler_without_options(self, print_count, create, reimbursements, print_):
+    @patch('jarbas.core.management.commands.reimbursements.Command.mark_not_updated_reimbursements')
+    def test_handler_without_options(self, mark, print_count, create, reimbursements, print_):
         reimbursements.return_value = (1, 2, 3)
         self.command.handle(dataset='reimbursements.xz')
         print_.assert_called_once_with('Starting with 0 reimbursements')
         create.assert_called_once_with(reimbursements)
         self.assertEqual('reimbursements.xz', self.command.path)
+        mark.assert_called_once_with()
 
     @patch('jarbas.core.management.commands.reimbursements.print')
     @patch('jarbas.core.management.commands.reimbursements.Command.reimbursements')
     @patch('jarbas.core.management.commands.reimbursements.Command.create_or_update')
     @patch('jarbas.core.management.commands.reimbursements.Command.drop_all')
     @patch('jarbas.core.management.commands.reimbursements.Command.print_count')
-    def test_handler_with_options(self, print_count, drop_all, create, reimbursements, print_):
+    @patch('jarbas.core.management.commands.reimbursements.Command.mark_not_updated_reimbursements')
+    def test_handler_with_options(self, mark, print_count, drop_all, create, reimbursements, print_):
         self.command.handle(dataset='reimbursements.xz', drop=True)
         print_.assert_called_once_with('Starting with 0 reimbursements')
         drop_all.assert_called_once_with(Reimbursement)
         create.assert_called_once_with(reimbursements)
+        mark.assert_called_once_with()
 
 
 class TestFileLoader(TestCommand):

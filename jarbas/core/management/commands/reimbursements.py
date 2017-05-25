@@ -1,6 +1,8 @@
 import csv
 import lzma
 
+from django.utils.timezone import now
+
 from jarbas.core.management.commands import LoadCommand
 from jarbas.core.models import Reimbursement
 
@@ -9,6 +11,7 @@ class Command(LoadCommand):
     help = 'Load Serenata de Amor reimbursements dataset'
 
     def handle(self, *args, **options):
+        self.started_at = now()
         self.path = options['dataset']
         self.count = Reimbursement.objects.count()
         print('Starting with {:,} reimbursements'.format(self.count))
@@ -19,6 +22,7 @@ class Command(LoadCommand):
 
         self.create_or_update(self.reimbursements)
         self.print_count(Reimbursement, count=self.count, permanent=True)
+        self.mark_not_updated_reimbursements()
 
     @property
     def reimbursements(self):
@@ -82,3 +86,7 @@ class Command(LoadCommand):
                     defaults=reimbursement
                 )
             self.print_count(Reimbursement, count=count + 1)
+
+    def mark_not_updated_reimbursements(self):
+        qs = Reimbursement.objects.filter(last_update__lt=self.started_at)
+        qs.update(available_in_latest_dataset=False)
