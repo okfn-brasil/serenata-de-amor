@@ -28,8 +28,6 @@ def main(data_path='/tmp/serenata-data', cities_file='2017-05-22-brazilian-citie
     Datasets(data_path).downloader.download(cities_file)
     br_cities = pd.read_csv(os.path.join(data_path, cities_file))
 
-    br_cities = br_cities.head(10).copy()
-
     br_cities['state'] = br_cities['state'].apply(lambda x: x.lower())
 
     br_cities['normalized_name'] = br_cities['name'] \
