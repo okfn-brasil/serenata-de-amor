@@ -12286,7 +12286,7 @@ div#notebook {
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Downloading 2017-05-22-brazilian-cities.csv: 100%|██████████| 134K/134K [00:00&lt;00:00, 1.45Mb/s]
+<pre>Downloading 2017-05-22-brazilian-cities.csv: 100%|██████████| 134K/134K [00:00&lt;00:00, 1.77Mb/s]
 </pre>
 </div>
 </div>
@@ -12842,8 +12842,8 @@ statusNOK = get_status(abaete)
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>200
 404
-CPU times: user 46.2 ms, sys: 9.1 ms, total: 55.3 ms
-Wall time: 2.35 s
+CPU times: user 42.9 ms, sys: 5.99 ms, total: 48.9 ms
+Wall time: 2.08 s
 </pre>
 </div>
 </div>
@@ -12857,8 +12857,20 @@ Wall time: 2.35 s
 <div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">br_cities</span> <span class="o">=</span> <span class="n">brazilian_cities</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span><span class="mi">10</span><span class="p">,:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">time</span>
-br_cities = brazilian_cities.loc[:10,:].copy()
 br_cities.loc[:,&#39;status_code&#39;] = br_cities.apply(lambda x: get_status(x[&#39;transparency_portal_url&#39;]), axis=1)
 </pre></div>
 
@@ -12885,8 +12897,8 @@ br_cities.loc[:,&#39;status_code&#39;] = br_cities.apply(lambda x: get_status(x[
 200
 404
 404
-CPU times: user 89.7 ms, sys: 12 ms, total: 102 ms
-Wall time: 3.9 s
+CPU times: user 92 ms, sys: 12.2 ms, total: 104 ms
+Wall time: 4.18 s
 </pre>
 </div>
 </div>
@@ -12897,7 +12909,7 @@ Wall time: 3.9 s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">br_cities</span>
@@ -12912,7 +12924,7 @@ Wall time: 3.9 s
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[21]:</div>
+<div class="prompt output_prompt">Out[22]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -13067,7 +13079,7 @@ Wall time: 3.9 s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">grequests</span>
@@ -13082,7 +13094,7 @@ Wall time: 3.9 s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">exception_handler</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
@@ -13098,7 +13110,7 @@ Wall time: 3.9 s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">codes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">br_cities</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
@@ -13129,7 +13141,7 @@ Wall time: 3.9 s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">responses</span>
@@ -13144,7 +13156,7 @@ Wall time: 3.9 s
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[25]:</div>
+<div class="prompt output_prompt">Out[26]:</div>
 
 
 
@@ -13169,81 +13181,1077 @@ Wall time: 3.9 s
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">br_cities</span><span class="p">[</span><span class="n">br_cities</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">404</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[27]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+      <th>state</th>
+      <th>normalized_name</th>
+      <th>transparency_portal_url</th>
+      <th>status_code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>520005</td>
+      <td>Abadia de Goiás</td>
+      <td>go</td>
+      <td>abadiadegoias</td>
+      <td>https://abadiadegoias-go.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>310010</td>
+      <td>Abadia dos Dourados</td>
+      <td>mg</td>
+      <td>abadiadosdourados</td>
+      <td>https://abadiadosdourados-mg.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>520010</td>
+      <td>Abadiânia</td>
+      <td>go</td>
+      <td>abadiania</td>
+      <td>https://abadiania-go.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>150010</td>
+      <td>Abaetetuba</td>
+      <td>pa</td>
+      <td>abaetetuba</td>
+      <td>https://abaetetuba-pa.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>310020</td>
+      <td>Abaeté</td>
+      <td>mg</td>
+      <td>abaete</td>
+      <td>https://abaete-mg.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>230010</td>
+      <td>Abaiara</td>
+      <td>ce</td>
+      <td>abaiara</td>
+      <td>https://abaiara-ce.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>410010</td>
+      <td>Abatiá</td>
+      <td>pr</td>
+      <td>abatia</td>
+      <td>https://abatia-pr.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>420005</td>
+      <td>Abdon Batista</td>
+      <td>sc</td>
+      <td>abdonbatista</td>
+      <td>https://abdonbatista-sc.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>150013</td>
+      <td>Abel Figueiredo</td>
+      <td>pa</td>
+      <td>abelfigueiredo</td>
+      <td>https://abelfigueiredo-pa.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>def get_status(url):
-    try:
-        return requests.head(url).status_code
-    except requests.ConnectionError:
-        return 404</p>
+<p>There are some cities that we already know that have a page with transparency and open data but the pattern is different from the one above.</p>
+<p>Second Pattern: <code>cm{city}-{state}.portaltp.com.br</code></p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">portal_url</span> <span class="o">=</span> <span class="s1">&#39;https://cm</span><span class="si">{}</span><span class="s1">-</span><span class="si">{}</span><span class="s1">.portaltp.com.br/&#39;</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;transparency_portal_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">portal_url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                                                           <span class="n">row</span><span class="p">[</span><span class="s1">&#39;normalized_name&#39;</span><span class="p">],</span>
+                                                                           <span class="n">row</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[28]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+      <th>state</th>
+      <th>normalized_name</th>
+      <th>transparency_portal_url</th>
+      <th>status_code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>520005</td>
+      <td>Abadia de Goiás</td>
+      <td>go</td>
+      <td>abadiadegoias</td>
+      <td>https://cmabadiadegoias-go.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>310010</td>
+      <td>Abadia dos Dourados</td>
+      <td>mg</td>
+      <td>abadiadosdourados</td>
+      <td>https://cmabadiadosdourados-mg.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>520010</td>
+      <td>Abadiânia</td>
+      <td>go</td>
+      <td>abadiania</td>
+      <td>https://cmabadiania-go.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>150010</td>
+      <td>Abaetetuba</td>
+      <td>pa</td>
+      <td>abaetetuba</td>
+      <td>https://cmabaetetuba-pa.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>310020</td>
+      <td>Abaeté</td>
+      <td>mg</td>
+      <td>abaete</td>
+      <td>https://cmabaete-mg.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>230010</td>
+      <td>Abaiara</td>
+      <td>ce</td>
+      <td>abaiara</td>
+      <td>https://cmabaiara-ce.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>410010</td>
+      <td>Abatiá</td>
+      <td>pr</td>
+      <td>abatia</td>
+      <td>https://cmabatia-pr.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>420005</td>
+      <td>Abdon Batista</td>
+      <td>sc</td>
+      <td>abdonbatista</td>
+      <td>https://cmabdonbatista-sc.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>150013</td>
+      <td>Abel Figueiredo</td>
+      <td>pa</td>
+      <td>abelfigueiredo</td>
+      <td>https://cmabelfigueiredo-pa.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>With that in mind, the medicine is patience. The following cell will take a long time to run so get a cup of coffee ;)</p>
+<p>We still need to update the status code column</p>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>brazilian_cities['status_code'] = brazilian_cities['transparency_portal_url'].apply(lambda x: get_status(x))</p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="k">time</span>
+data.loc[:,&#39;status_code&#39;] = data.apply(lambda x: get_status(x[&#39;transparency_portal_url&#39;]), axis=1)
+</pre></div>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>404
+404
+404
+404
+404
+404
+404
+404
+404
+CPU times: user 25.9 ms, sys: 5.92 ms, total: 31.8 ms
+Wall time: 56.1 ms
+</pre>
 </div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>brazilian_cities.head(10)</p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span>
+</pre></div>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[30]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+      <th>state</th>
+      <th>normalized_name</th>
+      <th>transparency_portal_url</th>
+      <th>status_code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>520005</td>
+      <td>Abadia de Goiás</td>
+      <td>go</td>
+      <td>abadiadegoias</td>
+      <td>https://cmabadiadegoias-go.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>310010</td>
+      <td>Abadia dos Dourados</td>
+      <td>mg</td>
+      <td>abadiadosdourados</td>
+      <td>https://cmabadiadosdourados-mg.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>520010</td>
+      <td>Abadiânia</td>
+      <td>go</td>
+      <td>abadiania</td>
+      <td>https://cmabadiania-go.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>150010</td>
+      <td>Abaetetuba</td>
+      <td>pa</td>
+      <td>abaetetuba</td>
+      <td>https://cmabaetetuba-pa.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>310020</td>
+      <td>Abaeté</td>
+      <td>mg</td>
+      <td>abaete</td>
+      <td>https://cmabaete-mg.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>230010</td>
+      <td>Abaiara</td>
+      <td>ce</td>
+      <td>abaiara</td>
+      <td>https://cmabaiara-ce.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>410010</td>
+      <td>Abatiá</td>
+      <td>pr</td>
+      <td>abatia</td>
+      <td>https://cmabatia-pr.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>420005</td>
+      <td>Abdon Batista</td>
+      <td>sc</td>
+      <td>abdonbatista</td>
+      <td>https://cmabdonbatista-sc.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>150013</td>
+      <td>Abel Figueiredo</td>
+      <td>pa</td>
+      <td>abelfigueiredo</td>
+      <td>https://cmabelfigueiredo-pa.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+  </tbody>
+</table>
 </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>data = brazilian_cities[brazilian_cities['status_code'] == 200]
-data = data.reset_index()
-data.head()</p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># study purposes</span>
+<span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">data</span>
+</pre></div>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[31]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+      <th>state</th>
+      <th>normalized_name</th>
+      <th>transparency_portal_url</th>
+      <th>status_code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>520005</td>
+      <td>Abadia de Goiás</td>
+      <td>go</td>
+      <td>abadiadegoias</td>
+      <td>https://cmabadiadegoias-go.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>310010</td>
+      <td>Abadia dos Dourados</td>
+      <td>mg</td>
+      <td>abadiadosdourados</td>
+      <td>https://cmabadiadosdourados-mg.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>520010</td>
+      <td>Abadiânia</td>
+      <td>go</td>
+      <td>abadiania</td>
+      <td>https://cmabadiania-go.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>150010</td>
+      <td>Abaetetuba</td>
+      <td>pa</td>
+      <td>abaetetuba</td>
+      <td>https://cmabaetetuba-pa.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>310020</td>
+      <td>Abaeté</td>
+      <td>mg</td>
+      <td>abaete</td>
+      <td>https://cmabaete-mg.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>230010</td>
+      <td>Abaiara</td>
+      <td>ce</td>
+      <td>abaiara</td>
+      <td>https://cmabaiara-ce.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>410010</td>
+      <td>Abatiá</td>
+      <td>pr</td>
+      <td>abatia</td>
+      <td>https://cmabatia-pr.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>420005</td>
+      <td>Abdon Batista</td>
+      <td>sc</td>
+      <td>abdonbatista</td>
+      <td>https://cmabdonbatista-sc.portaltp.com.br/</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>150013</td>
+      <td>Abel Figueiredo</td>
+      <td>pa</td>
+      <td>abelfigueiredo</td>
+      <td>https://cmabelfigueiredo-pa.portaltp.com.br/</td>
+      <td>200</td>
+    </tr>
+  </tbody>
+</table>
 </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>data.shape</p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">404</span><span class="p">,</span> <span class="s1">&#39;transparency_portal_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">data</span>
+</pre></div>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[32]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+      <th>state</th>
+      <th>normalized_name</th>
+      <th>transparency_portal_url</th>
+      <th>status_code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>520005</td>
+      <td>Abadia de Goiás</td>
+      <td>go</td>
+      <td>abadiadegoias</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>310010</td>
+      <td>Abadia dos Dourados</td>
+      <td>mg</td>
+      <td>abadiadosdourados</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>520010</td>
+      <td>Abadiânia</td>
+      <td>go</td>
+      <td>abadiania</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>150010</td>
+      <td>Abaetetuba</td>
+      <td>pa</td>
+      <td>abaetetuba</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>310020</td>
+      <td>Abaeté</td>
+      <td>mg</td>
+      <td>abaete</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>230010</td>
+      <td>Abaiara</td>
+      <td>ce</td>
+      <td>abaiara</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>410010</td>
+      <td>Abatiá</td>
+      <td>pr</td>
+      <td>abatia</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>420005</td>
+      <td>Abdon Batista</td>
+      <td>sc</td>
+      <td>abdonbatista</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>150013</td>
+      <td>Abel Figueiredo</td>
+      <td>pa</td>
+      <td>abelfigueiredo</td>
+      <td>https://cmabelfigueiredo-pa.portaltp.com.br/</td>
+      <td>200</td>
+    </tr>
+  </tbody>
+</table>
 </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>data.to_csv('../data/cities-with-tp-url.xz', compression='xz', index=False)</p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">br_cities</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">br_cities</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">404</span><span class="p">,</span> <span class="s1">&#39;transparency_portal_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">br_cities</span>
+</pre></div>
 
 </div>
 </div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[33]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+      <th>state</th>
+      <th>normalized_name</th>
+      <th>transparency_portal_url</th>
+      <th>status_code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>520005</td>
+      <td>Abadia de Goiás</td>
+      <td>go</td>
+      <td>abadiadegoias</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>310010</td>
+      <td>Abadia dos Dourados</td>
+      <td>mg</td>
+      <td>abadiadosdourados</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>520010</td>
+      <td>Abadiânia</td>
+      <td>go</td>
+      <td>abadiania</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>150010</td>
+      <td>Abaetetuba</td>
+      <td>pa</td>
+      <td>abaetetuba</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>310020</td>
+      <td>Abaeté</td>
+      <td>mg</td>
+      <td>abaete</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>230010</td>
+      <td>Abaiara</td>
+      <td>ce</td>
+      <td>abaiara</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>290020</td>
+      <td>Abaré</td>
+      <td>ba</td>
+      <td>abare</td>
+      <td>https://abare-ba.portaltp.com.br/</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>410010</td>
+      <td>Abatiá</td>
+      <td>pr</td>
+      <td>abatia</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>290010</td>
+      <td>Abaíra</td>
+      <td>ba</td>
+      <td>abaira</td>
+      <td>https://abaira-ba.portaltp.com.br/</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>420005</td>
+      <td>Abdon Batista</td>
+      <td>sc</td>
+      <td>abdonbatista</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>150013</td>
+      <td>Abel Figueiredo</td>
+      <td>pa</td>
+      <td>abelfigueiredo</td>
+      <td>None</td>
+      <td>404</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">unnecessary_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;normalized_name&#39;</span><span class="p">,</span> <span class="s1">&#39;status_code&#39;</span><span class="p">]</span>
+<span class="n">br_cities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">br_cities</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">unnecessary_columns</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                  <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">unnecessary_columns</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                  <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+<span class="n">br_cities</span><span class="p">[</span><span class="s1">&#39;transparency_portal_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">br_cities</span> \
+      <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;transparency_portal_url_x&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;transparency_portal_url_y&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+<span class="n">unnecessary_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;transparency_portal_url_x&#39;</span><span class="p">,</span> <span class="s1">&#39;transparency_portal_url_y&#39;</span><span class="p">]</span>
+<span class="n">br_cities</span> <span class="o">=</span> <span class="n">br_cities</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">unnecessary_columns</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">br_cities</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[34]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+      <th>state</th>
+      <th>transparency_portal_url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>520005</td>
+      <td>Abadia de Goiás</td>
+      <td>go</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>310010</td>
+      <td>Abadia dos Dourados</td>
+      <td>mg</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>520010</td>
+      <td>Abadiânia</td>
+      <td>go</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>150010</td>
+      <td>Abaetetuba</td>
+      <td>pa</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>310020</td>
+      <td>Abaeté</td>
+      <td>mg</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>230010</td>
+      <td>Abaiara</td>
+      <td>ce</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>290020</td>
+      <td>Abaré</td>
+      <td>ba</td>
+      <td>https://abare-ba.portaltp.com.br/</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>410010</td>
+      <td>Abatiá</td>
+      <td>pr</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>290010</td>
+      <td>Abaíra</td>
+      <td>ba</td>
+      <td>https://abaira-ba.portaltp.com.br/</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>420005</td>
+      <td>Abdon Batista</td>
+      <td>sc</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>150013</td>
+      <td>Abel Figueiredo</td>
+      <td>pa</td>
+      <td>https://cmabelfigueiredo-pa.portaltp.com.br/</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">

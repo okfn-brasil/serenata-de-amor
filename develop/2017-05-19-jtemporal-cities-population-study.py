@@ -196,10 +196,15 @@ get_ipython().run_cell_magic('time', '', "colatina = brazilian_cities[brazilian_
 
 # In[20]:
 
-get_ipython().run_cell_magic('time', '', "br_cities = brazilian_cities.loc[:10,:].copy()\nbr_cities.loc[:,'status_code'] = br_cities.apply(lambda x: get_status(x['transparency_portal_url']), axis=1)")
+br_cities = brazilian_cities.loc[:10,:].copy()
 
 
 # In[21]:
+
+get_ipython().run_cell_magic('time', '', "br_cities.loc[:,'status_code'] = br_cities.apply(lambda x: get_status(x['transparency_portal_url']), axis=1)")
+
+
+# In[22]:
 
 br_cities
 
@@ -210,14 +215,14 @@ br_cities
 # 
 # I know that we can find two different status code in the first 10 cities urls test. So let's use those 10 to test grequests ;)
 
-# In[22]:
+# In[23]:
 
 import grequests
 
 rs = (grequests.get(u) for u in list(br_cities['transparency_portal_url']))
 
 
-# In[23]:
+# In[24]:
 
 def exception_handler(request, exception):
     return 404
@@ -225,14 +230,14 @@ def exception_handler(request, exception):
 responses = grequests.map(rs, exception_handler=exception_handler)
 
 
-# In[24]:
+# In[25]:
 
 codes = [int(x) for x in br_cities['status_code'].values]
 
 print(pd.unique(codes), pd.unique(responses))
 
 
-# In[25]:
+# In[26]:
 
 responses
 
@@ -241,25 +246,69 @@ responses
 # 
 # With that in mind we decided to write a script that generates the infomartion we want: Open Data url for each brazilian city
 
-# def get_status(url):
-#     try:
-#         return requests.head(url).status_code
-#     except requests.ConnectionError:
-#         return 404
+# In[27]:
 
-# With that in mind, the medicine is patience. The following cell will take a long time to run so get a cup of coffee ;)
+data = br_cities[br_cities['status_code'] == 404].copy().reset_index(drop=True)
+data
 
-# brazilian_cities['status_code'] = brazilian_cities['transparency_portal_url'].apply(lambda x: get_status(x))
 
-# brazilian_cities.head(10)
+# There are some cities that we already know that have a page with transparency and open data but the pattern is different from the one above.
+# 
+# Second Pattern: `cm{city}-{state}.portaltp.com.br`
 
-# data = brazilian_cities[brazilian_cities['status_code'] == 200]
-# data = data.reset_index()
-# data.head()
+# In[28]:
 
-# data.shape
+portal_url = 'https://cm{}-{}.portaltp.com.br/'
+data['transparency_portal_url'] = data.apply(lambda row: portal_url.format(
+                                                                           row['normalized_name'],
+                                                                           row['state']), axis=1)
+data
 
-# data.to_csv('../data/cities-with-tp-url.xz', compression='xz', index=False)
+
+# We still need to update the status code column
+
+# In[29]:
+
+get_ipython().run_cell_magic('time', '', "data.loc[:,'status_code'] = data.apply(lambda x: get_status(x['transparency_portal_url']), axis=1)")
+
+
+# In[30]:
+
+data
+
+
+# In[31]:
+
+# study purposes
+data.loc[8, 'status_code'] = 200
+data
+
+
+# In[32]:
+
+data.loc[data['status_code'] == 404, 'transparency_portal_url'] = None
+data
+
+
+# In[33]:
+
+br_cities.loc[br_cities['status_code'] == 404, 'transparency_portal_url'] = None
+br_cities
+
+
+# In[34]:
+
+unnecessary_columns = ['normalized_name', 'status_code']
+br_cities = pd.merge(br_cities.drop(unnecessary_columns, axis=1),
+                  data.drop(unnecessary_columns, axis=1),
+                  on=['code', 'name', 'state'], how='left')
+
+br_cities['transparency_portal_url'] = br_cities       .apply(lambda row: row['transparency_portal_url_x'] or row['transparency_portal_url_y'], axis=1)
+    
+unnecessary_columns = ['transparency_portal_url_x', 'transparency_portal_url_y']
+br_cities = br_cities.drop(unnecessary_columns, axis=1)
+br_cities
+
 
 # In[ ]:
 
