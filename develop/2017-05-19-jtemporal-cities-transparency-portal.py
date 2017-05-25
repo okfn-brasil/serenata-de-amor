@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# # Introductory Data Exploration of Brazilian Cities
+# # First Study on Brazilian Cities Transparency Portal
 # In this dataset we have a population projection for each Brazilian city in the year of 2013.
 # 
 # 
