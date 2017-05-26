@@ -31,6 +31,13 @@ reimbursementTitle =
         "Documento nº"
 
 
+reimbursementDeletedTitle : TranslationSet
+reimbursementDeletedTitle =
+    TranslationSet
+        "Reimbursement deleted from the source"
+        "Reembolso excluído na base de dados da Câmara"
+
+
 reimbursementSource : TranslationSet
 reimbursementSource =
     TranslationSet

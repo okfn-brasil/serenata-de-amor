@@ -101,6 +101,7 @@ type TranslationId
     | ResultTitleSingular
     | ResultTitlePlural
     | ReimbursementTitle
+    | ReimbursementDeletedTitle
     | Search
     | NewSearch
     | Loading

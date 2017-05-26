@@ -437,6 +437,21 @@ viewReimbursement lang index reimbursement =
             MapView.view mapModel
                 |> Html.map (\_ -> MapMsg)
 
+        deletedTitle : Html Msg
+        deletedTitle =
+            if reimbursement.inLatestDataset then
+                text ""
+            else
+                Options.styled p
+                    [ Typography.caption ]
+                    [ Icon.view "warning"
+                        [ Options.css "transform" "translateY(0.3rem)"
+                        , Options.css "margin-right" "0.25rem"
+                        , Icon.size18
+                        ]
+                    , ReimbursementDeletedTitle |> translate lang |> text
+                    ]
+
         title =
             Options.styled p
                 [ Typography.headline, Color.text Color.primary ]
@@ -462,7 +477,7 @@ viewReimbursement lang index reimbursement =
                 |> Html.map (SameSubquotaMsg index)
     in
         [ cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
-            [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title ] ]
+            [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title, deletedTitle ] ]
         , cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
             [ Options.styled div
                 [ Options.css "margin-top" "3rem", Typography.right ]

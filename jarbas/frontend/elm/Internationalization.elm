@@ -275,6 +275,9 @@ translate lang trans =
                 ReimbursementTitle ->
                     ReimbursementCommon.reimbursementTitle
 
+                ReimbursementDeletedTitle ->
+                    ReimbursementCommon.reimbursementDeletedTitle
+
                 ResultTitleSingular ->
                     ReimbursementCommon.resultTitleSingular
 
