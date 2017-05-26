@@ -176,6 +176,9 @@ translate lang trans =
                 ReimbursementSource ->
                     ReimbursementCommon.reimbursementSource
 
+                ReimbursementDeletedSource ->
+                    ReimbursementCommon.reimbursementDeletedSource
+
                 ReimbursementChamberOfDeputies ->
                     ReimbursementCommon.reimbursementChamberOfDeputies
 

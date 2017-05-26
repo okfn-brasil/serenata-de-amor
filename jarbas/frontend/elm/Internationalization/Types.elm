@@ -66,6 +66,7 @@ type TranslationId
     | FieldSuspicions
     | FieldEmpty
     | ReimbursementSource
+    | ReimbursementDeletedSource
     | ReimbursementChamberOfDeputies
     | ReceiptFetch
     | ReceiptAvailable

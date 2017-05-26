@@ -475,6 +475,25 @@ viewReimbursement lang index reimbursement =
         sameSubquota =
             SameSubquota.view reimbursement.sameSubquota
                 |> Html.map (SameSubquotaMsg index)
+
+        reimbursementDeleted : Html Msg
+        reimbursementDeleted =
+            if reimbursement.inLatestDataset then
+                text ""
+            else
+                ReimbursementDeletedSource
+                    |> translate lang
+                    |> text
+
+        reimbursementSource : Html Msg
+        reimbursementSource =
+            Options.styled p
+                [ Typography.caption, Options.css "margin-top" "1rem" ]
+                [ text (translate lang ReimbursementSource)
+                , a [ href (sourceUrl reimbursement), class "chamber-of-deputies-source" ]
+                    [ text (translate lang ReimbursementChamberOfDeputies) ]
+                , reimbursementDeleted
+                ]
     in
         [ cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
             [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title, deletedTitle ] ]
@@ -485,12 +504,7 @@ viewReimbursement lang index reimbursement =
             ]
         , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] blocks
-            , Options.styled p
-                [ Typography.caption, Options.css "margin-top" "1rem" ]
-                [ text (translate lang ReimbursementSource)
-                , a [ href (sourceUrl reimbursement), class "chamber-of-deputies-source" ]
-                    [ text (translate lang ReimbursementChamberOfDeputies) ]
-                ]
+            , reimbursementSource
             , sameDay
             , sameSubquota
             ]
