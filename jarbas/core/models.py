@@ -118,7 +118,11 @@ class Reimbursement(models.Model):
             return None
 
         parts = list(content.split(','))
-        return list(map(lambda x: cast(x), parts)) if cast else parts
+        try:
+            return list(map(lambda x: cast(x), parts)) if cast else parts
+        except ValueError:
+            # this is far from good
+            return list()
 
     def __repr__(self):
         return 'Reimbursement(document_id={})'.format(self.document_id)
