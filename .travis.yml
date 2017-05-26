@@ -37,6 +37,7 @@ install:
   - psql -U postgres -c 'create database "jarbas";'
   - yarn install
   - python -m pip install -r requirements.txt coveralls
+  - python -m pip install -r requirements-test.txt coveralls
 
 before_script:
   - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 yarn assets
