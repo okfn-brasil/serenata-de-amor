@@ -28,6 +28,8 @@ class Receipt:
 
 class Reimbursement(models.Model):
     document_id = models.IntegerField('Document ID', db_index=True, unique=True)
+    last_update = models.DateTimeField('Last update', db_index=True, auto_now=True)
+    available_in_latest_dataset = models.BooleanField('Available in the latest dataset', default=True)
 
     year = models.IntegerField('Year', db_index=True)
     applicant_id = models.IntegerField('Applicant ID', db_index=True)

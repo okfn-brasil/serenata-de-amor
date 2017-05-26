@@ -26,6 +26,17 @@ class TestCreate(TestReimbursement):
         with self.assertRaises(IntegrityError):
             Reimbursement.objects.create(**self.data)
 
+    def test_last_update(self):
+        reimbursement = Reimbursement.objects.create(**self.data)
+        created_at = reimbursement.last_update
+        reimbursement.year = 1971
+        reimbursement.save()
+        self.assertGreater(reimbursement.last_update, created_at)
+
+    def test_default_available_in_latest_dataset(self):
+        reimbursement = Reimbursement.objects.create(**self.data)
+        self.assertTrue(reimbursement.available_in_latest_dataset)
+
     def test_optional_fields(self):
         optional = (
             'total_reimbursement_value',

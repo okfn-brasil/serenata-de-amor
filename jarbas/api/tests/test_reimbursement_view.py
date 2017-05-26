@@ -5,6 +5,7 @@ from unittest.mock import patch
 from django.core.cache import cache
 from django.shortcuts import resolve_url
 from django.test import TestCase
+from freezegun import freeze_time
 
 from jarbas.core.models import Reimbursement
 from jarbas.core.tests import sample_reimbursement_data, suspicions
@@ -110,6 +111,7 @@ class TestListApi(TestCase):
         return len(content.get('results', 0))
 
 
+@freeze_time('1970-01-01 00:00:00')
 class TestRetrieveApi(TestCase):
 
     def setUp(self):
@@ -157,6 +159,8 @@ class TestRetrieveApi(TestCase):
             year=1970,
             probability=0.5,
             suspicions=suspicions,
+            last_update='1970-01-01T00:00:00Z',
+            available_in_latest_dataset=True,
             receipt=dict(fetched=False, url=None)
         )
         self.assertEqual(expected, contents)
