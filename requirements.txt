@@ -11,3 +11,4 @@ tinys3==0.1.11
 tqdm==4.11.2
 wand==0.4.4
 ghostscript==0.4.1
+keras==2.0.4
