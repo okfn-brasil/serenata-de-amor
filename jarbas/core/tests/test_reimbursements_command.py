@@ -1,6 +1,6 @@
 from datetime import date
 from io import StringIO
-from unittest.mock import patch
+from unittest.mock import MagicMock, call, patch
 
 from django.test import TestCase
 
@@ -92,15 +92,44 @@ class TestSerializer(TestCommand):
 class TestCreate(TestCommand):
 
     @patch.object(Reimbursement.objects, 'update_or_create')
-    @patch('jarbas.core.management.commands.reimbursements.Command.print_count')
-    def test_create_or_update(self, print_count, create):
-        reimbursements = (dict(ahoy=42, document_id=1),)
-        self.command.create_or_update(reimbursements)
-        create.assert_called_once_with(
-            document_id=1,
-            defaults=dict(document_id=1, ahoy=42)
+    @patch('jarbas.core.management.commands.reimbursements.output')
+    def test_create_or_update(self, output, create):
+        status = MagicMock()
+        reimbursements = (
+            dict(ahoy=42, document_id=1),
+            dict(ahoy=21, document_id=''),
+            dict(ahoy=84, document_id=2)
         )
-        print_count.assert_called_once_with(Reimbursement, count=1)
+        create.side_effect = ((True, True), (False, False))
+        self.command.count = dict(zip(('updated', 'created', 'skip'), [0] * 3))
+        self.command.create_or_update(reimbursements, status)
+
+        # assert update_or_create was called
+        create.assert_has_calls((
+            call(document_id=1, defaults=reimbursements[0]),
+            call(document_id=2, defaults=reimbursements[-1])
+        ))
+
+        # assert status.change was called
+        self.assertEqual(3, status.change.call_count)
+
+        # assert self.count was updated
+        expected = {
+            'updated': 1,
+            'created': 1,
+            'skip': 1
+        }
+        self.assertEqual(expected, self.command.count)
+
+    def test_status(self):
+        expected = [
+            'Processed: 42 lines',
+            'Updated: 36 reimbursements',
+            'Created: 4 reimbursements',
+            'Skip: 2 reimbursements'
+        ]
+        self.command.count = {'updated': 36, 'created': 4, 'skip': 2}
+        self.assertEqual(expected, self.command.status)
 
 
 class TestMarkNonUpdated(TestCommand):
@@ -118,13 +147,17 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.reimbursements.print')
     @patch('jarbas.core.management.commands.reimbursements.Command.reimbursements')
     @patch('jarbas.core.management.commands.reimbursements.Command.create_or_update')
-    @patch('jarbas.core.management.commands.reimbursements.Command.print_count')
+    @patch('jarbas.core.management.commands.reimbursements.output')
     @patch('jarbas.core.management.commands.reimbursements.Command.mark_not_updated_reimbursements')
-    def test_handler_without_options(self, mark, print_count, create, reimbursements, print_):
+    def test_handler_without_options(self, mark, output, create, reimbursements, print_):
+        status = MagicMock()
+        output.return_value.__enter__.return_value = status
         reimbursements.return_value = (1, 2, 3)
         self.command.handle(dataset='reimbursements.xz')
         print_.assert_called_once_with('Starting with 0 reimbursements')
-        create.assert_called_once_with(reimbursements)
+        create.assert_called_once_with(reimbursements, status)
+        output.assert_called_once_with()
+        status.change.assert_called_once_with(self.command.status)
         self.assertEqual('reimbursements.xz', self.command.path)
         mark.assert_called_once_with()
 
@@ -132,13 +165,15 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.reimbursements.Command.reimbursements')
     @patch('jarbas.core.management.commands.reimbursements.Command.create_or_update')
     @patch('jarbas.core.management.commands.reimbursements.Command.drop_all')
-    @patch('jarbas.core.management.commands.reimbursements.Command.print_count')
+    @patch('jarbas.core.management.commands.reimbursements.output')
     @patch('jarbas.core.management.commands.reimbursements.Command.mark_not_updated_reimbursements')
-    def test_handler_with_options(self, mark, print_count, drop_all, create, reimbursements, print_):
+    def test_handler_with_options(self, mark, output, drop_all, create, reimbursements, print_):
+        status = MagicMock()
+        output.return_value.__enter__.return_value = status
         self.command.handle(dataset='reimbursements.xz', drop=True)
         print_.assert_called_once_with('Starting with 0 reimbursements')
         drop_all.assert_called_once_with(Reimbursement)
-        create.assert_called_once_with(reimbursements)
+        create.assert_called_once_with(reimbursements, status)
         mark.assert_called_once_with()
 
 
