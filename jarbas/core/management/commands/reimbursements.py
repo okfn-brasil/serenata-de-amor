@@ -15,8 +15,8 @@ class Command(LoadCommand):
         self.started_at = now()
         self.path = options['dataset']
 
-        exixting = Reimbursement.objects.count()
-        print('Starting with {:,} reimbursements'.format(exixting))
+        existing = Reimbursement.objects.count()
+        print('Starting with {:,} reimbursements'.format(existing))
         self.count = {'updated': 0, 'created': 0, 'skip': 0}
 
         if options.get('drop', False):
