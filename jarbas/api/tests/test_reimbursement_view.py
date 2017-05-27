@@ -5,7 +5,6 @@ from urllib.parse import urlencode
 from django.shortcuts import resolve_url
 from django.test import TestCase
 from freezegun import freeze_time
-
 from mixer.backend.django import mixer
 
 from jarbas.core.models import Reimbursement
