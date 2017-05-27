@@ -120,9 +120,8 @@ class Reimbursement(models.Model):
         parts = list(content.split(','))
         try:
             return list(map(lambda x: cast(x), parts)) if cast else parts
-        except ValueError:
-            # this is far from good
-            return list()
+        except ValueError as exc:
+            raise exc
 
     def __repr__(self):
         return 'Reimbursement(document_id={})'.format(self.document_id)

@@ -10,10 +10,20 @@ from mixer.backend.django import mixer
 from jarbas.core.models import Reimbursement
 
 
+def get_reimbursement(**kwargs):
+    quantity = kwargs.pop('quantity', 1)
+    kwargs['net_values'] = '1.99,2.99'
+    kwargs['reimbursement_values'] = '200.00,500.00'
+    kwargs['reimbursement_numbers'] = '2,3'
+    if quantity == 1:
+        return mixer.blend(Reimbursement, **kwargs)
+    return mixer.cycle(quantity).blend(Reimbursement, **kwargs)
+
+
 class TestListApi(TestCase):
 
     def setUp(self):
-        mixer.cycle(5).blend(Reimbursement)
+        get_reimbursement(quantity=3)
         self.url = resolve_url('api:reimbursement-list')
 
     def test_status(self):
@@ -21,15 +31,15 @@ class TestListApi(TestCase):
         self.assertEqual(200, resp.status_code)
 
     def test_content_general(self):
-        self.assertEqual(5, Reimbursement.objects.count())
-        self.assertEqual(5, self._count_results(self.url))
+        self.assertEqual(3, Reimbursement.objects.count())
+        self.assertEqual(3, self._count_results(self.url))
 
     def test_ordering(self):
         resp = self.client.get(self.url)
         content = loads(resp.content.decode('utf-8'))
         first = content['results'][0]
         last = content['results'][-1]
-        self.assertEqual(5, len(content['results']))
+        self.assertEqual(3, len(content['results']))
         self.assertTrue(first['issue_date'] > last['issue_date'])
 
     def test_content_with_cnpj_cpf_filter(self):
@@ -40,18 +50,15 @@ class TestListApi(TestCase):
             ('suspicious', '1'),
         )
         url = '{}?{}'.format(self.url, urlencode(search_data))
-        target_result = mixer.blend(Reimbursement,
-                                    cnpj_cpf='12345678901',
-                                    subquota_id=22,
-                                    suspicious=1)
+        target_result = get_reimbursement(cnpj_cpf='12345678901', subquota_id=22, suspicious=1)
         resp = self.client.get(url)
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(1, len(content['results']))
         self.assertEqual(target_result.cnpj_cpf, content['results'][0]['cnpj_cpf'])
 
     def test_content_with_date_filters(self):
-        mixer.blend(Reimbursement, issue_date='1970-01-01')
-        mixer.blend(Reimbursement, issue_date='1970-02-01')
+        get_reimbursement(issue_date='1970-01-01')
+        get_reimbursement(issue_date='1970-01-01')
         search_data = (
             ('issue_date_start', '1970-01-01'),
             ('issue_date_end', '1970-02-02'),
@@ -62,8 +69,7 @@ class TestListApi(TestCase):
         self.assertEqual(2, len(content['results']))
 
     def test_more_than_one_document_query(self):
-        mixer.cycle(4).blend(Reimbursement,
-                             document_id=(id for id in (42, 84, 126, 168)))
+        get_reimbursement(quantity=4, document_id=(id for id in (42, 84, 126, 168)))
         url = self.url + '?document_id=42,84+126,+168'
         resp = self.client.get(url)
         content = loads(resp.content.decode('utf-8'))
@@ -79,7 +85,7 @@ class TestListApi(TestCase):
 class TestRetrieveApi(TestCase):
 
     def setUp(self):
-        self.reimbursement = mixer.blend(Reimbursement)
+        self.reimbursement = get_reimbursement()
         url = resolve_url('api:reimbursement-detail',
                           document_id=self.reimbursement.document_id)
         self.resp = self.client.get(url)
@@ -100,14 +106,13 @@ class TestRetrieveApi(TestCase):
 class TestReceiptApi(TestCase):
 
     def setUp(self):
-        self.reimbursement = mixer.blend(
-            Reimbursement,
+        self.reimbursement = get_reimbursement(
             year=2017,
             applicant_id=1,
             document_id=20,
             receipt_url='http://www.camara.gov.br/cota-parlamentar/documentos/publ/1/2017/20.pdf'
         )
-        self.reimbursement_no_receipt = mixer.blend(Reimbursement, receipt_url=None)
+        self.reimbursement_no_receipt = get_reimbursement(receipt_url=None)
         self.url = resolve_url(
             'api:reimbursement-receipt', document_id=self.reimbursement.document_id)
         self.url_no_receipt = resolve_url(
