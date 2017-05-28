@@ -1,4 +1,3 @@
-from json import loads
 from unittest.mock import patch
 
 from django.test import TestCase
