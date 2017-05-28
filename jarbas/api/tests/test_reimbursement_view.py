@@ -8,6 +8,7 @@ from freezegun import freeze_time
 from mixer.backend.django import mixer
 
 from jarbas.core.models import Reimbursement
+from jarbas.api.tests import get_sample_reimbursement_api_response
 
 
 def get_reimbursement(**kwargs):
@@ -86,6 +87,9 @@ class TestRetrieveApi(TestCase):
 
     def setUp(self):
         self.reimbursement = get_reimbursement()
+        self.sample_response = get_sample_reimbursement_api_response(
+            self.reimbursement
+        )
         url = resolve_url('api:reimbursement-detail',
                           document_id=self.reimbursement.document_id)
         self.resp = self.client.get(url)
@@ -96,11 +100,7 @@ class TestRetrieveApi(TestCase):
 
     def test_contents(self):
         contents = loads(self.resp.content.decode('utf-8'))
-        for result_attr, result_value in contents.items():
-            if not hasattr(self.reimbursement, result_attr):
-                continue
-            expected_value = getattr(self.reimbursement, result_attr)
-            self.assertEqual(str(result_value), str(expected_value))
+        self.assertEqual(self.sample_response, contents)
 
 
 class TestReceiptApi(TestCase):
