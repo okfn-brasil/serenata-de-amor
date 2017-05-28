@@ -67,6 +67,7 @@ class TestSerializer(TestCommand):
         }
         self.assertEqual(self.command.serialize(input), expected)
 
+
 class TestCustomMethods(TestCommand):
 
     @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
@@ -83,7 +84,7 @@ class TestCustomMethods(TestCommand):
         reimbursement = Reimbursement()
         get.return_value = reimbursement
         content = {
-            'document_id' : 42,
+            'document_id': 42,
             'probability': 0.618,
             'suspicions': {'answer': 42}
         }
@@ -97,7 +98,7 @@ class TestCustomMethods(TestCommand):
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_non_existing_record(self, get):
         get.side_effect = Reimbursement.DoesNotExist
-        content = {'document_id' : 42}
+        content = {'document_id': 42}
         self.command.queue = []
         self.command.schedule_update(content)
         get.assert_called_once_with(document_id=42)
