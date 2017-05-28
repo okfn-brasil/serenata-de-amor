@@ -1,6 +1,7 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from requests import head
+from simple_history.models import HistoricalRecords
 
 from jarbas.core.querysets import ReimbursementQuerySet
 
@@ -76,6 +77,8 @@ class Reimbursement(models.Model):
 
     receipt_fetched = models.BooleanField('Was the receipt URL fetched?', default=False, db_index=True)
     receipt_url = models.CharField('Receipt URL', max_length=140, blank=True, null=True)
+
+    history = HistoricalRecords()
 
     objects = models.Manager.from_queryset(ReimbursementQuerySet)()
 
