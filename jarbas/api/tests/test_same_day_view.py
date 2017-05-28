@@ -12,7 +12,7 @@ class TestSameDay(TestCase):
 
     def setUp(self):
         self.maxDiff = 2 ** 10
-        cnpj =  '12345678901234'
+        cnpj = '12345678901234'
 
         company1 = sample_company_data.copy()
         company1['cnpj'] = format_cnpj(cnpj)
