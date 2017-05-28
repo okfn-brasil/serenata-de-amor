@@ -26,9 +26,16 @@ class ReimbursementListView(ListAPIView):
         values = map(self.request.query_params.get, params)
         filters = {k: v for k, v in zip(params, values) if v}
 
-        # filter queryset
-        if self.request.query_params.get('suspicions'):
+        # filter suspicions
+        if self._bool_param('suspicions'):
             self.queryset = self.queryset.suspicions()
+
+        # filter reimbursement in latest dataset
+        in_latest = self._bool_param('in_latest_dataset')
+        if in_latest is not None:
+            self.queryset = self.queryset.in_latest_dataset(in_latest)
+
+        # filter queryset
         if filters:
             self.queryset = self.queryset.tuple_filter(**filters)
 
@@ -38,6 +45,16 @@ class ReimbursementListView(ListAPIView):
             self.queryset = self.queryset.order_by_probability()
 
         return super().get(request)
+
+    def _bool_param(self, param):
+        if param not in self.request.query_params:
+            return None
+
+        value = self.request.query_params[param]
+        if value.lower() in ('1', 'true'):
+            return True
+
+        return False
 
 
 class ReimbursementDetailView(RetrieveAPIView):

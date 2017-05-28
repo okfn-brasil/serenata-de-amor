@@ -49,6 +49,7 @@ class TestListApi(TestCase):
         data[4]['subquota_id'] = 22
         data[4]['year'] = 1983
         data[4]['issue_date'] = '1960-02-01'
+        data[4]['available_in_latest_dataset'] = False
         del data[4]['probability']
         del data[4]['suspicions']
 
@@ -84,6 +85,12 @@ class TestListApi(TestCase):
         self.assertEqual(0.9, content['results'][0]['probability'])
         self.assertEqual(0.1, content['results'][1]['probability'])
         self.assertEqual(None, content['results'][2]['probability'])
+
+    def test_content_with_availability_in_latest_dataset(self):
+        url = self.url + '?in_latest_dataset=0'
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(1, len(content['results']))
 
     def test_content_with_date_filters(self):
         url = self.url + (
