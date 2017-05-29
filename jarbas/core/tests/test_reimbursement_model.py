@@ -95,11 +95,17 @@ class TestManager(TestReimbursement):
         data['available_in_latest_dataset'] = False
         Reimbursement.objects.create(**data)
         Reimbursement.objects.create(**self.data)
-        existing = Reimbursement.objects.in_latest_dataset(True)
         deleted = Reimbursement.objects.in_latest_dataset(False)
-        self.assertEqual(1, existing.count())
         self.assertEqual(1, deleted.count())
 
+    def test_not_in_latest_dataset(self):
+        data = self.data.copy()
+        data['document_id'] = 42 * 2
+        data['available_in_latest_dataset'] = False
+        Reimbursement.objects.create(**data)
+        Reimbursement.objects.create(**self.data)
+        existing = Reimbursement.objects.in_latest_dataset(True)
+        self.assertEqual(1, deleted.count())
 
 class TestCustomMethods(TestReimbursement):
 
