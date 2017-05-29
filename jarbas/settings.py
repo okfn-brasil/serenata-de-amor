@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'jarbas.core',
     'jarbas.api',
     'jarbas.frontend',
+    'jarbas.dashboard.app.DashboardConfig',
 ]
 
 
