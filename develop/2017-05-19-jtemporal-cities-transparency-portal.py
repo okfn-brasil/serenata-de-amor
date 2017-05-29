@@ -135,7 +135,7 @@ brazilian_cities.shape
 
 # In[13]:
 
-brazilian_cities['state'] = brazilian_cities['state'].apply(lambda x: x.lower())
+brazilian_cities['state'] = brazilian_cities['state'].apply(str.lower)
 
 
 # In[14]:
@@ -161,7 +161,7 @@ brazilian_cities.head()
 
 # ## Getting all cities that are part of Transparency Portal
 # 
-# There are some cities that we already know that have a page with transparency and open data. The main object here is to find how many cities have that.
+# There are some cities that we already know that have a page with transparency and open data. The main objective here is to find how many cities have that.
 # 
 # Pattern: `{city}-{state}.portaltp.com.br`
 
