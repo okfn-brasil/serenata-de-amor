@@ -31,4 +31,8 @@ class DashboardSite(AdminSite):
         urls = filter(self.valid_url, self.get_urls())
         return list(urls), 'admin', self.name
 
+    def has_permission(self, req):
+        return False if req.method != 'GET' else super().has_permission(req)
+
+
 dashboard = DashboardSite()
