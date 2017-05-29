@@ -105,7 +105,7 @@ class TestManager(TestReimbursement):
         Reimbursement.objects.create(**data)
         Reimbursement.objects.create(**self.data)
         existing = Reimbursement.objects.in_latest_dataset(True)
-        self.assertEqual(1, deleted.count())
+        self.assertEqual(1, existing.count())
 
 class TestCustomMethods(TestReimbursement):
 
