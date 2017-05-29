@@ -34,7 +34,6 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -48,6 +47,7 @@ INSTALLED_APPS = [
     'jarbas.api',
     'jarbas.frontend',
     'jarbas.dashboard.app.DashboardConfig',
+    'django.contrib.admin',
 ]
 
 

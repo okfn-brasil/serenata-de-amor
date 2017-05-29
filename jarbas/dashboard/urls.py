@@ -1,7 +1,6 @@
 from django.conf.urls import url
-from django.contrib import admin
-
+from jarbas.dashboard.sites import dashboard
 
 urlpatterns = [
-    url(r'', admin.site.urls)
+    url(r'', dashboard.urls)
 ]

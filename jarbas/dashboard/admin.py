@@ -1,5 +1,7 @@
 from django.contrib import admin
+
 from jarbas.core.models import Reimbursement
+from jarbas.dashboard.sites import dashboard
 
 
 class SuspiciousListFilter(admin.SimpleListFilter):
@@ -55,7 +57,4 @@ class ReimbursementModelAdmin(admin.ModelAdmin):
     is_suspicious.boolean = True
 
 
-admin.site.site_title = 'Dashboard'
-admin.site.site_header = 'Jarbas Dashboard'
-admin.site.index_title = 'Jarbas'
-admin.site.register(Reimbursement, ReimbursementModelAdmin)
+dashboard.register(Reimbursement, ReimbursementModelAdmin)
