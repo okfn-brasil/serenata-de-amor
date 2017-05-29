@@ -143,6 +143,10 @@ class TestCustomMethods(TestReimbursement):
         expected = 'Reimbursement(document_id=42)'
         self.assertEqual(expected, obj.__repr__())
 
+    def test_str(self):
+        obj = Reimbursement.objects.create(**self.data)
+        expected = 'Document #42'
+        self.assertEqual(expected, str(obj))
 
 class TestReceipt(TestCase):
 

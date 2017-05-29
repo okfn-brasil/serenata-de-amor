@@ -84,6 +84,8 @@ class Reimbursement(models.Model):
 
     class Meta:
         ordering = ['-issue_date']
+        verbose_name = 'reimbursement'
+        verbose_name_plural = 'reimbursements'
 
     def get_receipt_url(self, force=False, bulk=False):
         if self.receipt_url:
@@ -125,6 +127,9 @@ class Reimbursement(models.Model):
 
     def __repr__(self):
         return 'Reimbursement(document_id={})'.format(self.document_id)
+
+    def __str__(self):
+        return 'Document #{}'.format(self.document_id)
 
 
 class Activity(models.Model):

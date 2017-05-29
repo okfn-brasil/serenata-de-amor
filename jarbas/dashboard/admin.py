@@ -55,4 +55,7 @@ class ReimbursementModelAdmin(admin.ModelAdmin):
     is_suspicious.boolean = True
 
 
+admin.site.site_title = 'Dashboard'
+admin.site.site_header = 'Jarbas Dashboard'
+admin.site.index_title = 'Jarbas'
 admin.site.register(Reimbursement, ReimbursementModelAdmin)
