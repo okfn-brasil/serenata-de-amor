@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import include, url
+from django.contrib import admin
 
 from jarbas.frontend.views import home
 
@@ -21,4 +22,5 @@ from jarbas.frontend.views import home
 urlpatterns = [
     url(r'^$', home, name='home'),
     url(r'^api/', include('jarbas.api.urls', namespace='api')),
+    url(r'^admin/', admin.site.urls)
 ]

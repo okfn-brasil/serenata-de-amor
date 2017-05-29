@@ -136,41 +136,47 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 With [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)) installed just run:
 
 ```console
-make run.devel
+$ make run.devel
 ```
 
 or
 
 ```console
-docker-compose up -d
-docker-compose run --rm jarbas python manage.py migrate
-docker-compose run --rm jarbas python manage.py ceapdatasets
-docker-compose run --rm jarbas python manage.py collectstatic --no-input
+$ docker-compose up -d
+$ docker-compose run --rm jarbas python manage.py migrate
+$ docker-compose run --rm jarbas python manage.py ceapdatasets
+$ docker-compose run --rm jarbas python manage.py collectstatic --no-input
 ```
 
 You can access it at [`localhost:8000`](http://localhost:8000/). However your database starts empty, but you can use sample data to development using this command:
 
 ```console
-make seed.sample
+$ make seed.sample
 ```
 
 or
 
 ```console
-docker-compose run --rm jarbas python manage.py reimbursements contrib/sample-data/reimbursements_sample.xz
-docker-compose run --rm jarbas python manage.py companies contrib/sample-data/companies_sample.xz
-docker-compose run --rm jarbas python manage.py irregularities contrib/sample-data/irregularities_sample.xz
+$ docker-compose run --rm jarbas python manage.py reimbursements contrib/sample-data/reimbursements_sample.xz
+$ docker-compose run --rm jarbas python manage.py companies contrib/sample-data/companies_sample.xz
+$ docker-compose run --rm jarbas python manage.py irregularities contrib/sample-data/irregularities_sample.xz
 ```
 
 You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
 
 To add a fresh new `reimbursements.xz` brewed by [Rosie](https://github.com/datasciencebr/rosie) or made with our [toolbox](https://github.com/datasciencebr/rosie), you just need to have this file **inside project folder** and give the path at the end of the command, as bellow:
-```
-docker-compose run --rm jarbas python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
+
+```console
+$ docker-compose run --rm jarbas python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
 ```
 
 To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
 
+Finally if you would like to access the Django Admin for an alternative view of the reimbursements, you can access it at [`localhost:8000/admin/`](http://localhost:8000/admin/) creating an user with:
+
+```console
+$ docker-compose run --rm jarbas python manage.py createsuperuser
+```
 
 ### Local install
 
@@ -179,8 +185,8 @@ To change any of the default environment variables defined in the `docker-compos
 Jarbas requires [Python 3.5](http://python.org), [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org). Once you have `pip` and `yarn` available install the dependencies:
 
 ```console
-yarn install
-python -m pip install -r requirements.txt
+$ yarn install
+$ python -m pip install -r requirements.txt
 ```
 
 ##### Python's `lzma` module
@@ -237,6 +243,15 @@ $ yarn test
 #### Ready!
 
 Run the server with `$ python manage.py runserver` and load [localhost:8000](http://localhost:8000) in your favorite browser.
+
+#### Using Django Admin
+
+
+If you would like to access the Django Admin for an alternative view of the reimbursements, you can access it at [`localhost:8000/admin/`](http://localhost:8000/admin/) creating an user with:
+
+```console
+$ python manage.py createsuperuser
+```
 
 
 ### Settings
