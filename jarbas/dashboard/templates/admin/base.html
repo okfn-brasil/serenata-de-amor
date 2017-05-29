@@ -45,7 +45,15 @@
     <!-- Content -->
     <div id="content" class="{% block coltype %}colM{% endblock %}">
         {% block pretitle %}{% endblock %}
-        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+        {% block content_title %}
+          {% if title %}
+            {% if title == 'Change reimbursement' %}
+                <h1>View reimbursement</h1>
+            {% else %}
+                <h1>{{ title }}</h1>
+            {% endif %}
+          {% endif %}
+          {% endblock %}
         {% block content %}
         {% block object-tools %}{% endblock %}
         {{ content }}

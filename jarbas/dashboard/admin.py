@@ -50,6 +50,16 @@ class ReimbursementModelAdmin(admin.ModelAdmin):
     )
     readonly_fields = tuple(f.name for f in Reimbursement._meta.fields)
 
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_urls(self):
+        urls = filter(dashboard.valid_url, super().get_urls())
+        return list(urls)
+
     def is_suspicious(self, obj):
         return obj.suspicions is not None
 
