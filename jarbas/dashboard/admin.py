@@ -46,6 +46,7 @@ class ReimbursementModelAdmin(admin.ModelAdmin):
         'year',
         'state',
     )
+    readonly_fields = tuple(f.name for f in Reimbursement._meta.fields)
 
     def is_suspicious(self, obj):
         return obj.suspicions is not None
