@@ -13,10 +13,10 @@ def normalize_string(string):
 
 
 def exception_handler(request, exception):
-    return type('Response', (object,), {'status_code': 'None'})
+    return type('Response', (object,), {'status_code': None})
 
 def get_status_code(response):
-    if response.status_code == 'None':
+    if not response.status_code:
          return 404
     return response.status_code
 
