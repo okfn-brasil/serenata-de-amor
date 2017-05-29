@@ -17,19 +17,30 @@ pd.set_option('max_columns', 500)
 
 # In[2]:
 
-old_dataset = pd.read_csv('2017-05-21-reimbursements.old.xz',
-                          compression='xz')
+from serenata_toolbox.datasets import Datasets
+
+datasets = Datasets('../data')
+datasets.downloader.download('2017-05-21-reimbursements.old.xz')
+datasets.downloader.download('2017-05-21-reimbursements.new.xz')
 
 
 # In[3]:
 
-new_dataset = pd.read_csv('2017-05-21-reimbursements.new.xz',
-                           compression='xz')
+old_dataset = pd.read_csv('../data/2017-05-21-reimbursements.old.xz',
+                        compression='xz',
+                        low_memory=False)
+
+
+# In[4]:
+
+new_dataset = pd.read_csv('../data/2017-05-21-reimbursements.new.xz',
+                        compression='xz',
+                        low_memory=False)
 
 
 # First we need to check if both datasets have the same columns, even in they are in the same order:
 
-# In[4]:
+# In[5]:
 
 old_keys = old_dataset.keys()
 new_keys = new_dataset.keys()
@@ -39,14 +50,14 @@ print(old_keys==new_keys)
 
 # We can also make sure they have the same types for all columns
 
-# In[5]:
+# In[6]:
 
 new_dataset.dtypes == old_dataset.dtypes
 
 
 # Now we can take a slice of the datasets by year and compare their sizes. We also remove the current year, because this ongoing registry seems to have different update pace between versions, so it makes no sense comparing them:
 
-# In[6]:
+# In[7]:
 
 old_dataset = old_dataset[old_dataset['year'] != 2017]
 new_dataset = new_dataset[new_dataset['year'] != 2017]
@@ -59,7 +70,7 @@ for year in pd.unique(old_dataset['year']):
 
 # Oddly enough, there is a single row missing in the new dataset. Let's find out which document is that and also make sure the exact document_ids are present in both datasets:
 
-# In[7]:
+# In[8]:
 
 new_docs = list(new_dataset['document_id'])
 old_docs = list(old_dataset['document_id'])
@@ -73,7 +84,7 @@ print('Extra documents found in new dataset: {}'.format(len(new_extra)))
 
 # So there is really only one inconsistency between datasets. A quick query can show us the culprit:
 
-# In[8]:
+# In[9]:
 
 old_dataset[old_dataset['document_id'].isin(old_extra)]
 
