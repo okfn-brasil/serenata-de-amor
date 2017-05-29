@@ -2,11 +2,9 @@ import os
 import unicodedata
 
 import pandas as pd
-
 import grequests
 
 from serenata_toolbox.datasets import Datasets
-
 
 def normalize_string(string):
     if isinstance(string, str):
@@ -15,14 +13,12 @@ def normalize_string(string):
 
 
 def exception_handler(request, exception):
-    return request.response
-
+    return type('Response', (object,), {'status_code': 'None'})
 
 def get_status_code(response):
-    if not response.status_code:
-        return 404
+    if response.status_code == 'None':
+         return 404
     return response.status_code
-
 
 def main(data_path='/tmp/serenata-data', cities_file='2017-05-22-brazilian-cities.csv'):
     Datasets(data_path).downloader.download(cities_file)
@@ -70,14 +66,16 @@ def main(data_path='/tmp/serenata-data', cities_file='2017-05-22-brazilian-citie
 
     unnecessary_columns = ['normalized_name', 'status_code']
     br_cities = pd.merge(br_cities.drop(unnecessary_columns, axis=1),
-		         br_cities_cm.drop(unnecessary_columns, axis=1),
-		         on=['code', 'name', 'state'], how='left')
+		                 br_cities_cm.drop(unnecessary_columns, axis=1),
+		                 on=['code', 'name', 'state'], how='left')
 
     br_cities['transparency_portal_url'] = br_cities \
 	  .apply(lambda row: row['transparency_portal_url_x'] or row['transparency_portal_url_y'], axis=1)
 
     unnecessary_columns = ['transparency_portal_url_x', 'transparency_portal_url_y']
     br_cities = br_cities.drop(unnecessary_columns, axis=1)
+    br_cities['state'] = br_cities['state'].apply(str.upper)
+
     br_cities.to_csv(os.path.join(data_path, 'cities-with-tp-url.xz'),
                      compression='xz', index=False)
 
