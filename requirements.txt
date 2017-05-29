@@ -9,3 +9,4 @@ py2neo==3.1.2
 pycpfcnpj==1.0.2
 tinys3==0.1.11
 tqdm==4.11.2
+grequests==0.3.0

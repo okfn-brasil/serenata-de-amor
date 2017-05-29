@@ -19,7 +19,8 @@ RUN pip install --upgrade pip \
 
 COPY conda_requirements.txt ./
 RUN conda update --yes conda \
-    && conda config --add channels bioconda \
+    && conda config --add channels Rufone \
+    && conda config --add channels conda-forge \
     && conda install --yes --file conda_requirements.txt \
     && conda clean -tipsy
 
