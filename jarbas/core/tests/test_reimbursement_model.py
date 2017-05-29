@@ -89,6 +89,23 @@ class TestManager(TestReimbursement):
         Reimbursement.objects.create(**self.data)
         self.assertEqual(1, Reimbursement.objects.suspicions().count())
 
+    def test_in_latest_dataset(self):
+        data = self.data.copy()
+        data['document_id'] = 42 * 2
+        data['available_in_latest_dataset'] = False
+        Reimbursement.objects.create(**data)
+        Reimbursement.objects.create(**self.data)
+        deleted = Reimbursement.objects.in_latest_dataset(False)
+        self.assertEqual(1, deleted.count())
+
+    def test_not_in_latest_dataset(self):
+        data = self.data.copy()
+        data['document_id'] = 42 * 2
+        data['available_in_latest_dataset'] = False
+        Reimbursement.objects.create(**data)
+        Reimbursement.objects.create(**self.data)
+        existing = Reimbursement.objects.in_latest_dataset(True)
+        self.assertEqual(1, existing.count())
 
 class TestCustomMethods(TestReimbursement):
 

@@ -32,6 +32,9 @@ class ReimbursementQuerySet(models.QuerySet):
     def suspicions(self):
         return self.exclude(suspicions=None)
 
+    def in_latest_dataset(self, boolean):
+        return self.filter(available_in_latest_dataset=boolean)
+
     def tuple_filter(self, **kwargs):
         filters = {_rename_key(k): v for k, v in _str_to_tuple(kwargs).items()}
         for key, values in filters.items():
