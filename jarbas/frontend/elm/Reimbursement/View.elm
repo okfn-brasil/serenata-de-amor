@@ -437,6 +437,21 @@ viewReimbursement lang index reimbursement =
             MapView.view mapModel
                 |> Html.map (\_ -> MapMsg)
 
+        deletedTitle : Html Msg
+        deletedTitle =
+            if reimbursement.inLatestDataset then
+                text ""
+            else
+                Options.styled p
+                    [ Typography.caption ]
+                    [ Icon.view "warning"
+                        [ Options.css "transform" "translateY(0.3rem)"
+                        , Options.css "margin-right" "0.25rem"
+                        , Icon.size18
+                        ]
+                    , ReimbursementDeletedTitle |> translate lang |> text
+                    ]
+
         title =
             Options.styled p
                 [ Typography.headline, Color.text Color.primary ]
@@ -460,9 +475,28 @@ viewReimbursement lang index reimbursement =
         sameSubquota =
             SameSubquota.view reimbursement.sameSubquota
                 |> Html.map (SameSubquotaMsg index)
+
+        reimbursementDeleted : Html Msg
+        reimbursementDeleted =
+            if reimbursement.inLatestDataset then
+                text ""
+            else
+                ReimbursementDeletedSource
+                    |> translate lang
+                    |> text
+
+        reimbursementSource : Html Msg
+        reimbursementSource =
+            Options.styled p
+                [ Typography.caption, Options.css "margin-top" "1rem" ]
+                [ text (translate lang ReimbursementSource)
+                , a [ href (sourceUrl reimbursement), class "chamber-of-deputies-source" ]
+                    [ text (translate lang ReimbursementChamberOfDeputies) ]
+                , reimbursementDeleted
+                ]
     in
         [ cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
-            [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title ] ]
+            [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title, deletedTitle ] ]
         , cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
             [ Options.styled div
                 [ Options.css "margin-top" "3rem", Typography.right ]
@@ -470,12 +504,7 @@ viewReimbursement lang index reimbursement =
             ]
         , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] blocks
-            , Options.styled p
-                [ Typography.caption, Options.css "margin-top" "1rem" ]
-                [ text (translate lang ReimbursementSource)
-                , a [ href (sourceUrl reimbursement), class "chamber-of-deputies-source" ]
-                    [ text (translate lang ReimbursementChamberOfDeputies) ]
-                ]
+            , reimbursementSource
             , sameDay
             , sameSubquota
             ]
