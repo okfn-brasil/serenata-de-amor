@@ -170,6 +170,11 @@ $ docker-compose run --rm jarbas python manage.py reimbursements path/to/my/fres
 
 To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
 
+Finally if you would like to access the Django Admin for an alternative view of the reimbursements, you can access it at [`localhost:8000/admin/`](http://localhost:8000/admin/) creating an user with:
+
+```console
+$ docker-compose run --rm jarbas python manage.py createsuperuser
+```
 
 ### Local install
 
@@ -236,6 +241,15 @@ $ yarn test
 #### Ready!
 
 Run the server with `$ python manage.py runserver` and load [localhost:8000](http://localhost:8000) in your favorite browser.
+
+#### Using Django Admin
+
+
+If you would like to access the Django Admin for an alternative view of the reimbursements, you can access it at [`localhost:8000/admin/`](http://localhost:8000/admin/) creating an user with:
+
+```console
+$ python manage.py createsuperuser
+```
 
 
 ### Settings
