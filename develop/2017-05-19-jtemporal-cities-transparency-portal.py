@@ -55,12 +55,12 @@ data['city_id'] = data['city_id'].apply(lambda x: x.zfill(5))
 
 # ## Checking out a `unique_id` for each city
 
-# In[ ]:
+# In[5]:
 
 data[data['city_id'] == '00108']
 
 
-# In[ ]:
+# In[6]:
 
 UNIQUE_IDS = data.loc[:,['state_id', 'city_id']]
 
@@ -71,17 +71,17 @@ for i in range(len(UNIQUE_IDS['state_id'])):
 UNIQUE_IDS.head()
 
 
-# In[ ]:
+# In[7]:
 
 len(set(UNIQUE_IDS['ids']))
 
 
-# In[ ]:
+# In[8]:
 
 UNIQUE_IDS.shape
 
 
-# In[ ]:
+# In[9]:
 
 brazilian_states = {'RO': 'rondonia',
                     'AC': 'acre',
@@ -120,20 +120,20 @@ census_link = "ftp.ibge.gov.br/Censos/Censo_Demografico_2010/resultados/total_po
 # 
 # We checked and it is the best way to get the cities in the right way.
 
-# In[ ]:
+# In[10]:
 
 from serenata_toolbox.datasets import fetch
 
 fetch('2017-05-22-brazilian-cities.csv', '../data')
 
 
-# In[ ]:
+# In[11]:
 
 brazilian_cities = pd.read_csv('../data/2017-05-22-brazilian-cities.csv')
 brazilian_cities.head()
 
 
-# In[ ]:
+# In[12]:
 
 brazilian_cities.shape
 
@@ -145,12 +145,12 @@ brazilian_cities.shape
 # - Remove all acentuation and normalize cities names
 # - And for our case we remove spaces to generate the pattern we want
 
-# In[ ]:
+# In[13]:
 
 brazilian_cities['state'] = brazilian_cities['state'].apply(str.lower)
 
 
-# In[ ]:
+# In[14]:
 
 import unicodedata
 
@@ -160,13 +160,13 @@ def normalize_string(string):
         return nfkd_form.encode('ASCII', 'ignore').decode('utf-8')
 
 
-# In[ ]:
+# In[15]:
 
 brazilian_cities['normalized_name'] = brazilian_cities['name'].apply(lambda x: normalize_string(x))
 brazilian_cities['normalized_name'] = brazilian_cities['normalized_name'].apply(lambda x: x.replace(' ', ''))
 
 
-# In[ ]:
+# In[16]:
 
 brazilian_cities.head()
 
@@ -177,7 +177,7 @@ brazilian_cities.head()
 # 
 # Pattern: `{city}-{state}.portaltp.com.br`
 
-# In[ ]:
+# In[17]:
 
 portal_url = 'https://{}-{}.portaltp.com.br/'
 brazilian_cities['transparency_portal_url'] = brazilian_cities.apply(lambda row: portal_url.format(
@@ -188,7 +188,7 @@ brazilian_cities.head(20)
 
 # (Getting all of the status code for each city might take a while so we added the prints only for feedback)
 
-# In[ ]:
+# In[18]:
 
 import requests
     
@@ -201,22 +201,22 @@ def get_status(url):
         return 404
 
 
-# In[ ]:
+# In[19]:
 
 get_ipython().run_cell_magic('time', '', "colatina = brazilian_cities[brazilian_cities['code'] == 320150]['transparency_portal_url'].values[0]\nstatusOK = get_status(colatina)\n\nabaete = brazilian_cities[brazilian_cities['code'] == 310020]['transparency_portal_url'].values[0]\nstatusNOK = get_status(abaete)")
 
 
-# In[ ]:
+# In[20]:
 
 br_cities = brazilian_cities.loc[:10,:].copy()
 
 
-# In[ ]:
+# In[21]:
 
 get_ipython().run_cell_magic('time', '', "br_cities.loc[:,'status_code'] = br_cities.apply(lambda x: get_status(x['transparency_portal_url']), axis=1)")
 
 
-# In[ ]:
+# In[22]:
 
 br_cities
 
@@ -227,14 +227,14 @@ br_cities
 # 
 # I know that we can find two different status code in the first 10 cities urls test. So let's use those 10 to test grequests ;)
 
-# In[ ]:
+# In[23]:
 
 import grequests
 
 rs = (grequests.get(u) for u in list(br_cities['transparency_portal_url']))
 
 
-# In[ ]:
+# In[24]:
 
 def exception_handler(request, exception):
     return 404
@@ -242,14 +242,14 @@ def exception_handler(request, exception):
 responses = grequests.map(rs, exception_handler=exception_handler)
 
 
-# In[ ]:
+# In[25]:
 
 codes = [int(x) for x in br_cities['status_code'].values]
 
 print(pd.unique(codes), pd.unique(responses))
 
 
-# In[ ]:
+# In[26]:
 
 responses
 
@@ -258,7 +258,7 @@ responses
 # 
 # With that in mind we decided to write a script that generates the infomartion we want: Open Data url for each brazilian city
 
-# In[ ]:
+# In[27]:
 
 data = br_cities[br_cities['status_code'] == 404].copy().reset_index(drop=True)
 data
@@ -268,7 +268,7 @@ data
 # 
 # Second Pattern: `cm{city}-{state}.portaltp.com.br`
 
-# In[ ]:
+# In[28]:
 
 portal_url = 'https://cm{}-{}.portaltp.com.br/'
 data['transparency_portal_url'] = data.apply(lambda row: portal_url.format(
@@ -279,36 +279,36 @@ data
 
 # We still need to update the status code column
 
-# In[ ]:
+# In[29]:
 
 get_ipython().run_cell_magic('time', '', "data.loc[:,'status_code'] = data.apply(lambda x: get_status(x['transparency_portal_url']), axis=1)")
 
 
-# In[ ]:
+# In[30]:
 
 data
 
 
-# In[ ]:
+# In[31]:
 
 # study purposes
 data.loc[8, 'status_code'] = 200
 data
 
 
-# In[ ]:
+# In[32]:
 
 data.loc[data['status_code'] == 404, 'transparency_portal_url'] = None
 data
 
 
-# In[ ]:
+# In[33]:
 
 br_cities.loc[br_cities['status_code'] == 404, 'transparency_portal_url'] = None
 br_cities
 
 
-# In[ ]:
+# In[34]:
 
 unnecessary_columns = ['normalized_name', 'status_code']
 br_cities = pd.merge(br_cities.drop(unnecessary_columns, axis=1),
@@ -330,7 +330,7 @@ br_cities
 # 
 # Below we have a table with all those cities with portals ;)
 
-# In[ ]:
+# In[35]:
 
 with_tp_portal = pd.read_csv('../data/2017-05-30-cities_with_tp_portal.csv')
 with_tp_portal
