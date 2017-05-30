@@ -1,10 +1,11 @@
-from django.contrib import admin
+from django.contrib.admin import SimpleListFilter
+from simple_history.admin import SimpleHistoryAdmin
 
 from jarbas.core.models import Reimbursement
 from jarbas.dashboard.sites import dashboard
 
 
-class SuspiciousListFilter(admin.SimpleListFilter):
+class SuspiciousListFilter(SimpleListFilter):
 
     title = 'Is suspicious'
 
@@ -20,7 +21,7 @@ class SuspiciousListFilter(admin.SimpleListFilter):
         return queryset.suspicions() if self.value() == 'yes' else queryset
 
 
-class ReimbursementModelAdmin(admin.ModelAdmin):
+class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     list_display = (
         'document_id',
