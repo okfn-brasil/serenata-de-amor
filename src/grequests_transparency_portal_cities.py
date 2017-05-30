@@ -26,7 +26,7 @@ def get_status_code(response):
 
 
 def format_url(row, url):
-    if row['status_code'] != 200:
+    if row['status_code'] == 0:
         return url.format(row['normalized_name'], row['state'].lower())
     return row['transparency_portal_url']
 
@@ -37,14 +37,14 @@ def check_transparency_portal_existance(dataset, portal_urls):
 
     for url in portal_urls:
         dataset['transparency_portal_url'] = dataset.apply(format_url, axis=1, args=(url,))
-        rs = (grequests.get(u) for u \
-              in list(dataset.loc[dataset['status_code'] != 200, 'transparency_portal_url']))
+        rs = (grequests.head(u) for u \
+              in list(dataset.loc[dataset['status_code'] == 0, 'transparency_portal_url']))
 
         responses = grequests.map(rs, exception_handler=exception_handler)
         responses = [get_status_code(r) for r in responses]
 
-        dataset.loc[dataset['status_code'] != 200, 'status_code'] = responses
-        dataset.loc[dataset['status_code'] != 200, 'transparency_portal_url'] = 'None'
+        dataset.loc[dataset['status_code'] == 0, 'status_code'] = responses
+        dataset.loc[dataset['status_code'] == 0, 'transparency_portal_url'] = 'None'
 
 
 def main(data_path, cities_file):
