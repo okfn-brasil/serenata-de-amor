@@ -1,5 +1,6 @@
 import os
 import unicodedata
+from argparse import ArgumentParser
 
 import grequests
 import numpy as np
@@ -20,7 +21,7 @@ def exception_handler(request, exception):
 
 def get_status_code(response):
     if not response.status_code:
-         return 404
+         return 0
     return response.status_code
 
 
@@ -46,8 +47,7 @@ def check_transparency_portal_existance(dataset, portal_urls):
         dataset.loc[dataset['status_code'] != 200, 'transparency_portal_url'] = 'None'
 
 
-def main(data_path='/tmp/serenata-data', cities_file='2017-05-22-brazilian-cities.csv'):
-    Datasets(data_path).downloader.download(cities_file)
+def main(data_path, cities_file):
     cities = pd.read_csv(os.path.join(data_path, cities_file))
 
     cities['normalized_name'] = cities['name'].apply(normalize_string)
@@ -64,4 +64,29 @@ def main(data_path='/tmp/serenata-data', cities_file='2017-05-22-brazilian-citie
 
 
 if __name__ == '__main__':
-    main()
+    description = """
+    This script generates a CSV file containing all the Brazilian
+    cities and the URLs for their transparency portal if a transparency portal
+    exists
+    """
+
+    parser = ArgumentParser(description=description)
+    parser.add_argument(
+        '--cities_file', '-c', default='2017-05-22-brazilian-cities.csv',
+        help=('A CSV file containing all Brazilian cities per state '
+              '(default: 2017-05-22-brazilian-cities.csv)')
+    )
+    parser.add_argument(
+        '--data-dir', '-d', default='/tmp/serenata-data/',
+        help=('Data directory where Brazilian cities .csv file can be found '
+              '(default: /tmp/serenata-data/)')
+    )
+    args = parser.parse_args()
+
+    if not os.path.exists(os.path.join(args.data_dir, args.cities_file)):
+        Datasets(args.data_dir).downloader.download(args.cities_file)
+
+    main(
+        args.data_dir,
+        args.cities_file
+    )
