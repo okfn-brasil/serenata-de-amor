@@ -24,30 +24,31 @@ def get_status_code(response):
     return response.status_code
 
 
-def format_row(row, url):
-    if row['transparency_portal_url'] == 'None':
+def format_url(row, url):
+    if row['status_code'] != 200:
         return url.format(row['normalized_name'], row['state'].lower())
     return row['transparency_portal_url']
 
 
 def check_transparency_portal_existance(dataset, portal_urls):
     dataset['transparency_portal_url'] = 'None'
+    dataset['status_code'] = 0
 
     for url in portal_urls:
-        dataset['transparency_portal_url'] = dataset.apply(format_row, axis=1, args=(url,))
-        # TODO: Also filter by status_code
-        rs = (grequests.get(u) for u in list(dataset['transparency_portal_url']))
+        dataset['transparency_portal_url'] = dataset.apply(format_url, axis=1, args=(url,))
+        rs = (grequests.get(u) for u \
+              in list(dataset.loc[dataset['status_code'] != 200, 'transparency_portal_url']))
+
         responses = grequests.map(rs, exception_handler=exception_handler)
-        dataset.loc[:,'status_code'] = responses
-        dataset.loc[:,'status_code'] = dataset \
-               .apply(lambda row: get_status_code(row['status_code']), axis=1)
-        dataset.loc[dataset['status_code'] == 404, 'transparency_portal_url'] = 'None'
+        responses = [get_status_code(r) for r in responses]
+
+        dataset.loc[dataset['status_code'] != 200, 'status_code'] = responses
+        dataset.loc[dataset['status_code'] != 200, 'transparency_portal_url'] = 'None'
 
 
 def main(data_path='/tmp/serenata-data', cities_file='2017-05-22-brazilian-cities.csv'):
     Datasets(data_path).downloader.download(cities_file)
     cities = pd.read_csv(os.path.join(data_path, cities_file))
-    cities = cities.head(50).copy()
 
     cities['normalized_name'] = cities['name'].apply(normalize_string)
 
