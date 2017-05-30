@@ -24,6 +24,7 @@ class ReimbursementModelAdmin(admin.ModelAdmin):
 
     list_display = (
         'document_id',
+        'jarbas',
         'congressperson_name',
         'year',
         'subquota_description',
@@ -60,6 +61,16 @@ class ReimbursementModelAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = filter(dashboard.valid_url, super().get_urls())
         return list(urls)
+
+    def jarbas(self, obj):
+        base_url = 'https://jarbas.serenatadeamor.org/#/documentId/{}/'
+        url = base_url.format(obj.document_id)
+        image_src = '/static/favicon/favicon-16x16.png'
+        image = '<img alt="View on Jarbas" src="{}">'.format(image_src)
+        return '<a href="{}">{}</a>'.format(url, image)
+
+    jarbas.short_description = ''
+    jarbas.allow_tags = True
 
     def is_suspicious(self, obj):
         return obj.suspicions is not None
