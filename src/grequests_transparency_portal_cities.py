@@ -56,8 +56,7 @@ def main(data_path, cities_file):
                   'https://cm{}-{}.portaltp.com.br/']
     check_transparency_portal_existance(cities, portal_urls)
 
-    unnecessary_columns = ['normalized_name', 'status_code']
-    cities = cities.drop(unnecessary_columns, axis=1)
+    cities = cities.drop('normalized_name', axis=1)
 
     cities.to_csv(os.path.join(data_path, 'cities-with-tp-url.xz'),
                      compression='xz', index=False)
