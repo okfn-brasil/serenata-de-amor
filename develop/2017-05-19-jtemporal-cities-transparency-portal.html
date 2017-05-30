@@ -12297,7 +12297,7 @@ div#notebook {
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Downloading 2017-05-22-brazilian-cities.csv: 100%|██████████| 134K/134K [00:01&lt;00:00, 91.2Kb/s]
+<pre>Downloading 2017-05-22-brazilian-cities.csv: 100%|██████████| 134K/134K [00:01&lt;00:00, 97.1Kb/s]
 </pre>
 </div>
 </div>
@@ -12867,8 +12867,8 @@ statusNOK = get_status(abaete)
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>200
 404
-CPU times: user 54.5 ms, sys: 10.6 ms, total: 65.1 ms
-Wall time: 3.13 s
+CPU times: user 64.3 ms, sys: 13.1 ms, total: 77.4 ms
+Wall time: 2.28 s
 </pre>
 </div>
 </div>
@@ -12922,8 +12922,8 @@ br_cities.loc[:,&#39;status_code&#39;] = br_cities.apply(lambda x: get_status(x[
 200
 404
 404
-CPU times: user 119 ms, sys: 18 ms, total: 137 ms
-Wall time: 5.58 s
+CPU times: user 128 ms, sys: 20.6 ms, total: 149 ms
+Wall time: 4.21 s
 </pre>
 </div>
 </div>
@@ -13542,8 +13542,8 @@ data.loc[:,&#39;status_code&#39;] = data.apply(lambda x: get_status(x[&#39;trans
 404
 404
 404
-CPU times: user 45.3 ms, sys: 11.8 ms, total: 57.1 ms
-Wall time: 1.12 s
+CPU times: user 44.6 ms, sys: 12.1 ms, total: 56.8 ms
+Wall time: 118 ms
 </pre>
 </div>
 </div>
@@ -14283,8 +14283,8 @@ Wall time: 1.12 s
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Conclusions">Conclusions<a class="anchor-link" href="#Conclusions">&#182;</a></h1><p>After all that study, we find that in that pattern of transparency portals list there are already 270 cities.</p>
-<p>It is something like 4% of all Brazilian existing cities!</p>
+<h1 id="Conclusions">Conclusions<a class="anchor-link" href="#Conclusions">&#182;</a></h1><p>After all that study, we find that in that pattern of transparency portals list there are already 279 cities, from them 19 are returning an Internal Server Error (Status Code: 5XX).</p>
+<p>It is something like 5% of all Brazilian existing cities!</p>
 <p>Below we have a table with all those cities with portals ;)</p>
 
 </div>
@@ -14296,7 +14296,7 @@ Wall time: 1.12 s
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">with_tp_portal</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-05-30-cities_with_tp_portal.csv&#39;</span><span class="p">)</span>
-<span class="n">with_tp_portal</span>
+<span class="n">with_tp_portal</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
 </div>
@@ -14309,6 +14309,37 @@ Wall time: 1.12 s
 
 <div class="output_area">
 <div class="prompt output_prompt">Out[35]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(279, 5)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">with_tp_portal</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[36]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -14334,6 +14365,7 @@ Wall time: 1.12 s
       <th>name</th>
       <th>state</th>
       <th>transparency_portal_url</th>
+      <th>status_code</th>
     </tr>
   </thead>
   <tbody>
@@ -14343,6 +14375,7 @@ Wall time: 1.12 s
       <td>Abaré</td>
       <td>BA</td>
       <td>https://abare-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>1</th>
@@ -14350,6 +14383,7 @@ Wall time: 1.12 s
       <td>Abaíra</td>
       <td>BA</td>
       <td>https://abaira-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>2</th>
@@ -14357,6 +14391,7 @@ Wall time: 1.12 s
       <td>Afonso Cláudio</td>
       <td>ES</td>
       <td>https://afonsoclaudio-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>3</th>
@@ -14364,6 +14399,7 @@ Wall time: 1.12 s
       <td>Alegre</td>
       <td>ES</td>
       <td>https://alegre-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>4</th>
@@ -14371,6 +14407,7 @@ Wall time: 1.12 s
       <td>Alfredo Chaves</td>
       <td>ES</td>
       <td>https://alfredochaves-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>5</th>
@@ -14378,6 +14415,7 @@ Wall time: 1.12 s
       <td>Almenara</td>
       <td>MG</td>
       <td>https://almenara-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>6</th>
@@ -14385,6 +14423,7 @@ Wall time: 1.12 s
       <td>Alto Rio Novo</td>
       <td>ES</td>
       <td>https://altorionovo-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>7</th>
@@ -14392,6 +14431,7 @@ Wall time: 1.12 s
       <td>Anchieta</td>
       <td>ES</td>
       <td>https://anchieta-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>8</th>
@@ -14399,6 +14439,7 @@ Wall time: 1.12 s
       <td>Antas</td>
       <td>BA</td>
       <td>https://antas-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>9</th>
@@ -14406,6 +14447,7 @@ Wall time: 1.12 s
       <td>Apiacá</td>
       <td>ES</td>
       <td>https://apiaca-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>10</th>
@@ -14413,6 +14455,7 @@ Wall time: 1.12 s
       <td>Aracatu</td>
       <td>BA</td>
       <td>https://aracatu-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>11</th>
@@ -14420,6 +14463,7 @@ Wall time: 1.12 s
       <td>Araci</td>
       <td>BA</td>
       <td>https://araci-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>12</th>
@@ -14427,6 +14471,7 @@ Wall time: 1.12 s
       <td>Aracruz</td>
       <td>ES</td>
       <td>https://aracruz-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>13</th>
@@ -14434,6 +14479,7 @@ Wall time: 1.12 s
       <td>Arataca</td>
       <td>BA</td>
       <td>https://arataca-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>14</th>
@@ -14441,6 +14487,7 @@ Wall time: 1.12 s
       <td>Araçuaí</td>
       <td>MG</td>
       <td>https://cmaracuai-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>15</th>
@@ -14448,6 +14495,7 @@ Wall time: 1.12 s
       <td>Aricanduva</td>
       <td>MG</td>
       <td>https://aricanduva-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>16</th>
@@ -14455,6 +14503,7 @@ Wall time: 1.12 s
       <td>Atilio Vivacqua</td>
       <td>ES</td>
       <td>https://cmatiliovivacqua-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>17</th>
@@ -14462,6 +14511,7 @@ Wall time: 1.12 s
       <td>Aurelino Leal</td>
       <td>BA</td>
       <td>https://aurelinoleal-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>18</th>
@@ -14469,6 +14519,7 @@ Wall time: 1.12 s
       <td>Baixo Guandu</td>
       <td>ES</td>
       <td>https://baixoguandu-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>19</th>
@@ -14476,6 +14527,7 @@ Wall time: 1.12 s
       <td>Baldim</td>
       <td>MG</td>
       <td>https://baldim-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>20</th>
@@ -14483,6 +14535,7 @@ Wall time: 1.12 s
       <td>Bandeira</td>
       <td>MG</td>
       <td>https://bandeira-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>21</th>
@@ -14490,6 +14543,7 @@ Wall time: 1.12 s
       <td>Barra de São Francisco</td>
       <td>ES</td>
       <td>https://barradesaofrancisco-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>22</th>
@@ -14497,6 +14551,7 @@ Wall time: 1.12 s
       <td>Barro Preto</td>
       <td>BA</td>
       <td>https://barropreto-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>23</th>
@@ -14504,6 +14559,7 @@ Wall time: 1.12 s
       <td>Belmonte</td>
       <td>BA</td>
       <td>https://belmonte-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>24</th>
@@ -14511,6 +14567,7 @@ Wall time: 1.12 s
       <td>Belo Campo</td>
       <td>BA</td>
       <td>https://belocampo-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>25</th>
@@ -14518,6 +14575,7 @@ Wall time: 1.12 s
       <td>Berilo</td>
       <td>MG</td>
       <td>https://cmberilo-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>26</th>
@@ -14525,6 +14583,7 @@ Wall time: 1.12 s
       <td>Berizal</td>
       <td>MG</td>
       <td>https://berizal-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>27</th>
@@ -14532,6 +14591,7 @@ Wall time: 1.12 s
       <td>Boa Esperança</td>
       <td>ES</td>
       <td>https://boaesperanca-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>28</th>
@@ -14539,13 +14599,15 @@ Wall time: 1.12 s
       <td>Boa Nova</td>
       <td>BA</td>
       <td>https://boanova-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>310740</td>
-      <td>Bom Despacho</td>
+      <td>310720</td>
+      <td>Bocaina de Minas</td>
       <td>MG</td>
-      <td>https://cmbomdespacho-mg.portaltp.com.br/</td>
+      <td>https://cmbocainademinas-mg.portaltp.com.br/</td>
+      <td>500</td>
     </tr>
     <tr>
       <th>...</th>
@@ -14553,220 +14615,251 @@ Wall time: 1.12 s
       <td>...</td>
       <td>...</td>
       <td>...</td>
+      <td>...</td>
     </tr>
     <tr>
-      <th>240</th>
-      <td>320490</td>
-      <td>São Mateus</td>
-      <td>ES</td>
-      <td>https://saomateus-es.portaltp.com.br/</td>
-    </tr>
-    <tr>
-      <th>241</th>
+      <th>249</th>
       <td>320495</td>
       <td>São Roque do Canaã</td>
       <td>ES</td>
       <td>https://saoroquedocanaa-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>242</th>
+      <th>250</th>
       <td>316450</td>
       <td>São Sebastião do Maranhão</td>
       <td>MG</td>
       <td>https://saosebastiaodomaranhao-mg.portaltp.com...</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>243</th>
+      <th>251</th>
       <td>316790</td>
       <td>Tabuleiro</td>
       <td>MG</td>
       <td>https://cmtabuleiro-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>244</th>
+      <th>252</th>
       <td>316800</td>
       <td>Taiobeiras</td>
       <td>MG</td>
       <td>https://taiobeiras-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>245</th>
+      <th>253</th>
       <td>293135</td>
       <td>Teixeira de Freitas</td>
       <td>BA</td>
       <td>https://teixeiradefreitas-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>246</th>
+      <th>254</th>
       <td>316870</td>
       <td>Timóteo</td>
       <td>MG</td>
       <td>https://timoteo-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>247</th>
+      <th>255</th>
       <td>293180</td>
       <td>Tremedal</td>
       <td>BA</td>
       <td>https://tremedal-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>248</th>
+      <th>256</th>
       <td>316930</td>
       <td>Três Corações</td>
       <td>MG</td>
       <td>https://trescoracoes-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>249</th>
+      <th>257</th>
       <td>316935</td>
       <td>Três Marias</td>
       <td>MG</td>
       <td>https://tresmarias-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>250</th>
+      <th>258</th>
       <td>293220</td>
       <td>Ubaitaba</td>
       <td>BA</td>
       <td>https://ubaitaba-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>251</th>
+      <th>259</th>
       <td>293210</td>
       <td>Ubaíra</td>
       <td>BA</td>
       <td>https://cmubaira-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>252</th>
+      <th>260</th>
       <td>293250</td>
       <td>Una</td>
       <td>BA</td>
       <td>https://una-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>253</th>
+      <th>261</th>
       <td>293270</td>
       <td>Uruçuca</td>
       <td>BA</td>
       <td>https://urucuca-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>254</th>
+      <th>262</th>
       <td>317057</td>
       <td>Vargem Alegre</td>
       <td>MG</td>
       <td>https://vargemalegre-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>255</th>
+      <th>263</th>
       <td>320503</td>
       <td>Vargem Alta</td>
       <td>ES</td>
       <td>https://vargemalta-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>256</th>
+      <th>264</th>
       <td>320506</td>
       <td>Venda Nova do Imigrante</td>
       <td>ES</td>
       <td>https://vendanovadoimigrante-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>257</th>
+      <th>265</th>
       <td>317107</td>
       <td>Veredinha</td>
       <td>MG</td>
       <td>https://veredinha-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>258</th>
+      <th>266</th>
+      <td>317115</td>
+      <td>Vermelho Novo</td>
+      <td>MG</td>
+      <td>https://vermelhonovo-mg.portaltp.com.br/</td>
+      <td>500</td>
+    </tr>
+    <tr>
+      <th>267</th>
       <td>320510</td>
       <td>Viana</td>
       <td>ES</td>
       <td>https://viana-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>259</th>
+      <th>268</th>
       <td>320515</td>
       <td>Vila Pavão</td>
       <td>ES</td>
       <td>https://vilapavao-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>260</th>
+      <th>269</th>
       <td>320517</td>
       <td>Vila Valério</td>
       <td>ES</td>
       <td>https://vilavalerio-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>261</th>
+      <th>270</th>
       <td>320520</td>
       <td>Vila Velha</td>
       <td>ES</td>
       <td>https://cmvilavelha-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>262</th>
+      <th>271</th>
       <td>317180</td>
       <td>Virginópolis</td>
       <td>MG</td>
       <td>https://cmvirginopolis-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>263</th>
+      <th>272</th>
       <td>317190</td>
       <td>Virgolândia</td>
       <td>MG</td>
       <td>https://virgolandia-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>264</th>
+      <th>273</th>
       <td>293330</td>
       <td>Vitória da Conquista</td>
       <td>BA</td>
       <td>https://vitoriadaconquista-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>265</th>
+      <th>274</th>
       <td>317130</td>
       <td>Viçosa</td>
       <td>MG</td>
       <td>https://cmvicosa-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>266</th>
+      <th>275</th>
       <td>293340</td>
       <td>Wagner</td>
       <td>BA</td>
       <td>https://wagner-ba.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>267</th>
+      <th>276</th>
       <td>310060</td>
       <td>Água Boa</td>
       <td>MG</td>
       <td>https://aguaboa-mg.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>268</th>
+      <th>277</th>
       <td>320016</td>
       <td>Água Doce do Norte</td>
       <td>ES</td>
-      <td>https://cmaguadocedonorte-es.portaltp.com.br/</td>
+      <td>https://aguadocedonorte-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
     <tr>
-      <th>269</th>
+      <th>278</th>
       <td>320013</td>
       <td>Águia Branca</td>
       <td>ES</td>
       <td>https://aguiabranca-es.portaltp.com.br/</td>
+      <td>200</td>
     </tr>
   </tbody>
 </table>
-<p>270 rows × 4 columns</p>
+<p>279 rows × 5 columns</p>
 </div>
 </div>
 

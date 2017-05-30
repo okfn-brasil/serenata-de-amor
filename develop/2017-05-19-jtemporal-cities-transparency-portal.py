@@ -324,14 +324,19 @@ br_cities
 
 # # Conclusions
 # 
-# After all that study, we find that in that pattern of transparency portals list there are already 270 cities.
+# After all that study, we find that in that pattern of transparency portals list there are already 279 cities, from them 19 are returning an Internal Server Error (Status Code: 5XX).
 # 
-# It is something like 4% of all Brazilian existing cities!
+# It is something like 5% of all Brazilian existing cities!
 # 
 # Below we have a table with all those cities with portals ;)
 
 # In[35]:
 
 with_tp_portal = pd.read_csv('../data/2017-05-30-cities_with_tp_portal.csv')
+with_tp_portal.shape
+
+
+# In[36]:
+
 with_tp_portal
 

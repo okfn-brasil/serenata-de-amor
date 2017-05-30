@@ -75,8 +75,10 @@ if __name__ == '__main__':
         help=('A CSV file containing all Brazilian cities per state '
               '(default: 2017-05-22-brazilian-cities.csv)')
     )
+    tmp_path = os.path.join(os.sep,'tmp', 'serenata-data')
+    print(tmp_path)
     parser.add_argument(
-        '--data-dir', '-d', default='/tmp/serenata-data/',
+        '--data-dir', '-d', default=tmp_path,
         help=('Data directory where Brazilian cities .csv file can be found '
               '(default: /tmp/serenata-data/)')
     )
