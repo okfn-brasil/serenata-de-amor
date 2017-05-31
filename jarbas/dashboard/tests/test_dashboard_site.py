@@ -5,7 +5,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
-from jarbas.dashboard.sites import DashboardSite, dashboard
+from jarbas.dashboard.sites import DashboardSite, DummyUser, dashboard
 
 User = get_user_model()
 
@@ -19,30 +19,6 @@ class TestDashboardSite(TestCase):
         self.assertEqual({}, dict(self.site.actions))
         self.assertEqual({}, dict(self.site._global_actions))
         self.assertEqual('dashboard', self.site.name)
-
-    @patch.object(User.objects, 'get')
-    @patch.object(Permission.objects, 'get')
-    @patch.object(ContentType.objects, 'get_for_model')
-    def test_get_user_with_existing_user(self, get_for_model, permission_get, user_get):
-        User.objects.create_user('dashboard', password='dashboard')
-        with patch.object(User.objects, 'create_user') as create_user:
-            self.site.get_user()
-
-        user_get.assert_called_once_with(username='dashboard')
-        create_user.assert_not_called()
-        permission_get.assert_not_called()
-        get_for_model.assert_not_called()
-
-    @patch.object(User.objects, 'get', side_effect=(User.DoesNotExist, True))
-    @patch.object(User.objects, 'create_user')
-    @patch.object(Permission.objects, 'get')
-    @patch.object(ContentType.objects, 'get_for_model')
-    def test_get_user_without_existing_user(self, get_for_model, permission_get, create_user, user_get):
-        self.site.get_user()
-        self.assertEqual(2, user_get.call_count)
-        self.assertEqual(1, create_user.call_count)
-        self.assertEqual(1, permission_get.call_count)
-        self.assertEqual(1, get_for_model.call_count)
 
     def test_valid_url(self):
         valid, invalid = MagicMock(), MagicMock()
@@ -63,11 +39,8 @@ class TestDashboardSite(TestCase):
         request = MagicMock()
         request.method = 'GET'
         self.assertTrue(self.site.has_permission(request))
-        self.assertIsInstance(request.user, User)
 
     def test_has_permission_post(self):
         request = MagicMock()
         request.method = 'POST'
         self.assertFalse(self.site.has_permission(request))
-        self.assertIsInstance(request.user, MagicMock)
-
