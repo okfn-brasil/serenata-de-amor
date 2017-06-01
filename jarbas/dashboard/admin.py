@@ -96,21 +96,13 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     readonly_fields = tuple(f.name for f in Reimbursement._meta.fields)
 
-    def has_add_permission(self, request):
-        return False
     def _format_document(self, obj):
         if len(obj.cnpj_cpf) == 14:
             return format_cnpj(obj.cnpj_cpf)
 
-    def has_change_permission(self, request, obj=None):
-        if request.method != 'GET':
-            return False
-        return True
         if len(obj.cnpj_cpf) == 11:
             return format_cpf(obj.cnpj_cpf)
 
-    def has_delete_permission(self, request, obj=None):
-        return False
         return obj.cnpj_cpf
 
     def get_urls(self):
@@ -153,6 +145,17 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         return obj.document_id
 
     short_document_id.short_description = 'Reembolso'
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        if request.method != 'GET':
+            return False
+        return True
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 dashboard.register(Reimbursement, ReimbursementModelAdmin)
