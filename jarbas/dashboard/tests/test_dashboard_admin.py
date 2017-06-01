@@ -1,8 +1,10 @@
 from collections import namedtuple
+from unittest.mock import MagicMock
+
 from django.test import TestCase
 
 from jarbas.core.models import Reimbursement
-from jarbas.dashboard.admin import ReimbursementModelAdmin
+from jarbas.dashboard.admin import ReimbursementModelAdmin, SubuotaListfilter
 
 
 Request = namedtuple('Request', ('method',))
@@ -35,3 +37,20 @@ class TestDashboardSite(TestCase):
         self.assertEqual('12.345.678/9012-34', self.ma._format_document(obj1))
         self.assertEqual('123.456.789-01', self.ma._format_document(obj2))
         self.assertEqual('2345678', self.ma._format_document(obj3))
+
+
+class TestSubuotaListfilter(TestCase):
+
+    def setUp(self):
+        self.qs = MagicMock()
+        self.list_filter = MagicMock()
+
+    def test_queryset_without_subquota(self):
+        self.list_filter.value.return_value = None
+        SubuotaListfilter.queryset(self.list_filter, MagicMock(), self.qs)
+        self.qs.filter.assert_not_called()
+
+    def test_queryset_with_subquota(self):
+        self.list_filter.value.return_value = 42
+        SubuotaListfilter.queryset(self.list_filter, MagicMock(), self.qs)
+        self.qs.filter.assert_called_once_with(subquota_id=42)
