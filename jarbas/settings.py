@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'simple_history',
     'rest_framework',
-    'jarbas.core',
+    'jarbas.core.app.CoreConfig',
     'jarbas.api',
     'jarbas.frontend',
     'jarbas.dashboard.app.DashboardConfig',
@@ -117,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt_BR'
 
 TIME_ZONE = 'America/Sao_Paulo'
 

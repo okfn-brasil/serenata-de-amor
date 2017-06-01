@@ -9,18 +9,56 @@ from jarbas.dashboard.sites import dashboard
 
 class SuspiciousListFilter(SimpleListFilter):
 
-    title = 'Is suspicious'
-
+    title = 'reembolso suspeito'
     parameter_name = 'is_suspicions'
+    options = (
+        ('yes', 'Sim'),
+        ('no', 'Não'),
+    )
 
     def lookups(self, request, model_admin):
-        return (
-            ('yes', 'Yes'),
-            ('no',  'No'),
-        )
+        return self.options
 
     def queryset(self, request, queryset):
         return queryset.suspicions() if self.value() == 'yes' else queryset
+
+
+class SubuotaListfilter(SimpleListFilter):
+
+    title = 'subquota'
+    parameter_name = 'subquota_id'
+    options = (
+        (1, 'Manutenção de escritório de apoio à atividade parlamentar'),
+        (2, 'Locomoção, alimentação e  hospedagem'),
+        (3, 'Combustíveis e lubrificantes'),
+        (4, 'Consultorias, pesquisas e trabalhos técnicos'),
+        (5, 'Divulgação da atividade parlamentar'),
+        (6, 'Aquisição de material de escritório'),
+        (7, 'Aquisição ou loc. de software serv. postais ass.'),
+        (8, 'Serviço de segurança prestado por empresa especializada'),
+        (9, 'Passagens aéreas'),
+        (10, 'Telefonia'),
+        (11, 'Serviços postais'),
+        (12, 'Assinatura de publicações'),
+        (13, 'Fornecimento de alimentação do parlamentar'),
+        (14, 'Hospedagem ,exceto do parlamentar no distrito federal'),
+        (15, 'Locação de veículos automotores ou fretamento de embarcações'),
+        (119, 'Locação ou fretamento de aeronaves'),
+        (120, 'Locação ou fretamento de veículos automotores'),
+        (121, 'Locação ou fretamento de embarcações'),
+        (122, 'Serviço de táxi, pedágio e estacionamento'),
+        (123, 'Passagens terrestres, marítimas ou fluviais'),
+        (137, 'Participação em curso, palestra ou evento similar'),
+        (999, 'Emissão Bilhete Aéreo')
+    )
+
+    def lookups(self, request, model_admin):
+        return self.options
+
+    def queryset(self, request, queryset):
+        if not self.value():
+            return queryset
+        return queryset.filter(subquota_id=self.value())
 
 
 class ReimbursementModelAdmin(SimpleHistoryAdmin):
@@ -31,9 +69,9 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'congressperson_name',
         'year',
         'subquota_description',
-        'is_suspicious',
         'supplier_info',
         'value',
+        'suspicious',
         'still_available',
     )
     search_fields = (
@@ -51,7 +89,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'available_in_latest_dataset',
         'state',
         'year',
-        'subquota_description',
+        SubuotaListfilter,
     )
     readonly_fields = tuple(f.name for f in Reimbursement._meta.fields)
     has_permission = dashboard.has_permission
@@ -86,17 +124,17 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         base_url = 'https://jarbas.serenatadeamor.org/#/documentId/{}/'
         url = base_url.format(obj.document_id)
         image_src = '/static/favicon/favicon-16x16.png'
-        image = '<img alt="View on Jarbas" src="{}">'.format(image_src)
+        image = '<img alt="Ver no Jarbas" src="{}">'.format(image_src)
         return '<a href="{}">{}</a>'.format(url, image)
 
     jarbas.short_description = ''
     jarbas.allow_tags = True
 
-    def is_suspicious(self, obj):
+    def suspicious(self, obj):
         return obj.suspicions is not None
 
-    is_suspicious.short_description = 'Suspicious'
-    is_suspicious.boolean = True
+    suspicious.short_description = 'suspeito'
+    suspicious.boolean = True
 
     def value(self, obj):
         return 'R$ {:.2f}'.format(obj.total_net_value)#replace('.', ',')

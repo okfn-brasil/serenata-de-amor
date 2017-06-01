@@ -28,55 +28,55 @@ class Receipt:
 
 
 class Reimbursement(models.Model):
-    document_id = models.IntegerField('Document ID', db_index=True, unique=True)
-    last_update = models.DateTimeField('Last update', db_index=True, auto_now=True)
-    available_in_latest_dataset = models.BooleanField('Available in the latest dataset', default=True)
+    document_id = models.IntegerField('Número do Reembolso', db_index=True, unique=True)
+    last_update = models.DateTimeField('Atualizado no Jarbas em', db_index=True, auto_now=True)
+    available_in_latest_dataset = models.BooleanField('Disponível na Câmara dos Deputados', default=True)
 
-    year = models.IntegerField('Year', db_index=True)
-    applicant_id = models.IntegerField('Applicant ID', db_index=True)
+    year = models.IntegerField('Ano', db_index=True)
+    applicant_id = models.IntegerField('Identificador do Solicitante', db_index=True)
 
-    total_reimbursement_value = models.DecimalField('Total reimbusrsement value', max_digits=10, decimal_places=3, blank=True, null=True)
-    total_net_value = models.DecimalField('Total net value', max_digits=10, decimal_places=3, db_index=True)
-    reimbursement_numbers = models.CharField('Reimbursement numbers', max_length=140)
-    net_values = models.CharField('Net values', max_length=140)
+    total_reimbursement_value = models.DecimalField('Valor da Restituição', max_digits=10, decimal_places=3, blank=True, null=True)
+    total_net_value = models.DecimalField('Valor Líquido', max_digits=10, decimal_places=3, db_index=True)
+    reimbursement_numbers = models.CharField('Números dos Ressarcimentos', max_length=140)
+    net_values = models.CharField('Valores Líquidos dos Ressarcimentos', max_length=140)
 
-    congressperson_id = models.IntegerField('Congressperson ID', db_index=True, blank=True, null=True)
-    congressperson_name = models.CharField('Congressperson name', max_length=140, db_index=True, blank=True, null=True)
-    congressperson_document = models.IntegerField('Congressperson document', blank=True, null=True)
+    congressperson_id = models.IntegerField('Identificador Único do Parlamentar', db_index=True, blank=True, null=True)
+    congressperson_name = models.CharField('Nome do Parlamentar', max_length=140, db_index=True, blank=True, null=True)
+    congressperson_document = models.IntegerField('Número da  Carteira Parlamentar', blank=True, null=True)
 
-    party = models.CharField('Party', max_length=7, db_index=True, blank=True, null=True)
-    state = models.CharField('State', max_length=2, db_index=True, blank=True, null=True)
+    party = models.CharField('Partido', max_length=7, db_index=True, blank=True, null=True)
+    state = models.CharField('UF', max_length=2, db_index=True, blank=True, null=True)
 
-    term_id = models.IntegerField('Term ID', blank=True, null=True)
-    term = models.IntegerField('Term', blank=True, null=True)
+    term_id = models.IntegerField('Código da Legislatura', blank=True, null=True)
+    term = models.IntegerField('Número da  Legislatura', blank=True, null=True)
 
-    subquota_id = models.IntegerField('Subquota ID', db_index=True)
-    subquota_description = models.CharField('Subquota descrition', max_length=140)
-    subquota_group_id = models.IntegerField('Subquota group ID', blank=True, null=True)
-    subquota_group_description = models.CharField('Subquota group description', max_length=140, blank=True, null=True)
+    subquota_id = models.IntegerField('Número da Subcota', db_index=True)
+    subquota_description = models.CharField('Descrição da Subcota', max_length=140)
+    subquota_group_id = models.IntegerField('Número da Especificação da Subcota', blank=True, null=True)
+    subquota_group_description = models.CharField('Descrição da Especificação da Subcota', max_length=140, blank=True, null=True)
 
-    supplier = models.CharField('Supplier', max_length=140)
-    cnpj_cpf = models.CharField('CNPJ or CPF', max_length=14, db_index=True, blank=True, null=True)
+    supplier = models.CharField('Fornecedor', max_length=140)
+    cnpj_cpf = models.CharField('CNPJ ou CPF', max_length=14, db_index=True, blank=True, null=True)
 
-    document_type = models.IntegerField('Document type')
-    document_number = models.CharField('Document number', max_length=140, blank=True, null=True)
-    document_value = models.DecimalField('Document value', max_digits=10, decimal_places=3)
+    document_type = models.IntegerField('Indicativo de Tipo de Documento Fiscal')
+    document_number = models.CharField('Número do Documento', max_length=140, blank=True, null=True)
+    document_value = models.DecimalField('Valor do Documento', max_digits=10, decimal_places=3)
 
-    issue_date = models.DateField('Issue date')
-    month = models.IntegerField('Month', db_index=True)
-    remark_value = models.DecimalField('Remark value', max_digits=10, decimal_places=3, blank=True, null=True)
-    installment = models.IntegerField('Installment', blank=True, null=True)
-    batch_number = models.IntegerField('Batch number')
-    reimbursement_values = models.CharField('Reimbusrsement values', max_length=140, blank=True, null=True)
+    issue_date = models.DateField('Data de Emissão')
+    month = models.IntegerField('Mês', db_index=True)
+    remark_value = models.DecimalField('Valor da Glosa', max_digits=10, decimal_places=3, blank=True, null=True)
+    installment = models.IntegerField('Número da Parcela', blank=True, null=True)
+    batch_number = models.IntegerField('Número do Lote')
+    reimbursement_values = models.CharField('Valores dos Ressarcimentos', max_length=140, blank=True, null=True)
 
-    passenger = models.CharField('Passenger', max_length=140, blank=True, null=True)
-    leg_of_the_trip = models.CharField('Leg of the trip', max_length=140, blank=True, null=True)
+    passenger = models.CharField('Passageiro', max_length=140, blank=True, null=True)
+    leg_of_the_trip = models.CharField('Trecho', max_length=140, blank=True, null=True)
 
-    probability = models.DecimalField('Probability', max_digits=6, decimal_places=5, blank=True, null=True)
-    suspicions = JSONField('Suspicions', blank=True, null=True)
+    probability = models.DecimalField('Probabilidade', max_digits=6, decimal_places=5, blank=True, null=True)
+    suspicions = JSONField('Suspeitas', blank=True, null=True)
 
-    receipt_fetched = models.BooleanField('Was the receipt URL fetched?', default=False, db_index=True)
-    receipt_url = models.CharField('Receipt URL', max_length=140, blank=True, null=True)
+    receipt_fetched = models.BooleanField('Tentamos aessar a URL do documento fiscal?', default=False, db_index=True)
+    receipt_url = models.CharField('URL do Documento Fiscal', max_length=140, blank=True, null=True)
 
     history = HistoricalRecords()
 
@@ -84,8 +84,8 @@ class Reimbursement(models.Model):
 
     class Meta:
         ordering = ('-year', '-issue_date')
-        verbose_name = 'reimbursement'
-        verbose_name_plural = 'reimbursements'
+        verbose_name = 'reembolso'
+        verbose_name_plural = 'reembolsos'
 
     def get_receipt_url(self, force=False, bulk=False):
         if self.receipt_url:
@@ -129,7 +129,7 @@ class Reimbursement(models.Model):
         return 'Reimbursement(document_id={})'.format(self.document_id)
 
     def __str__(self):
-        return 'Document #{}'.format(self.document_id)
+        return 'Documento nº {}'.format(self.document_id)
 
 
 class Activity(models.Model):
