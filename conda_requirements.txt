@@ -1,4 +1,4 @@
-beautifulsoup4==4.5.3
+beautifulsoup4==4.6.0
 geopy==1.11.0
 grequests==0.3.0
 humanize==0.5.1
