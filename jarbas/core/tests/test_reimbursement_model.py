@@ -145,7 +145,7 @@ class TestCustomMethods(TestReimbursement):
 
     def test_str(self):
         obj = Reimbursement.objects.create(**self.data)
-        expected = 'Document #42'
+        expected = 'Documento nº 42'
         self.assertEqual(expected, str(obj))
 
 class TestReceipt(TestCase):
