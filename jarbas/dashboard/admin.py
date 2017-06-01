@@ -1,3 +1,5 @@
+import re
+
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.admin import SimpleListFilter
@@ -105,9 +107,6 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
         return obj.cnpj_cpf
 
-    def get_urls(self):
-        urls = filter(dashboard.valid_url, super().get_urls())
-        return list(urls)
     def supplier_info(self, obj):
         return '{}<br>{}'.format(obj.supplier, self._format_document(obj))
 
@@ -156,6 +155,17 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    @staticmethod
+    def rename_change_url(url):
+        if 'change' in url.regex.pattern:
+            new_re = url.regex.pattern.replace('change', 'details')
+            url.regex = re.compile(new_re, re.UNICODE)
+        return url
+
+    def get_urls(self):
+        urls = filter(dashboard.valid_url, super().get_urls())
+        return list(map(self.rename_change_url, urls))
 
 
 dashboard.register(Reimbursement, ReimbursementModelAdmin)
