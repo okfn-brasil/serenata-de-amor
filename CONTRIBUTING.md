@@ -197,6 +197,7 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/YYYY-MM-DD-deputies-advisors.xz` contains data from advisors of each deputy in the current term along with the deputy number and deputy name.
 1. `data/YYYY-MM-DD-sex-place-distances` contains data from the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (including distance in meters) — this dataset is just a sample (check [this notebook](develop/2017-04-21-cuducos-explore-sex-places-dataset.ipynb) for details).
 1. `data/YYYY-MM-DD-tse-candidates.xz` contains information about politicians candidacy over the last years. Can be used to extract a list of all politicians in Brazil.
+1. `data/YYYY-MM-DD-brazilian-cities.csv` contains information about all Brazilian cities (e.g. city code, state and name).
 
 ## Four moments
 
