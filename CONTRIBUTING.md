@@ -178,6 +178,10 @@ fetch_latest_backup('data/')
 ##### Purchase suppliers
 1. `src/fetch_purchase_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchase-suppliers.xz`.
 
+#### Brazilian cities
+1. `src/grequests_transparency_portal_cities.py` generates a dataset containing all available
+links for transparency portal from each Brazilian city that already have them. The output file can be found at `data/` and is named as follows: `YYYY-MM-DD-cities-with-tp-url.xz`.
+
 
 ### Datasets (`data/`)
 
