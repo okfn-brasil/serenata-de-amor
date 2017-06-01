@@ -43,12 +43,14 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'party',
         'state',
         'supplier',
+        'subquota_description',
     )
     list_filter = (
         SuspiciousListFilter,
         'available_in_latest_dataset',
-        'year',
         'state',
+        'year',
+        'subquota_description',
     )
     readonly_fields = tuple(f.name for f in Reimbursement._meta.fields)
     has_permission = dashboard.has_permission
