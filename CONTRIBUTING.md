@@ -181,6 +181,10 @@ fetch_latest_backup('data/')
 ##### Congresspeople details
 1. `src/fetch_congressperson_details.py` collects personal details (civil name, birth date and gender) from congresspeople. The file is named as follows: `YYYY-MM-DD-congressperson-details.xz`.
 
+#### Brazilian cities
+1. `src/grequests_transparency_portal_cities.py` generates a dataset containing all available
+links for transparency portal from each Brazilian city that already have them. The output file can be found at `data/` and is named as follows: `YYYY-MM-DD-cities-with-tp-url.xz`.
+
 ### Datasets (`data/`)
 
 Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with the [toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
@@ -196,6 +200,8 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/YYYY-MM-DD-sex-place-distances` contains data from the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (including distance in meters) — this dataset is just a sample (check [this notebook](develop/2017-04-21-cuducos-explore-sex-places-dataset.ipynb) for details).
 1. `data/YYYY-MM-DD-tse-candidates.xz` contains information about politicians candidacy over the last years. Can be used to extract a list of all politicians in Brazil.
 1. `data/YYYY-MM-DD-congressperson-details.xz` contains the birth date, gender and civil name of congresspeople.
+1. `data/YYYY-MM-DD-brazilian-cities.csv` contains information about all Brazilian cities (e.g. city code, state and name).
+
 
 ## Four moments
 
