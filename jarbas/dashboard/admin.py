@@ -99,13 +99,14 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     readonly_fields = tuple(f.name for f in Reimbursement._meta.fields)
 
     def _format_document(self, obj):
-        if len(obj.cnpj_cpf) == 14:
-            return format_cnpj(obj.cnpj_cpf)
+        if obj.cnpj_cpf:
+            if len(obj.cnpj_cpf) == 14:
+                return format_cnpj(obj.cnpj_cpf)
 
-        if len(obj.cnpj_cpf) == 11:
-            return format_cpf(obj.cnpj_cpf)
+            if len(obj.cnpj_cpf) == 11:
+                return format_cpf(obj.cnpj_cpf)
 
-        return obj.cnpj_cpf
+            return obj.cnpj_cpf
 
     def supplier_info(self, obj):
         return '{}<br>{}'.format(obj.supplier, self._format_document(obj))
@@ -130,7 +131,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     suspicious.boolean = True
 
     def value(self, obj):
-        return 'R$ {:.2f}'.format(obj.total_net_value)#replace('.', ',')
+        return 'R$ {:.2f}'.format(obj.total_net_value).replace('.', ',')
 
     value.short_description = 'valor'
 
