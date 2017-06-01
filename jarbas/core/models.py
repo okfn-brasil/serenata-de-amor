@@ -83,7 +83,7 @@ class Reimbursement(models.Model):
     objects = models.Manager.from_queryset(ReimbursementQuerySet)()
 
     class Meta:
-        ordering = ['-issue_date']
+        ordering = ('-year', '-issue_date')
         verbose_name = 'reimbursement'
         verbose_name_plural = 'reimbursements'
 
