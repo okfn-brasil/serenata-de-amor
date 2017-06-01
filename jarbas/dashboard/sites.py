@@ -31,7 +31,6 @@ class DashboardSite(AdminSite):
         forbidden = (
             'auth',
             'login',
-            'logout',
             'password',
             'add',
             'delete',
