@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'jarbas.core.app.CoreConfig',
     'jarbas.api',
     'jarbas.frontend',
-    'jarbas.dashboard.app.DashboardConfig',
+    'jarbas.dashboard',
     'django.contrib.admin',
 ]
 

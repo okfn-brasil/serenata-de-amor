@@ -74,6 +74,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'suspicious',
         'still_available',
     )
+
     search_fields = (
         'applicant_id',
         'cnpj_cpf',
@@ -84,6 +85,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'supplier',
         'subquota_description',
     )
+
     list_filter = (
         SuspiciousListFilter,
         'available_in_latest_dataset',
@@ -91,8 +93,8 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'year',
         SubuotaListfilter,
     )
+
     readonly_fields = tuple(f.name for f in Reimbursement._meta.fields)
-    has_permission = dashboard.has_permission
 
     def has_add_permission(self, request):
         return False
