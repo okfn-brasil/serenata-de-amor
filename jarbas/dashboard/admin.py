@@ -1,3 +1,5 @@
+from brazilnum.cnpj import format_cnpj
+from brazilnum.cpf import format_cpf
 from django.contrib.admin import SimpleListFilter
 from simple_history.admin import SimpleHistoryAdmin
 
@@ -24,16 +26,15 @@ class SuspiciousListFilter(SimpleListFilter):
 class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     list_display = (
-        'document_id',
+        'short_document_id',
         'jarbas',
         'congressperson_name',
         'year',
         'subquota_description',
-        'supplier',
-        'cnpj_cpf',
         'is_suspicious',
-        'total_net_value',
-        'available_in_latest_dataset',
+        'supplier_info',
+        'value',
+        'still_available',
     )
     search_fields = (
         'applicant_id',
@@ -57,18 +58,29 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     def has_add_permission(self, request):
         return False
+    def _format_document(self, obj):
+        if len(obj.cnpj_cpf) == 14:
+            return format_cnpj(obj.cnpj_cpf)
 
     def has_change_permission(self, request, obj=None):
         if request.method != 'GET':
             return False
         return True
+        if len(obj.cnpj_cpf) == 11:
+            return format_cpf(obj.cnpj_cpf)
 
     def has_delete_permission(self, request, obj=None):
         return False
+        return obj.cnpj_cpf
 
     def get_urls(self):
         urls = filter(dashboard.valid_url, super().get_urls())
         return list(urls)
+    def supplier_info(self, obj):
+        return '{}<br>{}'.format(obj.supplier, self._format_document(obj))
+
+    supplier_info.short_description = 'Fornecedor'
+    supplier_info.allow_tags = True
 
     def jarbas(self, obj):
         base_url = 'https://jarbas.serenatadeamor.org/#/documentId/{}/'
@@ -85,6 +97,22 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     is_suspicious.short_description = 'Suspicious'
     is_suspicious.boolean = True
+
+    def value(self, obj):
+        return 'R$ {:.2f}'.format(obj.total_net_value)#replace('.', ',')
+
+    value.short_description = 'valor'
+
+    def still_available(self, obj):
+        return obj.available_in_latest_dataset
+
+    still_available.short_description = 'disponível na Câmara'
+    still_available.boolean = True
+
+    def short_document_id(self, obj):
+        return obj.document_id
+
+    short_document_id.short_description = 'Reembolso'
 
 
 dashboard.register(Reimbursement, ReimbursementModelAdmin)

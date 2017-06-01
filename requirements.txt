@@ -1,4 +1,5 @@
 Django==1.11.1
+brazilnum==0.8.8
 dj-database-url==0.4.2
 django-assets==0.12
 django-bulk-update==2.1.0

@@ -3,3 +3,7 @@
 #content-main .submit-row {
   display: none
 }
+
+td.field-value {
+  white-space: nowrap
+}
