@@ -1,6 +1,8 @@
-#recent-actions-module,
 #content-main .changelink,
-#content-main .submit-row {
+#content-main .submit-row,
+#content-main p,
+#historicalreimbursement_form p,
+#recent-actions-module {
   display: none
 }
 
