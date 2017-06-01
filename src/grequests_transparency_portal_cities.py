@@ -1,6 +1,7 @@
 import os
 import unicodedata
 from argparse import ArgumentParser
+from datetime import date
 
 import grequests
 import numpy as np
@@ -47,6 +48,12 @@ def check_transparency_portal_existance(dataset, portal_urls):
         dataset.loc[dataset['status_code'] == 0, 'transparency_portal_url'] = 'None'
 
 
+def save_csv(dataset, data_path):
+    dataset_name = '{}-{}'.format(date.today().strftime('%Y-%m-%d'), 'cities-with-tp-url.xz')
+    dataset_path = os.path.join(data_path, dataset_name)
+    dataset.to_csv(dataset_path, compression='xz', encoding='utf-8', index=False)
+
+
 def main(data_path, cities_file):
     cities = pd.read_csv(os.path.join(data_path, cities_file))
 
@@ -57,9 +64,7 @@ def main(data_path, cities_file):
     check_transparency_portal_existance(cities, portal_urls)
 
     cities = cities.drop('normalized_name', axis=1)
-
-    cities.to_csv(os.path.join(data_path, 'cities-with-tp-url.xz'),
-                     compression='xz', index=False)
+    save_csv(cities, data_path)
 
 
 if __name__ == '__main__':
@@ -75,11 +80,10 @@ if __name__ == '__main__':
         help=('A CSV file containing all Brazilian cities per state '
               '(default: 2017-05-22-brazilian-cities.csv)')
     )
-    tmp_path = os.path.join(os.sep,'tmp', 'serenata-data')
     parser.add_argument(
-        '--data-dir', '-d', default=tmp_path,
+        '--data-dir', '-d', default='data/',
         help=('Data directory where Brazilian cities .csv file can be found '
-              '(default: {})'.format(tmp_path))
+              '(default: data/)')
     )
     args = parser.parse_args()
 
