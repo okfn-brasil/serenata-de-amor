@@ -1,6 +1,11 @@
 {% extends "admin/base.html" %}
+{% load static %}
 
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}<link rel="stylesheet" type="text/css" href="{% static "dashboard.css" %}" />{% endblock %}
+
+{% block blockbots %}<meta name="robots" content="INDEX, FOLLOW" />{% endblock %}
 
 {% block branding %}
 <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
