@@ -1,7 +1,8 @@
 FROM python:3.5
 COPY requirements.txt /requirements.txt
+COPY requirements-dev.txt /requirements-dev.txt
 RUN python -m pip install -U pip
-RUN python -m pip install -r requirements.txt
+RUN python -m pip install -r requirements-dev.txt
 RUN apt-get update && apt-get install -y postgresql postgresql-contrib
 COPY manage.py /code/manage.py
 COPY jarbas /code/jarbas
