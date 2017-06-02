@@ -34,7 +34,6 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -44,9 +43,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'simple_history',
     'rest_framework',
-    'jarbas.core',
+    'jarbas.core.app.CoreConfig',
     'jarbas.api',
     'jarbas.frontend',
+    'jarbas.dashboard',
+    'django.contrib.admin',
 ]
 
 
@@ -116,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt_BR'
 
 TIME_ZONE = 'America/Sao_Paulo'
 

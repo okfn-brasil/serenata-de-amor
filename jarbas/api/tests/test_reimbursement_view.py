@@ -36,12 +36,18 @@ class TestListApi(TestCase):
         self.assertEqual(3, self._count_results(self.url))
 
     def test_ordering(self):
+        """
+        Ordering depends on year and issue_date, but by using mixer we don't
+        know if year matches the issue date fields, so we cleanup first.
+        """
+        Reimbursement.objects.all().delete()
+        get_reimbursement(quantity=3, year=1970)
         resp = self.client.get(self.url)
         content = loads(resp.content.decode('utf-8'))
         first = content['results'][0]
         last = content['results'][-1]
         self.assertEqual(3, len(content['results']))
-        self.assertTrue(first['issue_date'] > last['issue_date'])
+        self.assertTrue(first['issue_date'] >= last['issue_date'])
 
     def test_content_with_cnpj_cpf_filter(self):
         search_data = (
