@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware'
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'jarbas.urls'
@@ -175,3 +175,11 @@ CACHES = {
         'TIMEOUT': 60 * 60 * 6
     }
 }
+
+# Django Debug Toolbar
+
+if DEBUG:
+    SKIP_TEMPLATE_PREFIXES = tuple()
+    INTERNAL_IPS = ('127.0.0.1',)
+    INSTALLED_APPS = INSTALLED_APPS + ['debug_toolbar']
+    MIDDLEWARE = MIDDLEWARE + ['debug_toolbar.middleware.DebugToolbarMiddleware']
