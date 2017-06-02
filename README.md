@@ -186,7 +186,7 @@ Jarbas requires [Python 3.5](http://python.org), [Yarn](https://yarnpkg.com), an
 
 ```console
 $ yarn install
-$ python -m pip install -r requirements.txt
+$ python -m pip install -r requirements-dev.txt
 ```
 
 ##### Python's `lzma` module
