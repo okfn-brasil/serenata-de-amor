@@ -3,12 +3,26 @@ import re
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.admin import SimpleListFilter
+from django.forms.widgets import Widget
 from simple_history.admin import SimpleHistoryAdmin
 
 from jarbas.core.models import Reimbursement
 from jarbas.dashboard.sites import dashboard
 
 
+ALL_FIELDS = sorted(Reimbursement._meta.fields, key=lambda f: f.verbose_name)
+CUSTOM_WIDGETS = ('receipt_url', 'subquota_description', 'suspicions')
+READONLY_FIELDS = (f.name for f in ALL_FIELDS if f.name not in CUSTOM_WIDGETS)
+
+
+class ReceiptUrlWidget(Widget):
+
+    def render(self, name, value, attrs=None, renderer=None):
+        if not value:
+            return ''
+
+        url = '<div class="readonly"><a href="{}" target="_blank">{}</a></div>'
+        return url.format(value, value)
 class SuspiciousListFilter(SimpleListFilter):
 
     title = 'reembolso suspeito'
@@ -96,7 +110,8 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         SubuotaListfilter,
     )
 
-    readonly_fields = tuple(f.name for f in Reimbursement._meta.fields)
+    fields = tuple(f.name for f in ALL_FIELDS)
+    readonly_fields = tuple(READONLY_FIELDS)
 
     def _format_document(self, obj):
         if obj.cnpj_cpf:
@@ -167,6 +182,14 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     def get_urls(self):
         urls = filter(dashboard.valid_url, super().get_urls())
         return list(map(self.rename_change_url, urls))
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name in CUSTOM_WIDGETS:
+            widgets = dict(
+                receipt_url=ReceiptUrlWidget,
+            )
+            kwargs['widget'] = widgets.get(db_field.name)
+        return super().formfield_for_dbfield(db_field, **kwargs)
 
 
 dashboard.register(Reimbursement, ReimbursementModelAdmin)
