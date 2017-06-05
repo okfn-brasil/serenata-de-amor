@@ -86,6 +86,8 @@ class Reimbursement(models.Model):
         ordering = ('-year', '-issue_date')
         verbose_name = 'reembolso'
         verbose_name_plural = 'reembolsos'
+        index_together = [["year", "issue_date","id"]]
+
 
     def get_receipt_url(self, force=False, bulk=False):
         if self.receipt_url:
