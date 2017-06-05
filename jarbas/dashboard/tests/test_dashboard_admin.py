@@ -36,13 +36,17 @@ class TestDashboardSite(TestCase):
         permissions = map(self.ma.has_delete_permission, self.requests)
         self.assertNotIn(True, tuple(permissions))
 
-    def test_format_document(self):
-        obj1 = ReimbursementMock('12345678901234')
-        obj2 = ReimbursementMock('12345678901')
-        obj3 = ReimbursementMock('2345678')
-        self.assertEqual('12.345.678/9012-34', self.ma._format_document(obj1))
-        self.assertEqual('123.456.789-01', self.ma._format_document(obj2))
-        self.assertEqual('2345678', self.ma._format_document(obj3))
+    def test_format_document_with_cnpj(self):
+        obj = ReimbursementMock('12345678901234')
+        self.assertEqual('12.345.678/9012-34', self.ma._format_document(obj))
+
+    def test_format_document_with_cpf(self):
+        obj = ReimbursementMock('12345678901')
+        self.assertEqual('123.456.789-01', self.ma._format_document(obj))
+
+    def test_format_document_with_unknown(self):
+        obj = ReimbursementMock('2345678')
+        self.assertEqual('2345678', self.ma._format_document(obj))
 
 
 class TestSubuotaListfilter(TestCase):
