@@ -282,6 +282,12 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         urls = filter(dashboard.valid_url, super().get_urls())
         return list(map(self.rename_change_url, urls))
 
+    def get_object(self, request, object_id, from_field=None):
+        obj = super().get_object(request, object_id, from_field)
+        if obj and not obj.receipt_fetched:
+            obj.get_receipt_url()
+        return obj
+
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name in CUSTOM_WIDGETS:
             widgets = dict(
