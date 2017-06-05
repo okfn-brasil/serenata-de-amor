@@ -4,7 +4,13 @@ from unittest.mock import MagicMock
 from django.test import TestCase
 
 from jarbas.core.models import Reimbursement
-from jarbas.dashboard.admin import ReimbursementModelAdmin, SubuotaListfilter
+from jarbas.dashboard.admin import (
+    ReceiptUrlWidget,
+    ReimbursementModelAdmin,
+    SubquotaWidget,
+    SubuotaListfilter,
+    SuspiciousWidget,
+)
 
 
 Request = namedtuple('Request', ('method',))
@@ -54,3 +60,52 @@ class TestSubuotaListfilter(TestCase):
         self.list_filter.value.return_value = 42
         SubuotaListfilter.queryset(self.list_filter, MagicMock(), self.qs)
         self.qs.filter.assert_called_once_with(subquota_id=42)
+
+
+class TestCustomWidgets(TestCase):
+
+    def test_subquota_widget(self):
+        widget = SubquotaWidget()
+        rendered = widget.render('Name', 'Flight ticket issue')
+        self.assertIn('Emissão bilhete aéreo', rendered)
+
+    def test_suspicious_widget_with_one_suspicion(self):
+        widget = SuspiciousWidget()
+        json_value = '{"invalid_cnpj_cpf": true}'
+        rendered = widget.render('Name', json_value)
+        self.assertIn('CPF ou CNPJ inválidos', rendered)
+        self.assertNotIn('<br>', rendered)
+
+    def test_suspicious_widget_with_two_suspicions(self):
+        widget = SuspiciousWidget()
+        json_value = '{"invalid_cnpj_cpf": true, "election_expenses": true}'
+        rendered = widget.render('Name', json_value)
+        self.assertIn('CPF ou CNPJ inválidos', rendered)
+        self.assertIn('<br>', rendered)
+        self.assertIn('Gasto com campanha eleitoral', rendered)
+
+    def test_suspicious_widget_with_new_suspicion(self):
+        widget = SuspiciousWidget()
+        json_value = '{"whatever": true, "invalid_cnpj_cpf": true}'
+        rendered = widget.render('Name', json_value)
+        self.assertIn('CPF ou CNPJ inválidos', rendered)
+        self.assertIn('<br>', rendered)
+        self.assertIn('whatever', rendered)
+
+    def test_suspicious_widget_without_suspicion(self):
+        widget = SuspiciousWidget()
+        json_value = 'null'
+        rendered = widget.render('Name', json_value)
+        self.assertEqual('', rendered)
+
+    def test_receipt_url_widget(self):
+        widget = ReceiptUrlWidget()
+        url = 'https://jarbas.serenatadeamor.org'
+        rendered = widget.render('Name', url)
+        self.assertIn('href="{}"'.format(url), rendered)
+        self.assertIn('>{}</a>'.format(url), rendered)
+
+    def test_receipt_url_widget_without_url(self):
+        widget = ReceiptUrlWidget()
+        rendered = widget.render('Name', '')
+        self.assertEqual('', rendered)
