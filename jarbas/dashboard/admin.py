@@ -1,3 +1,4 @@
+import json
 import re
 
 from brazilnum.cnpj import format_cnpj
@@ -55,6 +56,8 @@ class SuspiciousWidget(Widget):
         values = (self.MAP.get(k, k) for k in value_as_dict.keys())
         suspicions = '<br>'.join(values)
         return '<div class="readonly">{}</div>'.format(suspicions)
+
+
 class SuspiciousListFilter(SimpleListFilter):
 
     title = 'reembolso suspeito'
@@ -71,37 +74,101 @@ class SuspiciousListFilter(SimpleListFilter):
         return queryset.suspicions() if self.value() == 'yes' else queryset
 
 
-class SubuotaListfilter(SimpleListFilter):
+class Subquotas:
 
-    title = 'subquota'
-    parameter_name = 'subquota_id'
-    options = (
-        (1, 'Manutenção de escritório de apoio à atividade parlamentar'),
-        (2, 'Locomoção, alimentação e  hospedagem'),
-        (3, 'Combustíveis e lubrificantes'),
-        (4, 'Consultorias, pesquisas e trabalhos técnicos'),
-        (5, 'Divulgação da atividade parlamentar'),
-        (6, 'Aquisição de material de escritório'),
-        (7, 'Aquisição ou loc. de software serv. postais ass.'),
-        (8, 'Serviço de segurança prestado por empresa especializada'),
-        (9, 'Passagens aéreas'),
-        (10, 'Telefonia'),
-        (11, 'Serviços postais'),
-        (12, 'Assinatura de publicações'),
-        (13, 'Fornecimento de alimentação do parlamentar'),
-        (14, 'Hospedagem ,exceto do parlamentar no distrito federal'),
-        (15, 'Locação de veículos automotores ou fretamento de embarcações'),
-        (119, 'Locação ou fretamento de aeronaves'),
-        (120, 'Locação ou fretamento de veículos automotores'),
-        (121, 'Locação ou fretamento de embarcações'),
-        (122, 'Serviço de táxi, pedágio e estacionamento'),
-        (123, 'Passagens terrestres, marítimas ou fluviais'),
-        (137, 'Participação em curso, palestra ou evento similar'),
-        (999, 'Emissão Bilhete Aéreo')
+    EN_US = (
+        'Maintenance of office supporting parliamentary activity',
+        'Locomotion, meal and lodging',
+        'Fuels and lubricants',
+        'Consultancy, research and technical work',
+        'Publicity of parliamentary activity',
+        'Purchase of office supplies',
+        'Software purchase or renting; Postal services; Subscriptions',
+        'Security service provided by specialized company',
+        'Flight tickets',
+        'Telecommunication',
+        'Postal services',
+        'Publication subscriptions',
+        'Congressperson meal',
+        'Lodging, except for congressperson from Distrito Federal',
+        'Automotive vehicle renting or watercraft charter',
+        'Aircraft renting or charter of aircraft',
+        'Automotive vehicle renting or charter',
+        'Watercraft renting or charter',
+        'Taxi, toll and parking',
+        'Terrestrial, maritime and fluvial tickets',
+        'Participation in course, talk or similar event',
+        'Flight ticket issue'
     )
 
+    PT_BR = (
+        'Manutenção de escritório de apoio à atividade parlamentar',
+        'Locomoção, alimentação e  hospedagem',
+        'Combustíveis e lubrificantes',
+        'Consultorias, pesquisas e trabalhos técnicos',
+        'Divulgação da atividade parlamentar',
+        'Aquisição de material de escritório',
+        'Aquisição ou loc. de software serv. postais ass.',
+        'Serviço de segurança prestado por empresa especializada',
+        'Passagens aéreas',
+        'Telefonia',
+        'Serviços postais',
+        'Assinatura de publicações',
+        'Fornecimento de alimentação do parlamentar',
+        'Hospedagem ,exceto do parlamentar no distrito federal',
+        'Locação de veículos automotores ou fretamento de embarcações',
+        'Locação ou fretamento de aeronaves',
+        'Locação ou fretamento de veículos automotores',
+        'Locação ou fretamento de embarcações',
+        'Serviço de táxi, pedágio e estacionamento',
+        'Passagens terrestres, marítimas ou fluviais',
+        'Participação em curso, palestra ou evento similar',
+        'Emissão bilhete aéreo'
+    )
+
+    NUMBERS = (
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        119,
+        120,
+        121,
+        122,
+        123,
+        137,
+        999
+    )
+
+    OPTIONS = zip(NUMBERS, PT_BR)
+    TRANSLATIONS = dict(zip(EN_US, PT_BR))
+
+
+class SubquotaWidget(Widget, Subquotas):
+
+    def render(self, name, value, attrs=None, renderer=None):
+        value = self.TRANSLATIONS.get(value) or value
+        return '<div class="readonly">{}</div>'.format(value)
+
+
+class SubuotaListfilter(SimpleListFilter, Subquotas):
+
+    title = 'subcota'
+    parameter_name = 'subquota_id'
+
     def lookups(self, request, model_admin):
-        return self.options
+        return self.OPTIONS
 
     def queryset(self, request, queryset):
         if not self.value():
@@ -218,6 +285,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name in CUSTOM_WIDGETS:
             widgets = dict(
+                subquota_description=SubquotaWidget,
                 receipt_url=ReceiptUrlWidget,
                 suspicions=SuspiciousWidget
             )
