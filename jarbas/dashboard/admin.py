@@ -74,7 +74,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'supplier_info',
         'value',
         'suspicious',
-        'still_available',
+        # 'still_available',
     )
 
     search_fields = (
@@ -90,7 +90,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     list_filter = (
         SuspiciousListFilter,
-        'available_in_latest_dataset',
+        # 'available_in_latest_dataset',
         'state',
         'year',
         SubuotaListfilter,
