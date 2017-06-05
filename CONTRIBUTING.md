@@ -72,7 +72,7 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
-1. Start the environment (it might take a while, the base image has 5.8GB and we also pull in lots of dependencies): `$ docker-compose up -d`.
+1. Start the environment (it might take a while, the base image has 6.88GB and we also pull in lots of dependencies): `$ docker-compose up -d`.
 1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
 1. Run the script to download data and other useful files: `$ docker-compose run --rm jupyter python src/fetch_datasets.py`
 1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm jupyter jupyter notebook`
@@ -178,6 +178,12 @@ fetch_latest_backup('data/')
 ##### Purchase suppliers
 1. `src/fetch_purchase_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchase-suppliers.xz`.
 
+##### Congresspeople details
+1. `src/fetch_congressperson_details.py` collects personal details (civil name, birth date and gender) from congresspeople. The file is named as follows: `YYYY-MM-DD-congressperson-details.xz`.
+
+#### Brazilian cities
+1. `src/grequests_transparency_portal_cities.py` generates a dataset containing all available
+links for transparency portal from each Brazilian city that already have them. The output file can be found at `data/` and is named as follows: `YYYY-MM-DD-cities-with-tp-url.xz`.
 
 ### Datasets (`data/`)
 
@@ -193,6 +199,9 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/YYYY-MM-DD-deputies-advisors.xz` contains data from advisors of each deputy in the current term along with the deputy number and deputy name.
 1. `data/YYYY-MM-DD-sex-place-distances` contains data from the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (including distance in meters) — this dataset is just a sample (check [this notebook](develop/2017-04-21-cuducos-explore-sex-places-dataset.ipynb) for details).
 1. `data/YYYY-MM-DD-tse-candidates.xz` contains information about politicians candidacy over the last years. Can be used to extract a list of all politicians in Brazil.
+1. `data/YYYY-MM-DD-congressperson-details.xz` contains the birth date, gender and civil name of congresspeople.
+1. `data/YYYY-MM-DD-brazilian-cities.csv` contains information about all Brazilian cities (e.g. city code, state and name).
+
 
 ## Four moments
 
