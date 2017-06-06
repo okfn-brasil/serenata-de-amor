@@ -9,3 +9,9 @@
 td.field-value {
   white-space: nowrap
 }
+
+.required label,
+label.required {
+  color: #666;
+  font-weight: normal;
+}

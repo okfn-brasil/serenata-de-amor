@@ -1,12 +1,61 @@
+import json
 import re
 
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.admin import SimpleListFilter
+from django.forms.widgets import Widget
 from simple_history.admin import SimpleHistoryAdmin
 
 from jarbas.core.models import Reimbursement
 from jarbas.dashboard.sites import dashboard
+
+
+ALL_FIELDS = sorted(Reimbursement._meta.fields, key=lambda f: f.verbose_name)
+CUSTOM_WIDGETS = ('receipt_url', 'subquota_description', 'suspicions')
+READONLY_FIELDS = (f.name for f in ALL_FIELDS if f.name not in CUSTOM_WIDGETS)
+
+
+class ReceiptUrlWidget(Widget):
+
+    def render(self, name, value, attrs=None, renderer=None):
+        if not value:
+            return ''
+
+        url = '<div class="readonly"><a href="{}" target="_blank">{}</a></div>'
+        return url.format(value, value)
+
+
+class SuspiciousWidget(Widget):
+
+    SUSPICIONS = (
+        'meal_price_outlier',
+        'over_monthly_subquota_limit',
+        'suspicious_traveled_speed_day',
+        'invalid_cnpj_cpf',
+        'election_expenses',
+        'irregular_companies_classifier'
+    )
+
+    HUMAN_NAMES = (
+        'Preço de refeição muito incomum',
+        'Extrapolou limita da (sub)quota',
+        'Muitas despesas em diferentes cidades no mesmo dia',
+        'CPF ou CNPJ inválidos',
+        'Gasto com campanha eleitoral',
+        'CNPJ irregular'
+    )
+
+    MAP = dict(zip(SUSPICIONS, HUMAN_NAMES))
+
+    def render(self, name, value, attrs=None, renderer=None):
+        value_as_dict = json.loads(value)
+        if not value_as_dict:
+            return ''
+
+        values = (self.MAP.get(k, k) for k in value_as_dict.keys())
+        suspicions = '<br>'.join(values)
+        return '<div class="readonly">{}</div>'.format(suspicions)
 
 
 class SuspiciousListFilter(SimpleListFilter):
@@ -25,37 +74,101 @@ class SuspiciousListFilter(SimpleListFilter):
         return queryset.suspicions() if self.value() == 'yes' else queryset
 
 
-class SubuotaListfilter(SimpleListFilter):
+class Subquotas:
 
-    title = 'subquota'
-    parameter_name = 'subquota_id'
-    options = (
-        (1, 'Manutenção de escritório de apoio à atividade parlamentar'),
-        (2, 'Locomoção, alimentação e  hospedagem'),
-        (3, 'Combustíveis e lubrificantes'),
-        (4, 'Consultorias, pesquisas e trabalhos técnicos'),
-        (5, 'Divulgação da atividade parlamentar'),
-        (6, 'Aquisição de material de escritório'),
-        (7, 'Aquisição ou loc. de software serv. postais ass.'),
-        (8, 'Serviço de segurança prestado por empresa especializada'),
-        (9, 'Passagens aéreas'),
-        (10, 'Telefonia'),
-        (11, 'Serviços postais'),
-        (12, 'Assinatura de publicações'),
-        (13, 'Fornecimento de alimentação do parlamentar'),
-        (14, 'Hospedagem ,exceto do parlamentar no distrito federal'),
-        (15, 'Locação de veículos automotores ou fretamento de embarcações'),
-        (119, 'Locação ou fretamento de aeronaves'),
-        (120, 'Locação ou fretamento de veículos automotores'),
-        (121, 'Locação ou fretamento de embarcações'),
-        (122, 'Serviço de táxi, pedágio e estacionamento'),
-        (123, 'Passagens terrestres, marítimas ou fluviais'),
-        (137, 'Participação em curso, palestra ou evento similar'),
-        (999, 'Emissão Bilhete Aéreo')
+    EN_US = (
+        'Maintenance of office supporting parliamentary activity',
+        'Locomotion, meal and lodging',
+        'Fuels and lubricants',
+        'Consultancy, research and technical work',
+        'Publicity of parliamentary activity',
+        'Purchase of office supplies',
+        'Software purchase or renting; Postal services; Subscriptions',
+        'Security service provided by specialized company',
+        'Flight tickets',
+        'Telecommunication',
+        'Postal services',
+        'Publication subscriptions',
+        'Congressperson meal',
+        'Lodging, except for congressperson from Distrito Federal',
+        'Automotive vehicle renting or watercraft charter',
+        'Aircraft renting or charter of aircraft',
+        'Automotive vehicle renting or charter',
+        'Watercraft renting or charter',
+        'Taxi, toll and parking',
+        'Terrestrial, maritime and fluvial tickets',
+        'Participation in course, talk or similar event',
+        'Flight ticket issue'
     )
 
+    PT_BR = (
+        'Manutenção de escritório de apoio à atividade parlamentar',
+        'Locomoção, alimentação e  hospedagem',
+        'Combustíveis e lubrificantes',
+        'Consultorias, pesquisas e trabalhos técnicos',
+        'Divulgação da atividade parlamentar',
+        'Aquisição de material de escritório',
+        'Aquisição ou loc. de software serv. postais ass.',
+        'Serviço de segurança prestado por empresa especializada',
+        'Passagens aéreas',
+        'Telefonia',
+        'Serviços postais',
+        'Assinatura de publicações',
+        'Fornecimento de alimentação do parlamentar',
+        'Hospedagem ,exceto do parlamentar no distrito federal',
+        'Locação de veículos automotores ou fretamento de embarcações',
+        'Locação ou fretamento de aeronaves',
+        'Locação ou fretamento de veículos automotores',
+        'Locação ou fretamento de embarcações',
+        'Serviço de táxi, pedágio e estacionamento',
+        'Passagens terrestres, marítimas ou fluviais',
+        'Participação em curso, palestra ou evento similar',
+        'Emissão bilhete aéreo'
+    )
+
+    NUMBERS = (
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        119,
+        120,
+        121,
+        122,
+        123,
+        137,
+        999
+    )
+
+    OPTIONS = zip(NUMBERS, PT_BR)
+    TRANSLATIONS = dict(zip(EN_US, PT_BR))
+
+
+class SubquotaWidget(Widget, Subquotas):
+
+    def render(self, name, value, attrs=None, renderer=None):
+        value = self.TRANSLATIONS.get(value) or value
+        return '<div class="readonly">{}</div>'.format(value)
+
+
+class SubuotaListfilter(SimpleListFilter, Subquotas):
+
+    title = 'subcota'
+    parameter_name = 'subquota_id'
+
     def lookups(self, request, model_admin):
-        return self.options
+        return self.OPTIONS
 
     def queryset(self, request, queryset):
         if not self.value():
@@ -96,7 +209,8 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         SubuotaListfilter,
     )
 
-    readonly_fields = tuple(f.name for f in Reimbursement._meta.fields)
+    fields = tuple(f.name for f in ALL_FIELDS)
+    readonly_fields = tuple(READONLY_FIELDS)
 
     def _format_document(self, obj):
         if obj.cnpj_cpf:
@@ -167,6 +281,22 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     def get_urls(self):
         urls = filter(dashboard.valid_url, super().get_urls())
         return list(map(self.rename_change_url, urls))
+
+    def get_object(self, request, object_id, from_field=None):
+        obj = super().get_object(request, object_id, from_field)
+        if obj and not obj.receipt_fetched:
+            obj.get_receipt_url()
+        return obj
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name in CUSTOM_WIDGETS:
+            widgets = dict(
+                subquota_description=SubquotaWidget,
+                receipt_url=ReceiptUrlWidget,
+                suspicions=SuspiciousWidget
+            )
+            kwargs['widget'] = widgets.get(db_field.name)
+        return super().formfield_for_dbfield(db_field, **kwargs)
 
 
 dashboard.register(Reimbursement, ReimbursementModelAdmin)
