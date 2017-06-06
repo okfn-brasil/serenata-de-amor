@@ -36,15 +36,15 @@ class Reimbursement(models.Model):
     applicant_id = models.IntegerField('Identificador do Solicitante', db_index=True)
 
     total_reimbursement_value = models.DecimalField('Valor da Restituição', max_digits=10, decimal_places=3, blank=True, null=True)
-    total_net_value = models.DecimalField('Valor Líquido', max_digits=10, decimal_places=3, db_index=True)
+    total_net_value = models.DecimalField('Valor Líquido', max_digits=10, decimal_places=3)
     reimbursement_numbers = models.CharField('Números dos Ressarcimentos', max_length=140)
     net_values = models.CharField('Valores Líquidos dos Ressarcimentos', max_length=140)
 
-    congressperson_id = models.IntegerField('Identificador Único do Parlamentar', db_index=True, blank=True, null=True)
+    congressperson_id = models.IntegerField('Identificador Único do Parlamentar', blank=True, null=True)
     congressperson_name = models.CharField('Nome do Parlamentar', max_length=140, db_index=True, blank=True, null=True)
     congressperson_document = models.IntegerField('Número da  Carteira Parlamentar', blank=True, null=True)
 
-    party = models.CharField('Partido', max_length=7, db_index=True, blank=True, null=True)
+    party = models.CharField('Partido', max_length=7, blank=True, null=True)
     state = models.CharField('UF', max_length=2, db_index=True, blank=True, null=True)
 
     term_id = models.IntegerField('Código da Legislatura', blank=True, null=True)
@@ -62,7 +62,7 @@ class Reimbursement(models.Model):
     document_number = models.CharField('Número do Documento', max_length=140, blank=True, null=True)
     document_value = models.DecimalField('Valor do Documento', max_digits=10, decimal_places=3)
 
-    issue_date = models.DateField('Data de Emissão')
+    issue_date = models.DateField('Data de Emissão', db_index=True)
     month = models.IntegerField('Mês', db_index=True)
     remark_value = models.DecimalField('Valor da Glosa', max_digits=10, decimal_places=3, blank=True, null=True)
     installment = models.IntegerField('Número da Parcela', blank=True, null=True)
@@ -86,6 +86,8 @@ class Reimbursement(models.Model):
         ordering = ('-year', '-issue_date')
         verbose_name = 'reembolso'
         verbose_name_plural = 'reembolsos'
+        index_together = [["year", "issue_date","id"]]
+
 
     def get_receipt_url(self, force=False, bulk=False):
         if self.receipt_url:

@@ -1,3 +1,4 @@
 -r requirements.txt
+django-debug-toolbar==1.6
 django-test-without-migrations==0.6
 mixer==5.6.6
