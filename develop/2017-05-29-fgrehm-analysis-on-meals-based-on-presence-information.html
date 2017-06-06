@@ -11846,45 +11846,29 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># fetch(&quot;2017-02-15-receipts-texts.xz&quot;, &quot;../data&quot;)</span>
 <span class="c1"># fetch(&quot;2017-03-15-reimbursements.xz&quot;, &quot;../data&quot;)</span>
-<span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;2017-05-21-companies-no-geolocation.xz&quot;</span><span class="p">,</span> <span class="s2">&quot;../data&quot;</span><span class="p">)</span>
-
-<span class="c1"># TODO: Need to make sure the datasets have been uploaded to the S3 bucket</span>
-<span class="c1"># fetch(&quot;2017-04-19-official-missions.xz&quot;, &quot;../data&quot;)</span>
+<span class="c1"># fetch(&quot;2017-05-21-companies-no-geolocation.xz&quot;, &quot;../data&quot;)</span>
 <span class="c1"># fetch(&quot;2017-05-29-session-start-times.xz&quot;, &quot;../data&quot;)</span>
 <span class="c1"># fetch(&quot;2017-05-29-presences.xz&quot;, &quot;../data&quot;)</span>
 <span class="c1"># fetch(&quot;2017-05-29-deputies.xz&quot;, &quot;../data&quot;)</span>
 <span class="c1"># fetch(&quot;2017-05-29-speeches.xz&quot;, &quot;../data&quot;)</span>
+
+<span class="c1"># TODO: This need to be uploaded to S3</span>
+<span class="c1"># fetch(&quot;2017-06-05-official-missions.xz&quot;, &quot;../data&quot;)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Downloading 2017-05-21-companies-no-geolocation.xz: 100%|██████████| 7.49M/7.49M [00:02&lt;00:00, 3.60Mb/s]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">reimbursements</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-03-15-reimbursements.xz&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -11925,11 +11909,11 @@ Meals in this term: 61757
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">companies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-05-21-companies-no-geolocation.xz&#39;</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">companies</span><span class="p">[</span><span class="s1">&#39;cnpj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">companies</span><span class="p">[</span><span class="s1">&#39;cnpj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[\.\/\-]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">companies</span><span class="p">[</span><span class="s1">&#39;cnpj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">companies</span><span class="p">[</span><span class="s1">&#39;cnpj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\D&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
 <span class="c1"># Reduce dataset to meals with matching company and state info</span>
 <span class="n">meals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
@@ -11941,7 +11925,7 @@ Meals in this term: 61757
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meals with matching companies:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">meals</span><span class="p">))</span>
 
-<span class="n">meals</span> <span class="o">=</span> <span class="n">meals</span><span class="p">[</span><span class="o">~</span><span class="n">meals</span><span class="o">.</span><span class="n">state_company</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]</span>
+<span class="n">meals</span> <span class="o">=</span> <span class="n">meals</span><span class="p">[</span><span class="n">meals</span><span class="o">.</span><span class="n">state_company</span><span class="o">.</span><span class="n">notnull</span><span class="p">()]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meals with known company state:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">meals</span><span class="p">))</span>
 <span class="n">meals</span> <span class="o">=</span> <span class="n">meals</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
     <span class="s2">&quot;state_congressperson&quot;</span><span class="p">:</span> <span class="s2">&quot;congressperson_state&quot;</span><span class="p">,</span>
@@ -11975,14 +11959,14 @@ Meals with known company state: 60620
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">texts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-02-15-receipts-texts.xz&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">texts</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">texts</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 
-<span class="n">meals_with_ts</span> <span class="o">=</span> <span class="n">texts</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">meals</span><span class="p">[[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]],</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;document_id&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meals with OCR:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">meals_with_ts</span><span class="p">))</span>
+<span class="n">meals_with_ocr</span> <span class="o">=</span> <span class="n">texts</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">meals</span><span class="p">[[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]],</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;document_id&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meals with OCR:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">meals_with_ocr</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -12008,20 +11992,20 @@ Meals with known company state: 60620
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_timestamps</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;[0-9][0-9]:[0-9][0-9]:[0-9][0-9]&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
-<span class="n">meals_with_ts</span><span class="p">[</span><span class="s1">&#39;timestamps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meals_with_ts</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">extract_timestamps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;[0-2][0-9]:[0-5][0-9]:[0-5][0-9]&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+<span class="n">meals_with_ocr</span><span class="p">[</span><span class="s1">&#39;timestamps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meals_with_ocr</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">extract_timestamps</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">parse_timestamps</span><span class="p">(</span><span class="n">ts</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
-<span class="n">meals_with_ts</span><span class="p">[</span><span class="s1">&#39;timestamps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meals_with_ts</span><span class="o">.</span><span class="n">timestamps</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">parse_timestamps</span><span class="p">,</span> <span class="n">ts</span><span class="p">)))</span>
-<span class="n">meals_with_ts</span> <span class="o">=</span> <span class="n">meals_with_ts</span><span class="p">[</span><span class="n">meals_with_ts</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">timestamps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">meals_with_ocr</span><span class="p">[</span><span class="s1">&#39;timestamps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meals_with_ocr</span><span class="o">.</span><span class="n">timestamps</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">parse_timestamps</span><span class="p">,</span> <span class="n">ts</span><span class="p">)))</span>
+<span class="n">meals_with_ts</span> <span class="o">=</span> <span class="n">meals_with_ocr</span><span class="p">[</span><span class="n">meals_with_ocr</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">timestamps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
 
 <span class="n">meals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
     <span class="n">left</span><span class="o">=</span><span class="n">meals</span><span class="p">,</span>
@@ -12029,7 +12013,7 @@ Meals with known company state: 60620
     <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
     <span class="n">on</span><span class="o">=</span><span class="s1">&#39;document_id&#39;</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meals with timestamps:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">meals</span><span class="p">[</span><span class="o">~</span><span class="n">meals</span><span class="o">.</span><span class="n">timestamps</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meals with timestamps:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">meals</span><span class="p">[</span><span class="n">meals</span><span class="o">.</span><span class="n">timestamps</span><span class="o">.</span><span class="n">notnull</span><span class="p">()]))</span>
 </pre></div>
 
 </div>
@@ -12044,7 +12028,7 @@ Meals with known company state: 60620
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Meals with timestamps: 31284
+<pre>Meals with timestamps: 31208
 </pre>
 </div>
 </div>
@@ -12055,7 +12039,57 @@ Meals with known company state: 60620
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_dates</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;\d</span><span class="si">{2}</span><span class="s1">/\d</span><span class="si">{2}</span><span class="s1">/\d{2,4}&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+<span class="n">meals_with_ocr</span><span class="p">[</span><span class="s1">&#39;receipt_dates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meals_with_ocr</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">extract_dates</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">parse_dates</span><span class="p">(</span><span class="n">ts</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%y&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+<span class="n">meals_with_ocr</span><span class="p">[</span><span class="s1">&#39;receipt_dates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meals_with_ocr</span><span class="o">.</span><span class="n">receipt_dates</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">parse_dates</span><span class="p">,</span> <span class="n">ts</span><span class="p">)))</span>
+<span class="n">meals_with_dts</span> <span class="o">=</span> <span class="n">meals_with_ocr</span><span class="p">[</span><span class="n">meals_with_ocr</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">receipt_dates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+
+<span class="n">meals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+    <span class="n">left</span><span class="o">=</span><span class="n">meals</span><span class="p">,</span>
+    <span class="n">right</span><span class="o">=</span><span class="n">meals_with_dts</span><span class="p">[[</span><span class="s1">&#39;document_id&#39;</span><span class="p">,</span> <span class="s1">&#39;receipt_dates&#39;</span><span class="p">]],</span>
+    <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+    <span class="n">on</span><span class="o">=</span><span class="s1">&#39;document_id&#39;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meals with dates:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">meals</span><span class="p">[</span><span class="n">meals</span><span class="o">.</span><span class="n">receipt_dates</span><span class="o">.</span><span class="n">notnull</span><span class="p">()]))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Meals with dates: 43610
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals</span> <span class="o">=</span> <span class="n">meals</span><span class="p">[[</span>
@@ -12071,7 +12105,8 @@ Meals with known company state: 60620
     <span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span>
     <span class="s1">&#39;company_name&#39;</span><span class="p">,</span>
     <span class="s1">&#39;company_state&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;timestamps&#39;</span>
+    <span class="s1">&#39;timestamps&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;receipt_dates&#39;</span>
 <span class="p">]]</span>
 </pre></div>
 
@@ -12096,7 +12131,7 @@ Meals with known company state: 60620
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">deputies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-04-19-deputies.xz&#39;</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -12109,7 +12144,7 @@ Meals with known company state: 60620
 
 <span class="n">presences</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-04-19-presences.xz&#39;</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">presences</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">presences</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span>
-<span class="n">presences</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">presences</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Presence records:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">presences</span><span class="p">))</span>
 
 <span class="n">presences</span> <span class="o">=</span> <span class="n">presences</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;presence == &quot;Present&quot;&#39;</span><span class="p">)</span>
@@ -12151,7 +12186,7 @@ Presence records with deputies matched: 179280
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">presences</span><span class="p">[</span><span class="s1">&#39;first_session_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">presences</span><span class="p">[</span><span class="s1">&#39;started_at&#39;</span><span class="p">]</span>
@@ -12190,7 +12225,7 @@ Presence records with deputies matched: 179280
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals_outside_df</span> <span class="o">=</span> <span class="n">meals</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;company_state != &quot;DF&quot;&#39;</span><span class="p">)</span>
@@ -12239,11 +12274,11 @@ Meals excluding expenses on hotels: 2784
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">meal</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">score_by_time</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span> <span class="o">+</span> <span class="n">score_by_ts</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">score_by_time</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span> <span class="o">+</span> <span class="n">score_by_ts</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span> <span class="o">-</span> <span class="n">penalty_by_date</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">score_by_time</span><span class="p">(</span><span class="n">meal</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">meal</span><span class="o">.</span><span class="n">total_sessions</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -12262,10 +12297,39 @@ Meals excluding expenses on hotels: 2784
         <span class="k">if</span> <span class="p">(</span><span class="n">meal</span><span class="o">.</span><span class="n">first_session_at</span><span class="o">.</span><span class="n">hour</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">ts</span><span class="o">.</span><span class="n">tm_hour</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">meal</span><span class="o">.</span><span class="n">last_session_at</span><span class="o">.</span><span class="n">hour</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">occurences</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">occurences</span> <span class="o">*</span> <span class="mi">10</span>
+
+<span class="k">def</span> <span class="nf">penalty_by_date</span><span class="p">(</span><span class="n">meal</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">meal</span><span class="o">.</span><span class="n">receipt_dates</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    
+    <span class="n">bad_occurences</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">meal</span><span class="o">.</span><span class="n">receipt_dates</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">dt</span> <span class="o">!=</span> <span class="n">meal</span><span class="o">.</span><span class="n">issue_date</span><span class="p">:</span>
+            <span class="n">bad_occurences</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">bad_occurences</span> <span class="o">*</span> <span class="mi">2</span>
+
+<span class="k">def</span> <span class="nf">period_in_df</span><span class="p">(</span><span class="n">meal</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?&#39;</span>
+        <span class="s1">&#39;data=</span><span class="si">{}</span><span class="s1">&amp;numMatriculaParlamentar=</span><span class="si">{}</span><span class="s1">&amp;siglaPartido=&amp;siglaUF=&#39;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">meal</span><span class="o">.</span><span class="n">issue_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">),</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">meal</span><span class="o">.</span><span class="n">congressperson_document</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;&lt;a href=&quot;</span><span class="si">{}</span><span class="s1">&quot; target=&quot;_blank&quot;&gt;</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">&lt;/a&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">url</span><span class="p">,</span>
+        <span class="n">meal</span><span class="o">.</span><span class="n">first_session_at</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span>
+        <span class="n">meal</span><span class="o">.</span><span class="n">last_session_at</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
     
 <span class="n">suspects</span> <span class="o">=</span> <span class="n">meals_outside_df_while_in_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">suspects</span><span class="o">.</span><span class="n">timestamps</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">suspects</span><span class="o">.</span><span class="n">receipt_dates</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">suspects</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suspects</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+<span class="n">suspects</span><span class="p">[</span><span class="s1">&#39;period_in_df&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suspects</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">period_in_df</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+<span class="c1"># suspects.query(&#39;score &gt; 0&#39;).sort_values(&#39;score&#39;, ascending=False)</span>
 <span class="n">suspects</span> <span class="o">=</span> <span class="n">suspects</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;score &gt; 0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Suspicious reimbursements:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">suspects</span><span class="p">))</span>
 </pre></div>
@@ -12274,10 +12338,26 @@ Meals excluding expenses on hotels: 2784
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Suspicious reimbursements: 1280
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">report</span><span class="p">(</span><span class="n">suspects</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="p">[</span>
@@ -12286,11 +12366,10 @@ Meals excluding expenses on hotels: 2784
     <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span> 
     <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span>
     <span class="s1">&#39;company_name&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;company_state&#39;</span><span class="p">,</span> 
+    <span class="s1">&#39;company_state&#39;</span><span class="p">,</span>
     <span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span>
     <span class="s1">&#39;score&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;first_session_at&#39;</span><span class="p">,</span> 
-    <span class="s1">&#39;last_session_at&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;period_in_df&#39;</span><span class="p">,</span>
 <span class="p">])</span>
 </pre></div>
 
@@ -12303,7 +12382,7 @@ Meals excluding expenses on hotels: 2784
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[24]:</div>
+<div class="prompt output_prompt">Out[14]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12319,36 +12398,21 @@ Meals excluding expenses on hotels: 2784
       <th>company_state</th>
       <th>total_net_value</th>
       <th>score</th>
-      <th>first_session_at</th>
-      <th>last_session_at</th>
+      <th>period_in_df</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>2877</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6136366">6136366</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3118/2016/6136366.pdf">RECEIPT</a></td>
-      <td>2016-10-24</td>
-      <td>FRANKLIN LIMA</td>
-      <td>SOL PANAMBY AGROEMPRESARIAL LTDA.</td>
-      <td>SP</td>
-      <td>11.50</td>
-      <td>60</td>
-      <td>2016-10-24 17:26:11</td>
-      <td>2016-10-24 17:26:11</td>
-    </tr>
-    <tr>
-      <th>365</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6099888">6099888</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1586/2016/6099888.pdf">RECEIPT</a></td>
-      <td>2016-09-12</td>
-      <td>LOBBE NETO</td>
-      <td>RITA DE CASSIA C. CABRERA LANCHONETE - EPP</td>
-      <td>SP</td>
-      <td>15.00</td>
-      <td>57</td>
-      <td>2016-09-12 13:00:02</td>
-      <td>2016-09-12 19:00:20</td>
+      <th>1891</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6155695">6155695</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2473/2016/6155695.pdf">RECEIPT</a></td>
+      <td>2016-11-23</td>
+      <td>MARCOS ROGÉRIO</td>
+      <td>CHURRASCARIA LOCATELLI LTDA - ME</td>
+      <td>RO</td>
+      <td>67.99</td>
+      <td>42</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=23/11/2016&numMatriculaParlamentar=49&siglaPartido=&siglaUF=" target="_blank">09:23:49 - 21:30:17</a></td>
     </tr>
     <tr>
       <th>216</th>
@@ -12359,22 +12423,32 @@ Meals excluding expenses on hotels: 2784
       <td>TEIXEIRA BATISTA BUFES LTDA - EPP</td>
       <td>RJ</td>
       <td>165.00</td>
-      <td>56</td>
-      <td>2016-03-15 13:55:10</td>
-      <td>2016-03-15 18:13:27</td>
+      <td>38</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=15/03/2016&numMatriculaParlamentar=537&siglaPartido=&siglaUF=" target="_blank">13:55:10 - 18:13:27</a></td>
     </tr>
     <tr>
-      <th>1891</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6155695">6155695</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2473/2016/6155695.pdf">RECEIPT</a></td>
-      <td>2016-11-23</td>
-      <td>MARCOS ROGÉRIO</td>
-      <td>CHURRASCARIA LOCATELLI LTDA - ME</td>
-      <td>RO</td>
-      <td>67.99</td>
-      <td>54</td>
-      <td>2016-11-23 09:23:49</td>
-      <td>2016-11-23 21:30:17</td>
+      <th>365</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6099888">6099888</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1586/2016/6099888.pdf">RECEIPT</a></td>
+      <td>2016-09-12</td>
+      <td>LOBBE NETO</td>
+      <td>RITA DE CASSIA C. CABRERA LANCHONETE - EPP</td>
+      <td>SP</td>
+      <td>15.00</td>
+      <td>35</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=12/09/2016&numMatriculaParlamentar=521&siglaPartido=&siglaUF=" target="_blank">13:00:02 - 19:00:20</a></td>
+    </tr>
+    <tr>
+      <th>2877</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6136366">6136366</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3118/2016/6136366.pdf">RECEIPT</a></td>
+      <td>2016-10-24</td>
+      <td>FRANKLIN LIMA</td>
+      <td>SOL PANAMBY AGROEMPRESARIAL LTDA.</td>
+      <td>SP</td>
+      <td>11.50</td>
+      <td>32</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=24/10/2016&numMatriculaParlamentar=544&siglaPartido=&siglaUF=" target="_blank">17:26:11 - 17:26:11</a></td>
     </tr>
     <tr>
       <th>1131</th>
@@ -12385,48 +12459,8 @@ Meals excluding expenses on hotels: 2784
       <td>CAPISCE COMERCIO DE ALIMENTOS LTDA - ME</td>
       <td>SP</td>
       <td>28.30</td>
-      <td>34</td>
-      <td>2015-06-17 09:00:15</td>
-      <td>2015-06-17 21:39:40</td>
-    </tr>
-    <tr>
-      <th>1718</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6048825">6048825</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2261/2016/6048825.pdf">RECEIPT</a></td>
-      <td>2016-04-27</td>
-      <td>KEIKO OTA</td>
-      <td>BAR E RESTAURANTE BOINABRASA LTDA - EPP</td>
-      <td>SP</td>
-      <td>34.60</td>
-      <td>34</td>
-      <td>2016-04-27 09:29:11</td>
-      <td>2016-04-27 20:56:20</td>
-    </tr>
-    <tr>
-      <th>1892</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6155736">6155736</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2473/2016/6155736.pdf">RECEIPT</a></td>
-      <td>2016-11-23</td>
-      <td>MARCOS ROGÉRIO</td>
-      <td>CHURRASCARIA LOCATELLI LTDA - ME</td>
-      <td>RO</td>
-      <td>53.99</td>
-      <td>34</td>
-      <td>2016-11-23 09:23:49</td>
-      <td>2016-11-23 21:30:17</td>
-    </tr>
-    <tr>
-      <th>659</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5853739">5853739</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1744/2015/5853739.pdf">RECEIPT</a></td>
-      <td>2015-11-11</td>
-      <td>ADEMIR CAMILO</td>
-      <td>MULTI FORMATO DISTRIBUIDORA SOCIEDADE ANONIMA</td>
-      <td>MG</td>
-      <td>36.80</td>
       <td>32</td>
-      <td>2015-11-11 13:00:07</td>
-      <td>2015-11-11 23:26:05</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=17/06/2015&numMatriculaParlamentar=394&siglaPartido=&siglaUF=" target="_blank">09:00:15 - 21:39:40</a></td>
     </tr>
     <tr>
       <th>549</th>
@@ -12437,9 +12471,20 @@ Meals excluding expenses on hotels: 2784
       <td>CABANA DA MANTIQUEIRA TURISMO LTDA - EPP</td>
       <td>MG</td>
       <td>40.23</td>
-      <td>32</td>
-      <td>2016-08-30 09:27:42</td>
-      <td>2016-08-30 19:14:23</td>
+      <td>30</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=30/08/2016&numMatriculaParlamentar=265&siglaPartido=&siglaUF=" target="_blank">09:27:42 - 19:14:23</a></td>
+    </tr>
+    <tr>
+      <th>1718</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6048825">6048825</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2261/2016/6048825.pdf">RECEIPT</a></td>
+      <td>2016-04-27</td>
+      <td>KEIKO OTA</td>
+      <td>BAR E RESTAURANTE BOINABRASA LTDA - EPP</td>
+      <td>SP</td>
+      <td>34.60</td>
+      <td>30</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=27/04/2016&numMatriculaParlamentar=356&siglaPartido=&siglaUF=" target="_blank">09:29:11 - 20:56:20</a></td>
     </tr>
     <tr>
       <th>1248</th>
@@ -12450,22 +12495,20 @@ Meals excluding expenses on hotels: 2784
       <td>CHURRASCARIA RECH LTDA - ME</td>
       <td>SC</td>
       <td>20.00</td>
-      <td>31</td>
-      <td>2015-05-26 12:00:12</td>
-      <td>2015-05-26 21:01:53</td>
+      <td>29</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=26/05/2015&numMatriculaParlamentar=478&siglaPartido=&siglaUF=" target="_blank">12:00:12 - 21:01:53</a></td>
     </tr>
     <tr>
-      <th>2116</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5946133">5946133</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2880/2016/5946133.pdf">RECEIPT</a></td>
-      <td>2016-03-16</td>
-      <td>AFONSO MOTTA</td>
-      <td>CLAUDETE NAIR MERTZ - EPP</td>
-      <td>RS</td>
-      <td>23.50</td>
-      <td>31</td>
-      <td>2016-03-16 09:29:10</td>
-      <td>2016-03-16 18:05:09</td>
+      <th>659</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5853739">5853739</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1744/2015/5853739.pdf">RECEIPT</a></td>
+      <td>2015-11-11</td>
+      <td>ADEMIR CAMILO</td>
+      <td>MULTI FORMATO DISTRIBUIDORA SOCIEDADE ANONIMA</td>
+      <td>MG</td>
+      <td>36.80</td>
+      <td>28</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=11/11/2015&numMatriculaParlamentar=520&siglaPartido=&siglaUF=" target="_blank">13:00:07 - 23:26:05</a></td>
     </tr>
     <tr>
       <th>2343</th>
@@ -12476,9 +12519,8 @@ Meals excluding expenses on hotels: 2784
       <td>SERVICO SOCIAL DO COMERCIO SESC</td>
       <td>MT</td>
       <td>52.83</td>
-      <td>30</td>
-      <td>2015-09-30 11:01:01</td>
-      <td>2015-09-30 19:20:31</td>
+      <td>28</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=30/09/2015&numMatriculaParlamentar=260&siglaPartido=&siglaUF=" target="_blank">11:01:01 - 19:20:31</a></td>
     </tr>
     <tr>
       <th>2523</th>
@@ -12489,139 +12531,8 @@ Meals excluding expenses on hotels: 2784
       <td>BAR E RESTAURANTE AMIGOS GRILL LTDA - ME</td>
       <td>RJ</td>
       <td>64.16</td>
-      <td>30</td>
-      <td>2016-06-14 14:00:01</td>
-      <td>2016-06-14 22:13:17</td>
-    </tr>
-    <tr>
-      <th>2676</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5986409">5986409</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3085/2016/5986409.pdf">RECEIPT</a></td>
-      <td>2016-04-15</td>
-      <td>ANA PERUGINI</td>
-      <td>RABELO & PELOSO LTDA - ME</td>
-      <td>SP</td>
-      <td>64.00</td>
       <td>28</td>
-      <td>2016-04-15 08:00:32</td>
-      <td>2016-04-15 23:52:22</td>
-    </tr>
-    <tr>
-      <th>1686</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5754015">5754015</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2230/2015/5754015.pdf">RECEIPT</a></td>
-      <td>2015-07-15</td>
-      <td>RENZO BRAZ</td>
-      <td>RENATHA CAROLINE MACHADO FERREIRA EIRELI - EPP</td>
-      <td>RJ</td>
-      <td>24.80</td>
-      <td>28</td>
-      <td>2015-07-15 12:04:13</td>
-      <td>2015-07-15 19:29:10</td>
-    </tr>
-    <tr>
-      <th>1872</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5674987">5674987</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2473/2015/5674987.pdf">RECEIPT</a></td>
-      <td>2015-04-07</td>
-      <td>MARCOS ROGÉRIO</td>
-      <td>FAZENDINHA COMERCIO DE ALIMENTOS LTDA - EPP</td>
-      <td>RO</td>
-      <td>13.00</td>
-      <td>27</td>
-      <td>2015-04-07 14:00:14</td>
-      <td>2015-04-07 20:00:33</td>
-    </tr>
-    <tr>
-      <th>147</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5787384">5787384</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1458/2015/5787384.pdf">RECEIPT</a></td>
-      <td>2015-08-26</td>
-      <td>POMPEO DE MATTOS</td>
-      <td>E B DE CASTRO JUNIOR CAFETERIA E INFORMATICA - EPP</td>
-      <td>SP</td>
-      <td>24.00</td>
-      <td>27</td>
-      <td>2015-08-26 14:00:06</td>
-      <td>2015-08-26 20:13:44</td>
-    </tr>
-    <tr>
-      <th>2590</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6136276">6136276</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2016/6136276.pdf">RECEIPT</a></td>
-      <td>2016-10-10</td>
-      <td>CARLOS GOMES</td>
-      <td>TATIANA G. DE CORDOVA BASSO & CIA LTDA - EPP</td>
-      <td>RS</td>
-      <td>36.00</td>
-      <td>27</td>
-      <td>2016-10-10 09:26:33</td>
-      <td>2016-10-10 23:06:04</td>
-    </tr>
-    <tr>
-      <th>178</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5673282">5673282</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/763/2015/5673282.pdf">RECEIPT</a></td>
-      <td>2015-05-05</td>
-      <td>JORGE TADEU MUDALEN</td>
-      <td>RESTAURANTE GUARU CENTER LTDA - EPP</td>
-      <td>SP</td>
-      <td>150.78</td>
-      <td>27</td>
-      <td>2015-05-05 14:00:09</td>
-      <td>2015-05-05 20:03:53</td>
-    </tr>
-    <tr>
-      <th>430</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6121532">6121532</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1198/2016/6121532.pdf">RECEIPT</a></td>
-      <td>2016-09-12</td>
-      <td>WOLNEY QUEIROZ</td>
-      <td>GOLDEN GATE INDUSTRIA DE ALIMENTOS LTDA</td>
-      <td>PE</td>
-      <td>81.18</td>
-      <td>27</td>
-      <td>2016-09-12 13:00:02</td>
-      <td>2016-09-12 19:00:20</td>
-    </tr>
-    <tr>
-      <th>2660</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5769863">5769863</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3011/2015/5769863.pdf">RECEIPT</a></td>
-      <td>2015-08-12</td>
-      <td>ALEX MANENTE</td>
-      <td>CENTRO DE SERVICOS FRANGO ASSADO SUDOESTE LTDA</td>
-      <td>SP</td>
-      <td>30.00</td>
-      <td>27</td>
-      <td>2015-08-12 14:00:05</td>
-      <td>2015-08-12 20:33:47</td>
-    </tr>
-    <tr>
-      <th>2231</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6144211">6144211</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2958/2016/6144211.pdf">RECEIPT</a></td>
-      <td>2016-11-08</td>
-      <td>ULDURICO JUNIOR</td>
-      <td>BRASTEX HOTEIS E TURISMO LTDA - EPP</td>
-      <td>BA</td>
-      <td>121.88</td>
-      <td>27</td>
-      <td>2016-11-08 14:00:17</td>
-      <td>2016-11-08 20:36:57</td>
-    </tr>
-    <tr>
-      <th>1443</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6112550">6112550</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2016/6112550.pdf">RECEIPT</a></td>
-      <td>2016-09-12</td>
-      <td>ZECA DIRCEU</td>
-      <td>MOROSINI & MOROSINI LTDA - ME</td>
-      <td>PR</td>
-      <td>32.00</td>
-      <td>27</td>
-      <td>2016-09-12 13:00:02</td>
-      <td>2016-09-12 19:00:20</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=14/06/2016&numMatriculaParlamentar=329&siglaPartido=&siglaUF=" target="_blank">14:00:01 - 22:13:17</a></td>
     </tr>
     <tr>
       <th>1451</th>
@@ -12633,47 +12544,79 @@ Meals excluding expenses on hotels: 2784
       <td>PR</td>
       <td>22.50</td>
       <td>27</td>
-      <td>2016-11-08 14:00:17</td>
-      <td>2016-11-08 20:36:57</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=08/11/2016&numMatriculaParlamentar=468&siglaPartido=&siglaUF=" target="_blank">14:00:17 - 20:36:57</a></td>
     </tr>
     <tr>
-      <th>1575</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5683233">5683233</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2348/2015/5683233.pdf">RECEIPT</a></td>
-      <td>2015-05-12</td>
-      <td>JOSÉ NUNES</td>
-      <td>MCR COMERCIO DE ALIMENTOS LTDA - ME</td>
-      <td>BA</td>
-      <td>40.56</td>
+      <th>1872</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5674987">5674987</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2473/2015/5674987.pdf">RECEIPT</a></td>
+      <td>2015-04-07</td>
+      <td>MARCOS ROGÉRIO</td>
+      <td>FAZENDINHA COMERCIO DE ALIMENTOS LTDA - EPP</td>
+      <td>RO</td>
+      <td>13.00</td>
       <td>27</td>
-      <td>2015-05-12 14:00:06</td>
-      <td>2015-05-12 20:00:28</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=07/04/2015&numMatriculaParlamentar=49&siglaPartido=&siglaUF=" target="_blank">14:00:14 - 20:00:33</a></td>
     </tr>
     <tr>
-      <th>82</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6082225">6082225</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/993/2016/6082225.pdf">RECEIPT</a></td>
-      <td>2016-07-06</td>
-      <td>CELSO RUSSOMANNO</td>
-      <td>SUMA - RESTAURANTE TEMAKERIA LIMITADA - ME</td>
+      <th>2116</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5946133">5946133</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2880/2016/5946133.pdf">RECEIPT</a></td>
+      <td>2016-03-16</td>
+      <td>AFONSO MOTTA</td>
+      <td>CLAUDETE NAIR MERTZ - EPP</td>
+      <td>RS</td>
+      <td>23.50</td>
+      <td>27</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=16/03/2016&numMatriculaParlamentar=490&siglaPartido=&siglaUF=" target="_blank">09:29:10 - 18:05:09</a></td>
+    </tr>
+    <tr>
+      <th>1686</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5754015">5754015</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2230/2015/5754015.pdf">RECEIPT</a></td>
+      <td>2015-07-15</td>
+      <td>RENZO BRAZ</td>
+      <td>RENATHA CAROLINE MACHADO FERREIRA EIRELI - EPP</td>
+      <td>RJ</td>
+      <td>24.80</td>
+      <td>26</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=15/07/2015&numMatriculaParlamentar=262&siglaPartido=&siglaUF=" target="_blank">12:04:13 - 19:29:10</a></td>
+    </tr>
+    <tr>
+      <th>2676</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5986409">5986409</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3085/2016/5986409.pdf">RECEIPT</a></td>
+      <td>2016-04-15</td>
+      <td>ANA PERUGINI</td>
+      <td>RABELO & PELOSO LTDA - ME</td>
       <td>SP</td>
-      <td>35.90</td>
-      <td>27</td>
-      <td>2016-07-06 14:00:01</td>
-      <td>2016-07-06 20:03:09</td>
+      <td>64.00</td>
+      <td>26</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=15/04/2016&numMatriculaParlamentar=332&siglaPartido=&siglaUF=" target="_blank">08:00:32 - 23:52:22</a></td>
     </tr>
     <tr>
-      <th>531</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5683174">5683174</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1050/2015/5683174.pdf">RECEIPT</a></td>
-      <td>2015-05-12</td>
-      <td>JAIME MARTINS</td>
-      <td>INTERNATIONAL MEAL COMPANY ALIMENTACAO S.A.</td>
-      <td>SP</td>
-      <td>88.61</td>
-      <td>27</td>
-      <td>2015-05-12 14:00:06</td>
-      <td>2015-05-12 20:00:28</td>
+      <th>430</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6121532">6121532</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1198/2016/6121532.pdf">RECEIPT</a></td>
+      <td>2016-09-12</td>
+      <td>WOLNEY QUEIROZ</td>
+      <td>GOLDEN GATE INDUSTRIA DE ALIMENTOS LTDA</td>
+      <td>PE</td>
+      <td>81.18</td>
+      <td>25</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=12/09/2016&numMatriculaParlamentar=164&siglaPartido=&siglaUF=" target="_blank">13:00:02 - 19:00:20</a></td>
+    </tr>
+    <tr>
+      <th>2590</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6136276">6136276</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2016/6136276.pdf">RECEIPT</a></td>
+      <td>2016-10-10</td>
+      <td>CARLOS GOMES</td>
+      <td>TATIANA G. DE CORDOVA BASSO & CIA LTDA - EPP</td>
+      <td>RS</td>
+      <td>36.00</td>
+      <td>25</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=10/10/2016&numMatriculaParlamentar=492&siglaPartido=&siglaUF=" target="_blank">09:26:33 - 23:06:04</a></td>
     </tr>
     <tr>
       <th>494</th>
@@ -12684,126 +12627,20 @@ Meals excluding expenses on hotels: 2784
       <td>FAIZAH ALIMENTOS LTDA - EPP</td>
       <td>BA</td>
       <td>85.69</td>
-      <td>27</td>
-      <td>2016-09-12 13:00:02</td>
-      <td>2016-09-12 19:00:20</td>
+      <td>25</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=12/09/2016&numMatriculaParlamentar=209&siglaPartido=&siglaUF=" target="_blank">13:00:02 - 19:00:20</a></td>
     </tr>
     <tr>
-      <th>1699</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5953724">5953724</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2230/2016/5953724.pdf">RECEIPT</a></td>
-      <td>2016-03-17</td>
-      <td>RENZO BRAZ</td>
-      <td>BAR E RESTAURANTE SERRA DO CAPIM LTDA - EPP</td>
-      <td>RJ</td>
-      <td>26.58</td>
-      <td>26</td>
-      <td>2016-03-17 10:00:10</td>
-      <td>2016-03-17 15:02:22</td>
-    </tr>
-    <tr>
-      <th>1721</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6119294">6119294</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2261/2016/6119294.pdf">RECEIPT</a></td>
-      <td>2016-10-04</td>
-      <td>KEIKO OTA</td>
-      <td>ESTADAO GRILL CHURRASCARIA LTDA - EPP</td>
+      <th>2660</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5769863">5769863</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3011/2015/5769863.pdf">RECEIPT</a></td>
+      <td>2015-08-12</td>
+      <td>ALEX MANENTE</td>
+      <td>CENTRO DE SERVICOS FRANGO ASSADO SUDOESTE LTDA</td>
       <td>SP</td>
-      <td>41.40</td>
-      <td>26</td>
-      <td>2016-10-04 12:30:50</td>
-      <td>2016-10-04 17:25:23</td>
-    </tr>
-    <tr>
-      <th>235</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5824921">5824921</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1480/2015/5824921.pdf">RECEIPT</a></td>
-      <td>2015-10-06</td>
-      <td>JÚLIO DELGADO</td>
-      <td>HM ALIMENTOS E BEBIDAS EIRELI - ME</td>
-      <td>MG</td>
-      <td>39.00</td>
-      <td>26</td>
-      <td>2015-10-06 13:57:04</td>
-      <td>2015-10-06 18:58:25</td>
-    </tr>
-    <tr>
-      <th>80</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6035479">6035479</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/993/2016/6035479.pdf">RECEIPT</a></td>
-      <td>2016-06-15</td>
-      <td>CELSO RUSSOMANNO</td>
-      <td>CERTTO TELECOMUNICACOES LTDA - EPP</td>
-      <td>PR</td>
-      <td>26.80</td>
-      <td>26</td>
-      <td>2016-06-15 11:02:43</td>
-      <td>2016-06-15 16:10:03</td>
-    </tr>
-    <tr>
-      <th>81</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6041308">6041308</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/993/2016/6041308.pdf">RECEIPT</a></td>
-      <td>2016-07-05</td>
-      <td>CELSO RUSSOMANNO</td>
-      <td>DOLCISSIMO LANCHONETE E CAFE LTDA - EPP</td>
-      <td>SP</td>
-      <td>17.00</td>
-      <td>26</td>
-      <td>2016-07-05 14:00:01</td>
-      <td>2016-07-05 19:54:08</td>
-    </tr>
-    <tr>
-      <th>2190</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5751970">5751970</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2938/2015/5751970.pdf">RECEIPT</a></td>
-      <td>2015-08-04</td>
-      <td>JORGE SOLLA</td>
-      <td>H20 ALIMENTOS E BEBIDAS LTDA - ME</td>
-      <td>BA</td>
-      <td>50.00</td>
-      <td>26</td>
-      <td>2015-08-04 14:00:06</td>
-      <td>2015-08-04 19:05:01</td>
-    </tr>
-    <tr>
-      <th>649</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5730908">5730908</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1744/2015/5730908.pdf">RECEIPT</a></td>
-      <td>2015-07-01</td>
-      <td>ADEMIR CAMILO</td>
-      <td>DMA DISTRIBUIDORA S/A</td>
-      <td>MG</td>
-      <td>42.65</td>
-      <td>26</td>
-      <td>2015-07-01 16:31:06</td>
-      <td>2015-07-01 21:31:19</td>
-    </tr>
-    <tr>
-      <th>233</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5688679">5688679</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1480/2015/5688679.pdf">RECEIPT</a></td>
-      <td>2015-05-19</td>
-      <td>JÚLIO DELGADO</td>
-      <td>VILLA RURAL COMPRAS & LAZER LTDA - EPP</td>
-      <td>MG</td>
-      <td>68.80</td>
-      <td>26</td>
-      <td>2015-05-19 14:00:07</td>
-      <td>2015-05-19 19:01:31</td>
-    </tr>
-    <tr>
-      <th>2128</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6007707">6007707</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2880/2016/6007707.pdf">RECEIPT</a></td>
-      <td>2016-05-23</td>
-      <td>AFONSO MOTTA</td>
-      <td>ESMERALDA CONVENIENCIAS LTDA</td>
-      <td>RS</td>
-      <td>17.15</td>
-      <td>26</td>
-      <td>2016-05-23 18:00:07</td>
-      <td>2016-05-23 23:01:53</td>
+      <td>30.00</td>
+      <td>25</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=12/08/2015&numMatriculaParlamentar=331&siglaPartido=&siglaUF=" target="_blank">14:00:05 - 20:33:47</a></td>
     </tr>
     <tr>
       <th>606</th>
@@ -12814,100 +12651,20 @@ Meals excluding expenses on hotels: 2784
       <td>INTERNATIONAL MEAL COMPANY ALIMENTACAO S.A.</td>
       <td>SP</td>
       <td>84.90</td>
-      <td>26</td>
-      <td>2016-03-17 10:00:10</td>
-      <td>2016-03-17 15:02:22</td>
-    </tr>
-    <tr>
-      <th>1338</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5978369">5978369</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2256/2016/5978369.pdf">RECEIPT</a></td>
-      <td>2016-04-12</td>
-      <td>JORGE CÔRTE REAL</td>
-      <td>M L VIEIRA DA CUNHA E CIA LTDA</td>
-      <td>PE</td>
-      <td>184.47</td>
-      <td>25</td>
-      <td>2016-04-12 14:00:06</td>
-      <td>2016-04-12 18:57:03</td>
-    </tr>
-    <tr>
-      <th>282</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6074487">6074487</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/527/2016/6074487.pdf">RECEIPT</a></td>
-      <td>2016-08-08</td>
-      <td>VALDIR COLATTO</td>
-      <td>DREAM & WORK EIRELI - EPP</td>
-      <td>SC</td>
-      <td>18.00</td>
-      <td>25</td>
-      <td>2016-08-08 16:01:13</td>
-      <td>2016-08-08 20:58:41</td>
-    </tr>
-    <tr>
-      <th>2061</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6100224">6100224</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2950/2016/6100224.pdf">RECEIPT</a></td>
-      <td>2016-08-30</td>
-      <td>CAPITÃO AUGUSTO</td>
-      <td>Q9 COMERCIO DE ALIMENTOS LTDA - EPP</td>
-      <td>SP</td>
-      <td>30.40</td>
-      <td>25</td>
-      <td>2016-08-30 09:27:42</td>
-      <td>2016-08-30 21:54:49</td>
-    </tr>
-    <tr>
-      <th>716</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6138543">6138543</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1758/2016/6138543.pdf">RECEIPT</a></td>
-      <td>2016-10-25</td>
-      <td>AFONSO HAMM</td>
-      <td>RAABE COMERCIAL DE ALIMENTOS LTDA - EPP</td>
-      <td>RS</td>
-      <td>56.00</td>
       <td>24</td>
-      <td>2016-10-25 09:23:01</td>
-      <td>2016-10-25 21:02:07</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=17/03/2016&numMatriculaParlamentar=540&siglaPartido=&siglaUF=" target="_blank">10:00:10 - 15:02:22</a></td>
     </tr>
     <tr>
-      <th>1241</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6114349">6114349</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2241/2016/6114349.pdf">RECEIPT</a></td>
-      <td>2016-08-29</td>
-      <td>MARCON</td>
-      <td>TRANSPORTADORA E RESTAURANTE 31 LTDA - ME</td>
-      <td>RS</td>
-      <td>21.00</td>
+      <th>2190</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5751970">5751970</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2938/2015/5751970.pdf">RECEIPT</a></td>
+      <td>2015-08-04</td>
+      <td>JORGE SOLLA</td>
+      <td>H20 ALIMENTOS E BEBIDAS LTDA - ME</td>
+      <td>BA</td>
+      <td>50.00</td>
       <td>24</td>
-      <td>2016-08-29 10:00:41</td>
-      <td>2016-08-29 22:09:09</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6149244">6149244</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2917/2016/6149244.pdf">RECEIPT</a></td>
-      <td>2016-10-25</td>
-      <td>FAUSTO PINATO</td>
-      <td>CHURRASCARIA E LANCHONETE 446 LTDA - EPP</td>
-      <td>SP</td>
-      <td>35.00</td>
-      <td>24</td>
-      <td>2016-10-25 09:23:01</td>
-      <td>2016-10-25 21:02:07</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6101851">6101851</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2917/2016/6101851.pdf">RECEIPT</a></td>
-      <td>2016-08-29</td>
-      <td>FAUSTO PINATO</td>
-      <td>LANCHES RODO STOP LTDA - EPP</td>
-      <td>SP</td>
-      <td>54.56</td>
-      <td>24</td>
-      <td>2016-08-29 10:00:41</td>
-      <td>2016-08-29 22:09:09</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=04/08/2015&numMatriculaParlamentar=204&siglaPartido=&siglaUF=" target="_blank">14:00:06 - 19:05:01</a></td>
     </tr>
     <tr>
       <th>885</th>
@@ -12919,8 +12676,247 @@ Meals excluding expenses on hotels: 2784
       <td>MG</td>
       <td>25.90</td>
       <td>24</td>
-      <td>2015-06-17 09:00:15</td>
-      <td>2015-06-17 21:39:40</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=17/06/2015&numMatriculaParlamentar=232&siglaPartido=&siglaUF=" target="_blank">09:00:15 - 21:39:40</a></td>
+    </tr>
+    <tr>
+      <th>649</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5730908">5730908</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1744/2015/5730908.pdf">RECEIPT</a></td>
+      <td>2015-07-01</td>
+      <td>ADEMIR CAMILO</td>
+      <td>DMA DISTRIBUIDORA S/A</td>
+      <td>MG</td>
+      <td>42.65</td>
+      <td>24</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=01/07/2015&numMatriculaParlamentar=520&siglaPartido=&siglaUF=" target="_blank">16:31:06 - 21:31:19</a></td>
+    </tr>
+    <tr>
+      <th>716</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6138543">6138543</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1758/2016/6138543.pdf">RECEIPT</a></td>
+      <td>2016-10-25</td>
+      <td>AFONSO HAMM</td>
+      <td>RAABE COMERCIAL DE ALIMENTOS LTDA - EPP</td>
+      <td>RS</td>
+      <td>56.00</td>
+      <td>24</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=25/10/2016&numMatriculaParlamentar=487&siglaPartido=&siglaUF=" target="_blank">09:23:01 - 21:02:07</a></td>
+    </tr>
+    <tr>
+      <th>80</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6035479">6035479</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/993/2016/6035479.pdf">RECEIPT</a></td>
+      <td>2016-06-15</td>
+      <td>CELSO RUSSOMANNO</td>
+      <td>CERTTO TELECOMUNICACOES LTDA - EPP</td>
+      <td>PR</td>
+      <td>26.80</td>
+      <td>24</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=15/06/2016&numMatriculaParlamentar=347&siglaPartido=&siglaUF=" target="_blank">11:02:43 - 16:10:03</a></td>
+    </tr>
+    <tr>
+      <th>1699</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5953724">5953724</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2230/2016/5953724.pdf">RECEIPT</a></td>
+      <td>2016-03-17</td>
+      <td>RENZO BRAZ</td>
+      <td>BAR E RESTAURANTE SERRA DO CAPIM LTDA - EPP</td>
+      <td>RJ</td>
+      <td>26.58</td>
+      <td>24</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=17/03/2016&numMatriculaParlamentar=262&siglaPartido=&siglaUF=" target="_blank">10:00:10 - 15:02:22</a></td>
+    </tr>
+    <tr>
+      <th>147</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5787384">5787384</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1458/2015/5787384.pdf">RECEIPT</a></td>
+      <td>2015-08-26</td>
+      <td>POMPEO DE MATTOS</td>
+      <td>E B DE CASTRO JUNIOR CAFETERIA E INFORMATICA - EPP</td>
+      <td>SP</td>
+      <td>24.00</td>
+      <td>23</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=26/08/2015&numMatriculaParlamentar=516&siglaPartido=&siglaUF=" target="_blank">14:00:06 - 20:13:44</a></td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6082225">6082225</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/993/2016/6082225.pdf">RECEIPT</a></td>
+      <td>2016-07-06</td>
+      <td>CELSO RUSSOMANNO</td>
+      <td>SUMA - RESTAURANTE TEMAKERIA LIMITADA - ME</td>
+      <td>SP</td>
+      <td>35.90</td>
+      <td>23</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=06/07/2016&numMatriculaParlamentar=347&siglaPartido=&siglaUF=" target="_blank">14:00:01 - 20:03:09</a></td>
+    </tr>
+    <tr>
+      <th>2061</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6100224">6100224</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2950/2016/6100224.pdf">RECEIPT</a></td>
+      <td>2016-08-30</td>
+      <td>CAPITÃO AUGUSTO</td>
+      <td>Q9 COMERCIO DE ALIMENTOS LTDA - EPP</td>
+      <td>SP</td>
+      <td>30.40</td>
+      <td>23</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=30/08/2016&numMatriculaParlamentar=346&siglaPartido=&siglaUF=" target="_blank">09:27:42 - 21:54:49</a></td>
+    </tr>
+    <tr>
+      <th>1575</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5683233">5683233</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2348/2015/5683233.pdf">RECEIPT</a></td>
+      <td>2015-05-12</td>
+      <td>JOSÉ NUNES</td>
+      <td>MCR COMERCIO DE ALIMENTOS LTDA - ME</td>
+      <td>BA</td>
+      <td>40.56</td>
+      <td>23</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=12/05/2015&numMatriculaParlamentar=201&siglaPartido=&siglaUF=" target="_blank">14:00:06 - 20:00:28</a></td>
+    </tr>
+    <tr>
+      <th>1338</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5978369">5978369</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2256/2016/5978369.pdf">RECEIPT</a></td>
+      <td>2016-04-12</td>
+      <td>JORGE CÔRTE REAL</td>
+      <td>M L VIEIRA DA CUNHA E CIA LTDA</td>
+      <td>PE</td>
+      <td>184.47</td>
+      <td>23</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=12/04/2016&numMatriculaParlamentar=150&siglaPartido=&siglaUF=" target="_blank">14:00:06 - 18:57:03</a></td>
+    </tr>
+    <tr>
+      <th>178</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5673282">5673282</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/763/2015/5673282.pdf">RECEIPT</a></td>
+      <td>2015-05-05</td>
+      <td>JORGE TADEU MUDALEN</td>
+      <td>RESTAURANTE GUARU CENTER LTDA - EPP</td>
+      <td>SP</td>
+      <td>150.78</td>
+      <td>23</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=05/05/2015&numMatriculaParlamentar=363&siglaPartido=&siglaUF=" target="_blank">14:00:09 - 20:03:53</a></td>
+    </tr>
+    <tr>
+      <th>531</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5683174">5683174</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1050/2015/5683174.pdf">RECEIPT</a></td>
+      <td>2015-05-12</td>
+      <td>JAIME MARTINS</td>
+      <td>INTERNATIONAL MEAL COMPANY ALIMENTACAO S.A.</td>
+      <td>SP</td>
+      <td>88.61</td>
+      <td>23</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=12/05/2015&numMatriculaParlamentar=240&siglaPartido=&siglaUF=" target="_blank">14:00:06 - 20:00:28</a></td>
+    </tr>
+    <tr>
+      <th>1443</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6112550">6112550</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2016/6112550.pdf">RECEIPT</a></td>
+      <td>2016-09-12</td>
+      <td>ZECA DIRCEU</td>
+      <td>MOROSINI & MOROSINI LTDA - ME</td>
+      <td>PR</td>
+      <td>32.00</td>
+      <td>23</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=12/09/2016&numMatriculaParlamentar=468&siglaPartido=&siglaUF=" target="_blank">13:00:02 - 19:00:20</a></td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6101851">6101851</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2917/2016/6101851.pdf">RECEIPT</a></td>
+      <td>2016-08-29</td>
+      <td>FAUSTO PINATO</td>
+      <td>LANCHES RODO STOP LTDA - EPP</td>
+      <td>SP</td>
+      <td>54.56</td>
+      <td>22</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=29/08/2016&numMatriculaParlamentar=355&siglaPartido=&siglaUF=" target="_blank">10:00:41 - 22:09:09</a></td>
+    </tr>
+    <tr>
+      <th>1721</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6119294">6119294</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2261/2016/6119294.pdf">RECEIPT</a></td>
+      <td>2016-10-04</td>
+      <td>KEIKO OTA</td>
+      <td>ESTADAO GRILL CHURRASCARIA LTDA - EPP</td>
+      <td>SP</td>
+      <td>41.40</td>
+      <td>22</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=04/10/2016&numMatriculaParlamentar=356&siglaPartido=&siglaUF=" target="_blank">12:30:50 - 17:25:23</a></td>
+    </tr>
+    <tr>
+      <th>233</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5688679">5688679</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1480/2015/5688679.pdf">RECEIPT</a></td>
+      <td>2015-05-19</td>
+      <td>JÚLIO DELGADO</td>
+      <td>VILLA RURAL COMPRAS & LAZER LTDA - EPP</td>
+      <td>MG</td>
+      <td>68.80</td>
+      <td>22</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=19/05/2015&numMatriculaParlamentar=250&siglaPartido=&siglaUF=" target="_blank">14:00:07 - 19:01:31</a></td>
+    </tr>
+    <tr>
+      <th>235</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5824921">5824921</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1480/2015/5824921.pdf">RECEIPT</a></td>
+      <td>2015-10-06</td>
+      <td>JÚLIO DELGADO</td>
+      <td>HM ALIMENTOS E BEBIDAS EIRELI - ME</td>
+      <td>MG</td>
+      <td>39.00</td>
+      <td>22</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=06/10/2015&numMatriculaParlamentar=250&siglaPartido=&siglaUF=" target="_blank">13:57:04 - 18:58:25</a></td>
+    </tr>
+    <tr>
+      <th>2752</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5992836">5992836</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2928/2016/5992836.pdf">RECEIPT</a></td>
+      <td>2016-03-02</td>
+      <td>GOULART</td>
+      <td>STARBUCKS BRASIL COMERCIO DE CAFES LTDA.</td>
+      <td>SP</td>
+      <td>15.40</td>
+      <td>22</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=02/03/2016&numMatriculaParlamentar=361&siglaPartido=&siglaUF=" target="_blank">09:13:24 - 19:59:38</a></td>
+    </tr>
+    <tr>
+      <th>2128</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6007707">6007707</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2880/2016/6007707.pdf">RECEIPT</a></td>
+      <td>2016-05-23</td>
+      <td>AFONSO MOTTA</td>
+      <td>ESMERALDA CONVENIENCIAS LTDA</td>
+      <td>RS</td>
+      <td>17.15</td>
+      <td>22</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=23/05/2016&numMatriculaParlamentar=490&siglaPartido=&siglaUF=" target="_blank">18:00:07 - 23:01:53</a></td>
+    </tr>
+    <tr>
+      <th>1892</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6155736">6155736</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2473/2016/6155736.pdf">RECEIPT</a></td>
+      <td>2016-11-23</td>
+      <td>MARCOS ROGÉRIO</td>
+      <td>CHURRASCARIA LOCATELLI LTDA - ME</td>
+      <td>RO</td>
+      <td>53.99</td>
+      <td>22</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=23/11/2016&numMatriculaParlamentar=49&siglaPartido=&siglaUF=" target="_blank">09:23:49 - 21:30:17</a></td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6149244">6149244</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2917/2016/6149244.pdf">RECEIPT</a></td>
+      <td>2016-10-25</td>
+      <td>FAUSTO PINATO</td>
+      <td>CHURRASCARIA E LANCHONETE 446 LTDA - EPP</td>
+      <td>SP</td>
+      <td>35.00</td>
+      <td>22</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=25/10/2016&numMatriculaParlamentar=355&siglaPartido=&siglaUF=" target="_blank">09:23:01 - 21:02:07</a></td>
     </tr>
     <tr>
       <th>1770</th>
@@ -12931,22 +12927,32 @@ Meals excluding expenses on hotels: 2784
       <td>CHG ALIMENTACAO E COMERCIO LTDA - EPP</td>
       <td>RJ</td>
       <td>20.80</td>
-      <td>23</td>
-      <td>2015-04-08 09:16:12</td>
-      <td>2015-04-08 20:01:20</td>
+      <td>21</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=08/04/2015&numMatriculaParlamentar=297&siglaPartido=&siglaUF=" target="_blank">09:16:12 - 20:01:20</a></td>
     </tr>
     <tr>
-      <th>1546</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5836582">5836582</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2345/2015/5836582.pdf">RECEIPT</a></td>
-      <td>2015-10-29</td>
-      <td>JOSE STÉDILE</td>
-      <td>T. H. DA SILVA- BUFFET - EPP</td>
-      <td>RS</td>
-      <td>96.15</td>
-      <td>23</td>
-      <td>2015-10-29 09:03:28</td>
-      <td>2015-10-29 11:25:57</td>
+      <th>282</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6074487">6074487</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/527/2016/6074487.pdf">RECEIPT</a></td>
+      <td>2016-08-08</td>
+      <td>VALDIR COLATTO</td>
+      <td>DREAM & WORK EIRELI - EPP</td>
+      <td>SC</td>
+      <td>18.00</td>
+      <td>21</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=08/08/2016&numMatriculaParlamentar=489&siglaPartido=&siglaUF=" target="_blank">16:01:13 - 20:58:41</a></td>
+    </tr>
+    <tr>
+      <th>1803</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5706823">5706823</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2235/2015/5706823.pdf">RECEIPT</a></td>
+      <td>2015-06-10</td>
+      <td>DOMINGOS SÁVIO</td>
+      <td>SERVICO SOCIAL DO COMERCIO SESC</td>
+      <td>MT</td>
+      <td>51.13</td>
+      <td>21</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=10/06/2015&numMatriculaParlamentar=233&siglaPartido=&siglaUF=" target="_blank">13:00:28 - 22:07:50</a></td>
     </tr>
     <tr>
       <th>663</th>
@@ -12957,9 +12963,20 @@ Meals excluding expenses on hotels: 2784
       <td>MOMO CONFEITARIA - EIRELI - EPP</td>
       <td>MG</td>
       <td>28.36</td>
-      <td>22</td>
-      <td>2016-03-02 09:13:24</td>
-      <td>2016-03-02 19:59:38</td>
+      <td>20</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=02/03/2016&numMatriculaParlamentar=520&siglaPartido=&siglaUF=" target="_blank">09:13:24 - 19:59:38</a></td>
+    </tr>
+    <tr>
+      <th>2502</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5954237">5954237</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2911/2016/5954237.pdf">RECEIPT</a></td>
+      <td>2016-03-22</td>
+      <td>MARCOS SOARES</td>
+      <td>DOMCHEL DELIVERY EIRELI</td>
+      <td>RJ</td>
+      <td>20.70</td>
+      <td>20</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=22/03/2016&numMatriculaParlamentar=321&siglaPartido=&siglaUF=" target="_blank">09:10:36 - 17:56:07</a></td>
     </tr>
     <tr>
       <th>16</th>
@@ -12970,9 +12987,20 @@ Meals excluding expenses on hotels: 2784
       <td>ELISA DE ALMEIDA SILVA LANCHONETE - ME</td>
       <td>SP</td>
       <td>22.70</td>
-      <td>22</td>
-      <td>2016-08-30 09:27:42</td>
-      <td>2016-08-30 19:14:23</td>
+      <td>20</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=30/08/2016&numMatriculaParlamentar=355&siglaPartido=&siglaUF=" target="_blank">09:27:42 - 19:14:23</a></td>
+    </tr>
+    <tr>
+      <th>1668</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5847425">5847425</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2244/2015/5847425.pdf">RECEIPT</a></td>
+      <td>2015-11-11</td>
+      <td>ROGÉRIO PENINHA MENDONÇA</td>
+      <td>PANIFICIO TAIOENSE LTDA - EPP</td>
+      <td>SC</td>
+      <td>29.00</td>
+      <td>20</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?data=11/11/2015&numMatriculaParlamentar=483&siglaPartido=&siglaUF=" target="_blank">13:00:07 - 23:26:05</a></td>
     </tr>
   </tbody>
 </table>
@@ -13000,7 +13028,7 @@ Meals excluding expenses on hotels: 2784
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">speeches</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-04-21-speeches.xz&#39;</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -13046,7 +13074,7 @@ Speeches by politicians: 53625
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">speeches</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
@@ -13080,7 +13108,7 @@ Speeches by politicians: 53625
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">speeches</span><span class="p">[</span><span class="s1">&#39;first_speech_at&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">speeches</span><span class="p">[</span><span class="s1">&#39;speech_started_at&#39;</span><span class="p">]</span>
@@ -13118,7 +13146,7 @@ Speeches by politicians: 53625
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals_outside_df_during_speeches</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
@@ -13163,11 +13191,11 @@ Meals excluding expenses on hotels: 590
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">meal</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">score_by_time</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span> <span class="o">+</span> <span class="n">score_by_ts</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">score_by_time</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span> <span class="o">+</span> <span class="n">score_by_ts</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span> <span class="o">-</span> <span class="n">penalty_by_date</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">score_by_time</span><span class="p">(</span><span class="n">meal</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">meal</span><span class="o">.</span><span class="n">total_speeches</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -13186,10 +13214,40 @@ Meals excluding expenses on hotels: 590
         <span class="k">if</span> <span class="p">(</span><span class="n">meal</span><span class="o">.</span><span class="n">first_speech_at</span><span class="o">.</span><span class="n">hour</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">ts</span><span class="o">.</span><span class="n">tm_hour</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">meal</span><span class="o">.</span><span class="n">last_speech_at</span><span class="o">.</span><span class="n">hour</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">occurences</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">occurences</span> <span class="o">*</span> <span class="mi">10</span>
+
+<span class="k">def</span> <span class="nf">penalty_by_date</span><span class="p">(</span><span class="n">meal</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">meal</span><span class="o">.</span><span class="n">receipt_dates</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    
+    <span class="n">bad_occurences</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">meal</span><span class="o">.</span><span class="n">receipt_dates</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dt</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">dt</span> <span class="o">!=</span> <span class="n">meal</span><span class="o">.</span><span class="n">issue_date</span><span class="p">:</span>
+            <span class="n">bad_occurences</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">bad_occurences</span> <span class="o">*</span> <span class="mi">2</span>
+    
+<span class="k">def</span> <span class="nf">period_in_df</span><span class="p">(</span><span class="n">meal</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?&#39;</span>
+        <span class="s1">&#39;dataIni=</span><span class="si">{}</span><span class="s1">&amp;dataFim=</span><span class="si">{}</span><span class="s1">&amp;codigoSessao=&amp;parteNomeParlamentar=</span><span class="si">{}</span><span class="s1">&amp;siglaPartido=&amp;siglaUF=</span><span class="si">{}</span><span class="s1">&#39;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">meal</span><span class="o">.</span><span class="n">issue_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">),</span>
+        <span class="n">meal</span><span class="o">.</span><span class="n">issue_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">),</span>
+        <span class="n">meal</span><span class="o">.</span><span class="n">congressperson_name</span><span class="p">,</span>
+        <span class="n">meal</span><span class="o">.</span><span class="n">congressperson_state</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;&lt;a href=&quot;</span><span class="si">{}</span><span class="s1">&quot; target=&quot;_blank&quot;&gt;</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">&lt;/a&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">url</span><span class="p">,</span>
+        <span class="n">meal</span><span class="o">.</span><span class="n">first_speech_at</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span>
+        <span class="n">meal</span><span class="o">.</span><span class="n">last_speech_at</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
     
 <span class="n">suspects2</span> <span class="o">=</span> <span class="n">meals_outside_df_during_speeches</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">suspects2</span><span class="o">.</span><span class="n">timestamps</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">suspects2</span><span class="o">.</span><span class="n">receipt_dates</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">suspects2</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suspects2</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+<span class="n">suspects2</span><span class="p">[</span><span class="s1">&#39;period_in_df&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suspects2</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">period_in_df</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
 <span class="n">suspects2</span> <span class="o">=</span> <span class="n">suspects2</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;score &gt; 0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Suspicious reimbursements:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">suspects2</span><span class="p">))</span>
 
@@ -13209,8 +13267,8 @@ Meals excluding expenses on hotels: 590
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Suspicious reimbursements: 104
-Suspicious reimbursements that were not found using presences info: 53
+<pre>Suspicious reimbursements: 58
+Suspicious reimbursements that were not found using presences info: 34
 </pre>
 </div>
 </div>
@@ -13221,7 +13279,7 @@ Suspicious reimbursements that were not found using presences info: 53
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">report</span><span class="p">(</span><span class="n">suspects2</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="p">[</span>
@@ -13230,11 +13288,10 @@ Suspicious reimbursements that were not found using presences info: 53
     <span class="s1">&#39;issue_date&#39;</span><span class="p">,</span> 
     <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span>
     <span class="s1">&#39;score&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;company_name&#39;</span><span class="p">,</span>
     <span class="s1">&#39;company_state&#39;</span><span class="p">,</span> 
     <span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span> 
-    <span class="s1">&#39;first_speech_at&#39;</span><span class="p">,</span> 
-    <span class="s1">&#39;last_speech_at&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;company_name&#39;</span>
+    <span class="s1">&#39;period_in_df&#39;</span>
 <span class="p">])</span>
 </pre></div>
 
@@ -13247,7 +13304,7 @@ Suspicious reimbursements that were not found using presences info: 53
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[35]:</div>
+<div class="prompt output_prompt">Out[20]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -13260,39 +13317,36 @@ Suspicious reimbursements that were not found using presences info: 53
       <th>issue_date</th>
       <th>congressperson_name</th>
       <th>score</th>
+      <th>company_name</th>
       <th>company_state</th>
       <th>total_net_value</th>
-      <th>first_speech_at</th>
-      <th>last_speech_at</th>
-      <th>company_name</th>
+      <th>period_in_df</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th>163</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5864392">5864392</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2230/2015/5864392.pdf">RECEIPT</a></td>
-      <td>2015-11-19</td>
-      <td>RENZO BRAZ</td>
-      <td>20</td>
-      <td>RJ</td>
-      <td>38.19</td>
-      <td>2015-11-19 10:44:00</td>
-      <td>2015-11-19 10:44:00</td>
-      <td>BAR E RESTAURANTE SERRA DO CAPIM LTDA - EPP</td>
-    </tr>
     <tr>
       <th>420</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5764399">5764399</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2245/2015/5764399.pdf">RECEIPT</a></td>
       <td>2015-08-06</td>
       <td>MARCO TEBALDI</td>
-      <td>20</td>
+      <td>18</td>
+      <td>4 S EMPREENDIMENTOS LTDA - ME</td>
       <td>SC</td>
       <td>42.10</td>
-      <td>2015-08-06 12:40:00</td>
-      <td>2015-08-06 12:40:00</td>
-      <td>4 S EMPREENDIMENTOS LTDA - ME</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=06/08/2015&dataFim=06/08/2015&codigoSessao=&parteNomeParlamentar=MARCO TEBALDI&siglaPartido=&siglaUF=SC" target="_blank">12:40:00 - 12:40:00</a></td>
+    </tr>
+    <tr>
+      <th>163</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5864392">5864392</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2230/2015/5864392.pdf">RECEIPT</a></td>
+      <td>2015-11-19</td>
+      <td>RENZO BRAZ</td>
+      <td>18</td>
+      <td>BAR E RESTAURANTE SERRA DO CAPIM LTDA - EPP</td>
+      <td>RJ</td>
+      <td>38.19</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=19/11/2015&dataFim=19/11/2015&codigoSessao=&parteNomeParlamentar=RENZO BRAZ&siglaPartido=&siglaUF=MG" target="_blank">10:44:00 - 10:44:00</a></td>
     </tr>
     <tr>
       <th>487</th>
@@ -13300,12 +13354,11 @@ Suspicious reimbursements that were not found using presences info: 53
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2880/2015/5866763.pdf">RECEIPT</a></td>
       <td>2015-12-02</td>
       <td>AFONSO MOTTA</td>
-      <td>17</td>
+      <td>13</td>
+      <td>SHALON LANCHERIA - EIRELI - EPP</td>
       <td>RS</td>
       <td>30.35</td>
-      <td>2015-12-02 09:00:00</td>
-      <td>2015-12-02 13:52:00</td>
-      <td>SHALON LANCHERIA - EIRELI - EPP</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=02/12/2015&dataFim=02/12/2015&codigoSessao=&parteNomeParlamentar=AFONSO MOTTA&siglaPartido=&siglaUF=RS" target="_blank">09:00:00 - 13:52:00</a></td>
     </tr>
     <tr>
       <th>383</th>
@@ -13313,25 +13366,11 @@ Suspicious reimbursements that were not found using presences info: 53
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1798/2015/5673697.pdf">RECEIPT</a></td>
       <td>2015-04-23</td>
       <td>CELSO MALDANER</td>
-      <td>14</td>
+      <td>10</td>
+      <td>CHURRASCARIA RIO SUL LTDA - ME</td>
       <td>SC</td>
       <td>35.50</td>
-      <td>2015-04-23 09:12:00</td>
-      <td>2015-04-23 17:54:00</td>
-      <td>CHURRASCARIA RIO SUL LTDA - ME</td>
-    </tr>
-    <tr>
-      <th>259</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5682390">5682390</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2928/2015/5682390.pdf">RECEIPT</a></td>
-      <td>2015-05-08</td>
-      <td>GOULART</td>
-      <td>11</td>
-      <td>SP</td>
-      <td>77.00</td>
-      <td>2015-05-08 15:00:00</td>
-      <td>2015-05-08 15:00:00</td>
-      <td>ALMANARA RESTAURANTES E LANCHONETES LTDA</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=23/04/2015&dataFim=23/04/2015&codigoSessao=&parteNomeParlamentar=CELSO MALDANER&siglaPartido=&siglaUF=SC" target="_blank">09:12:00 - 17:54:00</a></td>
     </tr>
     <tr>
       <th>506</th>
@@ -13340,11 +13379,10 @@ Suspicious reimbursements that were not found using presences info: 53
       <td>2015-10-15</td>
       <td>BOHN GASS</td>
       <td>10</td>
+      <td>GR SERVICOS E ALIMENTACAO LTDA.</td>
       <td>SP</td>
       <td>22.50</td>
-      <td>2015-10-15 12:36:00</td>
-      <td>2015-10-15 12:36:00</td>
-      <td>GR SERVICOS E ALIMENTACAO LTDA.</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=15/10/2015&dataFim=15/10/2015&codigoSessao=&parteNomeParlamentar=BOHN GASS&siglaPartido=&siglaUF=RS" target="_blank">12:36:00 - 12:36:00</a></td>
     </tr>
     <tr>
       <th>356</th>
@@ -13352,12 +13390,23 @@ Suspicious reimbursements that were not found using presences info: 53
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/831/2015/5635756.pdf">RECEIPT</a></td>
       <td>2015-03-17</td>
       <td>RUBENS BUENO</td>
-      <td>10</td>
+      <td>8</td>
+      <td>RITA DE FATIMA DE CASTRO - ME</td>
       <td>PR</td>
       <td>2.50</td>
-      <td>2015-03-17 17:22:00</td>
-      <td>2015-03-17 21:12:00</td>
-      <td>RITA DE FATIMA DE CASTRO - ME</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=17/03/2015&dataFim=17/03/2015&codigoSessao=&parteNomeParlamentar=RUBENS BUENO&siglaPartido=&siglaUF=PR" target="_blank">17:22:00 - 21:12:00</a></td>
+    </tr>
+    <tr>
+      <th>259</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5682390">5682390</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2928/2015/5682390.pdf">RECEIPT</a></td>
+      <td>2015-05-08</td>
+      <td>GOULART</td>
+      <td>7</td>
+      <td>ALMANARA RESTAURANTES E LANCHONETES LTDA</td>
+      <td>SP</td>
+      <td>77.00</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=08/05/2015&dataFim=08/05/2015&codigoSessao=&parteNomeParlamentar=GOULART&siglaPartido=&siglaUF=SP" target="_blank">15:00:00 - 15:00:00</a></td>
     </tr>
     <tr>
       <th>470</th>
@@ -13365,90 +13414,11 @@ Suspicious reimbursements that were not found using presences info: 53
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/527/2015/5681292.pdf">RECEIPT</a></td>
       <td>2015-04-27</td>
       <td>VALDIR COLATTO</td>
-      <td>7</td>
+      <td>5</td>
+      <td>RESTAURANTE ZAMPRONIO & DE FILTRO LTDA - ME</td>
       <td>SC</td>
       <td>34.00</td>
-      <td>2015-04-27 19:26:00</td>
-      <td>2015-04-27 19:26:00</td>
-      <td>RESTAURANTE ZAMPRONIO & DE FILTRO LTDA - ME</td>
-    </tr>
-    <tr>
-      <th>565</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5798316">5798316</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1458/2015/5798316.pdf">RECEIPT</a></td>
-      <td>2015-08-13</td>
-      <td>POMPEO DE MATTOS</td>
-      <td>4</td>
-      <td>RS</td>
-      <td>99.00</td>
-      <td>2015-08-13 12:50:00</td>
-      <td>2015-08-13 12:50:00</td>
-      <td>BATISTA FONTANA - EPP</td>
-    </tr>
-    <tr>
-      <th>363</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5959367">5959367</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/831/2016/5959367.pdf">RECEIPT</a></td>
-      <td>2016-03-31</td>
-      <td>RUBENS BUENO</td>
-      <td>3</td>
-      <td>PR</td>
-      <td>13.00</td>
-      <td>2016-03-31 14:32:00</td>
-      <td>2016-03-31 14:32:00</td>
-      <td>RESTAURANTE BIG MEAL LTDA - ME</td>
-    </tr>
-    <tr>
-      <th>471</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5986088">5986088</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/527/2016/5986088.pdf">RECEIPT</a></td>
-      <td>2016-03-31</td>
-      <td>VALDIR COLATTO</td>
-      <td>3</td>
-      <td>SC</td>
-      <td>36.90</td>
-      <td>2016-03-31 12:50:00</td>
-      <td>2016-03-31 14:32:00</td>
-      <td>ACE ALIMENTOS LTDA - ME</td>
-    </tr>
-    <tr>
-      <th>186</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5787002">5787002</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1901/2015/5787002.pdf">RECEIPT</a></td>
-      <td>2015-09-01</td>
-      <td>OTAVIO LEITE</td>
-      <td>3</td>
-      <td>RJ</td>
-      <td>9.80</td>
-      <td>2015-09-01 17:56:00</td>
-      <td>2015-09-01 17:56:00</td>
-      <td>M&R EMPRESA ALIMENTICIA LTDA</td>
-    </tr>
-    <tr>
-      <th>358</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5646806">5646806</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/831/2015/5646806.pdf">RECEIPT</a></td>
-      <td>2015-03-26</td>
-      <td>RUBENS BUENO</td>
-      <td>3</td>
-      <td>PR</td>
-      <td>224.00</td>
-      <td>2015-03-26 10:58:00</td>
-      <td>2015-03-26 10:58:00</td>
-      <td>RESTAURANTE ALEFA LTDA</td>
-    </tr>
-    <tr>
-      <th>137</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5966898">5966898</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2920/2016/5966898.pdf">RECEIPT</a></td>
-      <td>2016-03-28</td>
-      <td>DELEGADO EDSON MOREIRA</td>
-      <td>3</td>
-      <td>MG</td>
-      <td>81.23</td>
-      <td>2016-03-28 18:06:00</td>
-      <td>2016-03-28 19:38:00</td>
-      <td>PLANETA SABOR LTDA - EPP</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=27/04/2015&dataFim=27/04/2015&codigoSessao=&parteNomeParlamentar=VALDIR COLATTO&siglaPartido=&siglaUF=SC" target="_blank">19:26:00 - 19:26:00</a></td>
     </tr>
     <tr>
       <th>589</th>
@@ -13457,37 +13427,10 @@ Suspicious reimbursements that were not found using presences info: 53
       <td>2016-12-15</td>
       <td>POMPEO DE MATTOS</td>
       <td>3</td>
+      <td>BATISTA FONTANA - EPP</td>
       <td>RS</td>
       <td>140.00</td>
-      <td>2016-12-15 11:20:00</td>
-      <td>2016-12-15 14:56:00</td>
-      <td>BATISTA FONTANA - EPP</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5642439">5642439</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1748/2015/5642439.pdf">RECEIPT</a></td>
-      <td>2015-03-30</td>
-      <td>ANDRÉ FIGUEIREDO</td>
-      <td>3</td>
-      <td>CE</td>
-      <td>61.60</td>
-      <td>2015-03-30 18:46:00</td>
-      <td>2015-03-30 18:46:00</td>
-      <td>ESPACO GOURMET COMERCIO E SERVICOS LTDA - ME</td>
-    </tr>
-    <tr>
-      <th>54</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5610703">5610703</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2406/2015/5610703.pdf">RECEIPT</a></td>
-      <td>2015-02-09</td>
-      <td>AFONSO FLORENCE</td>
-      <td>3</td>
-      <td>BA</td>
-      <td>69.46</td>
-      <td>2015-02-09 19:48:00</td>
-      <td>2015-02-09 19:48:00</td>
-      <td>J IEDA ALLES - ME</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=15/12/2016&dataFim=15/12/2016&codigoSessao=&parteNomeParlamentar=POMPEO DE MATTOS&siglaPartido=&siglaUF=RS" target="_blank">11:20:00 - 14:56:00</a></td>
     </tr>
     <tr>
       <th>94</th>
@@ -13496,11 +13439,70 @@ Suspicious reimbursements that were not found using presences info: 53
       <td>2015-04-27</td>
       <td>JOSÉ CARLOS ALELUIA</td>
       <td>3</td>
+      <td>RESTAURANTE LELLIS TRATTORIA LTDA</td>
       <td>SP</td>
       <td>160.00</td>
-      <td>2015-04-27 19:26:00</td>
-      <td>2015-04-27 19:26:00</td>
-      <td>RESTAURANTE LELLIS TRATTORIA LTDA</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=27/04/2015&dataFim=27/04/2015&codigoSessao=&parteNomeParlamentar=JOSÉ CARLOS ALELUIA&siglaPartido=&siglaUF=BA" target="_blank">19:26:00 - 19:26:00</a></td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5610703">5610703</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2406/2015/5610703.pdf">RECEIPT</a></td>
+      <td>2015-02-09</td>
+      <td>AFONSO FLORENCE</td>
+      <td>3</td>
+      <td>J IEDA ALLES - ME</td>
+      <td>BA</td>
+      <td>69.46</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=09/02/2015&dataFim=09/02/2015&codigoSessao=&parteNomeParlamentar=AFONSO FLORENCE&siglaPartido=&siglaUF=BA" target="_blank">19:48:00 - 19:48:00</a></td>
+    </tr>
+    <tr>
+      <th>358</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5646806">5646806</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/831/2015/5646806.pdf">RECEIPT</a></td>
+      <td>2015-03-26</td>
+      <td>RUBENS BUENO</td>
+      <td>3</td>
+      <td>RESTAURANTE ALEFA LTDA</td>
+      <td>PR</td>
+      <td>224.00</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=26/03/2015&dataFim=26/03/2015&codigoSessao=&parteNomeParlamentar=RUBENS BUENO&siglaPartido=&siglaUF=PR" target="_blank">10:58:00 - 10:58:00</a></td>
+    </tr>
+    <tr>
+      <th>565</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5798316">5798316</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1458/2015/5798316.pdf">RECEIPT</a></td>
+      <td>2015-08-13</td>
+      <td>POMPEO DE MATTOS</td>
+      <td>2</td>
+      <td>BATISTA FONTANA - EPP</td>
+      <td>RS</td>
+      <td>99.00</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=13/08/2015&dataFim=13/08/2015&codigoSessao=&parteNomeParlamentar=POMPEO DE MATTOS&siglaPartido=&siglaUF=RS" target="_blank">12:50:00 - 12:50:00</a></td>
+    </tr>
+    <tr>
+      <th>482</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5783325">5783325</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2880/2015/5783325.pdf">RECEIPT</a></td>
+      <td>2015-09-03</td>
+      <td>AFONSO MOTTA</td>
+      <td>2</td>
+      <td>OSMAR CEFRIN PEREIRA FILHO - ME</td>
+      <td>RS</td>
+      <td>71.00</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=03/09/2015&dataFim=03/09/2015&codigoSessao=&parteNomeParlamentar=AFONSO MOTTA&siglaPartido=&siglaUF=RS" target="_blank">11:26:00 - 11:46:00</a></td>
+    </tr>
+    <tr>
+      <th>365</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5984323">5984323</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/831/2016/5984323.pdf">RECEIPT</a></td>
+      <td>2016-04-28</td>
+      <td>RUBENS BUENO</td>
+      <td>2</td>
+      <td>GR SERVICOS E ALIMENTACAO LTDA.</td>
+      <td>SP</td>
+      <td>23.50</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=28/04/2016&dataFim=28/04/2016&codigoSessao=&parteNomeParlamentar=RUBENS BUENO&siglaPartido=&siglaUF=PR" target="_blank">11:56:00 - 11:56:00</a></td>
     </tr>
     <tr>
       <th>360</th>
@@ -13509,24 +13511,58 @@ Suspicious reimbursements that were not found using presences info: 53
       <td>2015-10-22</td>
       <td>RUBENS BUENO</td>
       <td>2</td>
+      <td>BISTRELLO COMERCIO DE ALIMENTOS LTDA. - ME</td>
       <td>PR</td>
       <td>102.73</td>
-      <td>2015-10-22 12:18:00</td>
-      <td>2015-10-22 12:18:00</td>
-      <td>BISTRELLO COMERCIO DE ALIMENTOS LTDA. - ME</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=22/10/2015&dataFim=22/10/2015&codigoSessao=&parteNomeParlamentar=RUBENS BUENO&siglaPartido=&siglaUF=PR" target="_blank">12:18:00 - 12:18:00</a></td>
     </tr>
     <tr>
-      <th>305</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5623580">5623580</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1947/2015/5623580.pdf">RECEIPT</a></td>
-      <td>2015-02-24</td>
-      <td>VANDERLEI MACRIS</td>
-      <td>2</td>
-      <td>SP</td>
-      <td>57.74</td>
-      <td>2015-02-24 17:10:00</td>
-      <td>2015-02-24 20:04:00</td>
-      <td>FIRENZE PAES E DOCES LTDA - EPP</td>
+      <th>64</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5864279">5864279</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2348/2015/5864279.pdf">RECEIPT</a></td>
+      <td>2015-11-26</td>
+      <td>JOSÉ NUNES</td>
+      <td>1</td>
+      <td>TM SALVADOR RESTAURANTES LTDA</td>
+      <td>BA</td>
+      <td>33.94</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=26/11/2015&dataFim=26/11/2015&codigoSessao=&parteNomeParlamentar=JOSÉ NUNES&siglaPartido=&siglaUF=BA" target="_blank">11:02:00 - 11:08:00</a></td>
+    </tr>
+    <tr>
+      <th>592</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6213804">6213804</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1458/2017/6213804.pdf">RECEIPT</a></td>
+      <td>2017-02-16</td>
+      <td>POMPEO DE MATTOS</td>
+      <td>1</td>
+      <td>BATISTA FONTANA - EPP</td>
+      <td>RS</td>
+      <td>137.00</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=16/02/2017&dataFim=16/02/2017&codigoSessao=&parteNomeParlamentar=POMPEO DE MATTOS&siglaPartido=&siglaUF=RS" target="_blank">14:09:00 - 15:03:00</a></td>
+    </tr>
+    <tr>
+      <th>125</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5853733">5853733</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2990/2015/5853733.pdf">RECEIPT</a></td>
+      <td>2015-10-28</td>
+      <td>CAIO NARCIO</td>
+      <td>1</td>
+      <td>DM2 PIZZAS LTDA - ME</td>
+      <td>MG</td>
+      <td>20.50</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=28/10/2015&dataFim=28/10/2015&codigoSessao=&parteNomeParlamentar=CAIO NARCIO&siglaPartido=&siglaUF=MG" target="_blank">18:16:00 - 18:16:00</a></td>
+    </tr>
+    <tr>
+      <th>579</th>
+      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5999537">5999537</a></td>
+      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1458/2016/5999537.pdf">RECEIPT</a></td>
+      <td>2016-04-28</td>
+      <td>POMPEO DE MATTOS</td>
+      <td>1</td>
+      <td>BATISTA FONTANA - EPP</td>
+      <td>RS</td>
+      <td>127.00</td>
+      <td><a href="http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?dataIni=28/04/2016&dataFim=28/04/2016&codigoSessao=&parteNomeParlamentar=POMPEO DE MATTOS&siglaPartido=&siglaUF=RS" target="_blank">11:56:00 - 11:56:00</a></td>
     </tr>
   </tbody>
 </table>
@@ -13550,22 +13586,25 @@ Suspicious reimbursements that were not found using presences info: 53
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">missions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-04-19-official-missions.xz&#39;</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">missions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-06-05-official-missions.xz&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;report_details_link&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total official mission records:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">missions</span><span class="p">))</span>
+
+<span class="n">missions</span> <span class="o">=</span> <span class="n">missions</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;canceled == &quot;No&quot;&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total official mission records without canceled trips:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">missions</span><span class="p">))</span>
+
 <span class="n">missions</span><span class="o">.</span><span class="n">participant</span> <span class="o">=</span> <span class="n">missions</span><span class="o">.</span><span class="n">participant</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
 <span class="n">missions</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">missions</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span>
 <span class="n">missions</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">missions</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total official mission records:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">missions</span><span class="p">))</span>
 
 <span class="n">missions</span> <span class="o">=</span> <span class="n">missions</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
     <span class="n">deputies</span><span class="p">,</span> 
     <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;participant&#39;</span><span class="p">],</span>
     <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">]</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total official mission records with deputies:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">missions</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total official mission records with deputies that have not been canceled:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">missions</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -13580,8 +13619,9 @@ Suspicious reimbursements that were not found using presences info: 53
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total official mission records: 1033
-Total official mission records with deputies: 934
+<pre>Total official mission records: 1107
+Total official mission records without canceled trips: 983
+Total official mission records with deputies that have not been canceled: 902
 </pre>
 </div>
 </div>
@@ -13592,7 +13632,7 @@ Total official mission records with deputies: 934
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">meals_in_df</span> <span class="o">=</span> <span class="n">meals</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;company_state == &quot;DF&quot;&#39;</span><span class="p">)</span>
@@ -13622,7 +13662,7 @@ Total official mission records with deputies: 934
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">suspects3</span> <span class="o">=</span> <span class="p">[]</span>
@@ -13634,6 +13674,9 @@ Total official mission records with deputies: 934
     <span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">meals_while_in_mission</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
         <span class="k">continue</span>
+    <span class="n">destination</span> <span class="o">=</span> <span class="n">mission</span><span class="o">.</span><span class="n">destination</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">mission</span><span class="o">.</span><span class="n">report_details_link</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">destination</span> <span class="o">=</span> <span class="s1">&#39;&lt;a href=&quot;</span><span class="si">{}</span><span class="s1">&quot;&gt;</span><span class="si">{}</span><span class="s1">&lt;/a&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mission</span><span class="o">.</span><span class="n">report_details_link</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">meals_while_in_mission</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="n">suspects3</span><span class="o">.</span><span class="n">append</span><span class="p">([</span>
             <span class="n">m</span><span class="o">.</span><span class="n">document_id</span><span class="p">,</span>
@@ -13644,8 +13687,8 @@ Total official mission records with deputies: 934
             <span class="n">m</span><span class="o">.</span><span class="n">total_net_value</span><span class="p">,</span>
             <span class="n">m</span><span class="o">.</span><span class="n">company_state</span><span class="p">,</span>
             <span class="n">m</span><span class="o">.</span><span class="n">company_name</span><span class="p">,</span>
-            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&lt;br&gt;</span><span class="si">{}</span><span class="s2">&lt;br&gt;&lt;i&gt;From &#39;</span><span class="si">{}</span><span class="s2">&#39; to &#39;</span><span class="si">{}</span><span class="s2">&#39;&lt;/i&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">mission</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span>
+            <span class="s1">&#39;&lt;p style=&quot;text-align: left&quot;&gt;</span><span class="si">{}</span><span class="s1">&lt;br&gt;</span><span class="si">{}</span><span class="s1">&lt;br&gt;&lt;i&gt;From </span><span class="si">{}</span><span class="s1"> to </span><span class="si">{}</span><span class="s1">&lt;/i&gt;&lt;/p&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">destination</span><span class="p">,</span>
                 <span class="n">mission</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
                 <span class="n">mission</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
                 <span class="n">mission</span><span class="o">.</span><span class="n">end</span>
@@ -13672,7 +13715,7 @@ Total official mission records with deputies: 934
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">report</span><span class="p">(</span><span class="n">suspects3</span><span class="p">,</span> <span class="p">[</span>
@@ -13682,8 +13725,7 @@ Total official mission records with deputies: 934
     <span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span>
     <span class="s1">&#39;total_net_value&#39;</span><span class="p">,</span> 
     <span class="s1">&#39;mission&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;company_name&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;company_state&#39;</span>
+    <span class="s1">&#39;company_name&#39;</span>
 <span class="p">])</span>
 </pre></div>
 
@@ -13696,7 +13738,7 @@ Total official mission records with deputies: 934
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[40]:</div>
+<div class="prompt output_prompt">Out[24]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -13711,7 +13753,6 @@ Total official mission records with deputies: 934
       <th>total_net_value</th>
       <th>mission</th>
       <th>company_name</th>
-      <th>company_state</th>
     </tr>
   </thead>
   <tbody>
@@ -13722,449 +13763,108 @@ Total official mission records with deputies: 934
       <td>2015-09-16</td>
       <td>HIRAN GONÇALVES</td>
       <td>74.58</td>
-      <td>Barcelona, Londres<br>Realizar visitas técnicas às cidades de Barcelona/Espanha e Londres/Reino Unido, a fim de avaliar os legados esportivos dos Jogos Olímpicos de 1992 e de 2012.<br><i>From '2015-09-12' to '2015-09-19'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=39530&ponto=811886">Barcelona, Londres</a><br>Realizar visitas técnicas às cidades de Barcelona/Espanha e Londres/Reino Unido, a fim de avaliar os legados esportivos dos Jogos Olímpicos de 1992 e de 2012.<br><i>From 2015-09-12 to 2015-09-19</i></p></td>
       <td>DUDUSAN RESTAURANTE E FAST FOOD LTDA - EPP</td>
-      <td>DF</td>
     </tr>
     <tr>
       <th>1</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5817751">5817751</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1011/2015/5817751.pdf">RECEIPT</a></td>
-      <td>2015-10-07</td>
-      <td>ELCIONE BARBALHO</td>
-      <td>20.50</td>
-      <td>Cidade do México<br>Participar da WIP Mexico Summit 2015, a ser promovida pelo Women in Parliaments Global Forum.<br><i>From '2015-10-06' to '2015-10-10'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5817712">5817712</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1011/2015/5817712.pdf">RECEIPT</a></td>
-      <td>2015-10-08</td>
-      <td>ELCIONE BARBALHO</td>
-      <td>50.69</td>
-      <td>Cidade do México<br>Participar da WIP Mexico Summit 2015, a ser promovida pelo Women in Parliaments Global Forum.<br><i>From '2015-10-06' to '2015-10-10'</i></td>
-      <td>GOODS RESTAURANTE E LANCHONETE EIRELI - ME</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6174589">6174589</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1011/2016/6174589.pdf">RECEIPT</a></td>
-      <td>2016-12-08</td>
-      <td>ELCIONE BARBALHO</td>
-      <td>25.04</td>
-      <td>Fortaleza/CE<br>Mesa Redonda na Assembleia Legislativa do Estado do Ceará, em Fortaleza, no dia 08/12/2016, das 9 às 18 horas.<br><i>From '2016-12-07' to '2016-12-09'</i></td>
-      <td>GOODS RESTAURANTE E LANCHONETE EIRELI - ME</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>4</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5781706">5781706</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2959/2015/5781706.pdf">RECEIPT</a></td>
       <td>2015-09-01</td>
       <td>ELIZIANE GAMA</td>
       <td>54.53</td>
-      <td>Curitiba/PR<br>Realização de diligências e oitivas em Curitiba, PR, com vistas a tomar o depoimento de algumas pessoas, as quais se encontram detidas em decorrência da Operação Lava-Jato, no período compreendido entre os dias 31/08 e 03/09/2015.<br><i>From '2015-08-31' to '2015-09-03'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=39293&ponto=811941">Curitiba/PR</a><br>Realização de diligências e oitivas em Curitiba, PR, com vistas a tomar o depoimento de algumas pessoas, as quais se encontram detidas em decorrência da Operação Lava-Jato, no período compreendido entre os dias 31/08 e 03/09/2015.<br><i>From 2015-08-31 to 2015-09-03</i></p></td>
       <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
     </tr>
     <tr>
-      <th>5</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5707683">5707683</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/999/2015/5707683.pdf">RECEIPT</a></td>
-      <td>2015-05-18</td>
-      <td>DARCÍSIO PERONDI</td>
-      <td>138.00</td>
-      <td>Ipojuca/PE<br>Realização de diligência com visita às obras da Refinaria Abreu e Lima, localizada no Município de Ipojuca, PE, no dia 18/5/2015.<br><i>From '2015-05-17' to '2015-05-19'</i></td>
-      <td>WINE COMPANY BEBIDAS LTDA - EPP</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>6</th>
+      <th>2</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5664780">5664780</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2998/2015/5664780.pdf">RECEIPT</a></td>
       <td>2015-04-23</td>
       <td>SÓSTENES CAVALCANTE</td>
       <td>20.00</td>
-      <td>Buenos Aires<br>Conferência Global Parlamentar e Fé.<br><i>From '2015-04-20' to '2015-04-25'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=32815&ponto=811852">Buenos Aires</a><br>Conferência Global Parlamentar e Fé.<br><i>From 2015-04-20 to 2015-04-25</i></p></td>
       <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
     </tr>
     <tr>
-      <th>7</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5653496">5653496</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2971/2015/5653496.pdf">RECEIPT</a></td>
-      <td>2015-04-13</td>
-      <td>FLAVINHO</td>
-      <td>29.80</td>
-      <td>Las Vegas<br>NAB SHOW 2015 Las Vegas - EUA<br><i>From '2015-04-12' to '2015-04-17'</i></td>
-      <td>JLM RESTAURANTE LTDA - EPP</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>8</th>
+      <th>3</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5872138">5872138</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1932/2015/5872138.pdf">RECEIPT</a></td>
       <td>2015-12-08</td>
       <td>RÔMULO GOUVEIA</td>
       <td>2.90</td>
-      <td>Nova Iorque<br>Participar, como observador, de debates e reuniões da 70ª sessão da Assembleia-Geral da Organização das Nações Unidas (ONU). O deputado utilizará a cota para upgrade para classe executiva.<br><i>From '2015-11-09' to '2015-12-14'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=43314&ponto=811278">Nova Iorque</a><br>Participar, como observador, de debates e reuniões da 70ª sessão da Assembleia-Geral da Organização das Nações Unidas (ONU). O deputado utilizará a cota para upgrade para classe executiva.<br><i>From 2015-11-09 to 2015-12-14</i></p></td>
       <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
     </tr>
     <tr>
-      <th>9</th>
+      <th>4</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5872515">5872515</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1932/2015/5872515.pdf">RECEIPT</a></td>
       <td>2015-12-10</td>
       <td>RÔMULO GOUVEIA</td>
       <td>69.80</td>
-      <td>Nova Iorque<br>Participar, como observador, de debates e reuniões da 70ª sessão da Assembleia-Geral da Organização das Nações Unidas (ONU). O deputado utilizará a cota para upgrade para classe executiva.<br><i>From '2015-11-09' to '2015-12-14'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=43314&ponto=811278">Nova Iorque</a><br>Participar, como observador, de debates e reuniões da 70ª sessão da Assembleia-Geral da Organização das Nações Unidas (ONU). O deputado utilizará a cota para upgrade para classe executiva.<br><i>From 2015-11-09 to 2015-12-14</i></p></td>
       <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
     </tr>
     <tr>
-      <th>10</th>
+      <th>5</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5862398">5862398</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1932/2015/5862398.pdf">RECEIPT</a></td>
       <td>2015-11-26</td>
       <td>RÔMULO GOUVEIA</td>
       <td>16.00</td>
-      <td>Nova Iorque<br>Participar, como observador, de debates e reuniões da 70ª sessão da Assembleia-Geral da Organização das Nações Unidas (ONU). O deputado utilizará a cota para upgrade para classe executiva.<br><i>From '2015-11-09' to '2015-12-14'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=43314&ponto=811278">Nova Iorque</a><br>Participar, como observador, de debates e reuniões da 70ª sessão da Assembleia-Geral da Organização das Nações Unidas (ONU). O deputado utilizará a cota para upgrade para classe executiva.<br><i>From 2015-11-09 to 2015-12-14</i></p></td>
       <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
     </tr>
     <tr>
-      <th>11</th>
+      <th>6</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5872290">5872290</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1932/2015/5872290.pdf">RECEIPT</a></td>
       <td>2015-12-09</td>
       <td>RÔMULO GOUVEIA</td>
       <td>83.42</td>
-      <td>Nova Iorque<br>Participar, como observador, de debates e reuniões da 70ª sessão da Assembleia-Geral da Organização das Nações Unidas (ONU). O deputado utilizará a cota para upgrade para classe executiva.<br><i>From '2015-11-09' to '2015-12-14'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=43314&ponto=811278">Nova Iorque</a><br>Participar, como observador, de debates e reuniões da 70ª sessão da Assembleia-Geral da Organização das Nações Unidas (ONU). O deputado utilizará a cota para upgrade para classe executiva.<br><i>From 2015-11-09 to 2015-12-14</i></p></td>
       <td>ASS DOS SERVIDORES DA CAMARA DOS DEPUTADOS ASCADE</td>
-      <td>DF</td>
     </tr>
     <tr>
-      <th>12</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5677283">5677283</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5677283.pdf">RECEIPT</a></td>
-      <td>2015-05-06</td>
-      <td>CARLOS GOMES</td>
-      <td>31.50</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5666423">5666423</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5666423.pdf">RECEIPT</a></td>
-      <td>2015-04-27</td>
-      <td>CARLOS GOMES</td>
-      <td>60.13</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5668234">5668234</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5668234.pdf">RECEIPT</a></td>
-      <td>2015-04-28</td>
-      <td>CARLOS GOMES</td>
-      <td>55.00</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5677304">5677304</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5677304.pdf">RECEIPT</a></td>
-      <td>2015-05-07</td>
-      <td>CARLOS GOMES</td>
-      <td>51.00</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5677315">5677315</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5677315.pdf">RECEIPT</a></td>
-      <td>2015-05-07</td>
-      <td>CARLOS GOMES</td>
-      <td>51.00</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5681591">5681591</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5681591.pdf">RECEIPT</a></td>
-      <td>2015-05-12</td>
-      <td>CARLOS GOMES</td>
-      <td>47.63</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5681661">5681661</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5681661.pdf">RECEIPT</a></td>
-      <td>2015-05-13</td>
-      <td>CARLOS GOMES</td>
-      <td>51.13</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5686184">5686184</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5686184.pdf">RECEIPT</a></td>
-      <td>2015-05-19</td>
-      <td>CARLOS GOMES</td>
-      <td>47.63</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5686190">5686190</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5686190.pdf">RECEIPT</a></td>
-      <td>2015-05-14</td>
-      <td>CARLOS GOMES</td>
-      <td>51.13</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5688435">5688435</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5688435.pdf">RECEIPT</a></td>
-      <td>2015-05-20</td>
-      <td>CARLOS GOMES</td>
-      <td>51.13</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5693506">5693506</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5693506.pdf">RECEIPT</a></td>
-      <td>2015-05-21</td>
-      <td>CARLOS GOMES</td>
-      <td>51.00</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5696702">5696702</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5696702.pdf">RECEIPT</a></td>
-      <td>2015-05-02</td>
-      <td>CARLOS GOMES</td>
-      <td>80.00</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>BRENT EMPREENDIMENTOS E ALIMENTACAO EIRELI</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5686167">5686167</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5686167.pdf">RECEIPT</a></td>
-      <td>2015-05-15</td>
-      <td>CARLOS GOMES</td>
-      <td>97.02</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>LC DINIZ BAR E RESTAURANTE EIRELI - EPP</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5686266">5686266</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2900/2015/5686266.pdf">RECEIPT</a></td>
-      <td>2015-05-18</td>
-      <td>CARLOS GOMES</td>
-      <td>26.00</td>
-      <td>Jerusalém<br>Visita ao Parlamento israelense (Knesset) e de reuniões com parlamentares locais, na cidade de Jerusalém, Israel.<br><i>From '2015-04-16' to '2015-05-24'</i></td>
-      <td>PASTELARIA CHINESA LTDA - ME</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>26</th>
+      <th>7</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5812202">5812202</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/831/2015/5812202.pdf">RECEIPT</a></td>
       <td>2015-10-06</td>
       <td>RUBENS BUENO</td>
       <td>25.60</td>
-      <td>Roma<br>Participar do I Fórum Parlamentar Itália - América Latina e Caribe.<br><i>From '2015-10-03' to '2015-10-07'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=41110&ponto=810830">Roma</a><br>Participar do I Fórum Parlamentar Itália - América Latina e Caribe.<br><i>From 2015-10-03 to 2015-10-07</i></p></td>
       <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
     </tr>
     <tr>
-      <th>27</th>
+      <th>8</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5812204">5812204</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/831/2015/5812204.pdf">RECEIPT</a></td>
       <td>2015-10-06</td>
       <td>RUBENS BUENO</td>
       <td>147.00</td>
-      <td>Roma<br>Participar do I Fórum Parlamentar Itália - América Latina e Caribe.<br><i>From '2015-10-03' to '2015-10-07'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=41110&ponto=810830">Roma</a><br>Participar do I Fórum Parlamentar Itália - América Latina e Caribe.<br><i>From 2015-10-03 to 2015-10-07</i></p></td>
       <td>ML ALIMENTACAO E DIVERSOES S/A</td>
-      <td>DF</td>
     </tr>
     <tr>
-      <th>28</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5719218">5719218</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1325/2015/5719218.pdf">RECEIPT</a></td>
-      <td>2015-06-11</td>
-      <td>CARLOS EDUARDO CADOCA</td>
-      <td>69.90</td>
-      <td>Genebra<br>Participar como observador, da 104ª reunião da Conferência Internacional do Trabalho (OIT).<br><i>From '2015-06-01' to '2015-06-13'</i></td>
-      <td>RESTAURANTE DAS MINAS LTDA - EPP</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5760674">5760674</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1325/2015/5760674.pdf">RECEIPT</a></td>
-      <td>2015-06-09</td>
-      <td>CARLOS EDUARDO CADOCA</td>
-      <td>200.00</td>
-      <td>Genebra<br>Participar como observador, da 104ª reunião da Conferência Internacional do Trabalho (OIT).<br><i>From '2015-06-01' to '2015-06-13'</i></td>
-      <td>GM RIBEIRO DA COSTA RESTAURANTE - EPP</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5700672">5700672</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1325/2015/5700672.pdf">RECEIPT</a></td>
-      <td>2015-06-02</td>
-      <td>CARLOS EDUARDO CADOCA</td>
-      <td>70.59</td>
-      <td>Genebra<br>Participar como observador, da 104ª reunião da Conferência Internacional do Trabalho (OIT).<br><i>From '2015-06-01' to '2015-06-13'</i></td>
-      <td>E & D COMERCIO DE ALIMENTOS LTDA - ME</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5707049">5707049</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1325/2015/5707049.pdf">RECEIPT</a></td>
-      <td>2015-06-10</td>
-      <td>CARLOS EDUARDO CADOCA</td>
-      <td>75.69</td>
-      <td>Genebra<br>Participar como observador, da 104ª reunião da Conferência Internacional do Trabalho (OIT).<br><i>From '2015-06-01' to '2015-06-13'</i></td>
-      <td>E & D COMERCIO DE ALIMENTOS LTDA - ME</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>32</th>
+      <th>9</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5755864">5755864</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1945/2015/5755864.pdf">RECEIPT</a></td>
       <td>2015-06-04</td>
       <td>VALADARES FILHO</td>
       <td>100.00</td>
-      <td>Genebra<br>Participar como observadores da 104ª reunião da Conferência Inernacional do Trabalho (OIT).<br><i>From '2015-06-01' to '2015-06-13'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=33010&ponto=811320">Genebra</a><br>Participar como observadores da 104ª reunião da Conferência Inernacional do Trabalho (OIT).<br><i>From 2015-06-01 to 2015-06-13</i></p></td>
       <td>TESSIER RESTAURANTE EIRELI - EPP</td>
-      <td>DF</td>
     </tr>
     <tr>
-      <th>33</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5879018">5879018</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3010/2015/5879018.pdf">RECEIPT</a></td>
-      <td>2015-12-16</td>
-      <td>ANTÔNIO JÁCOME</td>
-      <td>47.63</td>
-      <td>Cingapura<br>Participar do ESMO ASIA 2015 Congress, a ser promovido pela European Society for Medical Oncolgy.<br><i>From '2015-12-15' to '2015-12-21'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>34</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/5879030">5879030</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3010/2015/5879030.pdf">RECEIPT</a></td>
-      <td>2015-12-16</td>
-      <td>ANTÔNIO JÁCOME</td>
-      <td>53.00</td>
-      <td>Cingapura<br>Participar do ESMO ASIA 2015 Congress, a ser promovido pela European Society for Medical Oncolgy.<br><i>From '2015-12-15' to '2015-12-21'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>35</th>
+      <th>10</th>
       <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6028599">6028599</a></td>
       <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1951/2016/6028599.pdf">RECEIPT</a></td>
       <td>2016-06-08</td>
       <td>VINICIUS CARVALHO</td>
       <td>55.09</td>
-      <td>Genebra<br>Participar como observador da 105ª reunião da Conferência Internacional do Trabalho, promovida pela Organização Internacional do Trabalho(OIT). O deputado usa a cota Ceap para pagar diferença de tarifa.).<br><i>From '2016-06-05' to '2016-06-11'</i></td>
+      <td><p style="text-align: left"><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=53313&ponto=811379">Genebra</a><br>Participar como observador da 105ª reunião da Conferência Internacional do Trabalho, promovida pela Organização Internacional do Trabalho(OIT). O deputado usa a cota Ceap para pagar diferença de tarifa.).<br><i>From 2016-06-05 to 2016-06-11</i></p></td>
       <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>36</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6072107">6072107</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2976/2016/6072107.pdf">RECEIPT</a></td>
-      <td>2016-07-12</td>
-      <td>HERCULANO PASSOS</td>
-      <td>112.50</td>
-      <td>Buenos Aires<br>Participar de reuniões e ações de promoção do turismo brasileiro na Argentina, a serem promovidas pelo Instituto Brasileiro do Turismo(Embratur), parceria com a Embaixada do Brasil, na cidade de Buenos Aires.<br><i>From '2016-07-11' to '2016-07-13'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>37</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6056395">6056395</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2976/2016/6056395.pdf">RECEIPT</a></td>
-      <td>2016-07-12</td>
-      <td>HERCULANO PASSOS</td>
-      <td>22.00</td>
-      <td>Buenos Aires<br>Participar de reuniões e ações de promoção do turismo brasileiro na Argentina, a serem promovidas pelo Instituto Brasileiro do Turismo(Embratur), parceria com a Embaixada do Brasil, na cidade de Buenos Aires.<br><i>From '2016-07-11' to '2016-07-13'</i></td>
-      <td>LA HOTELS EMPREENDIMENTOS 1 LTDA.</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>38</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6056396">6056396</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2976/2016/6056396.pdf">RECEIPT</a></td>
-      <td>2016-07-12</td>
-      <td>HERCULANO PASSOS</td>
-      <td>44.00</td>
-      <td>Buenos Aires<br>Participar de reuniões e ações de promoção do turismo brasileiro na Argentina, a serem promovidas pelo Instituto Brasileiro do Turismo(Embratur), parceria com a Embaixada do Brasil, na cidade de Buenos Aires.<br><i>From '2016-07-11' to '2016-07-13'</i></td>
-      <td>LA HOTELS EMPREENDIMENTOS 1 LTDA.</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>39</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6155498">6155498</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2282/2016/6155498.pdf">RECEIPT</a></td>
-      <td>2016-11-23</td>
-      <td>ROBERTO DE LUCENA</td>
-      <td>52.19</td>
-      <td>Lisboa<br>Realizar visita à Assembleia da República, na cidade de Lisboa, Portugal a fim de tratar de assuntos referentes a transparência, parlamento aberto e políticas de proteção aos direitos do idoso.<br><i>From '2016-11-21' to '2016-11-27'</i></td>
-      <td>SERVICO NACIONAL DE APRENDIZAGEM COMERCIAL SENAC</td>
-      <td>DF</td>
-    </tr>
-    <tr>
-      <th>40</th>
-      <td><a target="_blank" href="http://jarbas.serenatadeamor.org/#/document_id/6166004">6166004</a></td>
-      <td><a target="_blank" href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2282/2016/6166004.pdf">RECEIPT</a></td>
-      <td>2016-11-22</td>
-      <td>ROBERTO DE LUCENA</td>
-      <td>20.90</td>
-      <td>Lisboa<br>Realizar visita à Assembleia da República, na cidade de Lisboa, Portugal a fim de tratar de assuntos referentes a transparência, parlamento aberto e políticas de proteção aos direitos do idoso.<br><i>From '2016-11-21' to '2016-11-27'</i></td>
-      <td>RESTAURANTE CHATEAU BRAZIL EIRELI - ME</td>
-      <td>DF</td>
     </tr>
   </tbody>
 </table>
@@ -14175,6 +13875,21 @@ Total official mission records with deputies: 934
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Conclusions">Conclusions<a class="anchor-link" href="#Conclusions">&#182;</a></h2><ul>
+<li>Talk about the false positives</li>
+<li>Talk about the new column on the dataset of official missions</li>
+<li>Problems with the date on some missions (like <code>RÔMULO GOUVEIA</code> trip which has the wrong end date</li>
+<li>Check if previous suspects were removed from dataset based on emails exchanged with Serenata de Amor team</li>
+</ul>
+
+</div>
+</div>
 </div>
     </div>
   </div>

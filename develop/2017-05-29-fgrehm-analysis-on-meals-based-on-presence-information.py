@@ -43,21 +43,21 @@ pd.set_option('display.max_colwidth', 1500)
 
 # ## Data preparation
 
-# In[6]:
+# In[3]:
 
 # fetch("2017-02-15-receipts-texts.xz", "../data")
 # fetch("2017-03-15-reimbursements.xz", "../data")
-fetch("2017-05-21-companies-no-geolocation.xz", "../data")
-
-# TODO: Need to make sure the datasets have been uploaded to the S3 bucket
-# fetch("2017-04-19-official-missions.xz", "../data")
+# fetch("2017-05-21-companies-no-geolocation.xz", "../data")
 # fetch("2017-05-29-session-start-times.xz", "../data")
 # fetch("2017-05-29-presences.xz", "../data")
 # fetch("2017-05-29-deputies.xz", "../data")
 # fetch("2017-05-29-speeches.xz", "../data")
 
+# TODO: This need to be uploaded to S3
+# fetch("2017-06-05-official-missions.xz", "../data")
 
-# In[7]:
+
+# In[4]:
 
 reimbursements = pd.read_csv('../data/2017-03-15-reimbursements.xz', dtype={'cnpj_cpf': np.str}, low_memory=False)
 print("Total reimbursements:", len(reimbursements))
@@ -72,10 +72,10 @@ meals = reimbursements.query('subquota_description == "Congressperson meal"')
 print("Meals in this term:", len(meals))
 
 
-# In[8]:
+# In[5]:
 
 companies = pd.read_csv('../data/2017-05-21-companies-no-geolocation.xz', low_memory=False)
-companies['cnpj'] = companies['cnpj'].str.replace(r'[\.\/\-]', '')
+companies['cnpj'] = companies['cnpj'].str.replace(r'\D', '')
 
 # Reduce dataset to meals with matching company and state info
 meals = pd.merge(
@@ -87,7 +87,7 @@ meals = pd.merge(
 )
 print("Meals with matching companies:", len(meals))
 
-meals = meals[~meals.state_company.isnull()]
+meals = meals[meals.state_company.notnull()]
 print("Meals with known company state:", len(meals))
 meals = meals.rename(index=str, columns={
     "state_congressperson": "congressperson_state",
@@ -97,28 +97,28 @@ meals = meals.rename(index=str, columns={
 })
 
 
-# In[9]:
+# In[6]:
 
 texts = pd.read_csv('../data/2017-02-15-receipts-texts.xz', dtype={'text': np.str}, low_memory=False)
 texts['text'] = texts.text.str.upper()
 
-meals_with_ts = texts.merge(meals[['document_id']], on='document_id')
-print("Meals with OCR:", len(meals_with_ts))
+meals_with_ocr = texts.merge(meals[['document_id']], on='document_id')
+print("Meals with OCR:", len(meals_with_ocr))
 
 
-# In[10]:
+# In[7]:
 
 def extract_timestamps(text):
-    return re.findall('[0-9][0-9]:[0-9][0-9]:[0-9][0-9]', str(text))
-meals_with_ts['timestamps'] = meals_with_ts.text.apply(extract_timestamps)
+    return re.findall('[0-2][0-9]:[0-5][0-9]:[0-5][0-9]', str(text))
+meals_with_ocr['timestamps'] = meals_with_ocr.text.apply(extract_timestamps)
 
 def parse_timestamps(ts):
     try:
         return time.strptime(ts, "%H:%M:%S")
     except:
         return None
-meals_with_ts['timestamps'] = meals_with_ts.timestamps.apply(lambda ts: list(map(parse_timestamps, ts)))
-meals_with_ts = meals_with_ts[meals_with_ts.apply(lambda r: len(r.timestamps) > 0, axis=1)]
+meals_with_ocr['timestamps'] = meals_with_ocr.timestamps.apply(lambda ts: list(map(parse_timestamps, ts)))
+meals_with_ts = meals_with_ocr[meals_with_ocr.apply(lambda r: len(r.timestamps) > 0, axis=1)]
 
 meals = pd.merge(
     left=meals,
@@ -126,10 +126,36 @@ meals = pd.merge(
     how='left',
     on='document_id'
 )
-print("Meals with timestamps:", len(meals[~meals.timestamps.isnull()]))
+print("Meals with timestamps:", len(meals[meals.timestamps.notnull()]))
 
 
-# In[11]:
+# In[8]:
+
+def extract_dates(text):
+    return re.findall('\d{2}/\d{2}/\d{2,4}', str(text))
+meals_with_ocr['receipt_dates'] = meals_with_ocr.text.apply(extract_dates)
+
+def parse_dates(ts):
+    try:
+        return time.strptime(ts, "%d/%m/%Y")
+    except:
+        try:
+            return time.strptime(ts, "%d/%m/%y")
+        except:
+            return None
+meals_with_ocr['receipt_dates'] = meals_with_ocr.receipt_dates.apply(lambda ts: list(map(parse_dates, ts)))
+meals_with_dts = meals_with_ocr[meals_with_ocr.apply(lambda r: len(r.receipt_dates) > 0, axis=1)]
+
+meals = pd.merge(
+    left=meals,
+    right=meals_with_dts[['document_id', 'receipt_dates']],
+    how='left',
+    on='document_id'
+)
+print("Meals with dates:", len(meals[meals.receipt_dates.notnull()]))
+
+
+# In[9]:
 
 meals = meals[[
     'document_id',
@@ -144,7 +170,8 @@ meals = meals[[
     'total_net_value',
     'company_name',
     'company_state',
-    'timestamps'
+    'timestamps',
+    'receipt_dates'
 ]]
 
 
@@ -154,7 +181,7 @@ meals = meals[[
 # * Making an approximation of the total time the congressperson was in Brasilia (like more than X hours) and checking for reimbursements on days they were there for a long period of time
 # * Leveraging OCR data from receipts and grabbing their timestamps
 
-# In[12]:
+# In[10]:
 
 deputies = pd.read_csv('../data/2017-04-19-deputies.xz', low_memory=False)
 print("Total deputies:", len(deputies))
@@ -166,7 +193,7 @@ print("Session records:", len(sessions))
 
 presences = pd.read_csv('../data/2017-04-19-presences.xz', low_memory=False)
 presences['date'] = pd.to_datetime(presences['date'], format="%Y-%m-%dT%H:%M:%S").dt.date
-presences.sort_values('date', ascending=False)
+presences.sort_values('date', ascending=False, inplace=True)
 print("Presence records:", len(presences))
 
 presences = presences.query('presence == "Present"')
@@ -180,7 +207,7 @@ presences = pd.merge(deputies, presences, on='congressperson_document')
 print("Presence records with deputies matched:", len(presences))
 
 
-# In[13]:
+# In[11]:
 
 presences['first_session_at'] = presences['started_at']
 presences['last_session_at'] = presences['started_at']
@@ -195,7 +222,7 @@ presences = presences.groupby(['congressperson_id', 'date'], as_index=False).agg
 print("Confirmed presences grouped by date and congressperson:", len(presences))
 
 
-# In[17]:
+# In[12]:
 
 meals_outside_df = meals.query('company_state != "DF"')
 meals_outside_df_while_in_df = pd.merge(
@@ -218,10 +245,10 @@ meals_outside_df_while_in_df = meals_outside_df_while_in_df[
 print("Meals excluding expenses on hotels:", len(meals_outside_df_while_in_df))
 
 
-# In[18]:
+# In[13]:
 
 def score(meal):
-    return score_by_time(meal) + score_by_ts(meal)
+    return score_by_time(meal) + score_by_ts(meal) - penalty_by_date(meal)
 
 def score_by_time(meal):
     if meal.total_sessions > 1:
@@ -240,15 +267,44 @@ def score_by_ts(meal):
         if (meal.first_session_at.hour-1) < ts.tm_hour < (meal.last_session_at.hour+1):
             occurences += 1
     return occurences * 10
+
+def penalty_by_date(meal):
+    if meal.receipt_dates == '':
+        return 0
+    
+    bad_occurences = 0
+    for dt in meal.receipt_dates:
+        if dt == None:
+            continue
+        if dt != meal.issue_date:
+            bad_occurences += 1
+    return bad_occurences * 2
+
+def period_in_df(meal):
+    url = (
+        'http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarPresencasDia?'
+        'data={}&numMatriculaParlamentar={}&siglaPartido=&siglaUF='
+    ).format(
+        meal.issue_date.strftime('%d/%m/%Y'),
+        int(meal.congressperson_document)
+    )
+    return '<a href="{}" target="_blank">{} - {}</a>'.format(
+        url,
+        meal.first_session_at.strftime('%H:%M:%S'),
+        meal.last_session_at.strftime('%H:%M:%S')
+    )
     
 suspects = meals_outside_df_while_in_df.copy()
 suspects.timestamps.fillna('', inplace=True)
+suspects.receipt_dates.fillna('', inplace=True)
 suspects['score'] = suspects.apply(score, axis='columns')
+suspects['period_in_df'] = suspects.apply(period_in_df, axis='columns')
+# suspects.query('score > 0').sort_values('score', ascending=False)
 suspects = suspects.query('score > 0').sort_values('score', ascending=False)
 print("Suspicious reimbursements:", len(suspects))
 
 
-# In[24]:
+# In[14]:
 
 report(suspects.head(50), [
     'document_id',
@@ -256,11 +312,10 @@ report(suspects.head(50), [
     'issue_date', 
     'congressperson_name',
     'company_name',
-    'company_state', 
+    'company_state',
     'total_net_value',
     'score',
-    'first_session_at', 
-    'last_session_at',
+    'period_in_df',
 ])
 
 
@@ -270,7 +325,7 @@ report(suspects.head(50), [
 # * Making an approximation of the total time the congressperson was in Brasilia (like more than X hours) and checking for reimbursements on days they were there for a long period of time
 # * Leveraging OCR data from receipts and grabbing their timestamps
 
-# In[25]:
+# In[15]:
 
 speeches = pd.read_csv('../data/2017-04-21-speeches.xz', low_memory=False)
 print("Total speeches:", len(speeches))
@@ -291,7 +346,7 @@ speeches = speeches[[
 print("Speeches by politicians:", len(speeches))
 
 
-# In[26]:
+# In[16]:
 
 speeches = pd.merge(
             speeches, 
@@ -301,7 +356,7 @@ speeches = pd.merge(
 print("Speeches with matching deputy:", len(speeches))
 
 
-# In[27]:
+# In[17]:
 
 speeches['first_speech_at'] = speeches['speech_started_at']
 speeches['last_speech_at'] = speeches['speech_started_at']
@@ -315,7 +370,7 @@ speeches = speeches.groupby(['congressperson_document', 'session_date'], as_inde
 print("Speeches grouped by date:", len(speeches))
 
 
-# In[29]:
+# In[18]:
 
 meals_outside_df_during_speeches = pd.merge(
     left=speeches, 
@@ -334,10 +389,10 @@ meals_outside_df_during_speeches = meals_outside_df_during_speeches[
 print("Meals excluding expenses on hotels:", len(meals_outside_df_during_speeches))
 
 
-# In[34]:
+# In[19]:
 
 def score(meal):
-    return score_by_time(meal) + score_by_ts(meal)
+    return score_by_time(meal) + score_by_ts(meal) - penalty_by_date(meal)
 
 def score_by_time(meal):
     if meal.total_speeches > 1:
@@ -356,10 +411,40 @@ def score_by_ts(meal):
         if (meal.first_speech_at.hour-1) < ts.tm_hour < (meal.last_speech_at.hour+1):
             occurences += 1
     return occurences * 10
+
+def penalty_by_date(meal):
+    if meal.receipt_dates == '':
+        return 0
+    
+    bad_occurences = 0
+    for dt in meal.receipt_dates:
+        if dt == None:
+            continue
+        if dt != meal.issue_date:
+            bad_occurences += 1
+    return bad_occurences * 2
+    
+def period_in_df(meal):
+    url = (
+        'http://www.camara.leg.br/SitCamaraWS/sessoesreunioes.asmx/ListarDiscursosPlenario?'
+        'dataIni={}&dataFim={}&codigoSessao=&parteNomeParlamentar={}&siglaPartido=&siglaUF={}'
+    ).format(
+        meal.issue_date.strftime('%d/%m/%Y'),
+        meal.issue_date.strftime('%d/%m/%Y'),
+        meal.congressperson_name,
+        meal.congressperson_state
+    )
+    return '<a href="{}" target="_blank">{} - {}</a>'.format(
+        url,
+        meal.first_speech_at.strftime('%H:%M:%S'),
+        meal.last_speech_at.strftime('%H:%M:%S')
+    )
     
 suspects2 = meals_outside_df_during_speeches.copy()
 suspects2.timestamps.fillna('', inplace=True)
+suspects2.receipt_dates.fillna('', inplace=True)
 suspects2['score'] = suspects2.apply(score, axis='columns')
+suspects2['period_in_df'] = suspects2.apply(period_in_df, axis='columns')
 suspects2 = suspects2.query('score > 0').sort_values('score', ascending=False)
 print("Suspicious reimbursements:", len(suspects2))
 
@@ -367,7 +452,7 @@ suspects2 = suspects2[~suspects2.document_id.isin(suspects.document_id)]
 print("Suspicious reimbursements that were not found using presences info:", len(suspects2))
 
 
-# In[35]:
+# In[20]:
 
 report(suspects2.head(20), [
     'document_id',
@@ -375,11 +460,10 @@ report(suspects2.head(20), [
     'issue_date', 
     'congressperson_name',
     'score',
+    'company_name',
     'company_state', 
     'total_net_value', 
-    'first_speech_at', 
-    'last_speech_at',
-    'company_name'
+    'period_in_df'
 ])
 
 
@@ -387,30 +471,33 @@ report(suspects2.head(20), [
 # 
 # In the past we also found cases where the congressperson was on an official mission outside DF but requested a reimbursement for a meal in DF
 
-# In[36]:
+# In[21]:
 
-missions = pd.read_csv('../data/2017-04-19-official-missions.xz', low_memory=False)
+missions = pd.read_csv('../data/2017-06-05-official-missions.xz', dtype={'report_details_link': np.str}, low_memory=False)
+print("Total official mission records:", len(missions))
+
+missions = missions.query('canceled == "No"')
+print("Total official mission records without canceled trips:", len(missions))
+
 missions.participant = missions.participant.apply(lambda x: x.upper())
 missions.start = pd.to_datetime(missions.start, format="%Y-%m-%d").dt.date
 missions.end = pd.to_datetime(missions.end, format="%Y-%m-%d").dt.date
-
-print("Total official mission records:", len(missions))
 
 missions = missions.merge(
     deputies, 
     left_on=['participant'],
     right_on=['congressperson_name']
 )
-print("Total official mission records with deputies:", len(missions))
+print("Total official mission records with deputies that have not been canceled:", len(missions))
 
 
-# In[38]:
+# In[22]:
 
 meals_in_df = meals.query('company_state == "DF"')
 print("Meals in DF:", len(meals_in_df))
 
 
-# In[39]:
+# In[23]:
 
 suspects3 = []
 for idx, mission in missions.iterrows():
@@ -421,6 +508,9 @@ for idx, mission in missions.iterrows():
     ]
     if (len(meals_while_in_mission) == 0):
         continue
+    destination = mission.destination
+    if type(mission.report_details_link) is str:
+        destination = '<a href="{}">{}</a>'.format(mission.report_details_link, destination)
     for _, m in meals_while_in_mission.iterrows():
         suspects3.append([
             m.document_id,
@@ -431,8 +521,8 @@ for idx, mission in missions.iterrows():
             m.total_net_value,
             m.company_state,
             m.company_name,
-            "{}<br>{}<br><i>From '{}' to '{}'</i>".format(
-                mission.destination,
+            '<p style="text-align: left">{}<br>{}<br><i>From {} to {}</i></p>'.format(
+                destination,
                 mission.subject,
                 mission.start,
                 mission.end
@@ -452,7 +542,7 @@ suspects3 = pd.DataFrame(suspects3, columns=[
 ])
 
 
-# In[40]:
+# In[24]:
 
 report(suspects3, [
     'document_id',
@@ -461,7 +551,13 @@ report(suspects3, [
     'congressperson_name',
     'total_net_value', 
     'mission',
-    'company_name',
-    'company_state'
+    'company_name'
 ])
 
+
+# ## Conclusions
+# 
+# - Talk about the false positives
+# - Talk about the new column on the dataset of official missions
+# - Problems with the date on some missions (like `RÔMULO GOUVEIA` trip which has the wrong end date
+# - Check if previous suspects were removed from dataset based on emails exchanged with Serenata de Amor team
