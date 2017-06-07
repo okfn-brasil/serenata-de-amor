@@ -248,6 +248,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         return 'R$ {:.2f}'.format(obj.total_net_value).replace('.', ',')
 
     value.short_description = 'valor'
+    value.admin_order_field = 'total_net_value'
 
     def still_available(self, obj):
         return obj.available_in_latest_dataset
