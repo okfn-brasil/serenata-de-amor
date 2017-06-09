@@ -76,6 +76,6 @@ drawer model =
             drawerLinks
             [ ( "/static/ceap-datasets.html", translate model.lang AboutDatasets )
             , ( "http://github.com/datasciencebr/jarbas", translate model.lang AboutJarbas )
-            , ( "http://serenata.serenatadeamor.org/", translate model.lang AboutSerenata )
+            , ( "https://serenatadeamor.org", translate model.lang AboutSerenata )
             ]
     ]
