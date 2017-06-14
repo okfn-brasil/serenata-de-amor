@@ -27,13 +27,13 @@ class TestAdapter(TestCase):
     def tearDown(self):
         shutil.rmtree(self.temp_path)
 
-    @patch('rosie.chamber_of_deputies.adapter.ChamberOfDeputiesDataset')
+    @patch('rosie.chamber_of_deputies.adapter.Dataset')
     @patch('rosie.chamber_of_deputies.adapter.fetch')
     def test_get_performs_a_left_merge_between_reimbursements_and_companies(self, fetch, chamber_of_deputies):
         self.assertEqual(6, len(self.subject.dataset))
         self.assertEqual(1, self.subject.dataset['legal_entity'].isnull().sum())
 
-    @patch('rosie.chamber_of_deputies.adapter.ChamberOfDeputiesDataset')
+    @patch('rosie.chamber_of_deputies.adapter.Dataset')
     @patch('rosie.chamber_of_deputies.adapter.fetch')
     def test_prepare_dataset(self, fetch, chamber_of_deputies):
         """

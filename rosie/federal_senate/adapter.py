@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from serenata_toolbox.federal_senate.federal_senate_dataset import FederalSenateDataset
+from serenata_toolbox.federal_senate.dataset import Dataset
 
 COLUMNS = {
     'net_value': 'reimbursement_value',
@@ -43,7 +43,7 @@ class Adapter:
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)
-        federal_senate = FederalSenateDataset(self.path)
+        federal_senate = Dataset(self.path)
         federal_senate.fetch()
         federal_senate.translate()
         federal_senate_reimbursements_path = federal_senate.clean()

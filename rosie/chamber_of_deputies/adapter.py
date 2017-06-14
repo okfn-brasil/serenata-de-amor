@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from serenata_toolbox.chamber_of_deputies.chamber_of_deputies_dataset import ChamberOfDeputiesDataset
+from serenata_toolbox.chamber_of_deputies.dataset import Dataset
 from serenata_toolbox.datasets import fetch
 
 COLUMNS = {
@@ -56,7 +56,7 @@ class Adapter:
 
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)
-        chamber_of_deputies = ChamberOfDeputiesDataset(self.path)
+        chamber_of_deputies = Dataset(self.path)
         chamber_of_deputies.fetch()
         chamber_of_deputies.convert_to_csv()
         chamber_of_deputies.translate()
