@@ -158,8 +158,8 @@ fetch_latest_backup('data/')
 ##### Politician's relatives
 1. `src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
 
-##### Deputies Advisors
-1. `src/fetch_deputies_advisors.py` gets the name and point number (and act's issued place and date when available) of all advisors of current deputies from Chamber of Deputies website and saves to `data/YYYY-MM-DD-deputies-advisors.xz`
+##### Congresspeople Advisors
+1. `src/fetch_congresspeople_advisors.py` gets the name and point number (and act's issued place and date when available) of all advisors of current congresspeople from Chamber of Deputies website and saves to `data/YYYY-MM-DD-congresspeople-advisors.xz`
 
 ##### Federal Budget
 1. `src/fetch_federal_budget_datasets.py` downloads datasets files of agreements made with Federal Budget and their related amendments.  The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
@@ -196,7 +196,7 @@ All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) da
 1. `data/YYYY-MM-DD-companies.xz`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
 1. `data/YYYY-MM-DD-congressperson_relatives.xz` contains data on the relatives of congresspeople and the nature of their relationship.
 1. `data/YYYY-MM-DD-congressperson_relatives_raw.xz` also contains data on the relatives of congresspeople, but is only created if `src/get_family_names.py` fails to handle some names.
-1. `data/YYYY-MM-DD-deputies-advisors.xz` contains data from advisors of each deputy in the current term along with the deputy number and deputy name.
+1. `data/YYYY-MM-DD-congresspeople-advisors.xz` contains data from advisors of each congressperson in the current term along with the congressperson number and congressperson name.
 1. `data/YYYY-MM-DD-sex-place-distances` contains data from the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (including distance in meters) — this dataset is just a sample (check [this notebook](develop/2017-04-21-cuducos-explore-sex-places-dataset.ipynb) for details).
 1. `data/YYYY-MM-DD-tse-candidates.xz` contains information about politicians candidacy over the last years. Can be used to extract a list of all politicians in Brazil.
 1. `data/YYYY-MM-DD-congressperson-details.xz` contains the birth date, gender and civil name of congresspeople.
