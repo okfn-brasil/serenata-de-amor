@@ -10,9 +10,10 @@ import requests
 
 CAMARA_URL = (
     'http://www2.camara.leg.br/transparencia/recursos-humanos/'
-    'quadro-remuneratorio/consulta-secretarios-parlamentares/'
+    'servidores/lotacao/consulta-secretarios-parlamentares/'
     'layouts_transpar_quadroremuner_consultaSecretariosParlamentares'
 )
+
 USERAGENT = (
     'Mozilla/5.0 (X11; Linux x86_64) '
     'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -39,7 +40,6 @@ def run():
 
     print("Preparing requests to fetch advisors data…")
     requests_ = (get_page(deputy) for deputy in deputies_data)
-
     for page_data in send_requests(requests_):
         deputy_with_advisors = page_data["data"]
         deputy = {
@@ -138,7 +138,7 @@ def extract_data_from_page(page):
     number_of_pages = extract_number_of_pages(html_tree)
     current_page = extract_current_page(html_tree)
 
-    tbody = html_tree.xpath('//tbody[@class="coresAlternadas"]/tr')
+    tbody = html_tree.xpath('//table[@class="tabela-padrao-bootstrap"]/tbody/tr')
     deputy_advisors = tuple(extract_adivisors(tbody))
 
     select = html_tree.xpath('//select[@id="lotacao"]/option[@selected]')[0]
