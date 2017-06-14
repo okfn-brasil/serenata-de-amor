@@ -72,7 +72,7 @@ dataset.shape
 
 # ## Further investigation
 # 
-# With that table we selected a few companies and apps for futher investigation:
+# With that table we selected a few companies and apps for further investigation:
 # 
 # 1. Companies
 #    1. CGMP CENTRO DE GESTAO DE MEIOS DE PAGAMENTO LTDA - CNPJ: 04088208000165
