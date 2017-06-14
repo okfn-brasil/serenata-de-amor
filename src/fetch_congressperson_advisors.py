@@ -222,7 +222,6 @@ def write_to_csv(data, output):
         writer = csv.DictWriter(fh, **kwargs)
         writer.writeheader()
         for advisor in data:
-            print(advisor)
             writer.writerow(advisor)
 
 
