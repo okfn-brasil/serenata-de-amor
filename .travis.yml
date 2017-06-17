@@ -6,6 +6,7 @@ install:
   - pip install coveralls
 script:
   - coverage run rosie.py test
+  - python rosie.py run chamber_of_deputies
   - python rosie.py run federal_senate
 after_success:
   - coveralls
