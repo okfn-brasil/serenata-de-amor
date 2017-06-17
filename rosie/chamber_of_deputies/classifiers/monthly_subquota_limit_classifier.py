@@ -12,15 +12,30 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
     issue_date : datetime column
         Date when the expense was made.
 
+    month : int column
+        The quota month matching the expense request.
+
     net_value : float column
         The value of the expense.
+
+    subquota_number : category column
+        A number to classify a category of expenses.
+
+    year : int column
+        The quota year matching the expense request.
     """
 
     KEYS = ['applicant_id', 'month', 'year']
+    COLS = ['applicant_id',
+            'issue_date',
+            'month',
+            'net_value',
+            'subquota_number',
+            'year']
 
     def fit(self, X):
         self.X = X
-        self._X = self.X.copy()
+        self._X = self.X[self.COLS].copy()
         self.__create_columns()
         return self
 
