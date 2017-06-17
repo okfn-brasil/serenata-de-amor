@@ -52,9 +52,7 @@ pd.set_option('display.max_colwidth', 1500)
 # fetch("2017-05-29-presences.xz", "../data")
 # fetch("2017-05-29-deputies.xz", "../data")
 # fetch("2017-05-29-speeches.xz", "../data")
-
-# TODO: This need to be uploaded to S3
-# fetch("2017-06-05-official-missions.xz", "../data")
+# fetch("2017-06-17-official-missions.xz", "../data")
 
 
 # In[4]:
@@ -299,7 +297,6 @@ suspects.timestamps.fillna('', inplace=True)
 suspects.receipt_dates.fillna('', inplace=True)
 suspects['score'] = suspects.apply(score, axis='columns')
 suspects['period_in_df'] = suspects.apply(period_in_df, axis='columns')
-# suspects.query('score > 0').sort_values('score', ascending=False)
 suspects = suspects.query('score > 0').sort_values('score', ascending=False)
 print("Suspicious reimbursements:", len(suspects))
 
@@ -473,7 +470,7 @@ report(suspects2.head(20), [
 
 # In[21]:
 
-missions = pd.read_csv('../data/2017-06-05-official-missions.xz', dtype={'report_details_link': np.str}, low_memory=False)
+missions = pd.read_csv('../data/2017-06-17-official-missions.xz', dtype={'report_details_link': np.str}, low_memory=False)
 print("Total official mission records:", len(missions))
 
 missions = missions.query('canceled == "No"')
@@ -555,9 +552,44 @@ report(suspects3, [
 ])
 
 
-# ## Conclusions
+# ## Results
 # 
-# - Talk about the false positives
-# - Talk about the new column on the dataset of official missions
-# - Problems with the date on some missions (like `RÔMULO GOUVEIA` trip which has the wrong end date
-# - Check if previous suspects were removed from dataset based on emails exchanged with Serenata de Amor team
+# I was able to manually check each individual suspicious reimbursement and the list of the ones have been confirmed have been sent to the team. Out of 81 suspects raised, 47 have a huge potential of being illegal:
+# 
+# * Out of the top 50 suspect reimbursements based on _presence_ information, 39 can be questioned
+# * Out of the top 20 suspect reimbursements based on _speeches_ information that were not caught by presence information, only 5 can be questioned
+# * Out of the top 11 suspect reimbursements based on _missions_ information, 3 can be questioned
+# 
+# 
+# ## False positives based on datasets
+# 
+# #### Presences & session start times
+# 
+# * Most of what I considered to be false positives are reimbursements made on airports. If we had a way to identify those companies and remove them from future analysis it would be great
+# * Some timestamps found on receipts are from the time when someone looked up the receipt online (more info on this [comment](https://github.com/datasciencebr/serenata-de-amor/pull/247#issuecomment-305923333)) and while "penalising" reimbursements that have dates that are different from when the purchase was made reduced the amount of false positives, that's something that can always get into our way.
+# * Seems that some reimbursements are associated with a CNPJ that does not match what's on the receipt (which is actually a company in DF)
+#   - For [#5805269](http://jarbas.serenatadeamor.org/#/document_id/5805269), Jarbas says Varzea Grande but [the receipt is actually from a restaurant in DF](http://www.camara.gov.br/cota-parlamentar/documentos/publ/3007/2015/5805269.pdf)
+#   - Same for [#5706823](http://jarbas.serenatadeamor.org/#/document_id/5706823) ([receipt](http://www.camara.gov.br/cota-parlamentar/documentos/publ/2235/2015/5706823.pdf))
+# * Found 2 fuel reimbursements that were categorized as meal:
+#   - http://jarbas.serenatadeamor.org/#/document_id/5769863 / http://www.camara.gov.br/cota-parlamentar/documentos/publ/3011/2015/5769863.pdf
+#   - http://jarbas.serenatadeamor.org/#/document_id/5978369 / http://www.camara.gov.br/cota-parlamentar/documentos/publ/2256/2016/5978369.pdf
+# 
+# #### Speeches
+# 
+# Most of the receipts did not have a matching timestamp so most of the suspicious reimbursements were only brought up due to the amount of speeches the deputy gave in a day. This does not seem to be a very good approach to raise new suspicious in the future given it returns many false positives.
+# 
+# #### Official missions
+# 
+# The official missions dataset does not seem to be very reliable. It's common for dates rendered on search results displayed on http://www.camara.leg.br/missao-oficial to not match the actual dates that the deputy was traveling. Some examples include: 
+# 
+# * [This mission](http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=39293&ponto=811941) in which the deputy makes a note [on the mission report](http://www.camara.leg.br/missao-oficial/missao_oficial_Relatorio?codViagem=39293&ponto=811941) that she ended up going back to Brasilia for a day during her trip
+# * There are also cases like [this](http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=43314&ponto=811278) in which the period of the trip returned represents more than a month while [on the report](http://www.camara.leg.br/missao-oficial/missao_oficial_Relatorio?codViagem=43314&ponto=811278) we can see that it was a trip that lasted less than a week.
+# 
+# 
+# ## Conclusion
+# 
+# Based on those results, if we ever want to implement any of this logic in Rosie, the initial focus should be on teaching her about the Presences / Session Start Times datasets alongside the receipts OCR. The accuracy of that combo is the one that is more likely to return good suspicious.
+# 
+# Using the speeches dataset _might_ yield new suspicious reimbursements but the majority of that is likely to be caught with the presence information.
+# 
+# Lastly, the official missions dataset does not seem to yield that many good results to justify spending more time on it (at least for now, can be revisited later).

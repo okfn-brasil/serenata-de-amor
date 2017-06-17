@@ -11856,9 +11856,7 @@ div#notebook {
 <span class="c1"># fetch(&quot;2017-05-29-presences.xz&quot;, &quot;../data&quot;)</span>
 <span class="c1"># fetch(&quot;2017-05-29-deputies.xz&quot;, &quot;../data&quot;)</span>
 <span class="c1"># fetch(&quot;2017-05-29-speeches.xz&quot;, &quot;../data&quot;)</span>
-
-<span class="c1"># TODO: This need to be uploaded to S3</span>
-<span class="c1"># fetch(&quot;2017-06-05-official-missions.xz&quot;, &quot;../data&quot;)</span>
+<span class="c1"># fetch(&quot;2017-06-17-official-missions.xz&quot;, &quot;../data&quot;)</span>
 </pre></div>
 
 </div>
@@ -12329,7 +12327,6 @@ Meals excluding expenses on hotels: 2784
 <span class="n">suspects</span><span class="o">.</span><span class="n">receipt_dates</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">suspects</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suspects</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
 <span class="n">suspects</span><span class="p">[</span><span class="s1">&#39;period_in_df&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suspects</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">period_in_df</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
-<span class="c1"># suspects.query(&#39;score &gt; 0&#39;).sort_values(&#39;score&#39;, ascending=False)</span>
 <span class="n">suspects</span> <span class="o">=</span> <span class="n">suspects</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;score &gt; 0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Suspicious reimbursements:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">suspects</span><span class="p">))</span>
 </pre></div>
@@ -13589,7 +13586,7 @@ Suspicious reimbursements that were not found using presences info: 34
 <div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">missions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-06-05-official-missions.xz&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;report_details_link&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">missions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-06-17-official-missions.xz&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;report_details_link&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">},</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total official mission records:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">missions</span><span class="p">))</span>
 
 <span class="n">missions</span> <span class="o">=</span> <span class="n">missions</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;canceled == &quot;No&quot;&#39;</span><span class="p">)</span>
@@ -13619,9 +13616,9 @@ Suspicious reimbursements that were not found using presences info: 34
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total official mission records: 1107
-Total official mission records without canceled trips: 983
-Total official mission records with deputies that have not been canceled: 902
+<pre>Total official mission records: 1115
+Total official mission records without canceled trips: 990
+Total official mission records with deputies that have not been canceled: 909
 </pre>
 </div>
 </div>
@@ -13881,12 +13878,35 @@ Total official mission records with deputies that have not been canceled: 902
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Conclusions">Conclusions<a class="anchor-link" href="#Conclusions">&#182;</a></h2><ul>
-<li>Talk about the false positives</li>
-<li>Talk about the new column on the dataset of official missions</li>
-<li>Problems with the date on some missions (like <code>RÔMULO GOUVEIA</code> trip which has the wrong end date</li>
-<li>Check if previous suspects were removed from dataset based on emails exchanged with Serenata de Amor team</li>
+<h2 id="Results">Results<a class="anchor-link" href="#Results">&#182;</a></h2><p>I was able to manually check each individual suspicious reimbursement and the list of the ones have been confirmed have been sent to the team. Out of 81 suspects raised, 47 have a huge potential of being illegal:</p>
+<ul>
+<li>Out of the top 50 suspect reimbursements based on <em>presence</em> information, 39 can be questioned</li>
+<li>Out of the top 20 suspect reimbursements based on <em>speeches</em> information that were not caught by presence information, only 5 can be questioned</li>
+<li>Out of the top 11 suspect reimbursements based on <em>missions</em> information, 3 can be questioned</li>
 </ul>
+<h2 id="False-positives-based-on-datasets">False positives based on datasets<a class="anchor-link" href="#False-positives-based-on-datasets">&#182;</a></h2><h4 id="Presences-&amp;-session-start-times">Presences &amp; session start times<a class="anchor-link" href="#Presences-&amp;-session-start-times">&#182;</a></h4><ul>
+<li>Most of what I considered to be false positives are reimbursements made on airports. If we had a way to identify those companies and remove them from future analysis it would be great</li>
+<li>Some timestamps found on receipts are from the time when someone looked up the receipt online (more info on this <a href="https://github.com/datasciencebr/serenata-de-amor/pull/247#issuecomment-305923333">comment</a>) and while "penalising" reimbursements that have dates that are different from when the purchase was made reduced the amount of false positives, that's something that can always get into our way.</li>
+<li>Seems that some reimbursements are associated with a CNPJ that does not match what's on the receipt (which is actually a company in DF)<ul>
+<li>For <a href="http://jarbas.serenatadeamor.org/#/document_id/5805269">#5805269</a>, Jarbas says Varzea Grande but <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3007/2015/5805269.pdf">the receipt is actually from a restaurant in DF</a></li>
+<li>Same for <a href="http://jarbas.serenatadeamor.org/#/document_id/5706823">#5706823</a> (<a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2235/2015/5706823.pdf">receipt</a>)</li>
+</ul>
+</li>
+<li>Found 2 fuel reimbursements that were categorized as meal:<ul>
+<li><a href="http://jarbas.serenatadeamor.org/#/document_id/5769863">http://jarbas.serenatadeamor.org/#/document_id/5769863</a> / <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3011/2015/5769863.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/3011/2015/5769863.pdf</a></li>
+<li><a href="http://jarbas.serenatadeamor.org/#/document_id/5978369">http://jarbas.serenatadeamor.org/#/document_id/5978369</a> / <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2256/2016/5978369.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/2256/2016/5978369.pdf</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="Speeches">Speeches<a class="anchor-link" href="#Speeches">&#182;</a></h4><p>Most of the receipts did not have a matching timestamp so most of the suspicious reimbursements were only brought up due to the amount of speeches the deputy gave in a day. This does not seem to be a very good approach to raise new suspicious in the future given it returns many false positives.</p>
+<h4 id="Official-missions">Official missions<a class="anchor-link" href="#Official-missions">&#182;</a></h4><p>The official missions dataset does not seem to be very reliable. It's common for dates rendered on search results displayed on <a href="http://www.camara.leg.br/missao-oficial">http://www.camara.leg.br/missao-oficial</a> to not match the actual dates that the deputy was traveling. Some examples include:</p>
+<ul>
+<li><a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=39293&amp;ponto=811941">This mission</a> in which the deputy makes a note <a href="http://www.camara.leg.br/missao-oficial/missao_oficial_Relatorio?codViagem=39293&amp;ponto=811941">on the mission report</a> that she ended up going back to Brasilia for a day during her trip</li>
+<li>There are also cases like <a href="http://www.camara.leg.br/missao-oficial/missao-relatorio?codViagem=43314&amp;ponto=811278">this</a> in which the period of the trip returned represents more than a month while <a href="http://www.camara.leg.br/missao-oficial/missao_oficial_Relatorio?codViagem=43314&amp;ponto=811278">on the report</a> we can see that it was a trip that lasted less than a week.</li>
+</ul>
+<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h2><p>Based on those results, if we ever want to implement any of this logic in Rosie, the initial focus should be on teaching her about the Presences / Session Start Times datasets alongside the receipts OCR. The accuracy of that combo is the one that is more likely to return good suspicious.</p>
+<p>Using the speeches dataset <em>might</em> yield new suspicious reimbursements but the majority of that is likely to be caught with the presence information.</p>
+<p>Lastly, the official missions dataset does not seem to yield that many good results to justify spending more time on it (at least for now, can be revisited later).</p>
 
 </div>
 </div>
