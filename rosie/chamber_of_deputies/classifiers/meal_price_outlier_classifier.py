@@ -28,6 +28,11 @@ class MealPriceOutlierClassifier(TransformerMixin):
 
     HOTEL_REGEX = r'hote(?:(?:ls?)|is)'
     CLUSTER_KEYS = ['mean', 'std']
+    COLS = ['applicant_id',
+            'category',
+            'net_value',
+            'recipient',
+            'recipient_id']
 
     def fit(self, X):
         _X = X[self.__applicable_rows(X)]
@@ -49,7 +54,7 @@ class MealPriceOutlierClassifier(TransformerMixin):
         pass
 
     def predict(self, X):
-        _X = X.copy()
+        _X = X[self.COLS].copy()
         companies = _X[self.__applicable_rows(_X)] \
             .groupby('recipient_id').apply(self.__company_stats) \
             .reset_index()
@@ -68,7 +73,7 @@ class MealPriceOutlierClassifier(TransformerMixin):
         _X = pd.merge(_X, known_thresholds, how='left')
         if 'cnpj_threshold' in _X.columns:
             _X.loc[_X['cnpj_threshold'].notnull(),
-                  'threshold'] = _X['cnpj_threshold']
+                   'threshold'] = _X['cnpj_threshold']
         _X['y'] = 1
         is_outlier = self.__applicable_rows(_X) & \
             _X['threshold'].notnull() & \
