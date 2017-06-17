@@ -1,9 +1,9 @@
 language: python
-python: 3.5
-install: 
+python: 3.6
+install:
   - ./setup
   - pip install coveralls
-script: 
+script:
   - coverage run rosie.py test
 
 after_success:
