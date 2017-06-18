@@ -7,16 +7,16 @@ import numpy as np
 from bs4 import BeautifulSoup
 
 
-class CivilNames:
+class CongresspersonDetails:
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     DATA_PATH = os.path.join(BASE_DIR, 'data')
 
     DATE = datetime.date.today().strftime('%Y-%m-%d')
-    FILE_BASE_NAME = '{}-congressperson-civil-names.xz'.format(DATE)
+    FILE_BASE_NAME = '{}-congressperson-details.xz'.format(DATE)
 
-    PRIMARY_URL = 'http://www.camara.leg.br/Internet/deputado/Dep_Detalhe.asp?id={}'
-    SECONDARY_URL = 'http://www2.camara.leg.br/deputados/pesquisa/layouts_deputados_biografia?pk={}'
+    CAMARA_URL = ('http://www.camara.leg.br/SitCamaraWS/Deputados.asmx/'
+                  'ObterDetalhesDeputado?ideCadastro={}&numLegislatura=')
 
     CSV_PARAMS = {
         'compression': 'xz',
@@ -72,34 +72,26 @@ class CivilNames:
         print('Done.')
 
     @staticmethod
-    def parse_primary_repository(data, congress_id):
-        try:
-            soup = BeautifulSoup(data, 'html.parser')
-            attrs = {'class': 'visualNoMarker'}
-            attributes = soup.findAll('ul', attrs=attrs)[0]
-            line_name = attributes.find('li')
-            [x.extract() for x in line_name('strong')]  # extract tag strong
-            civil_name = str(line_name.text.strip()).upper()
+    def parse_repository(data, congress_id):
+        soup = BeautifulSoup(data, 'lxml')
 
-            return dict(congressperson_id=congress_id, civil_name=civil_name)
+        civil_name = soup.find('nomecivil').text
 
-        except IndexError:
-            print('Could not parse data')
+        birth_date = soup.find('datanascimento').text
+        birth_date = datetime.datetime.strptime(birth_date, '%d/%m/%Y').date()
 
-    @staticmethod
-    def parse_secondary_repository(data, congress_id):
-        try:
-            soup = BeautifulSoup(data, 'html.parser')
-            attributes = soup.findAll('div', attrs={'class': 'bioDetalhes'})[0]
-            line_name = attributes.find('strong')
-            civil_name = str(line_name.text.strip()).upper()
-            return dict(congressperson_id=congress_id, civil_name=civil_name)
+        gender = soup.find('sexo').text
 
-        except IndexError:
-            print('Could not parse data')
+        return {
+            'congressperson_id': congress_id,
+            'civil_name': civil_name,
+            'birth_date': birth_date,
+            'gender': gender.upper(),
+        }
 
-    @staticmethod
-    def fetch_repository(url, congressperson_id, parser):
+    def fetch_data_repository(self, congress_id):
+        url = self.CAMARA_URL.format(congress_id)
+
         page = requests.get(url)
 
         if page.status_code != 200:
@@ -107,35 +99,24 @@ class CivilNames:
             print(msg.format(url, page.status_code))
             return
 
-        data = str(page.content.decode('utf-8'))
-        return parser(data, congressperson_id)
+        content = str(page.content.decode('utf-8'))
 
-    def fetch_data_repository(self, congress_id):
-        primary_url = self.PRIMARY_URL.format(congress_id)
-        data = self.fetch_repository(
-            primary_url,
-            congress_id,
-            self.parse_primary_repository
-        )
-
-        if not data:
-            secondary_url = self.SECONDARY_URL.format(congress_id)
-            return self.fetch_repository(
-                secondary_url,
-                congress_id,
-                self.parse_secondary_repository
-            )
-        return data
+        return self.parse_repository(content, congress_id)
 
     def get_civil_names(self):
         congresspeople_ids = self.get_all_congresspeople_ids()
-        for ind, congress_id in enumerate(congresspeople_ids):
+        for i, congress_id in enumerate(congresspeople_ids):
             if not np.math.isnan(float(congress_id)):
-                percentage = (ind / self.total * 100)
+                percentage = (i / self.total * 100)
                 msg = 'Processed {} out of {} ({:.2f}%)'
-                print(msg.format(ind, self.total, percentage), end='\r')
-                yield dict(self.fetch_data_repository(congress_id))
+                print(msg.format(i, self.total, percentage), end='\r')
+
+                data = self.fetch_data_repository(congress_id)
+
+                if data is not None:
+                    yield dict(data)
+
 
 if __name__ == '__main__':
-    civil_names = CivilNames()
-    civil_names.write_civil_file(civil_names.get_civil_names())
+    details = CongresspersonDetails()
+    details.write_civil_file(details.get_civil_names())

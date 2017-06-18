@@ -1,8 +1,11 @@
 [Amazon]
 Bucket: serenata-de-amor-data
 AccessKey: YOUR_ACCESS_KEY
-Region: s3-sa-east-1
+Region: sa-east-1
 SecretKey: YOUR_SECRET_KEY
+
+[Email]
+Password: YOUR_PASSWORD
 
 [Foursquare]
 ClientId: YOUR_CLIEND_ID
