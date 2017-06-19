@@ -36,6 +36,12 @@ class TraveledSpeedsClassifier(TransformerMixin):
     """
 
     AGG_KEYS = ['applicant_id', 'issue_date']
+    COLS = ['applicant_id',
+            'category',
+            'is_party_expense',
+            'issue_date',
+            'latitude',
+            'longitude']
 
     def __init__(self, contamination=.001):
         if contamination in [0, 1]:
@@ -57,7 +63,7 @@ class TraveledSpeedsClassifier(TransformerMixin):
     def predict(self, X):
         check_is_fitted(self, ['polynomial', '_polynomial_fn'])
 
-        _X = X.copy()
+        _X = X[self.COLS].copy()
         _X = self.__aggregate_dataset(_X)
         _X = self.__classify_dataset(_X)
         _X = pd.merge(X, _X, how='left', left_on=self.AGG_KEYS, right_on=self.AGG_KEYS)
