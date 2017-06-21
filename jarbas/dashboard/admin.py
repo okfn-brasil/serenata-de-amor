@@ -173,14 +173,22 @@ class SubquotaListFilter(SimpleListFilter, Subquotas):
 
     title = 'subcota'
     parameter_name = 'subquota_id'
+    default_value = None
 
     def lookups(self, request, model_admin):
         return self.OPTIONS
 
+    def value(self):
+        try:
+            return int(super().value())
+        except ValueError:
+            return None
+
     def queryset(self, request, queryset):
-        if not self.value():
+        subquota = dict(self.OPTIONS).get(self.value())
+        if not subquota:
             return queryset
-        return queryset.filter(subquota_id=self.value())
+        return queryset.filter(subquota_description=self.en_us(subquota))
 
 
 class ReimbursementModelAdmin(SimpleHistoryAdmin):
