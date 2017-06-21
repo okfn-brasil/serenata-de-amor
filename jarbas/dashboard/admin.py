@@ -181,7 +181,7 @@ class SubquotaListFilter(SimpleListFilter, Subquotas):
     def value(self):
         try:
             return int(super().value())
-        except ValueError:
+        except (TypeError, ValueError):
             return None
 
     def queryset(self, request, queryset):
