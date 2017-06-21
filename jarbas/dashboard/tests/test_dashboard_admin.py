@@ -1,5 +1,5 @@
 from collections import namedtuple
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from django.test import TestCase
 
@@ -8,7 +8,7 @@ from jarbas.dashboard.admin import (
     ReceiptUrlWidget,
     ReimbursementModelAdmin,
     SubquotaWidget,
-    SubuotaListfilter,
+    SubquotaListFilter,
     SuspiciousWidget,
 )
 
@@ -49,21 +49,25 @@ class TestDashboardSite(TestCase):
         self.assertEqual('2345678', self.ma._format_document(obj))
 
 
-class TestSubuotaListfilter(TestCase):
+class TestSubquotaListFilter(TestCase):
 
     def setUp(self):
+        args = [MagicMock()] * 4  # SubquotaListFilter expectss 4 arguments
+        self.list_filter = SubquotaListFilter(*args)
         self.qs = MagicMock()
-        self.list_filter = MagicMock()
 
-    def test_queryset_without_subquota(self):
-        self.list_filter.value.return_value = None
-        SubuotaListfilter.queryset(self.list_filter, MagicMock(), self.qs)
+    @patch.object(SubquotaListFilter, 'value')
+    def test_queryset_without_subquota(self, value):
+        value.return_value = None
+        self.list_filter.queryset(MagicMock(), self.qs)
         self.qs.filter.assert_not_called()
 
-    def test_queryset_with_subquota(self):
-        self.list_filter.value.return_value = 42
-        SubuotaListfilter.queryset(self.list_filter, MagicMock(), self.qs)
-        self.qs.filter.assert_called_once_with(subquota_id=42)
+    @patch.object(SubquotaListFilter, 'value')
+    def test_queryset_with_subquota(self, value):
+        value.return_value = 10
+        self.list_filter.queryset(MagicMock(), self.qs)
+        expected = dict(subquota_description='Telecommunication')
+        self.qs.filter.assert_called_once_with(**expected)
 
 
 class TestCustomWidgets(TestCase):

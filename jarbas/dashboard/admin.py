@@ -151,29 +151,47 @@ class Subquotas:
         999
     )
 
-    OPTIONS = zip(NUMBERS, PT_BR)
-    TRANSLATIONS = dict(zip(EN_US, PT_BR))
+    OPTIONS = sorted(zip(NUMBERS, PT_BR), key=lambda t: t[1])
+
+    @classmethod
+    def pt_br(cls, en_us):
+        translations = dict(zip(cls.EN_US, cls.PT_BR))
+        return translations.get(en_us)
+
+    @classmethod
+    def en_us(cls, pt_br):
+        translations = dict(zip(cls.PT_BR, cls.EN_US))
+        return translations.get(pt_br)
 
 
 class SubquotaWidget(Widget, Subquotas):
 
     def render(self, name, value, attrs=None, renderer=None):
-        value = self.TRANSLATIONS.get(value) or value
+        value = self.pt_br(value) or value
         return '<div class="readonly">{}</div>'.format(value)
 
 
-class SubuotaListfilter(SimpleListFilter, Subquotas):
+class SubquotaListFilter(SimpleListFilter, Subquotas):
 
     title = 'subcota'
     parameter_name = 'subquota_id'
+    default_value = None
 
     def lookups(self, request, model_admin):
         return self.OPTIONS
 
+    def value(self):
+        value = super().value()
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return value
+
     def queryset(self, request, queryset):
-        if not self.value():
+        subquota = dict(self.OPTIONS).get(self.value())
+        if not subquota:
             return queryset
-        return queryset.filter(subquota_id=self.value())
+        return queryset.filter(subquota_description=self.en_us(subquota))
 
 
 class ReimbursementModelAdmin(SimpleHistoryAdmin):
@@ -183,7 +201,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'jarbas',
         'congressperson_name',
         'year',
-        'subquota_description',
+        'subquota_translated',
         'supplier_info',
         'value',
         'suspicious',
@@ -206,7 +224,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         # 'available_in_latest_dataset',
         'state',
         'year',
-        SubuotaListfilter,
+        SubquotaListFilter,
     )
 
     fields = tuple(f.name for f in ALL_FIELDS)
@@ -260,6 +278,9 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         return obj.document_id
 
     short_document_id.short_description = 'Reembolso'
+
+    def subquota_translated(self, obj):
+        return Subquotas.pt_br(obj.subquota_description)
 
     def has_add_permission(self, request):
         return False
