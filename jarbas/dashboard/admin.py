@@ -158,9 +158,11 @@ class Subquotas:
         translations = dict(zip(cls.EN_US, cls.PT_BR))
         return translations.get(en_us)
 
+    @classmethod
     def en_us(cls, pt_br):
         translations = dict(zip(cls.PT_BR, cls.EN_US))
         return translations.get(pt_br)
+
 
 class SubquotaWidget(Widget, Subquotas):
 
@@ -179,10 +181,11 @@ class SubquotaListFilter(SimpleListFilter, Subquotas):
         return self.OPTIONS
 
     def value(self):
+        value = super().value()
         try:
-            return int(super().value())
+            return int(value)
         except (TypeError, ValueError):
-            return None
+            return value
 
     def queryset(self, request, queryset):
         subquota = dict(self.OPTIONS).get(self.value())
