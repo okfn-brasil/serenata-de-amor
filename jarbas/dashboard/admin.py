@@ -169,7 +169,7 @@ class SubquotaWidget(Widget, Subquotas):
         return '<div class="readonly">{}</div>'.format(value)
 
 
-class SubuotaListfilter(SimpleListFilter, Subquotas):
+class SubquotaListFilter(SimpleListFilter, Subquotas):
 
     title = 'subcota'
     parameter_name = 'subquota_id'
@@ -213,7 +213,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         # 'available_in_latest_dataset',
         'state',
         'year',
-        SubuotaListfilter,
+        SubquotaListFilter,
     )
 
     fields = tuple(f.name for f in ALL_FIELDS)
