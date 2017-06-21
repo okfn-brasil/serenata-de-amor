@@ -190,7 +190,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'jarbas',
         'congressperson_name',
         'year',
-        'subquota_description',
+        'subquota_translated',
         'supplier_info',
         'value',
         'suspicious',
@@ -267,6 +267,9 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         return obj.document_id
 
     short_document_id.short_description = 'Reembolso'
+
+    def subquota_translated(self, obj):
+        return Subquotas.pt_br(obj.subquota_description)
 
     def has_add_permission(self, request):
         return False
