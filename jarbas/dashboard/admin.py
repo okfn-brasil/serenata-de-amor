@@ -151,14 +151,21 @@ class Subquotas:
         999
     )
 
-    OPTIONS = zip(NUMBERS, PT_BR)
-    TRANSLATIONS = dict(zip(EN_US, PT_BR))
+    OPTIONS = sorted(zip(NUMBERS, PT_BR), key=lambda t: t[1])
 
+    @classmethod
+    def pt_br(cls, en_us):
+        translations = dict(zip(cls.EN_US, cls.PT_BR))
+        return translations.get(en_us)
+
+    def en_us(cls, pt_br):
+        translations = dict(zip(cls.PT_BR, cls.EN_US))
+        return translations.get(pt_br)
 
 class SubquotaWidget(Widget, Subquotas):
 
     def render(self, name, value, attrs=None, renderer=None):
-        value = self.TRANSLATIONS.get(value) or value
+        value = self.pt_br(value) or value
         return '<div class="readonly">{}</div>'.format(value)
 
 
