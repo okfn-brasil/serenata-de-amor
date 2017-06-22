@@ -6,6 +6,10 @@
   display: none
 }
 
+#content-main p {
+  display: block
+}
+
 td.field-value {
   white-space: nowrap
 }
@@ -13,5 +17,5 @@ td.field-value {
 .required label,
 label.required {
   color: #666;
-  font-weight: normal;
+  font-weight: normal
 }
