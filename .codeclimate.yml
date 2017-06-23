@@ -21,12 +21,13 @@ engines:
     enabled: true
 
 ratings:
-   paths:
-   - "**.css"
-   - "**.js"
-   - "**.md"
-   - "**.py"
-   - "**.sh"
+  paths:
+    - "**.css"
+    - "**.js"
+    - "**.md"
+    - "**.py"
+    - "**.sh"
 
 exclude_paths:
-  - jarbas/core/migrations/
+  - "jarbas/core/migrations/"
+  - "**/tests/*.py"
