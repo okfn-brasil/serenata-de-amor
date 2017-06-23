@@ -1,8 +1,32 @@
 engines:
   pep8:
     enabled: true
+
+  csslint:
+    enabled: true
+
+  duplication:
+    enabled: true
+    languages:
+      - javascript:
+      - python:
+
+  eslint:
+    enabled: true
+
+  fixme:
+    enabled: true
+
+  markdownlint:
+    enabled: true
+
 ratings:
    paths:
+   - "**.css"
+   - "**.js"
+   - "**.md"
    - "**.py"
-exclude_paths:     
+   - "**.sh"
+
+exclude_paths:
   - jarbas/core/migrations/
