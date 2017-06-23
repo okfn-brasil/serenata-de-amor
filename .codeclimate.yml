@@ -7,9 +7,10 @@ engines:
 
   duplication:
     enabled: true
-    languages:
-      - javascript:
-      - python:
+    config:
+      languages:
+        - javascript:
+        - python:
 
   eslint:
     enabled: true
