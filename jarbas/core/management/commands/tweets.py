@@ -8,41 +8,38 @@ from django.core.management.base import BaseCommand
 from jarbas.core.models import Reimbursement, Tweet
 
 
-log = logging.getLogger('django')
-
-
 class Command(BaseCommand):
     help = 'Find out and save links to @RosieDaSerenata tweets'
 
-    def handle(self, *args, **options):
-        credentials = (
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.credentials = (
             settings.TWITTER_CONSUMER_KEY,
             settings.TWITTER_CONSUMER_SECRET,
             settings.TWITTER_ACCESS_TOKEN,
             settings.TWITTER_ACCESS_SECRET
         )
+        self.log = logging.getLogger('django')
 
-        # check for credentials
-        if not all(credentials):
-            log.warning('No Twitter API consumer key and/or secret set.')
+    def handle(self, *args, **options):
+        if not all(self.credentials):
+            self.log.warning('Twitter API credentials not set.')
             return
-
-        # connect to the API & pick the most recent Twiiter to limit the query
-        self.api = twitter.Api(*credentials, sleep_on_rate_limit=True)
-        self.latest_tweet = Tweet.objects.first()
 
         # persist tweet status in the database
         for status, document_id in self.document_ids:
 
             # skip if reimbursement does not exist
-            reimbursement = Reimbursement.objects.get(document_id=document_id)
-            if not reimbursement:
+            kwargs = dict(document_id=document_id)
+            try:
+                reimbursement = Reimbursement.objects.get(**kwargs)
+            except Reimbursement.DoesNotExist:
                 continue
 
             # skip if status is already related to that reimbursement
             try:
                 current_tweet = reimbursement.tweet
-            except Reimbursement.tweet.RelatedObjectDoesNotExist:
+            except Tweet.DoesNotExist:
                 pass
             else:
                 if current_tweet.status == status:
@@ -64,10 +61,12 @@ class Command(BaseCommand):
             exclude_replies=True
         )
 
-        if self.latest_tweet:
-            kwargs['since_id'] = self.latest_tweet.status
+        latest_tweet = Tweet.objects.first()
+        if latest_tweet:
+            kwargs['since_id'] = latest_tweet.status
 
-        yield from self.api.GetUserTimeline(**kwargs)
+        api = twitter.Api(*self.credentials, sleep_on_rate_limit=True)
+        yield from api.GetUserTimeline(**kwargs)
 
     @property
     def urls(self):
@@ -105,8 +104,7 @@ class Command(BaseCommand):
             if document_id:
                 yield tweet_id, document_id
 
-    @staticmethod
-    def save_tweet(reimbursement, status):
+    def save_tweet(self, reimbursement, status):
         """
         :param reimbursement: Reimbursement instance
         :param status: (int) Tweet status ID
@@ -116,4 +114,4 @@ class Command(BaseCommand):
 
         msg = 'Document #{} linked to {}'
         args = (reimbursement.document_id, reimbursement.tweet.get_url())
-        log.info(msg.format(*args))
+        self.log.info(msg.format(*args))
