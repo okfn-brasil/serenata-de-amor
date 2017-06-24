@@ -7,50 +7,78 @@
 # https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
 # 
 # They have good explanation and good images to show how these networks compute image classification.
-# So, before to continue go there, I only comented the strong changes to make this method works to your case.
+# So, before to continue go there!
+# Ps: I only commented in my code the strong changes regarding they example.
 # 
-# To use it, i'm suposing you already have instaled the requirements to convert pdf to images!
+# To use it i'm supposing you have installed the requirements to convert pdf to images.
+# See this notebook: 2017-05-05-silvio-PDF-to-PNG-SIFT-descriptors.ipynb
 # 
 # ## Togheter with these previous requirements you have to install  Keras 2.0 API
 # 
-# Wait.... Again more requirements...  What is Keras???
+# What is Keras???
 # 
 # ## Keras: Deep Learning library for TensorFlow and Theano
 # https://github.com/fchollet/keras
 # 
-# Yeap, let's include more functionalites in the serenata-de-amor :D
+# Yeap, let's include more functionalities in the serenata-de-amor :D
 # 
 # 
-# # Main constraint of it
-# 1) We need a training and validation set :/ 
-# 
-# 2) But deep learning needs a lot of data... *Read the title ;)
+# # Main constraint of it: We need a training and validation set :/ 
 # 
 # ## Solution >>> Let's build it.
 # 
-# Here:: you can find my training and validation set
+# ## New Dataset
+# Here: https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing
+# It includes, images, model and csv .
+# 
+# 
+# Here: you can find my first training and validation set
 # https://drive.google.com/file/d/0B6F2XOmMAf28dDZoOWtmS050Skk/view?usp=sharing
 # 
-# It is composed by 250 wrong reimbursiments, and 250 not wrong
+# #### It is composed by 250 wrong reimbursements, and 250 not wrong
 # 
 # What i mean by wrong: http://www.camara.gov.br/cota-parlamentar/documentos/publ/2398/2015/5635048.pdf
 # 
-# As you can see it don't has any description about the consumation 
+# As you can see it don't has any description about the consummation 
 # 
 # And what is "NOT WRONG": 
 # 
 # http://www.camara.gov.br/cota-parlamentar//documentos/publ/1773/2014/5506259.pdf
 # 
+# This first dataset was not big, but it allowed us to do the first steps and improve the machine learn model
 # 
-# ## So Let's start to run our ML method (Remember to read the first link before to continue)
+# PS: using only this data i built a model with 70% accuracy
+# Take a look at this pull: https://github.com/datasciencebr/serenata-de-amor/pull/238
+# 
+# Moving on, i executed it over 10000 and i got 2483 reimbursements regarding the two classes (Wrong, not wrong).
+# 
+# You can download them here:
+# https://drive.google.com/file/d/0B6F2XOmMAf28eVBLUnRFQkZsSGs/view?usp=sharing
+# 
+# # All these reimbursements were validate by hand
+# # Thanks so much everyone involved on it :D
+# 
+# Take a look at this great collaborative work: https://docs.google.com/spreadsheets/d/1o7P79iMw2VnJypSZNHrsDjud398g4vXpZdrGMMqe6qA/edit?usp=sharing
+# 
+# Here: you can find the up-to-date reimbursements
+# https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing
+# #### It is composed by 1691 wrong reimbursements, and 1691 not wrong (*Now they are called, positive, negative)
+# 
+# 
+# ## PS: The first training set was also reevaluated after discussion with @anaschwendler
+# ### In the spreadsheet they are in orange color.
+# 
+# 
+# ## So Let's start to run our DeepLearning method (Remember to read the first link before to continue)
 
-# In[9]:
+# In[4]:
 
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
 from keras import backend as K
+from keras.callbacks import ModelCheckpoint
 import os.path
 import numpy as np
 
@@ -58,8 +86,8 @@ import numpy as np
 seed = 2017
 np.random.seed(seed)
 
-train_data_dir = '../data/training set/ML/train'
-validation_data_dir = '../data/training set/ML/validation'
+train_data_dir = '../data/DeepLearningKeras/dataset/training/'
+validation_data_dir = '../data/DeepLearningKeras/dataset/validation/'
 
 
 
@@ -70,11 +98,11 @@ print('no. of trained samples = ', nb_train_samples, ' no. of validation samples
 
 
 #dimensions of our images.
-img_width, img_height = 150, 150
+img_width, img_height = 300, 300
 
 
 epochs = 20 
-batch_size = 3
+batch_size = 15
 
 if K.image_data_format() == 'channels_first':
     input_shape = (3, img_width, img_height)
@@ -110,7 +138,7 @@ train_datagen = ImageDataGenerator(
     rescale=1. / 255,
     shear_range=0.2,
     zoom_range=0.2,
-    horizontal_flip=False)#As you can see i put it as FALSE and in the example link it is TRUE
+    horizontal_flip=False)#As you can see i put it as FALSE and on link example it is TRUE
 #Explanation, there no possibility to write in a reverse way :P
 
 #this is the augmentation configuration we will use for testing:
@@ -129,24 +157,116 @@ validation_generator = test_datagen.flow_from_directory(
     batch_size=batch_size,
     class_mode='binary')
 
+#It allow us to save only the best model between the iterations 
+checkpointer = ModelCheckpoint(filepath="weights.hdf5", verbose=1, save_best_only=True)
+
 model.fit_generator(
     train_generator,
+     callbacks=[checkpointer], #And we set the parameter to save only the best model
     steps_per_epoch=nb_train_samples // batch_size,
     epochs=epochs,
     validation_data=validation_generator,
     validation_steps=nb_validation_samples // batch_size)
 
-model.save_weights('first_try.h5')
+
+# # Result: A network with 94% of accuracy!!! Big improvement regarding the first we buit...
+# 
+# 156/157 [============================>.] - ETA: 3s - loss: 0.3726 - acc: 0.8682 Epoch 00013: val_loss improved from 0.23616 to 0.22647, saving model to weights.hdf5
+# 157/157 [==============================] - 607s - loss: 0.3715 - acc: 0.8691 - val_loss: 0.2265 - val_acc: 0.9423
+# 
+# # Let's use it on an external set of reimbursements!
+# ### @vmesel recommended it, thanks for the feedback :D
+
+# In[46]:
+
+from keras.models import load_model
+from keras.preprocessing.image import img_to_array, load_img
+import glob
+import numpy as np
+import pandas as pd
+
+def goldStandard(png_directory,value):
+    png = glob.glob(png_directory+'*.png')
+    data = list()
+    for f in png:
+        data.append(f)
+    df = pd.DataFrame(data,columns=['Image'])
+    df['Reference']=value
+   
+    return df
+
+png_directory='../data/DeepLearningKeras/dataset/pos_validation/positive/'
+df1 = goldStandard(png_directory,1)
+png_directory='../data/DeepLearningKeras/dataset/pos_validation/negative/'
+df2= goldStandard(png_directory,0)
+frames = [df1, df2]
+df = pd.concat(frames)
+print(df.head())
+print(df.tail())
+test_model = load_model('./weights.hdf5')#I'm using the saved file to load the model
+
+#dimensions of our images.
+img_width, img_height = 300, 300
+predicted=list()
+for obj in df.iterrows():
+    try:
+        print(obj[1].Image)
+        img = load_img(obj[1].Image,False,target_size=(img_width,img_height))#read a image
+        x = img_to_array(img)
+        x = np.expand_dims(x, axis=0) #convert it
+        preds = test_model.predict_classes(x) #predict it in our model :D
+        prob = test_model.predict_proba(x) #get the probability of prediciton
+        if(prob>=0.8 and preds==1):#Only keep the predictions with more than 80% of accuracy and the class 1 (suspicious)
+            print("suspicious!!! prob:",prob)
+            predicted.append(1)
+        else:
+            predicted.append(0)
+    except Exception as ex:
+            print(ex)
+df['Predicted']=predicted
 
 
-# # Result: A network with 70% of accuracy, Not bad to our small sample...
+# # After to run the Model over the pos_validation set
+# ## Let's verify how is the performance!
+
+# In[47]:
+
+from sklearn import metrics
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import average_precision_score
+from sklearn.metrics import roc_curve, auc
+
+fpr, tpr, _= metrics.roc_curve(df.Reference,df.Predicted)
+roc_auc = auc(fpr, tpr)
+print("Confusion matrix")
+print(metrics.confusion_matrix(df.Reference,df.Predicted))
+print(" accuracy ",metrics.accuracy_score(df.Reference,df.Predicted))
+print(" AUC ",roc_auc)
+print(" precision ",metrics.precision_score(df.Reference,df.Predicted))
+print(" recall ",metrics.recall_score(df.Reference,df.Predicted))
+print(" f1-score ",metrics.f1_score(df.Reference,df.Predicted))
+
+
+# # These results are amazing!! All metrics are above 91% !!
 # 
-# # Let's use it on new reimbursements!
+# # Conclusion:
+# ## We have a new classifier which detects generalization in the reimbursements
+# 
+# ## It handle with CEAP: Article 4, paragraph 3 (***Generalizations )
+# The receipt or invoice must not have erasures, additions or amendments, must be dated and must list without generalizations or abbreviations each of the services or products purchased; it can be:
+# 
+# CEAP:
+# 3. O documento que comprova o pagamento não pode ter rasura, acréscimos, emendas ou entrelinhas, deve conter data e deve conter os serviços ou materiais descritos item por item, sem generalizações ou abreviaturas, podendo ser:
 # 
 # 
+# # How to use it?
 # 
-# ## I did a little script which create this workflow: csv -> download -> convert to png
-# ## the cell bellow do it
+# ### Download the new Dataset, take the weights.hdf5 file and then use the code from cell [46]
+
+# # The cells bellow belongs to the first ML model 
+# ## Basically it creates the workflow: csv -> download pdf -> convert to png -> predict png in the ML model
+# 
+# ## I kept it for those which would like to do something similar. Moreover it contains the first discussion we had about the model and some suspicious reimbursements
 
 # In[10]:
 
@@ -349,7 +469,7 @@ for png_file in file_png_list:
 # Using this method we can find a lot of suspicious reimbursements :) 
 # Using this we created new pre-trained networks with few data :D
 # 
-# It seems that our deputies are used to ask for reimbursements with poor description, #CHATIADO
+# It seems that our deputies are used to ask for reimbursements with poor description, #CHATEADO
 # 
 # CEAP: 
 # 
@@ -362,7 +482,12 @@ for png_file in file_png_list:
 # 
 # It is clear to me that the description of the items was made by someone else than the restaurant, is it allowed ???
 # 
-# Are the deputies or acessors changing a document?? What are the implications about it?
+# Are the deputies or assessors changing a document?? What are the implications about it?
+
+# In[ ]:
+
+
+
 
 # In[ ]:
 
