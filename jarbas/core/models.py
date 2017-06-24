@@ -86,8 +86,7 @@ class Reimbursement(models.Model):
         ordering = ('-year', '-issue_date')
         verbose_name = 'reembolso'
         verbose_name_plural = 'reembolsos'
-        index_together = [["year", "issue_date","id"]]
-
+        index_together = [['year', 'issue_date', 'id']]
 
     def get_receipt_url(self, force=False, bulk=False):
         if self.receipt_url:
@@ -175,3 +174,16 @@ class Company(models.Model):
     longitude = models.DecimalField('Longitude', decimal_places=7, max_digits=10, blank=True, null=True)
 
     last_updated = models.DateTimeField('Last updated', blank=True, null=True)
+
+
+class Tweet(models.Model):
+
+    reimbursement = models.OneToOneField(Reimbursement)
+    status = models.IntegerField('Tweet ID', db_index=True)
+
+    def get_url(self):
+        base_url = 'https://twitter.com/RosieDaSerenata/status/'
+        return base_url + str(self.status)
+
+    class Meta:
+        ordering = ('-status',)
