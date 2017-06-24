@@ -185,5 +185,11 @@ class Tweet(models.Model):
         base_url = 'https://twitter.com/RosieDaSerenata/status/'
         return base_url + str(self.status)
 
+    def __str__(self):
+        return self.get_url()
+
+    def __repr__(self):
+        return '<Tweet: status={}>'.format(self.status)
+
     class Meta:
         ordering = ('-status',)
