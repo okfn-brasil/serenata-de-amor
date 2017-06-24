@@ -5,6 +5,8 @@ import twitter
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from jarbas.core.models import Reimbursement, Tweet
+
 
 log = logging.getLogger('django')
 
@@ -25,9 +27,33 @@ class Command(BaseCommand):
             log.warning('No Twitter API consumer key and/or secret set.')
             return
 
+        # create API and pick the most recent Twiiter to limit the query
         self.api = twitter.Api(*credentials, sleep_on_rate_limit=True)
-        for tweet_id, document_id in self.document_ids:
-            print(str(tweet_id), document_id)
+        self.latest_tweet = Tweet.objects.first()
+
+        # persist tweet status in the database
+        for status, document_id in self.document_ids:
+
+            # skip if reimbursement does not exist
+            reimbursement = Reimbursement.objects.get(document_id=document_id)
+            if not reimbursement:
+                continue
+
+            # skip if status is already related to that reimbursement
+            try:
+                current_tweet = reimbursement.tweet
+            except Reimbursement.tweet.RelatedObjectDoesNotExist:
+                pass
+            else:
+                if current_tweet and current_tweet.status == status:
+                    continue
+
+            tweet = Tweet(reimbursement=reimbursement, status=status)
+            reimbursement.tweet = tweet
+            reimbursement.save()
+
+            msg = 'Document #{} linked to {}'
+            log.info(msg.format(document_id, reimbursement.tweet.get_url()))
 
     @property
     def tweets(self):
@@ -37,6 +63,10 @@ class Command(BaseCommand):
             include_rts=False,
             exclude_replies=True
         )
+
+        if self.latest_tweet:
+            kwargs['since_id'] = self.latest_tweet.status
+
         yield from self.api.GetUserTimeline(**kwargs)
 
     @property
