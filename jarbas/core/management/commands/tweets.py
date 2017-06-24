@@ -48,12 +48,7 @@ class Command(BaseCommand):
                 if current_tweet and current_tweet.status == status:
                     continue
 
-            tweet = Tweet(reimbursement=reimbursement, status=status)
-            reimbursement.tweet = tweet
-            reimbursement.save()
-
-            msg = 'Document #{} linked to {}'
-            log.info(msg.format(document_id, reimbursement.tweet.get_url()))
+            self.save_tweet(reimbursement, status)
 
     @property
     def tweets(self):
@@ -86,3 +81,12 @@ class Command(BaseCommand):
             document_id = self.get_document_id(url)
             if document_id:
                 yield tweet_id, document_id
+
+    @staticmethod
+    def save_tweet(reimbursement, status):
+        reimbursement.tweet = Tweet(reimbursement=reimbursement, status=status)
+        reimbursement.save()
+
+        msg = 'Document #{} linked to {}'
+        args = (reimbursement.document_id, reimbursement.tweet.get_url())
+        log.info(msg.format(*args))
