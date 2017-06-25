@@ -11,6 +11,7 @@ class ReimbursementSerializer(serializers.ModelSerializer):
     document_value = serializers.SerializerMethodField()
     probability = serializers.SerializerMethodField()
     receipt = serializers.SerializerMethodField()
+    rosies_tweet = serializers.SerializerMethodField()
     remark_value = serializers.SerializerMethodField()
     total_net_value = serializers.SerializerMethodField()
     total_reimbursement_value = serializers.SerializerMethodField()
@@ -32,6 +33,12 @@ class ReimbursementSerializer(serializers.ModelSerializer):
 
     def get_receipt(self, obj):
         return dict(fetched=obj.receipt_fetched, url=obj.receipt_url)
+
+    def get_rosies_tweet(self, obj):
+        try:
+            return obj.tweet.get_url()
+        except Reimbursement.tweet.RelatedObjectDoesNotExist:
+            return None
 
     def get_remark_value(self, obj):
         return to_float(obj.remark_value)
