@@ -30,6 +30,8 @@ import Reimbursement.SameDay.View as SameDay
 import Reimbursement.SameSubquota.View as SameSubquota
 import Reimbursement.Search.Update as SearchUpdate
 import Reimbursement.Search.View as SearchView
+import Reimbursement.Tweet.Model as TweetModel
+import Reimbursement.Tweet.View as TweetView
 import Reimbursement.Update exposing (Msg(..), onlyDigits, totalPages)
 import String
 
@@ -431,6 +433,11 @@ viewReimbursement lang index reimbursement =
                 |> ReceiptView.view
                 |> Html.map (ReceiptMsg index)
 
+        tweet =
+            reimbursement.tweet
+                |> TweetModel.modelFrom lang
+                |> TweetView.view
+                |> Html.map (\_ -> TweetMsg)
 
         mapButton =
             reimbursement.supplierInfo
@@ -501,7 +508,7 @@ viewReimbursement lang index reimbursement =
         , cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
             [ Options.styled div
                 [ Options.css "margin-top" "3rem", Typography.right ]
-                [ receipt, mapButton ]
+                [ tweet, receipt, mapButton ]
             ]
         , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] blocks
