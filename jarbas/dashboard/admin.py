@@ -127,28 +127,28 @@ class Subquotas:
     )
 
     NUMBERS = (
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        119,
-        120,
-        121,
-        122,
-        123,
-        137,
-        999
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '10',
+        '11',
+        '12',
+        '13',
+        '14',
+        '15',
+        '119',
+        '120',
+        '121',
+        '122',
+        '123',
+        '137',
+        '999'
     )
 
     OPTIONS = sorted(zip(NUMBERS, PT_BR), key=lambda t: t[1])
@@ -179,13 +179,6 @@ class SubquotaListFilter(SimpleListFilter, Subquotas):
 
     def lookups(self, request, model_admin):
         return self.OPTIONS
-
-    def value(self):
-        value = super().value()
-        try:
-            return int(value)
-        except (TypeError, ValueError):
-            return value
 
     def queryset(self, request, queryset):
         subquota = dict(self.OPTIONS).get(self.value())
