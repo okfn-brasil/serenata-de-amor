@@ -427,14 +427,15 @@ viewReimbursement lang index reimbursement =
             ]
 
         receipt =
-            ReceiptView.view reimbursement.receipt
+            reimbursement.receipt
+                |> ReceiptView.view
                 |> Html.map (ReceiptMsg index)
 
-        mapModel =
-            MapModel.modelFrom lang reimbursement.supplierInfo
 
         mapButton =
-            MapView.view mapModel
+            reimbursement.supplierInfo
+                |> MapModel.modelFrom lang
+                |> MapView.view
                 |> Html.map (\_ -> MapMsg)
 
         deletedTitle : Html Msg
