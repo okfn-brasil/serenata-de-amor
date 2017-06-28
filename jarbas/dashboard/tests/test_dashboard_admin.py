@@ -64,7 +64,7 @@ class TestSubquotaListFilter(TestCase):
 
     @patch.object(SubquotaListFilter, 'value')
     def test_queryset_with_subquota(self, value):
-        value.return_value = 10
+        value.return_value = '10'
         self.list_filter.queryset(MagicMock(), self.qs)
         expected = dict(subquota_description='Telecommunication')
         self.qs.filter.assert_called_once_with(**expected)
