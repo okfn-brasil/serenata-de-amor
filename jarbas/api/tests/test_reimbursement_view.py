@@ -126,6 +126,7 @@ class TestRetrieveApi(TestCase):
         contents = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, contents)
 
+
 class TestReceiptApi(TestCase):
 
     def setUp(self):

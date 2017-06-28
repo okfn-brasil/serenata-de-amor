@@ -115,13 +115,14 @@ class TestMethods(TestCommand):
         self.assertEqual(42, reimbursement.tweet.status)
         self.assertEqual(1, command.log.info.call_count)
 
+
 class TestProperties(TestCommand):
 
     @patch('jarbas.core.management.commands.tweets.twitter.Api')
     def test_tweets_with_clean_database(self, api):
         api.return_value.GetUserTimeline.return_value = range(3)
         with self.settings(**self.credentials):
-            command  = Command()
+            command = Command()
         self.assertEqual((0, 1, 2), tuple(command.tweets))
         api.assert_called_once_with(
             '42', '42', '42', '42',
@@ -139,7 +140,7 @@ class TestProperties(TestCommand):
         tweet = mixer.blend(Tweet)
         api.return_value.GetUserTimeline.return_value = range(3)
         with self.settings(**self.credentials):
-            command  = Command()
+            command = Command()
         self.assertEqual((0, 1, 2), tuple(command.tweets))
         api.assert_called_once_with(
             '42', '42', '42', '42',
