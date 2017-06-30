@@ -31,7 +31,7 @@ class Command(LoadCommand):
         print('{:,} reimbursements updated.'.format(self.count))
 
     def irregularities(self):
-        """Returns a Generator with bathces of irregularities."""
+        """Returns a Generator with batches of irregularities."""
         print('Loading irregularities dataset…', end='\r')
         with lzma.open(self.path, mode='rt') as file_handler:
             batch = []
@@ -62,7 +62,7 @@ class Command(LoadCommand):
         hypothesis = tuple(k for k in row.keys() if k not in reserved_keys)
         pairs = ((k, v) for k, v in row.items() if k in hypothesis)
         filtered = filter(lambda x: self.bool(x[1]), pairs)
-        suspicions = dict((k, True) for k, v in filtered) or None
+        suspicions = {k: True for k, _ in filtered} or None
 
         return dict(
             document_id=document_id,
