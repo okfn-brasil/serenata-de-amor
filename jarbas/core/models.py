@@ -125,7 +125,7 @@ class Reimbursement(models.Model):
             return None
 
         parts = content.split(',')
-        return list(map(lambda x: cast(x), parts)) if cast else parts
+        return list(map(cast, parts)) if cast else parts
 
     def __repr__(self):
         return 'Reimbursement(document_id={})'.format(self.document_id)
