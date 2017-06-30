@@ -45,7 +45,7 @@ class ReimbursementQuerySet(models.QuerySet):
 
 def _str_to_tuple(filters):
     """
-    Transform string values form a dictionary in tuples. For example:
+    Transform string values from a dictionary into tuples. For example:
         {
             'document': '42,3',
             'year': '1994,1996',
