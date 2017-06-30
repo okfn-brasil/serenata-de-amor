@@ -280,9 +280,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         return False
 
     def has_change_permission(self, request, obj=None):
-        if request.method != 'GET':
-            return False
-        return True
+        return request.method == 'GET'
 
     def has_delete_permission(self, request, obj=None):
         return False
