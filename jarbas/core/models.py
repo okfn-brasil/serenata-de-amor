@@ -42,13 +42,13 @@ class Reimbursement(models.Model):
 
     congressperson_id = models.IntegerField('Identificador Único do Parlamentar', blank=True, null=True)
     congressperson_name = models.CharField('Nome do Parlamentar', max_length=140, db_index=True, blank=True, null=True)
-    congressperson_document = models.IntegerField('Número da  Carteira Parlamentar', blank=True, null=True)
+    congressperson_document = models.IntegerField('Número da Carteira Parlamentar', blank=True, null=True)
 
     party = models.CharField('Partido', max_length=7, blank=True, null=True)
     state = models.CharField('UF', max_length=2, db_index=True, blank=True, null=True)
 
     term_id = models.IntegerField('Código da Legislatura', blank=True, null=True)
-    term = models.IntegerField('Número da  Legislatura', blank=True, null=True)
+    term = models.IntegerField('Número da Legislatura', blank=True, null=True)
 
     subquota_id = models.IntegerField('Número da Subcota', db_index=True)
     subquota_description = models.CharField('Descrição da Subcota', max_length=140, db_index=True)
@@ -75,7 +75,7 @@ class Reimbursement(models.Model):
     probability = models.DecimalField('Probabilidade', max_digits=6, decimal_places=5, blank=True, null=True)
     suspicions = JSONField('Suspeitas', blank=True, null=True)
 
-    receipt_fetched = models.BooleanField('Tentamos aessar a URL do documento fiscal?', default=False, db_index=True)
+    receipt_fetched = models.BooleanField('Tentamos acessar a URL do documento fiscal?', default=False, db_index=True)
     receipt_url = models.CharField('URL do Documento Fiscal', max_length=140, blank=True, null=True)
 
     history = HistoricalRecords()

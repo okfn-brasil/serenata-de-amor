@@ -153,15 +153,16 @@ class Subquotas:
 
     OPTIONS = sorted(zip(NUMBERS, PT_BR), key=lambda t: t[1])
 
+    PT_BR_TRANSLATIONS = dict(zip(EN_US, PT_BR))
+    EN_US_TRANSLATIONS = dict(zip(PT_BR, EN_US))
+
     @classmethod
     def pt_br(cls, en_us):
-        translations = dict(zip(cls.EN_US, cls.PT_BR))
-        return translations.get(en_us)
+        return cls.PT_BR_TRANSLATIONS.get(en_us)
 
     @classmethod
     def en_us(cls, pt_br):
-        translations = dict(zip(cls.PT_BR, cls.EN_US))
-        return translations.get(pt_br)
+        return cls.EN_US_TRANSLATIONS.get(pt_br)
 
 
 class SubquotaWidget(Widget, Subquotas):

@@ -31,7 +31,7 @@ class Command(LoadCommand):
         print('{:,} reimbursements updated.'.format(self.count))
 
     def irregularities(self):
-        """Returns a Generator with bathces of irregularities."""
+        """Returns a Generator with batches of irregularities."""
         print('Loading irregularities dataset…', end='\r')
         with lzma.open(self.path, mode='rt') as file_handler:
             batch = []
