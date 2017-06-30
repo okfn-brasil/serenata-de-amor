@@ -124,7 +124,7 @@ class Reimbursement(models.Model):
         if not content:
             return None
 
-        parts = list(content.split(','))
+        parts = content.split(',')
         return list(map(lambda x: cast(x), parts)) if cast else parts
 
     def __repr__(self):
