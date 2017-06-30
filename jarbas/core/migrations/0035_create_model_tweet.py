@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0033_add_index_for_subquota_description'),
+        ('core', '0034_auto_20170629_2150'),
     ]
 
     operations = [
