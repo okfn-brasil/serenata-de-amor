@@ -1,10 +1,11 @@
 language: python
-python: 3.5
-install: 
+python: 3.6
+cache: pip
+install:
   - ./setup
   - pip install coveralls
-script: 
+script:
   - coverage run rosie.py test
-
+  - python rosie.py run federal_senate
 after_success:
   - coveralls
