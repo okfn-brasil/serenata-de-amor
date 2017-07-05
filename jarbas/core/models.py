@@ -123,8 +123,8 @@ class Reimbursement(models.Model):
         if not content:
             return None
 
-        parts = list(content.split(','))
-        return list(map(lambda x: cast(x), parts)) if cast else parts
+        parts = content.split(',')
+        return [cast(p) for p in parts] if cast else parts
 
     def __repr__(self):
         return 'Reimbursement(document_id={})'.format(self.document_id)
