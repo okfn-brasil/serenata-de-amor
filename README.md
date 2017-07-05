@@ -145,6 +145,7 @@ or
 $ docker-compose up -d
 $ docker-compose run --rm jarbas python manage.py migrate
 $ docker-compose run --rm jarbas python manage.py ceapdatasets
+$ docker-compose run --rm jarbas python manage.py tweets
 $ docker-compose run --rm jarbas python manage.py collectstatic --no-input
 ```
 
@@ -213,6 +214,7 @@ Now you can load the data from our datasets and get some other data as static fi
 $ python manage.py reimbursements <path to reimbursements.xz>
 $ python manage.py irregularities <path to irregularities.xz file>
 $ python manage.py companies <path to companies.xz>
+$ python manage.py tweets
 $ python manage.py ceapdatasets
 ```
 
