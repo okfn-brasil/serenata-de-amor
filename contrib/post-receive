@@ -22,7 +22,7 @@ yarn install
 
 echo "\n==> Installing Python packages…\n"
 pip install -U pip
-pip install -r requirements.txt
+pip install -U -r requirements.txt
 
 echo "\n==> Running migrations…\n"
 python manage.py migrate
