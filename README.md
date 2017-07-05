@@ -182,7 +182,7 @@ $ docker-compose run --rm jarbas python manage.py createsuperuser
 
 #### Requirements
 
-Jarbas requires [Python 3.5](http://python.org), [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org). Once you have `pip` and `yarn` available install the dependencies:
+Jarbas requires [Python 3.5](http://python.org), [Node.js 6+](https://nodejs.org/en/), [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org). Once you have `pip` and `yarn` available install the dependencies:
 
 ```console
 $ yarn install
