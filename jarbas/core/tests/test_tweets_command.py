@@ -106,14 +106,24 @@ class TestMethods(TestCommand):
         self.assertTrue(all((Command.get_document_id(u) for u in valid)))
         self.assertFalse(any((Command.get_document_id(u) for u in invalid)))
 
-    @patch.object(Command, 'document_ids', new_callable=PropertyMock)
-    def test_save_tweet(self, document_ids):
+    def test_save_tweet(self):
         reimbursement = mixer.blend(Reimbursement)
         command = Command()
         command.log = MagicMock()
         command.save_tweet(reimbursement, 42)
         self.assertEqual(42, reimbursement.tweet.status)
         self.assertEqual(1, command.log.info.call_count)
+        self.assertEqual(1, Tweet.objects.count())
+
+    def test_save_duplicated_tweet(self):
+        reimbursement = mixer.blend(Reimbursement)
+        tweet = mixer.blend(Tweet, status=42, reimbursement=reimbursement)
+        command = Command()
+        command.log = MagicMock()
+        command.save_tweet(reimbursement, 42)
+        self.assertEqual(42, reimbursement.tweet.status)
+        self.assertEqual(1, command.log.info.call_count)
+        self.assertEqual(1, Tweet.objects.count())
 
 
 class TestProperties(TestCommand):

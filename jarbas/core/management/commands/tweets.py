@@ -109,9 +109,11 @@ class Command(BaseCommand):
         :param reimbursement: Reimbursement instance
         :param status: (int) Tweet status ID
         """
-        reimbursement.tweet = Tweet(reimbursement=reimbursement, status=status)
-        reimbursement.save()
+        if Tweet.objects.filter(reimbursement=reimbursement):
+            msg = 'Document #{} already linked to {}'
+        else:
+            Tweet.objects.create(reimbursement=reimbursement, status=status)
+            msg = 'Document #{} just linked to {}'
 
-        msg = 'Document #{} linked to {}'
         args = (reimbursement.document_id, reimbursement.tweet.get_url())
         self.log.info(msg.format(*args))
