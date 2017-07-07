@@ -179,7 +179,7 @@ class Company(models.Model):
 class Tweet(models.Model):
 
     reimbursement = models.OneToOneField(Reimbursement)
-    status = models.IntegerField('Tweet ID', db_index=True)
+    status = models.DecimalField('Tweet ID', db_index=True, max_digits=25, decimal_places=0)
 
     def get_url(self):
         base_url = 'https://twitter.com/RosieDaSerenata/status/'

@@ -107,21 +107,23 @@ class TestMethods(TestCommand):
         self.assertFalse(any((Command.get_document_id(u) for u in invalid)))
 
     def test_save_tweet(self):
+        status = 9999999999999999999999999
         reimbursement = mixer.blend(Reimbursement)
         command = Command()
         command.log = MagicMock()
-        command.save_tweet(reimbursement, 42)
-        self.assertEqual(42, reimbursement.tweet.status)
+        command.save_tweet(reimbursement, status)
+        self.assertEqual(status, reimbursement.tweet.status)
         self.assertEqual(1, command.log.info.call_count)
         self.assertEqual(1, Tweet.objects.count())
 
     def test_save_duplicated_tweet(self):
+        status = 9999999999999999999999999
         reimbursement = mixer.blend(Reimbursement)
-        tweet = mixer.blend(Tweet, status=42, reimbursement=reimbursement)
+        tweet = mixer.blend(Tweet, status=status, reimbursement=reimbursement)
         command = Command()
         command.log = MagicMock()
-        command.save_tweet(reimbursement, 42)
-        self.assertEqual(42, reimbursement.tweet.status)
+        command.save_tweet(reimbursement, status)
+        self.assertEqual(status, reimbursement.tweet.status)
         self.assertEqual(1, command.log.info.call_count)
         self.assertEqual(1, Tweet.objects.count())
 
@@ -147,7 +149,7 @@ class TestProperties(TestCommand):
 
     @patch('jarbas.core.management.commands.tweets.twitter.Api')
     def test_tweets_with_database(self, api):
-        tweet = mixer.blend(Tweet)
+        tweet = mixer.blend(Tweet, status=42)
         api.return_value.GetUserTimeline.return_value = range(3)
         with self.settings(**self.credentials):
             command = Command()
