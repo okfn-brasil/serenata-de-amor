@@ -7,6 +7,7 @@ from mixer.backend.django import mixer
 
 from jarbas.core.models import Reimbursement, Tweet
 from jarbas.core.management.commands.tweets import Command
+from jarbas.core.tests import random_tweet_status
 
 
 KEYS = (
@@ -149,7 +150,7 @@ class TestProperties(TestCommand):
 
     @patch('jarbas.core.management.commands.tweets.twitter.Api')
     def test_tweets_with_database(self, api):
-        tweet = mixer.blend(Tweet, status=42)
+        tweet = mixer.blend(Tweet, status=random_tweet_status())
         api.return_value.GetUserTimeline.return_value = range(3)
         with self.settings(**self.credentials):
             command = Command()
