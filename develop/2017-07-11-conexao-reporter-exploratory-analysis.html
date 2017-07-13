@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>2017-07-11-conexao-reporter-exploratory-analysis</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>2017-07-11-conexao-reporter-exploratory-analysis</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11,8 +13,8 @@
 *
 */
 /*!
- * Bootstrap v3.3.7 (http://getbootstrap.com)
- * Copyright 2011-2016 Twitter, Inc.
+ * Bootstrap v3.3.6 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -1107,6 +1109,7 @@ a:focus {
   text-decoration: underline;
 }
 a:focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2535,6 +2538,7 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -3025,6 +3029,7 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -8755,9 +8760,6 @@ body > #header .header-bar {
     margin-left: 10px;
   }
 }
-[dir="rtl"] #ipython_notebook {
-  float: right !important;
-}
 #noscript {
   width: auto;
   padding-top: 16px;
@@ -8960,14 +8962,8 @@ span#login_widget > .button .badge,
  *
  * Author: Jupyter Development Team
  */
-[dir="rtl"] #tabs li {
-  float: right;
-}
 ul#tabs {
   margin-bottom: 4px;
-}
-[dir="rtl"] ul#tabs {
-  margin-right: 0px;
 }
 ul#tabs a {
   padding-top: 6px;
@@ -8990,16 +8986,6 @@ ul.breadcrumb span {
 }
 .list_toolbar .tree-buttons {
   padding-top: 1px;
-}
-[dir="rtl"] .list_toolbar .tree-buttons {
-  float: left !important;
-}
-[dir="rtl"] .list_toolbar .pull-right {
-  padding-top: 1px;
-  float: left !important;
-}
-[dir="rtl"] .list_toolbar .pull-left {
-  float: right !important;
 }
 .dynamic-buttons {
   padding-top: 3px;
@@ -9136,9 +9122,6 @@ ul.breadcrumb span {
 #tree-selector {
   padding-right: 0px;
 }
-[dir="rtl"] #tree-selector a {
-  float: right;
-}
 #button-select-all {
   min-width: 50px;
 }
@@ -9228,9 +9211,6 @@ ul#new-menu {
   left: auto;
   right: 0;
 }
-[dir="rtl"] #new-menu {
-  text-align: right;
-}
 .kernel-menu-icon {
   padding-right: 12px;
   width: 24px;
@@ -9275,9 +9255,6 @@ ul#new-menu {
 }
 #running .panel-group .panel .panel-body .list_container .list_item:last-child {
   border-bottom: 0px;
-}
-[dir="rtl"] #running .col-sm-8 {
-  float: right !important;
 }
 .delete-button {
   display: none;
@@ -9574,7 +9551,6 @@ div.cell.selected.jupyter-soft-selected {
   }
 }
 div.inner_cell {
-  min-width: 0;
   /* Old browsers */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -9595,6 +9571,11 @@ div.inner_cell {
   box-flex: 1;
   /* Modern browsers */
   flex: 1;
+}
+@-moz-document url-prefix() {
+  div.inner_cell {
+    overflow-x: hidden;
+  }
 }
 /* input_area and input_prompt must match in top border and margin for alignment */
 div.input_area {
@@ -11265,7 +11246,7 @@ div#pager .ui-resizable-handle::after {
 }
 .shortcut_key {
   display: inline-block;
-  width: 21ex;
+  width: 20ex;
   text-align: right;
   font-family: monospace;
 }
@@ -11577,7 +11558,6 @@ ul.typeahead-list > li > a {
   box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
 }
 .terminal-app .terminal {
-  width: 100%;
   float: left;
   font-family: monospace;
   color: white;
@@ -11591,9 +11571,6 @@ ul.typeahead-list > li > a {
 .terminal-app .terminal dummy-screen {
   line-height: 1em;
   font-size: 14px;
-}
-.terminal-app .terminal .xterm-rows {
-  padding: 10px;
 }
 .terminal-app .terminal-cursor {
   color: black;
@@ -11654,10 +11631,8 @@ ul.typeahead-list > li > a {
 .highlight .mh { color: #666666 } /* Literal.Number.Hex */
 .highlight .mi { color: #666666 } /* Literal.Number.Integer */
 .highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
 .highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
 .highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
 .highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
 .highlight .s2 { color: #BA2121 } /* Literal.String.Double */
 .highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
@@ -11668,11 +11643,9 @@ ul.typeahead-list > li > a {
 .highlight .s1 { color: #BA2121 } /* Literal.String.Single */
 .highlight .ss { color: #19177C } /* Literal.String.Symbol */
 .highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
 .highlight .vc { color: #19177C } /* Name.Variable.Class */
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
 <style type="text/css">
@@ -11789,6 +11762,7 @@ div#notebook {
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">serenata_toolbox.datasets</span> <span class="k">import</span> <span class="n">Datasets</span>
 </pre></div>
 
 </div>
@@ -11798,7 +11772,62 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">datasets</span> <span class="o">=</span> <span class="n">Datasets</span><span class="p">(</span><span class="s1">&#39;../data/&#39;</span><span class="p">)</span>
+<span class="n">datasets</span><span class="o">.</span><span class="n">downloader</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;2017-07-04-reimbursements.xz&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Downloading 2017-07-04-reimbursements.xz: 100%|██████████| 34.1M/34.1M [01:15&lt;00:00, 452Kb/s]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">datasets</span><span class="o">.</span><span class="n">downloader</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;2017-07-04-suspicions.xz&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Downloading 2017-07-04-suspicions.xz: 100%|██████████| 2.22M/2.22M [00:05&lt;00:00, 419Kb/s]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">reimbursements</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-07-04-reimbursements.xz&#39;</span><span class="p">,</span>
@@ -11817,7 +11846,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">reimbursements</span><span class="o">.</span><span class="n">columns</span>
@@ -11831,9 +11860,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[3]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11876,7 +11903,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">current_term_reimbursements</span> <span class="o">=</span> <span class="n">reimbursements</span><span class="p">[</span><span class="n">reimbursements</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">2015</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -11891,9 +11918,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[4]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11908,7 +11933,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">current_term_reimbursements</span><span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">])))</span>
@@ -11922,9 +11947,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[5]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11949,7 +11972,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[71]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">current_term_congresspeople</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">current_term_reimbursements</span><span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">]))</span>
@@ -11965,9 +11988,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[6]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[71]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12799,7 +12820,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">reimbursements</span><span class="o">.</span><span class="n">shape</span>
@@ -12813,9 +12834,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[7]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12830,7 +12849,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">filtered_reimbursements</span> <span class="o">=</span> <span class="n">reimbursements</span><span class="p">[</span><span class="n">reimbursements</span><span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">current_term_congresspeople</span><span class="p">)]</span>
@@ -12843,7 +12862,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">filtered_reimbursements</span><span class="o">.</span><span class="n">shape</span>
@@ -12857,9 +12876,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[9]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12874,13 +12891,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[61]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;congressperson_name&#39;</span><span class="p">,</span> <span class="s1">&#39;congressperson_id&#39;</span><span class="p">,</span> <span class="s1">&#39;applicant_id&#39;</span><span class="p">]</span>
-<span class="n">grouped_by_representative</span> <span class="o">=</span> <span class="n">filtered_reimbursements</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">)</span> \
+<span class="n">grouped_by_representative</span> <span class="o">=</span> <span class="n">filtered_reimbursements</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span><span class="nb">len</span><span class="p">])</span> \
                                     <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span> \
-                                    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">:</span> <span class="s1">&#39;sum&#39;</span><span class="p">})</span>
+                                    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">:</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span> 
+                                                     <span class="s1">&#39;len&#39;</span><span class="p">:</span> <span class="s1">&#39;expenses&#39;</span><span class="p">})</span>
 </pre></div>
 
 </div>
@@ -12890,11 +12908,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[62]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">grouped_by_representative</span> <span class="o">=</span> <span class="n">grouped_by_representative</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">grouped_by_representative</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">grouped_by_representative_top_5</span> <span class="o">=</span> <span class="n">grouped_by_representative</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">grouped_by_representative_top_5</span>
 </pre></div>
 
 </div>
@@ -12905,9 +12923,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[11]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[62]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12932,6 +12948,7 @@ div#notebook {
       <th>congressperson_id</th>
       <th>applicant_id</th>
       <th>sum</th>
+      <th>expenses</th>
     </tr>
   </thead>
   <tbody>
@@ -12941,6 +12958,7 @@ div#notebook {
       <td>74043</td>
       <td>1703</td>
       <td>3106049.82</td>
+      <td>883.0</td>
     </tr>
     <tr>
       <th>1</th>
@@ -12948,6 +12966,7 @@ div#notebook {
       <td>141408</td>
       <td>1804</td>
       <td>2975434.05</td>
+      <td>978.0</td>
     </tr>
     <tr>
       <th>2</th>
@@ -12955,6 +12974,7 @@ div#notebook {
       <td>74216</td>
       <td>1244</td>
       <td>2860739.64</td>
+      <td>3785.0</td>
     </tr>
     <tr>
       <th>3</th>
@@ -12962,6 +12982,7 @@ div#notebook {
       <td>141527</td>
       <td>1922</td>
       <td>2809970.46</td>
+      <td>5966.0</td>
     </tr>
     <tr>
       <th>4</th>
@@ -12969,6 +12990,7 @@ div#notebook {
       <td>141422</td>
       <td>1823</td>
       <td>2774536.47</td>
+      <td>1784.0</td>
     </tr>
   </tbody>
 </table>
@@ -12993,15 +13015,15 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_colwidth&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># setting pandas so it won&#39;t truncate the html</span>
 
 <span class="n">congressperson_url</span> <span class="o">=</span> <span class="s1">&#39;&lt;a href=&quot;http://www.camara.leg.br/internet/deputado/dep_Detalhe.asp?id=</span><span class="si">{0}</span><span class="s1">&quot;&gt;link&lt;/a&gt;&#39;</span>
-<span class="n">grouped_by_representative</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grouped_by_representative</span> \
+<span class="n">grouped_by_representative_top_5</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grouped_by_representative_top_5</span>\
                                     <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">congressperson_url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;congressperson_id&#39;</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">grouped_by_representative</span>
+<span class="n">grouped_by_representative_top_5</span>
 </pre></div>
 
 </div>
@@ -13012,9 +13034,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[12]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[39]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -13096,11 +13116,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">HTML</span>
-<span class="n">HTML</span><span class="p">(</span><span class="n">grouped_by_representative</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">escape</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="n">HTML</span><span class="p">(</span><span class="n">grouped_by_representative_top_5</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">escape</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -13111,9 +13131,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[13]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[40]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <table border="1" class="dataframe">
@@ -13190,7 +13208,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">suspicions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2017-07-04-suspicions.xz&#39;</span><span class="p">)</span>
@@ -13205,9 +13223,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[14]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[19]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -13313,7 +13329,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">suspicions</span><span class="o">.</span><span class="n">shape</span>
@@ -13327,9 +13343,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[15]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13354,7 +13368,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">current_term_aplicant_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">current_term_reimbursements</span><span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">]))</span>
@@ -13370,9 +13384,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[32]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13387,20 +13399,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># this takes a lot of time! grab a cup of coffee</span>
@@ -13418,16 +13417,14 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/Users/temporal/anaconda3/envs/serenata_de_amor/lib/python3.6/site-packages/ipykernel_launcher.py:4: SettingWithCopyWarning: 
+<pre>/home/cabral/anaconda3/envs/serenata_de_amor/lib/python3.5/site-packages/ipykernel_launcher.py:5: SettingWithCopyWarning: 
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
 See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
-  after removing the cwd from sys.path.
+  &#34;&#34;&#34;
 </pre>
 </div>
 </div>
@@ -13438,7 +13435,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">only_suspicions_current_term</span> <span class="o">=</span> <span class="n">suspicions_current_term</span><span class="p">[</span><span class="n">suspicions_current_term</span><span class="p">[</span><span class="s1">&#39;suspicious&#39;</span><span class="p">]]</span>
@@ -13451,7 +13448,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">suspicions_current_term</span><span class="o">.</span><span class="n">shape</span>
@@ -13465,9 +13462,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[35]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[24]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13482,20 +13477,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">only_suspicions_current_term</span><span class="o">.</span><span class="n">shape</span>
@@ -13509,9 +13491,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[36]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[25]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13537,11 +13517,370 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">current_term_applicant_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">only_suspicions_current_term</span><span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">]))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">current_term_aplicant_ids</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[31]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>808</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">]</span>
+<span class="n">grouped_by_applicant</span> <span class="o">=</span> <span class="n">only_suspicions_current_term</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)[</span><span class="s1">&#39;suspicious&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span> \
+                                    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">grouped_by_applicant</span> <span class="o">=</span> <span class="n">grouped_by_applicant</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;suspicious&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">grouped_by_applicant</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[55]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>applicant_id</th>
+      <th>suspicious</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1689</td>
+      <td>346</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>191</td>
+      <td>132</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1010</td>
+      <td>112</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2439</td>
+      <td>103</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1953</td>
+      <td>103</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">top_5</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">grouped_by_applicant</span><span class="o">.</span><span class="n">head</span><span class="p">()[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">])</span> 
+<span class="n">top_5</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">top_5</span><span class="p">))</span>
+<span class="n">top_5</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[66]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;1689&#39;, &#39;191&#39;, &#39;1010&#39;, &#39;2439&#39;, &#39;1953&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[77]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">top_5_with_suspicions</span> <span class="o">=</span> <span class="n">grouped_by_representative</span><span class="p">[</span><span class="n">grouped_by_representative</span><span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">top_5</span><span class="p">)]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">top_5_with_suspicions</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[77]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>congressperson_name</th>
+      <th>congressperson_id</th>
+      <th>applicant_id</th>
+      <th>sum</th>
+      <th>expenses</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>103</th>
+      <td>BONIFÁCIO DE ANDRADA</td>
+      <td>74650</td>
+      <td>191</td>
+      <td>1135253.08</td>
+      <td>1958.0</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>EDUARDO BARBOSA</td>
+      <td>74655</td>
+      <td>1010</td>
+      <td>2308970.72</td>
+      <td>7829.0</td>
+    </tr>
+    <tr>
+      <th>692</th>
+      <td>SANDRA ROSADO</td>
+      <td>74039</td>
+      <td>1689</td>
+      <td>1552162.38</td>
+      <td>5463.0</td>
+    </tr>
+    <tr>
+      <th>759</th>
+      <td>VITOR PENIDO</td>
+      <td>141557</td>
+      <td>1953</td>
+      <td>1641426.97</td>
+      <td>1632.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">reimbursements</span><span class="p">[</span><span class="n">reimbursements</span><span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;2439&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[73]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>applicant_id</th>
+      <th>document_id</th>
+      <th>reimbursement_value_total</th>
+      <th>total_net_value</th>
+      <th>reimbursement_numbers</th>
+      <th>congressperson_name</th>
+      <th>congressperson_id</th>
+      <th>congressperson_document</th>
+      <th>term</th>
+      <th>...</th>
+      <th>issue_date</th>
+      <th>document_value</th>
+      <th>remark_value</th>
+      <th>net_values</th>
+      <th>month</th>
+      <th>installment</th>
+      <th>passenger</th>
+      <th>leg_of_the_trip</th>
+      <th>batch_number</th>
+      <th>reimbursement_values</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>571822</th>
+      <td>2011</td>
+      <td>2439</td>
+      <td>2176355</td>
+      <td>0.0</td>
+      <td>138.0</td>
+      <td>3753</td>
+      <td>LIDERANÇA DO PT</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>2011-10-03 00:00:00</td>
+      <td>138.0</td>
+      <td>0.0</td>
+      <td>138.0</td>
+      <td>10</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>569094</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>1 rows × 31 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>On TOP_5 doesn't show 'LIDERANÇA DO PT' because we'd filtered by congressperson_id. Make sense now since the leadership have special powers with the reimbursments. We MUST save this informations for future analysis like phantom enterprises and other analysis.</p>
+
+</div>
+</div>
+</div>
     </div>
   </div>
 </body>
-
- 
-
-
 </html>
