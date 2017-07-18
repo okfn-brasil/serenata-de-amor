@@ -193,6 +193,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     list_display = (
         'short_document_id',
         'jarbas',
+        'rosies_tweet',
         'congressperson_name',
         'year',
         'subquota_translated',
@@ -249,6 +250,15 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     jarbas.short_description = ''
     jarbas.allow_tags = True
+
+    def rosies_tweet(self, obj):
+        try:
+            return '<a href="{}">🤖</a>'.format(obj.tweet.get_url())
+        except Reimbursement.tweet.RelatedObjectDoesNotExist:
+            return ''
+
+    rosies_tweet.short_description = ''
+    rosies_tweet.allow_tags = True
 
     def suspicious(self, obj):
         return obj.suspicions is not None

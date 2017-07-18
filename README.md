@@ -145,6 +145,7 @@ or
 $ docker-compose up -d
 $ docker-compose run --rm jarbas python manage.py migrate
 $ docker-compose run --rm jarbas python manage.py ceapdatasets
+$ docker-compose run --rm jarbas python manage.py tweets
 $ docker-compose run --rm jarbas python manage.py collectstatic --no-input
 ```
 
@@ -197,8 +198,6 @@ In some Linux distros `lzma` is not installed by default. You can check whether 
 
 Basically this means copying `contrib/.env.sample` as `.env` in the project's root folder — but there is [an entire section on that](#settings).
 
-
-
 #### Migrations
 
 Once you're done with requirements, dependencies and settings, create the basic database structure:
@@ -215,6 +214,7 @@ Now you can load the data from our datasets and get some other data as static fi
 $ python manage.py reimbursements <path to reimbursements.xz>
 $ python manage.py irregularities <path to irregularities.xz file>
 $ python manage.py companies <path to companies.xz>
+$ python manage.py tweets
 $ python manage.py ceapdatasets
 ```
 
@@ -282,3 +282,13 @@ If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the proj
 
 * `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
 * `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
+
+##### Twitter settings
+
+* `TWITTER_CONSUMER_KEY` (_str_) Twitter API key
+* `TWITTER_CONSUMER_SECRET` (_str_) Twitter API secret
+* `TWITTER_ACCESS_TOKEN` (_str_) Twitter access token
+* `TWITTER_ACCESS_SECRET` (_str_) Twitter access token secret
+
+To get this credentials follow [`python-twitter`
+instructions](https://python-twitter.readthedocs.io/en/latest/getting_started.html#getting-your-application-tokens).

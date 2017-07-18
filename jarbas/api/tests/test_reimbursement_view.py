@@ -7,8 +7,9 @@ from django.test import TestCase
 from freezegun import freeze_time
 from mixer.backend.django import mixer
 
-from jarbas.core.models import Reimbursement
 from jarbas.api.tests import get_sample_reimbursement_api_response
+from jarbas.core.models import Reimbursement, Tweet
+from jarbas.core.tests import random_tweet_status
 
 
 def get_reimbursement(**kwargs):
@@ -113,7 +114,19 @@ class TestRetrieveApi(TestCase):
 
     def test_contents(self):
         contents = loads(self.resp.content.decode('utf-8'))
+        self.sample_response['rosies_tweet'] = None
         self.assertEqual(self.sample_response, contents)
+
+    def test_contents_with_tweet(self):
+        status = random_tweet_status()
+        mixer.blend(Tweet, reimbursement=self.reimbursement, status=status)
+        expected = self.sample_response
+        expected['rosies_tweet'] = self.reimbursement.tweet.get_url()
+        url = resolve_url('api:reimbursement-detail',
+                          document_id=self.reimbursement.document_id)
+        resp = self.client.get(url)
+        contents = loads(resp.content.decode('utf-8'))
+        self.assertEqual(expected, contents)
 
 
 class TestReceiptApi(TestCase):
