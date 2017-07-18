@@ -48,7 +48,7 @@ count_per_consultancy = consultancies[cols]             .groupby(cols)          
 count_per_consultancy.head()
 
 
-# ## Couting the total reimbursements congresspeople had in consultancies
+# ## Counting the total reimbursements congresspeople had in consultancies
 # 
 # Now let's see the total reimbursements for all consultancies per congresspeople.
 
@@ -76,7 +76,7 @@ results = consultancies_grouped     .query('count_per_consultancy >= 10')     .q
 results
 
 
-# There are 126 congressperson that are constantly using the same consultancy. This is **not** illegal _per se_ but might be an indicator of something. If anyone wanna go deeper, here are the Jarba links for each of this cases:
+# There are 126 congressperson that are constantly using the same consultancy. This is **not** illegal _per se_ but might be an indicator of something. If anyone wanna go deeper, here are the Jarbas links for each of this cases:
 
 # In[8]:
 
