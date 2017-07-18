@@ -1,5 +1,7 @@
 FROM python:3.5
+
 USER root
+
 RUN apt-get update && apt-get install -y \
   build-essential \
   libxml2-dev \
@@ -9,10 +11,13 @@ RUN apt-get update && apt-get install -y \
   zlib1g-dev
   
 RUN pip install --upgrade pip
+
 COPY requirements.txt ./
 COPY setup ./
-RUN ./setup
 COPY rosie.py ./
 COPY rosie ./rosie
+COPY config.ini.example ./
+
+RUN ./setup
 
 CMD python rosie.py run
