@@ -273,8 +273,8 @@ post_translation = {
     '1º SUPLENTE SENADO': 'senate_first_alternate',
     '2º SUPLENTE': 'senate_second_alternate',
     '1º SUPLENTE': 'senate_first_alternate',
-    'VICE-PRESIDENTE': 'president',
-    'PRESIDENTE': 'vice_president',
+    'VICE-PRESIDENTE': 'vice_president',
+    'PRESIDENTE': 'president',
 }
 result_translation = {
     'SUPLENTE': 'alternate',
