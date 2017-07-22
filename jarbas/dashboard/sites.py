@@ -36,10 +36,7 @@ class DashboardSite(AdminSite):
             'add',
             'delete',
         )
-        for label in forbidden:
-            if label in url.regex.pattern:
-                return False
-        return True
+        return all(label not in url.regex.pattern for label in forbidden)
 
     @property
     def urls(self):
@@ -47,9 +44,7 @@ class DashboardSite(AdminSite):
         return list(urls), 'admin', self.name
 
     def has_permission(self, request):
-        if request.method != 'GET':
-            return False
-        return True
+        return request.method == 'GET'
 
     def admin_view(self, view, cacheable=False):
         def inner(request, *args, **kwargs):

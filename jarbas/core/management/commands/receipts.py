@@ -18,7 +18,7 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             '--pause', '-p', dest='pause', type=int, default=2,
-            help='Pause length in seconds (default: 2)'
+            help='Pause duration in seconds (default: 2)'
         )
 
     def handle(self, *args, **options):

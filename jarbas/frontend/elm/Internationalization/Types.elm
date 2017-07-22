@@ -71,6 +71,7 @@ type TranslationId
     | ReceiptFetch
     | ReceiptAvailable
     | ReceiptNotAvailable
+    | RosiesTweet
     | Map
     | CompanyCNPJ
     | CompanyTradeName

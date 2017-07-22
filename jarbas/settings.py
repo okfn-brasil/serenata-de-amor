@@ -29,6 +29,7 @@ SECRET_KEY = config('SECRET_KEY', default='my-secret')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
+INTERNAL_IPS = ('127.0.0.1',)
 
 
 # Application definition
@@ -48,8 +49,9 @@ INSTALLED_APPS = [
     'jarbas.frontend',
     'jarbas.dashboard',
     'django.contrib.admin',
+    'django_extensions',
+    'debug_toolbar',
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.cache.UpdateCacheMiddleware',
@@ -62,7 +64,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware'
+    'django.middleware.cache.FetchFromCacheMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'jarbas.urls'
@@ -78,6 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'jarbas.core.context_processors.google_analytics',
             ],
         },
     },
@@ -154,6 +158,14 @@ REST_FRAMEWORK = {
 
 GOOGLE_ANALYTICS = config('GOOGLE_ANALYTICS', default='')
 GOOGLE_STREET_VIEW_API_KEY = config('GOOGLE_STREET_VIEW_API_KEY', default='')
+
+
+# Twitter
+
+TWITTER_CONSUMER_KEY = config('TWITTER_CONSUMER_KEY', default='')
+TWITTER_CONSUMER_SECRET = config('TWITTER_CONSUMER_SECRET', default='')
+TWITTER_ACCESS_TOKEN = config('TWITTER_ACCESS_TOKEN', default='')
+TWITTER_ACCESS_SECRET = config('TWITTER_ACCESS_SECRET', default='')
 
 
 # Server headers

@@ -94,6 +94,7 @@ singleDecoder lang apiKey =
             |> required "leg_of_the_trip" (nullable string)
             |> required "probability" (nullable float)
             |> required "suspicions" (nullable <| keyValuePairs bool)
+            |> required "rosies_tweet" (nullable string)
             |> required "receipt" (ReceiptDecoder.decoder lang)
             |> hardcoded { supplier | googleStreetViewApiKey = apiKey }
             |> hardcoded RelatedTable.model

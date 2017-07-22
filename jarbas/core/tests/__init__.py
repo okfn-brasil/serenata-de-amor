@@ -1,5 +1,9 @@
 from datetime import date
+from random import randrange
+
 from django.utils import timezone
+
+from jarbas.core.models import Tweet
 
 
 suspicions = {
@@ -74,3 +78,16 @@ sample_company_data = dict(
     latitude=None,
     longitude=None
 )
+
+
+def random_tweet_status():
+    """
+    Fixture generators (mixer, and faker behind the scenes) won't generate a
+    value for a `DecimalField` with zero decimal places — which is the case of
+    Tweet.status (too big to fit `BigIntegerField`). Therefore we use this
+    function to workaround random test fixtures for Tweet.status.
+    """
+    status = Tweet._meta.get_field('status')
+    min_range = 9223372036854775807  # max big integer should be the minimum
+    max_range = 10 ** status.max_digits  # field limit
+    return randrange(min_range, max_range)

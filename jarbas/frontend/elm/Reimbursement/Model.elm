@@ -45,6 +45,7 @@ type alias Reimbursement =
     , legOfTheTrip : Maybe String
     , probability : Maybe Float
     , suspicions : Maybe (List ( String, Bool ))
+    , tweet : Maybe String
     , receipt : Receipt.Model
     , supplierInfo : Company.Model
     , sameDay : RelatedTable.Model
