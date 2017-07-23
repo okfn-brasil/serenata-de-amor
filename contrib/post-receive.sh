@@ -3,30 +3,36 @@
 GIT_REPO=/opt/jarbas.git
 PUBLIC_WWW=/opt/jarbas
 
-echo "\n==> Deploying to application directory…\n"
+echo "==> Stopping the server"
+kill -9 `cat /tmp/gunicorn.pid`
+
+echo "==> Deploying to application directory…"
 cd $PUBLIC_WWW || exit
 unset GIT_DIR
 git pull $GIT_REPO master
 
-echo "\n==> Activating virtualenv…\n"
+echo "==> Activating virtualenv…"
 . /opt/jarbas.venv/bin/activate
 
-echo "\n==> Installing NodeJS packages…\n"
+echo "==> Installing NodeJS packages…"
 yarn install
 
-echo "\n==> Installing Python packages…\n"
+echo "==> Installing Python packages…"
 pip install -r requirements.txt
 
-echo "\n==> Running migrations…\n"
+echo "==> Running migrations…"
 python manage.py migrate
 
-echo "\n==> Updating CEAP dataset page\n"
+echo "==> Updating CEAP dataset page"
 python manage.py ceapdatasets
 
-echo "\n==> Building assets\n"
+echo "==> Building assets"
 yarn assets
 
-echo "\n==> Collecting static files\n"
+echo "==> Collecting static files"
 python manage.py collectstatic --no-input
 
-echo "\n==> Done!\n"
+echo "==> Starting the server"
+nohup gunicorn jarbas.wsgi:application --reload --bind 127.0.0.1:8001 --workers 1 --pid /tmp/gunicorn.pid &>/dev/null &
+
+echo "==> Done!"
