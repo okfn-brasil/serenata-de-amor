@@ -1,5 +1,4 @@
 import glob
-import subprocess
 from unittest import TestCase
 
 
