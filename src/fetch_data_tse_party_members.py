@@ -28,20 +28,20 @@ state_list = [RS, SC, PR, RJ, SP, ES, MG, GO, DF, TO, MS, MT, AM, AC, RO, RR, PA
 
 # Download files
 for party in party_list:
-for state in state_list:
-    filename = '{}{}.zip'.format(FILENAME_PREFIX, party, state)
-    file_url = TSE_PARTYMEMBERS_STATE_URL + filename
-    output_file = os.path.join(TEMP_PATH, filename)
-    urllib.request.urlretrieve(file_url, output_file)
+    for state in state_list:
+        filename = '{}{}.zip'.format(FILENAME_PREFIX, party, state)
+        file_url = TSE_PARTYMEMBERS_STATE_URL + filename
+        output_file = os.path.join(TEMP_PATH, filename)
+        urllib.request.urlretrieve(file_url, output_file)
 
 # Unzip downloaded files
 for party in party_list:
-for state in state_list:
-    filename = FILENAME_PREFIX + party + state + '.zip'
-    filepath = os.path.join(TEMP_PATH, filename)
-    zip_ref = zipfile.ZipFile(filepath, 'r')
-    zip_ref.extractall(TEMP_PATH)
-    zip_ref.close()
+    for state in state_list:
+        filename = FILENAME_PREFIX + party + state + '.zip'
+        filepath = os.path.join(TEMP_PATH, filename)
+        zip_ref = zipfile.ZipFile(filepath, 'r')
+        zip_ref.extractall(TEMP_PATH)
+        zip_ref.close()
 
 # ### Adding the headers
 # The following headers were extracted from LEIAME.pdf in leiame.pdf
@@ -113,7 +113,7 @@ header_filiados = [
 
 # Translation
 headers_translation = {
-    "DATA_DA_EXTRACAO": "download date";
+    "DATA_DA_EXTRACAO": "download date",
     "HORA_DA_EXTRACAO": "download hour",    
     "NUMERO_DA_INSCRICAO": "electoral registration number", 
     "NOME_DO_FILIADO": "party member name", 
