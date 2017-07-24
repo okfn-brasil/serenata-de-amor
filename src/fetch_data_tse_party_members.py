@@ -17,10 +17,10 @@ from tempfile import mkdtemp
 TEMP_PATH = mkdtemp()
 
 FILENAME_PREFIX = 'filiados_{}_{}.zip'
-TSE_PARTYMEMBERS_STATE_URL = 'http://agencia.tse.jus.br/estatistica/sead/eleitorado/filiados/uf/filiados_'
+TSE_PARTYMEMBERS_STATE_URL = 'http://agencia.tse.jus.br/estatistica/sead/eleitorado/filiados/uf/'
 TODAY = pd.datetime.today().date()
 OUTPUT_FILENAME = TODAY.isoformat() + '-tse-partymembers.xz'
-OUTPUT_DATASET_PATH = os.path.join(os.pardir, 'data', OUTPUT_FILENAME)
+OUTPUT_DATASET_PATH = os.path.join('data', OUTPUT_FILENAME)
 # the array with parties has considered all mentioned on TSE's website until 21/07/2017
 party_list = ["DEM", "NOVO", "PEN", "PC_DO_B", "PCB", "PCO", "PDT", "PHS", "PMDB", "PMB", "PMN", "PP",
               "PPL", "PPS", "PR", "PRB", "PROS", "PRP", "PRTB", "PSB", "PSC", "PSD", "PSDB", "PSDC", "PSL",
@@ -33,6 +33,7 @@ for party in party_list:
     for state in state_list:
         filename = FILENAME_PREFIX.format(party.lower(), state.lower())
         file_url = TSE_PARTYMEMBERS_STATE_URL + filename
+        print(file_url)
         output_file = os.path.join(TEMP_PATH, filename)
         urllib.request.urlretrieve(file_url, output_file)
 
@@ -40,8 +41,9 @@ for party in party_list:
 for party in party_list:
     for state in state_list:
         filename = FILENAME_PREFIX.format(party.lower(), state.lower())
-        filepath = os.path.join(TEMP_PATH, filename)
-        zip_ref = zipfile.ZipFile(filepath, 'r')
+        file_path = os.path.join(TEMP_PATH, filename)
+        print(file_path)
+        zip_ref = zipfile.ZipFile(file_path, 'r')
         zip_ref.extractall(TEMP_PATH)
         zip_ref.close()
 
