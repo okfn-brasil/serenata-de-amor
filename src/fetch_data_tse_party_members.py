@@ -23,8 +23,11 @@ TODAY = pd.datetime.today().date()
 OUTPUT_FILENAME = TODAY.isoformat() + '-tse-partymembers.xz'
 OUTPUT_DATASET_PATH = os.path.join(os.pardir, 'data', OUTPUT_FILENAME)
 # the array with parties has considered all mentioned on TSE's website until 21/07/2017
-party_list = [DEM, NOVO, PEN, PC_DO_B, PCB, PCO, PDT, PHS, PMDB, PMB, PMN, PP, PPL, PPS, PR, PRB, PROS, PRP, PRTB, PSB, PSC, PSD, PSDB, PSDC, PSL, PSOL, PSTU, PT, PT_DO_B, PTB, PTC, PTN, PV, REDE, SD]
-state_list = [RS, SC, PR, RJ, SP, ES, MG, GO, DF, TO, MS, MT, AM, AC, RO, RR, PA, AP, MA, AL, PI, RN, PE, CE, SE, BA, PB]
+party_list = ["DEM", "NOVO", "PEN", "PC_DO_B", "PCB", "PCO", "PDT", "PHS", "PMDB", "PMB", "PMN", "PP",
+              "PPL", "PPS", "PR", "PRB", "PROS", "PRP", "PRTB", "PSB", "PSC", "PSD", "PSDB", "PSDC", "PSL",
+              "PSOL", "PSTU", "PT", "PT_DO_B", "PTB", "PTC", "PTN", "PV", "REDE", "SD"]
+state_list = ["RS", "SC", "PR", "RJ", "SP", "ES", "MG", "GO", "DF", "TO", "MS", "MT", "AM", "AC",
+              "RO", "RR", "PA", "AP", "MA", "AL", "PI", "RN", "PE", "CE", "SE", "BA", "PB"]
 
 # Download files
 for party in party_list:
@@ -48,7 +51,7 @@ for party in party_list:
 # headers commented with (*) can be used in the future to integrate with
 # other TSE datasets
 header_filiados = [
-    "DATA_DA_EXTRACAO"
+    "DATA_DA_EXTRACAO",
     "HORA_DA_EXTRACAO",    
     "NUMERO_DA_INSCRICAO", #*
     "NOME_DO_FILIADO", #*
