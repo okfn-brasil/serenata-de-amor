@@ -1,10 +1,9 @@
 """"
 This script downloads and format some data from TSE website.
-The first objective with this data is to obtain a list of *members of parties* in Brazil.
-In *july* 2017, the data available in TSE website contained information about *membership and disfellowship in brazilian parties of each state.*
-The data is available in csv format*. On TSE's website, you have to filter choosing party and state.*
-The csv files from TSE contain headers.
-*All the csv files present the same header, which we have translated below, so more people can access and reuse the code of Serenata Project.*
+The first objective with this data is to obtain a list of members of parties in Brazil.
+In july 2017, the data available in TSE website contained information about membership and disfellowship in brazilian parties of each state.
+The data is available in csv format. On TSE's website, you have to filter choosing party and state.
+The csv files from TSE contain headers.All the csv files present the same header, which we have translated below, so more people can access and reuse the code of Serenata Project.
 """
 
 import pandas as pd
@@ -17,7 +16,7 @@ import glob
 from tempfile import mkdtemp
 TEMP_PATH = mkdtemp()
 
-FILENAME_PREFIX = 'filiados_'
+FILENAME_PREFIX = 'filiados_{}_{}.{}'
 TSE_PARTYMEMBERS_STATE_URL = 'http://agencia.tse.jus.br/estatistica/sead/eleitorado/filiados/uf/filiados_'
 TODAY = pd.datetime.today().date()
 OUTPUT_FILENAME = TODAY.isoformat() + '-tse-partymembers.xz'
@@ -32,7 +31,7 @@ state_list = ["RS", "SC", "PR", "RJ", "SP", "ES", "MG", "GO", "DF", "TO", "MS", 
 # Download files
 for party in party_list:
     for state in state_list:
-        filename = '{}{}.zip'.format(FILENAME_PREFIX, party, state)
+        filename = FILENAME_PREFIX.format(party.lower(), state.lower(), .zip)
         file_url = TSE_PARTYMEMBERS_STATE_URL + filename
         output_file = os.path.join(TEMP_PATH, filename)
         urllib.request.urlretrieve(file_url, output_file)
@@ -40,7 +39,7 @@ for party in party_list:
 # Unzip downloaded files
 for party in party_list:
     for state in state_list:
-        filename = FILENAME_PREFIX + party + state + '.zip'
+        filename = FILENAME_PREFIX.format(party.lower(), state.lower(), .zip)
         filepath = os.path.join(TEMP_PATH, filename)
         zip_ref = zipfile.ZipFile(filepath, 'r')
         zip_ref.extractall(TEMP_PATH)
