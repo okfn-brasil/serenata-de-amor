@@ -16,7 +16,7 @@ import glob
 from tempfile import mkdtemp
 TEMP_PATH = mkdtemp()
 
-FILENAME_PREFIX = 'filiados_{}_{}.{}'
+FILENAME_PREFIX = 'filiados_{}_{}.zip'
 TSE_PARTYMEMBERS_STATE_URL = 'http://agencia.tse.jus.br/estatistica/sead/eleitorado/filiados/uf/filiados_'
 TODAY = pd.datetime.today().date()
 OUTPUT_FILENAME = TODAY.isoformat() + '-tse-partymembers.xz'
@@ -31,7 +31,7 @@ state_list = ["RS", "SC", "PR", "RJ", "SP", "ES", "MG", "GO", "DF", "TO", "MS", 
 # Download files
 for party in party_list:
     for state in state_list:
-        filename = FILENAME_PREFIX.format(party.lower(), state.lower(), .zip)
+        filename = FILENAME_PREFIX.format(party.lower(), state.lower())
         file_url = TSE_PARTYMEMBERS_STATE_URL + filename
         output_file = os.path.join(TEMP_PATH, filename)
         urllib.request.urlretrieve(file_url, output_file)
@@ -39,7 +39,7 @@ for party in party_list:
 # Unzip downloaded files
 for party in party_list:
     for state in state_list:
-        filename = FILENAME_PREFIX.format(party.lower(), state.lower(), .zip)
+        filename = FILENAME_PREFIX.format(party.lower(), state.lower())
         filepath = os.path.join(TEMP_PATH, filename)
         zip_ref = zipfile.ZipFile(filepath, 'r')
         zip_ref.extractall(TEMP_PATH)
