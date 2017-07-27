@@ -1,5 +1,4 @@
 git+git://github.com/marcusrehm/neo4jupyter.git@master
-git+https://github.com/datasciencebr/serenata-toolbox.git#egg=serenata-toolbox
 aiofiles==0.3.0
 aiohttp==1.3.1
 beautifulsoup4==4.6.0
@@ -17,5 +16,6 @@ py2neo==3.1.2
 pycpfcnpj==1.0.2
 scikit-learn==0.18.1
 seaborn==0.7.1
+serenata-toolbox
 tinys3==0.1.11
 tqdm==4.11.2
