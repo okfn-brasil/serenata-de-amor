@@ -160,7 +160,7 @@ or
 ```console
 $ docker-compose run --rm jarbas python manage.py reimbursements contrib/sample-data/reimbursements_sample.xz
 $ docker-compose run --rm jarbas python manage.py companies contrib/sample-data/companies_sample.xz
-$ docker-compose run --rm jarbas python manage.py irregularities contrib/sample-data/irregularities_sample.xz
+$ docker-compose run --rm jarbas python manage.py suspicions contrib/sample-data/suspicions_sample.xz
 ```
 
 You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
@@ -212,7 +212,7 @@ Now you can load the data from our datasets and get some other data as static fi
 
 ```
 $ python manage.py reimbursements <path to reimbursements.xz>
-$ python manage.py irregularities <path to irregularities.xz file>
+$ python manage.py suspicions <path to suspicions.xz file>
 $ python manage.py companies <path to companies.xz>
 $ python manage.py tweets
 $ python manage.py ceapdatasets
