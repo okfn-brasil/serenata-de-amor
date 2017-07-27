@@ -3,7 +3,7 @@ from unittest.mock import Mock, call, patch
 
 from django.test import TestCase
 
-from jarbas.core.management.commands.irregularities import Command
+from jarbas.core.management.commands.suspicions import Command
 from jarbas.core.models import Reimbursement
 
 
@@ -70,11 +70,11 @@ class TestSerializer(TestCommand):
 
 class TestCustomMethods(TestCommand):
 
-    @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
-    @patch('jarbas.core.management.commands.irregularities.Command.schedule_update')
-    @patch('jarbas.core.management.commands.irregularities.Command.update')
-    def test_main(self, update, schedule_update, irregularities):
-        irregularities.return_value = (range(21), range(21, 43))
+    @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
+    @patch('jarbas.core.management.commands.suspicions.Command.schedule_update')
+    @patch('jarbas.core.management.commands.suspicions.Command.update')
+    def test_main(self, update, schedule_update, suspicions):
+        suspicions.return_value = (range(21), range(21, 43))
         self.command.main()
         update.assert_has_calls([call()] * 2)
         schedule_update.assert_has_calls(call(i) for i in range(42))
@@ -104,8 +104,8 @@ class TestCustomMethods(TestCommand):
         get.assert_called_once_with(document_id=42)
         self.assertEqual([], self.command.queue)
 
-    @patch('jarbas.core.management.commands.irregularities.bulk_update')
-    @patch('jarbas.core.management.commands.irregularities.print')
+    @patch('jarbas.core.management.commands.suspicions.bulk_update')
+    @patch('jarbas.core.management.commands.suspicions.print')
     def test_update(self, print_, bulk_update):
         self.command.count = 40
         self.command.queue = list(range(2))
@@ -133,52 +133,52 @@ class TestCustomMethods(TestCommand):
 
 class TestConventionMethods(TestCommand):
 
-    @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
-    @patch('jarbas.core.management.commands.irregularities.Command.main')
-    @patch('jarbas.core.management.commands.irregularities.os.path.exists')
-    @patch('jarbas.core.management.commands.irregularities.print')
-    def test_handler_with_options(self, print_, exists, main, irregularities):
-        self.command.handle(dataset='irregularities.xz', batch_size=42)
+    @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
+    @patch('jarbas.core.management.commands.suspicions.Command.main')
+    @patch('jarbas.core.management.commands.suspicions.os.path.exists')
+    @patch('jarbas.core.management.commands.suspicions.print')
+    def test_handler_with_options(self, print_, exists, main, suspicions):
+        self.command.handle(dataset='suspicions.xz', batch_size=42)
         main.assert_called_once_with()
         print_.assert_called_once_with('0 reimbursements updated.')
-        self.assertEqual(self.command.path, 'irregularities.xz')
+        self.assertEqual(self.command.path, 'suspicions.xz')
         self.assertEqual(self.command.batch_size, 42)
 
-    @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
-    @patch('jarbas.core.management.commands.irregularities.Command.main')
-    @patch('jarbas.core.management.commands.irregularities.os.path.exists')
-    @patch('jarbas.core.management.commands.irregularities.print')
-    def test_handler_without_options(self, print_, exists, main, irregularities):
-        self.command.handle(dataset='irregularities.xz', batch_size=4096)
+    @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
+    @patch('jarbas.core.management.commands.suspicions.Command.main')
+    @patch('jarbas.core.management.commands.suspicions.os.path.exists')
+    @patch('jarbas.core.management.commands.suspicions.print')
+    def test_handler_without_options(self, print_, exists, main, suspicions):
+        self.command.handle(dataset='suspicions.xz', batch_size=4096)
         main.assert_called_once_with()
         print_.assert_called_once_with('0 reimbursements updated.')
-        self.assertEqual(self.command.path, 'irregularities.xz')
+        self.assertEqual(self.command.path, 'suspicions.xz')
         self.assertEqual(self.command.batch_size, 4096)
 
-    @patch('jarbas.core.management.commands.irregularities.Command.irregularities')
-    @patch('jarbas.core.management.commands.irregularities.Command.main')
-    @patch('jarbas.core.management.commands.irregularities.os.path.exists')
-    def test_handler_with_non_existing_file(self, exists, update, irregularities):
+    @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
+    @patch('jarbas.core.management.commands.suspicions.Command.main')
+    @patch('jarbas.core.management.commands.suspicions.os.path.exists')
+    def test_handler_with_non_existing_file(self, exists, update, suspicions):
         exists.return_value = False
         with self.assertRaises(FileNotFoundError):
-            self.command.handle(dataset='irregularities.xz', batch_size=4096)
+            self.command.handle(dataset='suspicions.xz', batch_size=4096)
         update.assert_not_called()
 
 
 class TestFileLoader(TestCommand):
 
-    @patch('jarbas.core.management.commands.irregularities.print')
-    @patch('jarbas.core.management.commands.irregularities.lzma')
-    @patch('jarbas.core.management.commands.irregularities.csv.DictReader')
-    @patch('jarbas.core.management.commands.irregularities.Command.serialize')
-    def test_irregularities(self, serialize, rows, lzma, print_):
+    @patch('jarbas.core.management.commands.suspicions.print')
+    @patch('jarbas.core.management.commands.suspicions.lzma')
+    @patch('jarbas.core.management.commands.suspicions.csv.DictReader')
+    @patch('jarbas.core.management.commands.suspicions.Command.serialize')
+    def test_suspicions(self, serialize, rows, lzma, print_):
         serialize.return_value = '.'
         lzma.return_value = StringIO()
         rows.return_value = range(42)
         self.command.batch_size = 10
-        self.command.path = 'irregularities.xz'
+        self.command.path = 'suspicions.xz'
         expected = [['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 2]
-        self.assertEqual(expected, list(self.command.irregularities()))
+        self.assertEqual(expected, list(self.command.suspicions()))
         self.assertEqual(42, serialize.call_count)
 
 
