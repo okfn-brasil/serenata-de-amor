@@ -77,6 +77,7 @@ class Reimbursement(models.Model):
 
     receipt_fetched = models.BooleanField('Tentamos acessar a URL do documento fiscal?', default=False, db_index=True)
     receipt_url = models.CharField('URL do Documento Fiscal', max_length=140, blank=True, null=True)
+    reimbursement_text = models.TextField('OCR', blank=True, null=True)
 
     history = HistoricalRecords()
 
