@@ -3,3 +3,4 @@ geopy>=1.11.0
 pycpfcnpj==1.0.2
 scikit-learn==0.18.1
 scipy==0.19.0
+serenata-toolbox
