@@ -18,7 +18,7 @@ class TestSerializer(TestCommand):
     def test_serializer(self):
         expected = {
             'document_id': 42,
-            'reimbursement_text': 'lorem ipsum',
+            'receipt_text': 'lorem ipsum',
         }
 
         input = {
@@ -30,7 +30,7 @@ class TestSerializer(TestCommand):
     def test_serializer_without_text(self):
         expected = {
             'document_id': 42,
-            'reimbursement_text': None
+            'receipt_text': None
         }
 
         input = {
@@ -56,12 +56,12 @@ class TestCustomMethods(TestCommand):
         get.return_value = reimbursement
         content = {
             'document_id': 42,
-            'reimbursement_text': 'lorem ipsum'
+            'receipt_text': 'lorem ipsum'
         }
         self.command.queue = []
         self.command.schedule_update(content)
         get.assert_called_once_with(document_id=42)
-        self.assertEqual(content['reimbursement_text'], reimbursement.reimbursement_text)
+        self.assertEqual(content['receipt_text'], reimbursement.receipt_text)
 
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_non_existing_record(self, get):
@@ -78,7 +78,7 @@ class TestCustomMethods(TestCommand):
         self.command.count = 40
         self.command.queue = list(range(2))
         self.command.update()
-        fields = ['reimbursement_text',]
+        fields = ['receipt_text',]
         bulk_update.assert_called_with([0, 1], update_fields=fields)
         print_.assert_called_with('42 reimbursements updated.', end='\r')
         self.assertEqual(42, self.command.count)
