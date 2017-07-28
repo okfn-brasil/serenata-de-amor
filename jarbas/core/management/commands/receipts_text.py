@@ -72,7 +72,7 @@ class Command(LoadCommand):
             self.queue.append(reimbursement)
 
     def update(self):
-        fields = ['reimbursement_text',]
+        fields = ['reimbursement_text', ]
         bulk_update(self.queue, update_fields=fields)
         self.count += len(self.queue)
         print('{:,} reimbursements updated.'.format(self.count), end='\r')
