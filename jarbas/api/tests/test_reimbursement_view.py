@@ -128,10 +128,10 @@ class TestRetrieveApi(TestCase):
         contents = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, contents)
 
-    def test_contents_with_reimbursement_text(self):
+    def test_contents_with_receipt_text(self):
         expected = self.sample_response
         expected['rosies_tweet'] = None
-        expected['reimbursement_text'] = self.reimbursement.reimbursement_text
+        expected['receipt_text'] = self.reimbursement.receipt_text
         url = resolve_url('api:reimbursement-detail',
                           document_id=self.reimbursement.document_id)
         resp = self.client.get(url)

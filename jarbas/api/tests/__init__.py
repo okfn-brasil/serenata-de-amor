@@ -33,7 +33,7 @@ def get_sample_reimbursement_api_response(obj):
         year=obj.year,
         probability=obj.probability,
         suspicions=obj.suspicions,
-        reimbursement_text=obj.reimbursement_text,
+        receipt_text=obj.receipt_text,
         last_update=obj.last_update.strftime('%Y-%m-%dT%H:%M:%SZ'),
         available_in_latest_dataset=obj.available_in_latest_dataset,
         receipt=dict(fetched=obj.receipt_fetched, url=obj.receipt_url)
