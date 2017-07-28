@@ -48,11 +48,11 @@ class Command(LoadCommand):
         the `document_id` and with data about the receipts text.
         """
         document_id = self.to_number(row.get('document_id'), cast=int)
-        reimbursement_text = row.get('text')
+        receipt_text = row.get('text')
 
         return dict(
             document_id=document_id,
-            reimbursement_text=reimbursement_text,
+            receipt_text=receipt_text,
         )
 
     def main(self):
@@ -68,11 +68,11 @@ class Command(LoadCommand):
         except Reimbursement.DoesNotExist:
             pass
         else:
-            reimbursement.reimbursement_text = content.get('reimbursement_text')
+            reimbursement.receipt_text = content.get('receipt_text')
             self.queue.append(reimbursement)
 
     def update(self):
-        fields = ['reimbursement_text', ]
+        fields = ['receipt_text', ]
         bulk_update(self.queue, update_fields=fields)
         self.count += len(self.queue)
         print('{:,} reimbursements updated.'.format(self.count), end='\r')
