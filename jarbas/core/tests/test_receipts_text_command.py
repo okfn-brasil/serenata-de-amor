@@ -124,7 +124,7 @@ class TestFileLoader(TestCommand):
     @patch('jarbas.core.management.commands.receipts_text.lzma')
     @patch('jarbas.core.management.commands.receipts_text.csv.DictReader')
     @patch('jarbas.core.management.commands.receipts_text.Command.serialize')
-    def test_suspicions(self, serialize, rows, lzma, print_):
+    def test_receipts(self, serialize, rows, lzma, print_):
         serialize.return_value = '.'
         lzma.return_value = StringIO()
         rows.return_value = range(42)
