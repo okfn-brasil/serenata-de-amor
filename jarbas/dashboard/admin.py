@@ -212,6 +212,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'state',
         'supplier',
         'subquota_description',
+        'receipt_text',
     )
 
     list_filter = (
