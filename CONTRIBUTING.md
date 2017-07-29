@@ -74,13 +74,13 @@ You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker 
 
 1. Start the environment (it might take a while, the base image has 6.88GB and we also pull in lots of dependencies): `$ docker-compose up -d`.
 1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
-1. Run the script to download data and other useful files: `$ docker-compose run --rm jupyter python src/fetch_datasets.py`
-1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm jupyter jupyter notebook`
+1. Run the script to download data and other useful files: `$ docker-compose run --rm research python src/fetch_datasets.py`
+1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm research jupyter notebook`
 
 If you want to access the console:
 
 ```console
-$ docker-compose run --rm jupyter bash
+$ docker-compose run --rm research bash
 ```
 
 ### Using Neo4j in graph analysis

@@ -1,21 +1,21 @@
-version: '2'
-
+version: "3"
 services:
-  jupyter:
+  research:
     build:
-      context: .
-      dockerfile: docker/Dockerfile
+      context: research
     ports:
       - 8888:8888
     volumes:
-      - .:/notebook
-    working_dir: /notebook
+      - ./research/deliver:/home/jovyan/work/deliver
+      - ./research/develop:/home/jovyan/work/develop
+      - ./research/src:/home/jovyan/work/src
+      - ./research/test:/home/jovyan/work/test
   neo4j:
     image: neo4j:3.1.1
     ports:
       - 7474:7474
       - 7687:7687
     volumes:
-      - ./data/neo4j/data:/data
+      - ./research/data/neo4j/data:/data
     environment:
       - NEO4J_AUTH=none

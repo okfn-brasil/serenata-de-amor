@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 
+import os
 import pip
 from shutil import copyfile, which
 
 copyfile('config.ini.example', 'config.ini')
 
-pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
+pip.main(['install', '--upgrade', '-r', 'research/requirements.txt'])
 
 if which('unzip') == None:
     print('The following executables are needed and were not found: unzip')
 
 print('Downloading datasets (this might take several minutes depending on your internet connection)')
 
-
 # This is imported here because serenata_toolbox is only installed when pip.main is called (line 9)
 from serenata_toolbox.datasets import fetch_latest_backup
-fetch_latest_backup('data/')
+os.makedirs('research/data', exist_ok=True)
+fetch_latest_backup('research/data')
