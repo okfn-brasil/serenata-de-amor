@@ -17,4 +17,4 @@ python-decouple==3.0
 python-memcached==1.58
 python-twitter==3.3
 reprint==0.4.0
-requests==2.18.2
+requests==2.18.3
