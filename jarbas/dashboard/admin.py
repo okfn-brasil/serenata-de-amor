@@ -14,20 +14,6 @@ from jarbas.dashboard.sites import dashboard
 ALL_FIELDS = sorted(Reimbursement._meta.fields, key=lambda f: f.verbose_name)
 CUSTOM_WIDGETS = ('receipt_url', 'subquota_description', 'suspicions')
 READONLY_FIELDS = (f.name for f in ALL_FIELDS if f.name not in CUSTOM_WIDGETS)
-MONTHS = {
-    1: 'Janeiro',
-    2: 'Fevereiro',
-    3: 'Março',
-    4: 'Abril',
-    5: 'Maio',
-    6: 'Junho',
-    7: 'Julho',
-    8: 'Agosto',
-    9: 'Setembro',
-    10: 'Outubro',
-    11: 'Novembro',
-    12: 'Dezembro'
-}
 
 
 class ReceiptUrlWidget(Widget):
@@ -72,7 +58,22 @@ class SuspiciousWidget(Widget):
         return '<div class="readonly">{}</div>'.format(suspicions)
 
 
-class SuspiciousListFilter(SimpleListFilter):
+class JarbasListFilter(SimpleListFilter):
+
+    options = tuple()
+
+    def lookups(self, request, model_admin):
+        return self.options
+
+    def queryset(self, request, queryset):
+        if not self.value():
+            return queryset
+
+        kwarg = {self.parameter_name: self.value()}
+        return queryset.filter(**kwarg)
+
+
+class SuspiciousListFilter(JarbasListFilter):
 
     title = 'reembolso suspeito'
     parameter_name = 'is_suspicions'
@@ -81,29 +82,31 @@ class SuspiciousListFilter(SimpleListFilter):
         ('no', 'Não'),
     )
 
-    def lookups(self, request, model_admin):
-        return self.options
-
     def queryset(self, request, queryset):
         return queryset.suspicions() if self.value() == 'yes' else queryset
 
 
-class MonthListFilter(SimpleListFilter):
+class MonthListFilter(JarbasListFilter):
 
     title = 'mês'
     parameter_name = 'month'
-    options = ((k, v) for k, v in MONTHS.items())
+    options = (
+        (1, 'Janeiro'),
+        (2, 'Fevereiro'),
+        (3, 'Março'),
+        (4, 'Abril'),
+        (5, 'Maio'),
+        (6, 'Junho'),
+        (7, 'Julho'),
+        (8, 'Agosto'),
+        (9, 'Setembro'),
+        (10, 'Outubro'),
+        (11, 'Novembro'),
+        (12, 'Dezembro')
+    )
 
-    def lookups(self, request, model_admin):
-        return self.options
 
-    def queryset(self, request, queryset):
-        if not self.value():
-            return queryset
-        return queryset.filter(month=self.value())
-
-
-class DocumentTypeListFilter(SimpleListFilter):
+class DocumentTypeListFilter(JarbasListFilter):
 
     title = 'tipo do documento fiscal'
     parameter_name = 'document_type'
@@ -112,14 +115,6 @@ class DocumentTypeListFilter(SimpleListFilter):
         (1, 'Recibo simples'),
         (2, 'Despesa no exterior')
     )
-
-    def lookups(self, request, model_admin):
-        return self.options
-
-    def queryset(self, request, queryset):
-        if not self.value():
-            return queryset
-        return queryset.filter(document_type=self.value())
 
 
 class Subquotas:
