@@ -1,4 +1,5 @@
 import os
+from collections import defaultdict
 
 import numpy as np
 import pandas as pd
@@ -43,11 +44,9 @@ class Adapter:
     def rename_categories(self):
         # There's no documented type for `3`, `4` and `5`, thus we assume it's
         # an input error until we hear back from chamber of deputies
-        converters = {
-                3: None,
-                4: None,
-                5: None,
-                }
+        converters = defaultdict(lambda: None)
+        for i in range(3):
+            converters[i] = i
         self._dataset['document_type'].replace(converters, inplace=True)
         self._dataset['document_type'] = self._dataset['document_type'].astype(
             'category')
