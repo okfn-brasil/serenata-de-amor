@@ -65,7 +65,6 @@ class Adapter:
         os.makedirs(self.path, exist_ok=True)
         chamber_of_deputies = Dataset(self.path)
         chamber_of_deputies.fetch()
-        chamber_of_deputies.convert_to_csv()
         chamber_of_deputies.translate()
         chamber_of_deputies.clean()
         fetch(self.COMPANIES_DATASET, self.path)
