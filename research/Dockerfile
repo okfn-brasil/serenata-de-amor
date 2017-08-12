@@ -11,10 +11,10 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-USER jovyan
-
 COPY requirements.txt ./
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
-COPY docker/jupyter_notebook_config.py /home/jovyan/.jupyter/jupyter_notebook_config.py
+USER jovyan
+
+COPY jupyter_notebook_config.py /home/jovyan/.jupyter/jupyter_notebook_config.py
