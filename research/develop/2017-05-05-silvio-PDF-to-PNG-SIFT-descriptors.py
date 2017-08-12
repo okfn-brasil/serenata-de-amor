@@ -16,7 +16,7 @@
 # # Case you are using the Dockerfile it is already there! 
 # # Upload your image and Enjoy!!!
 
-# In[1]:
+# In[2]:
 
 get_ipython().magic('matplotlib inline')
 import os
@@ -29,7 +29,7 @@ import urllib
 import glob
 
 
-# In[20]:
+# In[3]:
 
 #Let's load and save some pdf files
 url = 'http://www.camara.gov.br/cota-parlamentar/documentos/publ/2437/2015/5645173.pdf'
@@ -39,7 +39,7 @@ with urllib.request.urlopen(url) as response, open(file_name, 'wb') as out_file:
     out_file.write(data)
 
 
-# In[21]:
+# In[4]:
 
 #Let's load and save some pdf files
 url = 'http://www.camara.gov.br/cota-parlamentar/documentos/publ/2437/2015/5645177.pdf'
@@ -49,7 +49,7 @@ with urllib.request.urlopen(url) as response, open(file_name, 'wb') as out_file:
     out_file.write(data)
 
 
-# In[4]:
+# In[5]:
 
 print (glob.glob('5645173.pdf'))
 print (glob.glob('5645177.pdf'))
@@ -57,7 +57,7 @@ print (glob.glob('5645177.pdf'))
 
 # # Now let's convert the downloaded pdf to images
 
-# In[8]:
+# In[6]:
 
 from __future__ import print_function
 from wand.image import Image
@@ -74,7 +74,7 @@ with Image(filename='5645173.pdf', resolution=300) as img:
 file_name1='5645173.png'
 
 
-# In[9]:
+# In[7]:
 
 from __future__ import print_function
 from wand.image import Image
@@ -95,15 +95,20 @@ file_name2='5645177.png'
 # 
 # # Let's use SIFT to extract features from these images!
 
-# In[10]:
+# In[11]:
 
 import cv2
 import numpy as np
+from cv2 import xfeatures2d
 
 img = cv2.imread(file_name1)
 gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-sift=cv2.xfeatures2d.SIFT_create()
-kp=sift.detect(gray,None)
+
+# Create SURF object. You can specify params here or later.
+# Here I set Hessian Threshold to 400
+surf = xfeatures2d.SURF_create(400)
+
+kp, des = surf.detectAndCompute(img,None)
 img=cv2.drawKeypoints(gray, kp, img,flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
 cv2.imwrite('sift_keypoints.jpg',img)
@@ -174,39 +179,8 @@ plt.imshow(img3,),plt.show()
 
 
 # ## Great it works! We can work with these parsed images :D
-# 
-# ### So, following steps:
-# 
-# ### Goal: to build a ML classifier to detect duplicated reimbursiments.
-# 
-# ### I plain to follow  steps hereafter:
-# 
-# #### 1- Convert these pdfs to images
-# #### 2- Extract SIFT features from them
-# #### 3- Create a bag of visual words
-# #### 4- Run a ML method to get the duplicated reimbursements
-#             
-#             
-# ### !! What i have done so far !!
-#     Steps 1 and 2 
-#     For the nexts steps i will follow these approaches:
-#     
-#     http://www.robots.ox.ac.uk/~vgg/publications/2006/Sivic06c/sivic06c.pdf
-#     
-#     https://ianlondon.github.io/blog/how-to-sift-opencv/
-#     
-#     ### I did something similar before. Where i got the Scenes of a movie using an image as input
-#     ### I coded it on matlab, so i can't to use it here directly.
-#     ### However, i noticed some good code on github which we can adapt to our problem:
-#     ### Look at my repository: 
-#     https://github.com/silviodc/general_img_classifier
-#     https://github.com/silviodc/Bag-of-Visual-Words-Python
-#     
-# ### My main concerns about to use only the images are:
-# ##### The recuperation of similar images refering to diferent reimbursements.
-# ##### --- It can be from any politician, 
-# #### ---- I guess our approach must to preserve for more precision at the begining (*It is good to market )
-# 
-# ### About these similar images check the issue: https://github.com/datasciencebr/serenata-de-amor/issues/32
-# ##### ---- So, i also will try to combine the sift descriptors and other information. 
-# 
+
+# In[ ]:
+
+
+
