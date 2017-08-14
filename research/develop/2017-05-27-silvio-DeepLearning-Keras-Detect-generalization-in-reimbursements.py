@@ -373,27 +373,23 @@ data=data[data['subquota_description']=='Congressperson meal']
 
 #creating a column to access the files latter
 data['filename'] = ''
-doc_ids=[]
 
-#Get the pdfs files downloaded in our folder, e.g., /data
-pdfs = glob.glob(pdf_directory+'*.pdf')
 
-#Case we have pdf files we convert the pdf_files_name to doc_ids
-for file in pdfs:
-    full_name= file.split("/")
+# Reference for our model.
+link = 'https://drive.google.com/uc?export=download&id=0B6F2XOmMAf28dHM5M0tmSy1JZzA'
+
+response = urllib.request.urlopen(link)
+
+csv_ref = pd.DataFrame.from_csv(response)
+
+for index, refs in csv_ref:
+    full_name= refs['tocheck'].split("/")
     file_name = full_name[len(full_name)-1]
-    file_name= file_name.split(".pdf")
-    file_name= file_name[0]
     doc_ids.append(file_name)
     
-print ("recupered PDF files: {}".format(len(pdfs)))    
+print ("recupered Referemces: {}".format(len(doc_ids)))    
 
-#Case we have pdf files we use them in our Machine learn method
-if(len(pdfs)==0):
-    data = data.sample(n=100)#Only 100 images to test (In my RUN i put 10000 YEAP, i will use them to refiny the training set)
-    download_sample(data,pdf_directory)
-else:
-    data=data[data['document_id'].isin(doc_ids)]
+data=data[data['document_id'].isin(doc_ids)]
 
 #build a list of pdf_file_name to fill our dataframe directly
 file_list = []
