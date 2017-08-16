@@ -11783,31 +11783,272 @@ div#notebook {
 <p>They have good explanation and good images to show how these networks compute image classification.
 So, before to continue go there!
 Ps: I only commented in my code the strong changes regarding they example.</p>
-<p>To use it i'm supposing you have installed the requirements to convert pdf to images.
-See this notebook: 2017-05-05-silvio-PDF-to-PNG-SIFT-descriptors.ipynb</p>
-<h2 id="Togheter-with-these-previous-requirements-you-have-to-install--Keras-2.0-API">Togheter with these previous requirements you have to install  Keras 2.0 API<a class="anchor-link" href="#Togheter-with-these-previous-requirements-you-have-to-install--Keras-2.0-API">&#182;</a></h2><p>What is Keras???</p>
-<h2 id="Keras:-Deep-Learning-library-for-TensorFlow-and-Theano">Keras: Deep Learning library for TensorFlow and Theano<a class="anchor-link" href="#Keras:-Deep-Learning-library-for-TensorFlow-and-Theano">&#182;</a></h2><p><a href="https://github.com/fchollet/keras">https://github.com/fchollet/keras</a></p>
-<p>Yeap, let's include more functionalities in the serenata-de-amor :D</p>
-<h1 id="Main-constraint-of-it:-We-need-a-training-and-validation-set-:/">Main constraint of it: We need a training and validation set :/<a class="anchor-link" href="#Main-constraint-of-it:-We-need-a-training-and-validation-set-:/">&#182;</a></h1><h2 id="Solution-&gt;&gt;&gt;-Let's-build-it.">Solution &gt;&gt;&gt; Let's build it.<a class="anchor-link" href="#Solution-&gt;&gt;&gt;-Let's-build-it.">&#182;</a></h2><h2 id="New-Dataset">New Dataset<a class="anchor-link" href="#New-Dataset">&#182;</a></h2><p>Here: <a href="https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing">https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing</a>
-It includes, images, model and csv .</p>
-<p>Here: you can find my first training and validation set
-<a href="https://drive.google.com/file/d/0B6F2XOmMAf28dDZoOWtmS050Skk/view?usp=sharing">https://drive.google.com/file/d/0B6F2XOmMAf28dDZoOWtmS050Skk/view?usp=sharing</a></p>
-<h4 id="It-is-composed-by-250-wrong-reimbursements,-and-250-not-wrong">It is composed by 250 wrong reimbursements, and 250 not wrong<a class="anchor-link" href="#It-is-composed-by-250-wrong-reimbursements,-and-250-not-wrong">&#182;</a></h4><p>What i mean by wrong: <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2398/2015/5635048.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/2398/2015/5635048.pdf</a></p>
+<p>To use it i'm supposing you have installed the requirements to convert pdf to images.</p>
+<h2 id="Togheter-with-these-previous-requirements-you-have-to-install--Keras-2.0-API">Togheter with these previous requirements you have to install  Keras 2.0 API<a class="anchor-link" href="#Togheter-with-these-previous-requirements-you-have-to-install--Keras-2.0-API">&#182;</a></h2><h2 id="Keras:-Deep-Learning-library-for-TensorFlow-and-Theano">Keras: Deep Learning library for TensorFlow and Theano<a class="anchor-link" href="#Keras:-Deep-Learning-library-for-TensorFlow-and-Theano">&#182;</a></h2><p><a href="https://github.com/fchollet/keras">https://github.com/fchollet/keras</a></p>
+<h1 id="Main-constraint-of-this-approach:-We-need-a-training-and-validation-set-:/">Main constraint of this approach: We need a training and validation set :/<a class="anchor-link" href="#Main-constraint-of-this-approach:-We-need-a-training-and-validation-set-:/">&#182;</a></h1><h2 id="Solution-&gt;&gt;&gt;-Let's-build-it.">Solution &gt;&gt;&gt; Let's build it.<a class="anchor-link" href="#Solution-&gt;&gt;&gt;-Let's-build-it.">&#182;</a></h2><h4 id="It-is-composed-by-1691-wrong-reimbursements,-and-1691-not-wrong-(*-they-are-called,-positive,-negative)">It is composed by 1691 wrong reimbursements, and 1691 not wrong (* they are called, positive, negative)<a class="anchor-link" href="#It-is-composed-by-1691-wrong-reimbursements,-and-1691-not-wrong-(*-they-are-called,-positive,-negative)">&#182;</a></h4><p>What i mean by wrong: <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2398/2015/5635048.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/2398/2015/5635048.pdf</a></p>
 <p>As you can see it don't has any description about the consummation</p>
 <p>And what is "NOT WRONG":</p>
 <p><a href="http://www.camara.gov.br/cota-parlamentar//documentos/publ/1773/2014/5506259.pdf">http://www.camara.gov.br/cota-parlamentar//documentos/publ/1773/2014/5506259.pdf</a></p>
-<p>This first dataset was not big, but it allowed us to do the first steps and improve the machine learn model</p>
-<p>PS: using only this data i built a model with 70% accuracy
-Take a look at this pull: <a href="https://github.com/datasciencebr/serenata-de-amor/pull/238">https://github.com/datasciencebr/serenata-de-amor/pull/238</a></p>
-<p>Moving on, i executed it over 10000 and i got 2483 reimbursements regarding the two classes (Wrong, not wrong).</p>
-<p>You can download them here:
-<a href="https://drive.google.com/file/d/0B6F2XOmMAf28eVBLUnRFQkZsSGs/view?usp=sharing">https://drive.google.com/file/d/0B6F2XOmMAf28eVBLUnRFQkZsSGs/view?usp=sharing</a></p>
-<h1 id="All-these-reimbursements-were-validate-by-hand">All these reimbursements were validate by hand<a class="anchor-link" href="#All-these-reimbursements-were-validate-by-hand">&#182;</a></h1><h1 id="Thanks-so-much-everyone-involved-on-it-:D">Thanks so much everyone involved on it :D<a class="anchor-link" href="#Thanks-so-much-everyone-involved-on-it-:D">&#182;</a></h1><p>Take a look at this great collaborative work: <a href="https://docs.google.com/spreadsheets/d/1o7P79iMw2VnJypSZNHrsDjud398g4vXpZdrGMMqe6qA/edit?usp=sharing">https://docs.google.com/spreadsheets/d/1o7P79iMw2VnJypSZNHrsDjud398g4vXpZdrGMMqe6qA/edit?usp=sharing</a></p>
+<h1 id="All-these-reimbursements-were-validated-by-hand">All these reimbursements were validated by hand<a class="anchor-link" href="#All-these-reimbursements-were-validated-by-hand">&#182;</a></h1><h1 id="Thanks-so-much-everyone-involved-on-it-:D">Thanks so much everyone involved on it :D<a class="anchor-link" href="#Thanks-so-much-everyone-involved-on-it-:D">&#182;</a></h1><p>Take a look at this great collaborative work: <a href="https://docs.google.com/spreadsheets/d/1o7P79iMw2VnJypSZNHrsDjud398g4vXpZdrGMMqe6qA/edit?usp=sharing">https://docs.google.com/spreadsheets/d/1o7P79iMw2VnJypSZNHrsDjud398g4vXpZdrGMMqe6qA/edit?usp=sharing</a></p>
 <p>Here: you can find the up-to-date reimbursements
 <a href="https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing">https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing</a></p>
-<h4 id="It-is-composed-by-1691-wrong-reimbursements,-and-1691-not-wrong-(*Now-they-are-called,-positive,-negative)">It is composed by 1691 wrong reimbursements, and 1691 not wrong (*Now they are called, positive, negative)<a class="anchor-link" href="#It-is-composed-by-1691-wrong-reimbursements,-and-1691-not-wrong-(*Now-they-are-called,-positive,-negative)">&#182;</a></h4><h2 id="PS:-The-first-training-set-was-also-reevaluated-after-discussion-with-@anaschwendler">PS: The first training set was also reevaluated after discussion with @anaschwendler<a class="anchor-link" href="#PS:-The-first-training-set-was-also-reevaluated-after-discussion-with-@anaschwendler">&#182;</a></h2><h3 id="In-the-spreadsheet-they-are-in-orange-color.">In the spreadsheet they are in orange color.<a class="anchor-link" href="#In-the-spreadsheet-they-are-in-orange-color.">&#182;</a></h3><h2 id="So-Let's-start-to-run-our-DeepLearning-method-(Remember-to-read-the-first-link-before-to-continue)">So Let's start to run our DeepLearning method (Remember to read the first link before to continue)<a class="anchor-link" href="#So-Let's-start-to-run-our-DeepLearning-method-(Remember-to-read-the-first-link-before-to-continue)">&#182;</a></h2>
+<h2 id="PS:-The-first-training-set-was-also-reevaluated-after-discussion-with-@anaschwendler">PS: The first training set was also reevaluated after discussion with @anaschwendler<a class="anchor-link" href="#PS:-The-first-training-set-was-also-reevaluated-after-discussion-with-@anaschwendler">&#182;</a></h2><h3 id="In-the-spreadsheet-they-are-in-orange-color.">In the spreadsheet they are in orange color.<a class="anchor-link" href="#In-the-spreadsheet-they-are-in-orange-color.">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># First download the dataset</span>
+<span class="kn">from</span> <span class="nn">serenata_toolbox.datasets</span> <span class="k">import</span> <span class="n">Datasets</span>
+<span class="n">datasets</span> <span class="o">=</span> <span class="n">Datasets</span><span class="p">(</span><span class="s1">&#39;../test/&#39;</span><span class="p">)</span>
+<span class="n">datasets</span><span class="o">.</span><span class="n">downloader</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;2016-11-19-last-year.xz&#39;</span><span class="p">)</span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Downloading 2016-11-19-last-year.xz: 100%|██████████| 6.28M/6.28M [00:06&lt;00:00, 979Kb/s]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">unicodedata</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="k">import</span> <span class="n">urlopen</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span> <span class="k">as</span> <span class="n">pil_image</span>
+<span class="kn">from</span> <span class="nn">wand.image</span> <span class="k">import</span> <span class="n">Image</span>
+
+<span class="sd">&quot;&quot;&quot;Download a pdf file and transform it to png</span>
+<span class="sd">        arguments:</span>
+<span class="sd">        url -- the url to chamber of deputies web site, e.g.,</span>
+<span class="sd">        http://www.../documentos/publ/2437/2015/5645177.pdf</span>
+<span class="sd">        file_name -- myDirectory/5645177.png</span>
+<span class="sd">        Exception -- returns None</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">download_doc</span><span class="p">(</span><span class="n">url_link</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Open the resquest and get the file</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url_link</span><span class="p">)</span>
+        <span class="c1"># Default arguments to read the file and has a good resolution</span>
+        <span class="k">with</span> <span class="n">Image</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span> <span class="k">as</span> <span class="n">img</span><span class="p">:</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">compression_quality</span> <span class="o">=</span> <span class="mi">99</span>
+            <span class="c1"># Chosen format to convert pdf to image</span>
+            <span class="k">with</span> <span class="n">img</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;png&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">converted</span><span class="p">:</span>
+                    <span class="n">converted</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error during pdf download </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">url_link</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span>
+            <span class="c1"># Case we get some exception we return None</span>
+            <span class="k">return</span>
+        
+<span class="sd">&quot;&quot;&quot; Creates a new column &#39;links&#39; containing an url</span>
+<span class="sd">        for the files in the chamber of deputies website</span>
+<span class="sd">        Return updated Dataframe</span>
+<span class="sd">        arguments:</span>
+<span class="sd">        record -- Dataframe</span>
+<span class="sd">&quot;&quot;&quot;</span>       
+<span class="k">def</span> <span class="nf">__document_url</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">X</span><span class="p">[</span><span class="s1">&#39;link&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">links</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="s2">&quot;http://www.camara.gov.br/cota-parlamentar/documentos/publ&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">applicant_id</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">document_id</span><span class="p">)</span>
+        <span class="n">links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">[</span><span class="s1">&#39;link&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">links</span>
+    <span class="k">return</span> <span class="n">X</span>
+
+<span class="c1"># Reading the downloaded reimbursements files</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../test/2016-11-19-last-year.xz&#39;</span><span class="p">,</span>
+                   <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span>
+                   <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;document_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;congressperson_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;congressperson_document&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;term_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
+                          <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">})</span>
+
+<span class="c1"># Build the Directory structure for our ML model</span>
+<span class="n">CONST_DIR</span> <span class="o">=</span> <span class="s1">&#39;../test/dataset/&#39;</span>
+<span class="n">directories</span> <span class="o">=</span> <span class="p">[</span><span class="n">CONST_DIR</span><span class="p">,</span> <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;dataset/training&#39;</span><span class="p">,</span>
+                        <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;dataset/training/positive/&#39;</span><span class="p">,</span>
+                        <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;dataset/training/negative/&#39;</span><span class="p">,</span>
+                        <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;dataset/validation/&#39;</span><span class="p">,</span>
+                        <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;dataset/validation/positive/&#39;</span><span class="p">,</span>
+                        <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;dataset/validation/negative/&#39;</span><span class="p">,</span>
+                        <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;dataset/pos_validation/&#39;</span><span class="p">,</span>
+                        <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;dataset/pos_validation/positive/&#39;</span><span class="p">,</span>
+                        <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;dataset/pos_validation/negative/&#39;</span><span class="p">,</span>
+                        <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;save_model/&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">dirs</span> <span class="ow">in</span> <span class="n">directories</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dirs</span><span class="p">)):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span>
+
+
+<span class="c1">#I will look only the meals</span>
+<span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Congressperson meal&#39;</span><span class="p">]</span>
+
+<span class="c1"># Reference for our model.</span>
+<span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/uc?export=download&amp;id=0B6F2XOmMAf28OEdBLWVBZ2c1RVk&#39;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+
+<span class="n">csv_ref</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">csv_ref</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">csv_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">doc_ids</span><span class="o">=</span><span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">refs</span> <span class="ow">in</span> <span class="n">csv_ref</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">full_name</span><span class="o">=</span> <span class="n">refs</span><span class="p">[</span><span class="s1">&#39;tocheck&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">full_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">doc_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;recupered References: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)))</span>    
+
+<span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)]</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;reference&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">csv_ref</span><span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">__document_url</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">document_id</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">reference</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">positive</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="n">download_doc</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">negative</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="n">download_doc</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">link</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+        
+<span class="c1"># Split our Files in Training, Validation and POS validation</span>
+<span class="c1"># 70% tranning and 15% validation and 15% pos_validation</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                                                 tocheck  standard
+index                                                             
+1      https://jarbas.serenatadeamor.org/#/documentId...         1
+2      https://jarbas.serenatadeamor.org/#/documentId...         1
+3      https://jarbas.serenatadeamor.org/#/documentId...         1
+4      https://jarbas.serenatadeamor.org/#/documentId...         1
+5      https://jarbas.serenatadeamor.org/#/documentId...         1
+6      https://jarbas.serenatadeamor.org/#/documentId...         1
+7      https://jarbas.serenatadeamor.org/#/documentId...         1
+8      https://jarbas.serenatadeamor.org/#/documentId...         0
+9      https://jarbas.serenatadeamor.org/#/documentId...         1
+10     https://jarbas.serenatadeamor.org/#/documentId...         0
+(3382, 2)
+recupered References: 3382
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Exception ignored in: &lt;bound method Resource.__del__ of &lt;wand.image.Image: (empty)&gt;&gt;
+Traceback (most recent call last):
+  File &#34;/opt/conda/lib/python3.5/site-packages/wand/resource.py&#34;, line 232, in __del__
+    self.destroy()
+  File &#34;/opt/conda/lib/python3.5/site-packages/wand/image.py&#34;, line 2767, in destroy
+    for i in range(0, len(self.sequence)):
+TypeError: object of type &#39;NoneType&#39; has no len()
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1.0
+1.0
+1.0
+0.0
+0.0
+1.0
+1.0
+0.0
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-18-2d0067d34033&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">     91</span>     <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     92</span>         file_name <span class="ansi-blue-fg">=</span> os<span class="ansi-blue-fg">.</span>path<span class="ansi-blue-fg">.</span>join<span class="ansi-blue-fg">(</span>negative<span class="ansi-blue-fg">,</span> file_name<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 93</span><span class="ansi-red-fg">         </span>download_doc<span class="ansi-blue-fg">(</span>item<span class="ansi-blue-fg">.</span>link<span class="ansi-blue-fg">,</span> file_name<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-18-2d0067d34033&gt;</span> in <span class="ansi-cyan-fg">download_doc</span><span class="ansi-blue-fg">(url_link, file_name)</span>
+<span class="ansi-green-intense-fg ansi-bold">     17</span>         response <span class="ansi-blue-fg">=</span> urlopen<span class="ansi-blue-fg">(</span>url_link<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     18</span>         <span class="ansi-red-fg"># Default arguments to read the file and has a good resolution</span>
+<span class="ansi-green-fg">---&gt; 19</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">with</span> Image<span class="ansi-blue-fg">(</span>file<span class="ansi-blue-fg">=</span>response<span class="ansi-blue-fg">,</span> resolution<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">300</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">as</span> img<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     20</span>             img<span class="ansi-blue-fg">.</span>compression_quality <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">99</span>
+<span class="ansi-green-intense-fg ansi-bold">     21</span>             <span class="ansi-red-fg"># Chosen format to convert pdf to image</span>
+
+<span class="ansi-green-fg">/opt/conda/lib/python3.5/site-packages/wand/image.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, image, blob, file, filename, format, width, height, depth, background, resolution)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2738</span>                                                   b&#39;buffer.&#39; + format)
+<span class="ansi-green-intense-fg ansi-bold">   2739</span>                 <span class="ansi-green-fg">if</span> file <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">-&gt; 2740</span><span class="ansi-red-fg">                     </span>self<span class="ansi-blue-fg">.</span>read<span class="ansi-blue-fg">(</span>file<span class="ansi-blue-fg">=</span>file<span class="ansi-blue-fg">,</span> resolution<span class="ansi-blue-fg">=</span>resolution<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2741</span>                 <span class="ansi-green-fg">elif</span> blob <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   2742</span>                     self<span class="ansi-blue-fg">.</span>read<span class="ansi-blue-fg">(</span>blob<span class="ansi-blue-fg">=</span>blob<span class="ansi-blue-fg">,</span> resolution<span class="ansi-blue-fg">=</span>resolution<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/opt/conda/lib/python3.5/site-packages/wand/image.py</span> in <span class="ansi-cyan-fg">read</span><span class="ansi-blue-fg">(self, file, filename, blob, resolution)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2815</span>             <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> isinstance<span class="ansi-blue-fg">(</span>blob<span class="ansi-blue-fg">,</span> binary_type<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   2816</span>                 blob <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">b&#39;&#39;</span><span class="ansi-blue-fg">.</span>join<span class="ansi-blue-fg">(</span>blob<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">-&gt; 2817</span><span class="ansi-red-fg">             </span>r <span class="ansi-blue-fg">=</span> library<span class="ansi-blue-fg">.</span>MagickReadImageBlob<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>wand<span class="ansi-blue-fg">,</span> blob<span class="ansi-blue-fg">,</span> len<span class="ansi-blue-fg">(</span>blob<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2818</span>         <span class="ansi-green-fg">elif</span> filename <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   2819</span>             filename <span class="ansi-blue-fg">=</span> encode_filename<span class="ansi-blue-fg">(</span>filename<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">KeyboardInterrupt</span>: </pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -11827,8 +12068,8 @@ Take a look at this pull: <a href="https://github.com/datasciencebr/serenata-de-
 <span class="n">seed</span> <span class="o">=</span> <span class="mi">2017</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
-<span class="n">train_data_dir</span> <span class="o">=</span> <span class="s1">&#39;../data/DeepLearningKeras/dataset/training/&#39;</span>
-<span class="n">validation_data_dir</span> <span class="o">=</span> <span class="s1">&#39;../data/DeepLearningKeras/dataset/validation/&#39;</span>
+<span class="n">train_data_dir</span> <span class="o">=</span> <span class="s1">&#39;../test/dataset/training/&#39;</span>
+<span class="n">validation_data_dir</span> <span class="o">=</span> <span class="s1">&#39;../test/dataset/validation/&#39;</span>
 
 
 
@@ -11839,7 +12080,7 @@ Take a look at this pull: <a href="https://github.com/datasciencebr/serenata-de-
 
 
 <span class="c1">#dimensions of our images.</span>
-<span class="n">img_width</span><span class="p">,</span> <span class="n">img_height</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span>
+<span class="n">img_width</span><span class="p">,</span> <span class="n">img_height</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span>
 
 
 <span class="n">epochs</span> <span class="o">=</span> <span class="mi">20</span> 
@@ -13915,1137 +14156,7 @@ suspicious!!! prob: [[ 1.]]
 <ol>
 <li>O documento que comprova o pagamento não pode ter rasura, acréscimos, emendas ou entrelinhas, deve conter data e deve conter os serviços ou materiais descritos item por item, sem generalizações ou abreviaturas, podendo ser:</li>
 </ol>
-<h1 id="How-to-use-it?">How to use it?<a class="anchor-link" href="#How-to-use-it?">&#182;</a></h1><h3 id="Download-the-new-Dataset,-take-the-weights.hdf5-file-and-then-use-the-code-from-cell-[46]">Download the new Dataset, take the weights.hdf5 file and then use the code from cell [46]<a class="anchor-link" href="#Download-the-new-Dataset,-take-the-weights.hdf5-file-and-then-use-the-code-from-cell-[46]">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="The-cells-bellow-belongs-to-the-first-ML-model">The cells bellow belongs to the first ML model<a class="anchor-link" href="#The-cells-bellow-belongs-to-the-first-ML-model">&#182;</a></h1><h2 id="Basically-it-creates-the-workflow:-csv--&gt;-download-pdf--&gt;-convert-to-png--&gt;-predict-png-in-the-ML-model">Basically it creates the workflow: csv -&gt; download pdf -&gt; convert to png -&gt; predict png in the ML model<a class="anchor-link" href="#Basically-it-creates-the-workflow:-csv--&gt;-download-pdf--&gt;-convert-to-png--&gt;-predict-png-in-the-ML-model">&#182;</a></h2><h2 id="I-kept-it-for-those-which-would-like-to-do-something-similar.-Moreover-it-contains-the-first-discussion-we-had-about-the-model-and-some-suspicious-reimbursements">I kept it for those which would like to do something similar. Moreover it contains the first discussion we had about the model and some suspicious reimbursements<a class="anchor-link" href="#I-kept-it-for-those-which-would-like-to-do-something-similar.-Moreover-it-contains-the-first-discussion-we-had-about-the-model-and-some-suspicious-reimbursements">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># detect duplicate reimbursements</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">cv2</span>
-<span class="kn">import</span> <span class="nn">urllib</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">wand.image</span> <span class="k">import</span> <span class="n">Image</span>
-
-<span class="k">def</span> <span class="nf">convert_pdf_png_and_save</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span><span class="n">new_file_name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert a pdf file to png and save it at disk</span>
-
-<span class="sd">    arguments:</span>
-<span class="sd">    file_name -- the real path to access the pdf file on disk</span>
-<span class="sd">    new_file_name -- my_path/12312.png</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1">#Default arguments to read the file and has a good resolution</span>
-        <span class="k">with</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span> <span class="k">as</span> <span class="n">img</span><span class="p">:</span>
-            <span class="n">img</span><span class="o">.</span><span class="n">compression_quality</span> <span class="o">=</span> <span class="mi">99</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;width =&#39;</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;height =&#39;</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pages = &#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">sequence</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;resolution = &#39;</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
-
-            <span class="c1">#Format choosed to convert the pdf to image</span>
-            <span class="k">with</span> <span class="n">img</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;png&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">converted</span><span class="p">:</span>
-                <span class="n">converted</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">new_file_name</span><span class="p">)</span>
-                <span class="k">return</span> <span class="mi">1</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span>
-        <span class="k">return</span> <span class="mi">0</span>
-            
-<span class="k">def</span> <span class="nf">downloadDoc</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">pdf_directory</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Download a pdf file to a specified directory </span>
-<span class="sd">    Returns the name of the file, e.g., 123123.pdf</span>
-
-<span class="sd">    arguments:</span>
-<span class="sd">    url -- the pdf url to chamber of deputies web site, e.g., http://www.../documentos/publ/2437/2015/5645177.pdf</span>
-<span class="sd">    pdf_directory -- the path to save the file on disk</span>
-<span class="sd">    </span>
-<span class="sd">    Exception -- returns None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">#using the doc id as file name</span>
-    <span class="n">full_name</span><span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-    <span class="n">file_name</span> <span class="o">=</span> <span class="n">full_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-        <span class="c1">#open the resquest and get the file</span>
-        <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">pdf_directory</span><span class="o">+</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_file</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-            <span class="c1">#write the file on disk</span>
-            <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="c1"># return the name </span>
-            <span class="k">return</span> <span class="n">out_file</span><span class="o">.</span><span class="n">name</span> 
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span> <span class="c1">#case we get some exception we return None</span>
-
-<span class="sd">&quot;&quot;&quot;convert the row of a dataframe to a string represinting the url for the files in the chamber of deputies</span>
-<span class="sd">        Return a string to access the files in the chamber of deputies web site</span>
-<span class="sd">    </span>
-<span class="sd">        arguments:</span>
-<span class="sd">        record -- row of a dataframe</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="k">def</span> <span class="nf">document_url</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span>\
-        <span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">],</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">record</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">])</span>
-
-<span class="sd">&quot;&quot;&quot;Download the files related to a dataframe and store them in an informed directory</span>
-<span class="sd">        Returns the dataframe with the column filename filled</span>
-<span class="sd">        arguments:</span>
-<span class="sd">        sample -- the pandas dataframe</span>
-<span class="sd">        pdf_directory -- base directory where we can access the file</span>
-<span class="sd">&quot;&quot;&quot;</span>  
-<span class="k">def</span> <span class="nf">download_sample</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span><span class="n">pdf_directory</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)):</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">document_url</span><span class="p">(</span><span class="n">sample</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="c1">#get the url representation</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">downloadDoc</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">pdf_directory</span><span class="p">)</span> <span class="c1">#download, store and get the file name</span>
-        <span class="k">if</span> <span class="n">url</span> <span class="o">!=</span> <span class="kc">None</span> <span class="p">:</span>
-            <span class="n">sample</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">sample</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">)]</span><span class="o">=</span><span class="n">url</span> <span class="c1">#fill the row with the filename</span>
-
-    
-<span class="c1">#Reading the reimbursements files</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-11-19-last-year.xz&#39;</span><span class="p">,</span>
-                   <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span>
-                   <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;document_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                          <span class="s1">&#39;congressperson_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                          <span class="s1">&#39;congressperson_document&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                          <span class="s1">&#39;term_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                          <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
-                          <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">})</span>
-
-<span class="c1">#Directory where we will store the pdf downloaded OR where they already exist</span>
-<span class="n">pdf_directory</span><span class="o">=</span><span class="s2">&quot;../data/pdfs/&quot;</span>
-
-<span class="c1">#I will look only the meals</span>
-<span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;subquota_description&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;Congressperson meal&#39;</span><span class="p">]</span>
-
-<span class="c1">#creating a column to access the files latter</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-
-
-<span class="c1"># Reference for our model.</span>
-<span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/uc?export=download&amp;id=0B6F2XOmMAf28dHM5M0tmSy1JZzA&#39;</span>
-
-<span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
-
-<span class="n">csv_ref</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">refs</span> <span class="ow">in</span> <span class="n">csv_ref</span><span class="p">:</span>
-    <span class="n">full_name</span><span class="o">=</span> <span class="n">refs</span><span class="p">[</span><span class="s1">&#39;tocheck&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-    <span class="n">file_name</span> <span class="o">=</span> <span class="n">full_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">doc_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-    
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;recupered Referemces: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)))</span>    
-
-<span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)]</span>
-
-<span class="c1">#build a list of pdf_file_name to fill our dataframe directly</span>
-<span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="n">pdf_directory</span><span class="o">+</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.pdf&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;document_id&#39;</span><span class="p">)])</span>
-    <span class="n">file_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
-
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">file_list</span> <span class="c1">#fill it</span>
-
-<span class="n">file_png_list</span><span class="o">=</span><span class="p">[]</span>
-<span class="n">bad_index</span><span class="o">=</span><span class="p">[]</span> <span class="c1">#Bad requests to conversion which must be removed</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
-    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
-        <span class="c1">#read the pdf file and convert to png</span>
-        <span class="n">newName</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">)]</span>
-        <span class="n">newName</span><span class="o">=</span> <span class="n">newName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span><span class="s1">&#39;.png&#39;</span><span class="p">)</span>
-        <span class="n">converted</span> <span class="o">=</span> <span class="n">convert_pdf_png_and_save</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">)],</span><span class="n">newName</span><span class="p">)</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">converted</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">file_png_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newName</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PNG failed removing index </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-            <span class="n">bad_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>    
-
-<span class="c1">#remove bad requests            </span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">bad_index</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;new dataframe len: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-
-<span class="c1">#Change the name of files</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">file_png_list</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>recupered PDF files: 0
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/137/2015/5790165.pdf
-5790165.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/678/2015/5603837.pdf
-5603837.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2429/2015/5749973.pdf
-5749973.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2988/2015/5674918.pdf
-5674918.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1001/2015/5622671.pdf
-5622671.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2340/2015/5655777.pdf
-5655777.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2920/2015/5677038.pdf
-5677038.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1782/2015/5646833.pdf
-5646833.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1005/2015/5832530.pdf
-5832530.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2243/2015/5713033.pdf
-5713033.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1892/2015/5603061.pdf
-5603061.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2912/2015/5822111.pdf
-5822111.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3077/2015/5862190.pdf
-5862190.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3033/2015/5823029.pdf
-5823029.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2937/2015/5695859.pdf
-5695859.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3045/2015/5720229.pdf
-5720229.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3076/2015/5609404.pdf
-5609404.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3017/2015/5683220.pdf
-5683220.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2989/2015/5780015.pdf
-5780015.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/831/2015/5660120.pdf
-5660120.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2379/2015/5655256.pdf
-5655256.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1676/2015/5615007.pdf
-5615007.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2906/2015/5838719.pdf
-5838719.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1951/2015/5837281.pdf
-5837281.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/198/2015/5758532.pdf
-5758532.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5720915.pdf
-5720915.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1458/2015/5878018.pdf
-5878018.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2288/2015/5682882.pdf
-5682882.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/184/2015/5890363.pdf
-5890363.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3054/2015/5674296.pdf
-5674296.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2950/2015/5816601.pdf
-5816601.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2267/2015/5671222.pdf
-5671222.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3033/2015/5849069.pdf
-5849069.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1798/2015/5628929.pdf
-5628929.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2934/2015/5737948.pdf
-5737948.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1782/2015/5782562.pdf
-5782562.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1901/2015/5609302.pdf
-5609302.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2371/2015/5817683.pdf
-5817683.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2944/2015/5669193.pdf
-5669193.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5864632.pdf
-5864632.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3033/2015/5712836.pdf
-5712836.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1758/2015/5800226.pdf
-5800226.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1860/2015/5661178.pdf
-5661178.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1922/2015/5856968.pdf
-5856968.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2928/2015/5779060.pdf
-5779060.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/184/2015/5620904.pdf
-5620904.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3038/2015/5644551.pdf
-5644551.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2264/2015/5625888.pdf
-5625888.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2299/2015/5667000.pdf
-5667000.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3051/2015/5719771.pdf
-5719771.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1699/2015/5884534.pdf
-5884534.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2341/2015/5662494.pdf
-5662494.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1935/2015/5878742.pdf
-5878742.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1744/2015/5748948.pdf
-5748948.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1924/2015/5725853.pdf
-5725853.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5815026.pdf
-5815026.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1175/2015/5823102.pdf
-5823102.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2988/2015/5722147.pdf
-5722147.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2974/2015/5847582.pdf
-5847582.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3040/2015/5776127.pdf
-5776127.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2933/2015/5826616.pdf
-5826616.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2236/2015/5680527.pdf
-5680527.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3010/2015/5688211.pdf
-5688211.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1744/2015/5853774.pdf
-5853774.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1514/2015/5758698.pdf
-5758698.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2910/2015/5802181.pdf
-5802181.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1873/2015/5901168.pdf
-5901168.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2345/2015/5811805.pdf
-5811805.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/527/2015/5656352.pdf
-5656352.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1947/2015/5597945.pdf
-5597945.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2907/2015/5880188.pdf
-5880188.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/184/2015/5767104.pdf
-5767104.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1175/2015/5676296.pdf
-5676296.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/836/2015/5617598.pdf
-5617598.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1922/2015/5640801.pdf
-5640801.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3026/2015/5644192.pdf
-5644192.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2366/2015/5633538.pdf
-5633538.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3003/2015/5786058.pdf
-5786058.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2937/2015/5791316.pdf
-5791316.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2880/2015/5690835.pdf
-5690835.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3070/2015/5874678.pdf
-5874678.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3010/2015/5785543.pdf
-5785543.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1737/2015/5807811.pdf
-5807811.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2281/2015/5714377.pdf
-5714377.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2995/2015/5738175.pdf
-5738175.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2325/2015/5589857.pdf
-5589857.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/705/2015/5729304.pdf
-5729304.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2975/2015/5663235.pdf
-5663235.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2379/2015/5701375.pdf
-5701375.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/3022/2015/5692444.pdf
-5692444.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1693/2015/5596177.pdf
-5596177.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1458/2015/5774410.pdf
-5774410.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2927/2015/5802073.pdf
-5802073.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/995/2015/5851565.pdf
-5851565.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2887/2015/5714995.pdf
-5714995.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1562/2015/5845054.pdf
-5845054.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2256/2015/5778837.pdf
-5778837.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2243/2015/5610335.pdf
-5610335.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/1958/2015/5639120.pdf
-5639120.pdf
-http://www.camara.gov.br/cota-parlamentar/documentos/publ/2864/2015/5767545.pdf
-5767545.pdf
-width = 2483
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2550
-height = 3300
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2413
-height = 3404
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2481
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2550
-height = 3300
-pages =  2
-resolution =  (300, 300)
-width = 2481
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2483
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-unable to open image `../data/pdfs/5890363.pdf&#39;: No such file or directory @ error/blob.c/OpenBlob/2712
-PNG failed removing index 28
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2483
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2413
-height = 3404
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2421
-height = 3413
-pages =  1
-resolution =  (300, 300)
-width = 2238
-height = 2658
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 1188
-height = 1200
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2550
-height = 3300
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2483
-height = 3517
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2496
-height = 3529
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2483
-height = 3517
-pages =  1
-resolution =  (300, 300)
-width = 2558
-height = 3313
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2496
-height = 3517
-pages =  2
-resolution =  (300, 300)
-unable to open image `../data/pdfs/5901168.pdf&#39;: No such file or directory @ error/blob.c/OpenBlob/2712
-PNG failed removing index 66
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2413
-height = 3404
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 1775
-height = 1321
-pages =  1
-resolution =  (300, 300)
-width = 2550
-height = 3304
-pages =  1
-resolution =  (300, 300)
-width = 2550
-height = 3304
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2483
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 1088
-height = 1071
-pages =  1
-resolution =  (300, 300)
-width = 2481
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 975
-height = 1046
-pages =  1
-resolution =  (300, 300)
-width = 2558
-height = 3313
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3513
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2481
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2483
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2550
-height = 3300
-pages =  1
-resolution =  (300, 300)
-width = 2550
-height = 3300
-pages =  1
-resolution =  (300, 300)
-width = 2483
-height = 3517
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2496
-height = 3521
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3504
-pages =  1
-resolution =  (300, 300)
-width = 2479
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 2488
-height = 3508
-pages =  1
-resolution =  (300, 300)
-width = 3300
-height = 2550
-pages =  1
-resolution =  (300, 300)
-new dataframe len: (98, 30)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Here-is-where-we-play-with-our-ML-model">Here is where we play with our ML model<a class="anchor-link" href="#Here-is-where-we-play-with-our-ML-model">&#182;</a></h1><p>1) Use the before trained network</p>
-<p>2) Get a new image and classify it as wrong or not</p>
-<p>3) Keep only predictions with more 80% probability</p>
-<p>4) Move it to another folder to future modifications</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">load_model</span>
-<span class="kn">from</span> <span class="nn">keras.preprocessing.image</span> <span class="k">import</span> <span class="n">img_to_array</span><span class="p">,</span> <span class="n">load_img</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-
-
-<span class="c1">#test_model = load_model(&#39;./first_try.h5&#39;)#I&#39;m using the before model, if you want to load it from file use it</span>
-<span class="k">for</span> <span class="n">png_file</span> <span class="ow">in</span> <span class="n">file_png_list</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">load_img</span><span class="p">(</span><span class="n">png_file</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="n">img_width</span><span class="p">,</span><span class="n">img_height</span><span class="p">))</span><span class="c1">#read a iamge</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">img_to_array</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#convert it</span>
-        <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_classes</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#predict it in our model :D</span>
-        <span class="n">prob</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">prob</span><span class="o">&gt;=</span><span class="mf">0.8</span><span class="p">):</span><span class="c1">#Only keep the predictions with more than 80% of accuracy</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;../data/toCheck2&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">png_file</span><span class="p">])</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[Errno 2] No such file or directory: &#39;../data/pdfs/5790165.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-       document_id congressperson_name congressperson_id  \
-290307     5713033         PEDRO UCZAI            160604   
-
-       congressperson_document  term state party term_id  subquota_number  \
-290307                     481  2015    SC    PT      55               13   
-
-       subquota_description            ...             month  year  \
-290307  Congressperson meal            ...                 6  2015   
-
-       installment passenger leg_of_the_trip  batch_number  \
-290307           0       NaN             NaN       1201998   
-
-       reimbursement_number  reimbursement_value  applicant_id  \
-290307                 5064                  NaN          2243   
-
-                        filename  
-290307  ../data/pdfs/5713033.png  
-
-[1 rows x 30 columns]
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-[Errno 2] No such file or directory: &#39;../data/pdfs/5660120.png&#39;
-[Errno 2] No such file or directory: &#39;../data/pdfs/5655256.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-[Errno 2] No such file or directory: &#39;../data/pdfs/5849069.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-[Errno 2] No such file or directory: &#39;../data/pdfs/5719771.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-       document_id congressperson_name congressperson_id  \
-329198     5878742       SÉRGIO MORAES            141542   
-
-       congressperson_document  term state party term_id  subquota_number  \
-329198                     512  2015    RS   PTB      55               13   
-
-       subquota_description            ...             month  year  \
-329198  Congressperson meal            ...                12  2015   
-
-       installment passenger leg_of_the_trip  batch_number  \
-329198           0       NaN             NaN       1252985   
-
-       reimbursement_number  reimbursement_value  applicant_id  \
-329198                 5275                  NaN          1935   
-
-                        filename  
-329198  ../data/pdfs/5878742.png  
-
-[1 rows x 30 columns]
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-     document_id congressperson_name congressperson_id  \
-2996     5748948       ADEMIR CAMILO            133374   
-
-     congressperson_document  term state party term_id  subquota_number  \
-2996                     520  2015    MG   PTN      55               13   
-
-     subquota_description            ...             month  year installment  \
-2996  Congressperson meal            ...                 7  2015           0   
-
-     passenger leg_of_the_trip  batch_number reimbursement_number  \
-2996       NaN             NaN       1213210                 5109   
-
-      reimbursement_value  applicant_id                  filename  
-2996                  NaN          1744  ../data/pdfs/5748948.png  
-
-[1 rows x 30 columns]
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-[Errno 2] No such file or directory: &#39;../data/pdfs/5758698.png&#39;
-[Errno 2] No such file or directory: &#39;../data/pdfs/5802181.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-       document_id congressperson_name congressperson_id  \
-348559     5656352      VALDIR COLATTO             74010   
-
-       congressperson_document  term state party term_id  subquota_number  \
-348559                     489  2015    SC  PMDB      55               13   
-
-       subquota_description            ...             month  year  \
-348559  Congressperson meal            ...                 4  2015   
-
-       installment passenger leg_of_the_trip  batch_number  \
-348559           0       NaN             NaN       1184158   
-
-       reimbursement_number  reimbursement_value  applicant_id  \
-348559                 5010                  NaN           527   
-
-                        filename  
-348559  ../data/pdfs/5656352.png  
-
-[1 rows x 30 columns]
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-[Errno 2] No such file or directory: &#39;../data/pdfs/5786058.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-[Errno 2] No such file or directory: &#39;../data/pdfs/5738175.png&#39;
-[Errno 2] No such file or directory: &#39;../data/pdfs/5589857.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-[Errno 2] No such file or directory: &#39;../data/pdfs/5701375.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-[Errno 2] No such file or directory: &#39;../data/pdfs/5774410.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-      document_id congressperson_name congressperson_id  \
-81930     5845054      DANIEL ALMEIDA             74060   
-
-      congressperson_document  term state  party term_id  subquota_number  \
-81930                     188  2015    BA  PCdoB      55               13   
-
-      subquota_description            ...             month  year installment  \
-81930  Congressperson meal            ...                11  2015           0   
-
-      passenger leg_of_the_trip  batch_number reimbursement_number  \
-81930       NaN             NaN       1242541                 5228   
-
-       reimbursement_value  applicant_id                  filename  
-81930                  NaN          1562  ../data/pdfs/5845054.png  
-
-[1 rows x 30 columns]
-[Errno 2] No such file or directory: &#39;../data/pdfs/5778837.png&#39;
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Results:">Results:<a class="anchor-link" href="#Results:">&#182;</a></h1><p>I got 2483 suspicious reimbursements. You can download them here:
-<a href="https://drive.google.com/file/d/0B6F2XOmMAf28eVBLUnRFQkZsSGs/view?usp=sharing">https://drive.google.com/file/d/0B6F2XOmMAf28eVBLUnRFQkZsSGs/view?usp=sharing</a></p>
-<p>I will validate them by hand and use it to argument the the top layers of my pre-trained network.</p>
-<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1><p>Using this method we can find a lot of suspicious reimbursements :) 
-Using this we created new pre-trained networks with few data :D</p>
-<p>It seems that our deputies are used to ask for reimbursements with poor description, #CHATEADO</p>
-<p>CEAP:</p>
-<p>O documento que comprova o pagamento não pode ter rasura, acréscimos, emendas ou entrelinhas, deve conter data e deve conter os serviços ou materiais descritos item por item, sem generalizações ou abreviaturas, podendo ser:</p>
-
+<h1 id="How-to-use-it?">How to use it?<a class="anchor-link" href="#How-to-use-it?">&#182;</a></h1><h3 id="See-this-PULL-Request-:-https://github.com/datasciencebr/rosie/pull/66">See this PULL Request : <a href="https://github.com/datasciencebr/rosie/pull/66">https://github.com/datasciencebr/rosie/pull/66</a><a class="anchor-link" href="#See-this-PULL-Request-:-https://github.com/datasciencebr/rosie/pull/66">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -15060,32 +14171,6 @@ Using this we created new pre-trained networks with few data :D</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
     </div>
   </div>

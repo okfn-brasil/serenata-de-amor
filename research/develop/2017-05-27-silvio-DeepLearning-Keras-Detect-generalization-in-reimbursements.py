@@ -11,31 +11,19 @@
 # Ps: I only commented in my code the strong changes regarding they example.
 # 
 # To use it i'm supposing you have installed the requirements to convert pdf to images.
-# See this notebook: 2017-05-05-silvio-PDF-to-PNG-SIFT-descriptors.ipynb
 # 
 # ## Togheter with these previous requirements you have to install  Keras 2.0 API
-# 
-# What is Keras???
 # 
 # ## Keras: Deep Learning library for TensorFlow and Theano
 # https://github.com/fchollet/keras
 # 
-# Yeap, let's include more functionalities in the serenata-de-amor :D
 # 
-# 
-# # Main constraint of it: We need a training and validation set :/ 
+# # Main constraint of this approach: We need a training and validation set :/ 
 # 
 # ## Solution >>> Let's build it.
 # 
-# ## New Dataset
-# Here: https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing
-# It includes, images, model and csv .
 # 
-# 
-# Here: you can find my first training and validation set
-# https://drive.google.com/file/d/0B6F2XOmMAf28dDZoOWtmS050Skk/view?usp=sharing
-# 
-# #### It is composed by 250 wrong reimbursements, and 250 not wrong
+# #### It is composed by 1691 wrong reimbursements, and 1691 not wrong (* they are called, positive, negative)
 # 
 # What i mean by wrong: http://www.camara.gov.br/cota-parlamentar/documentos/publ/2398/2015/5635048.pdf
 # 
@@ -45,31 +33,142 @@
 # 
 # http://www.camara.gov.br/cota-parlamentar//documentos/publ/1773/2014/5506259.pdf
 # 
-# This first dataset was not big, but it allowed us to do the first steps and improve the machine learn model
-# 
-# PS: using only this data i built a model with 70% accuracy
-# Take a look at this pull: https://github.com/datasciencebr/serenata-de-amor/pull/238
-# 
-# Moving on, i executed it over 10000 and i got 2483 reimbursements regarding the two classes (Wrong, not wrong).
-# 
-# You can download them here:
-# https://drive.google.com/file/d/0B6F2XOmMAf28eVBLUnRFQkZsSGs/view?usp=sharing
-# 
-# # All these reimbursements were validate by hand
+# # All these reimbursements were validated by hand
 # # Thanks so much everyone involved on it :D
 # 
 # Take a look at this great collaborative work: https://docs.google.com/spreadsheets/d/1o7P79iMw2VnJypSZNHrsDjud398g4vXpZdrGMMqe6qA/edit?usp=sharing
 # 
 # Here: you can find the up-to-date reimbursements
 # https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing
-# #### It is composed by 1691 wrong reimbursements, and 1691 not wrong (*Now they are called, positive, negative)
 # 
 # 
 # ## PS: The first training set was also reevaluated after discussion with @anaschwendler
 # ### In the spreadsheet they are in orange color.
-# 
-# 
-# ## So Let's start to run our DeepLearning method (Remember to read the first link before to continue)
+
+# In[20]:
+
+# First download the dataset
+from serenata_toolbox.datasets import Datasets
+datasets = Datasets('../test/')
+datasets.downloader.download('2016-11-19-last-year.xz') 
+
+
+# In[18]:
+
+import os
+import unicodedata
+import shutil
+from io import BytesIO
+from urllib.request import urlopen
+
+import numpy as np
+import pandas as pd
+from PIL import Image as pil_image
+from wand.image import Image
+
+"""Download a pdf file and transform it to png
+        arguments:
+        url -- the url to chamber of deputies web site, e.g.,
+        http://www.../documentos/publ/2437/2015/5645177.pdf
+        file_name -- myDirectory/5645177.png
+        Exception -- returns None
+"""
+def download_doc(url_link, file_name):
+    try:
+        # Open the resquest and get the file
+        response = urlopen(url_link)
+        # Default arguments to read the file and has a good resolution
+        with Image(file=response, resolution=300) as img:
+            img.compression_quality = 99
+            # Chosen format to convert pdf to image
+            with img.convert('png') as converted:
+                    converted.save(filename=file_name)
+    except Exception as ex:
+            print("Error during pdf download {}",url_link)
+            print(ex)
+            # Case we get some exception we return None
+            return
+        
+""" Creates a new column 'links' containing an url
+        for the files in the chamber of deputies website
+        Return updated Dataframe
+        arguments:
+        record -- Dataframe
+"""       
+def __document_url(X):
+    X['link'] = ''
+    links = list()
+    for index, x in X.iterrows():
+        base = "http://www.camara.gov.br/cota-parlamentar/documentos/publ"
+        url = '{}/{}/{}/{}.pdf'.format(base, x.applicant_id, x.year, x.document_id)
+        links.append(url)
+    X['link'] = links
+    return X
+
+# Reading the downloaded reimbursements files
+data = pd.read_csv('../test/2016-11-19-last-year.xz',
+                   parse_dates=[16],
+                   dtype={'document_id': np.str,
+                          'congressperson_id': np.str,
+                          'congressperson_document': np.str,
+                          'term_id': np.str,
+                          'cnpj_cpf': np.str,
+                          'reimbursement_number': np.str})
+
+# Build the Directory structure for our ML model
+CONST_DIR = '../test/dataset/'
+directories = [CONST_DIR, CONST_DIR+'dataset/training',
+                        CONST_DIR+'dataset/training/positive/',
+                        CONST_DIR+'dataset/training/negative/',
+                        CONST_DIR+'dataset/validation/',
+                        CONST_DIR+'dataset/validation/positive/',
+                        CONST_DIR+'dataset/validation/negative/',
+                        CONST_DIR+'dataset/pos_validation/',
+                        CONST_DIR+'dataset/pos_validation/positive/',
+                        CONST_DIR+'dataset/pos_validation/negative/',
+                        CONST_DIR+'save_model/']
+
+for dirs in directories:
+    if (not os.path.exists(dirs)):
+        os.mkdir(dirs)
+
+
+#I will look only the meals
+data=data[data['subquota_description']=='Congressperson meal']
+
+# Reference for our model.
+link = 'https://drive.google.com/uc?export=download&id=0B6F2XOmMAf28OEdBLWVBZ2c1RVk'
+
+response = urlopen(link)
+
+csv_ref = pd.DataFrame.from_csv(response)
+print(csv_ref.head(10))
+print(csv_ref.shape)
+doc_ids=[]
+
+for index, refs in csv_ref.iterrows():
+    full_name= refs['tocheck'].split("/")
+    file_name = full_name[len(full_name)-1]
+    doc_ids.append(file_name)
+    
+print ("recupered References: {}".format(len(doc_ids)))    
+
+data=data[data['document_id'].isin(doc_ids)]
+data['reference'] = csv_ref['standard']
+data = __document_url(data)
+
+for index, item in data.iterrows():
+    file_name = item.document_id+'.png'
+    if(item.reference == 1):
+        file_name = os.path.join(positive, file_name)
+        download_doc(item.link, file_name)
+    else:
+        file_name = os.path.join(negative, file_name)
+        download_doc(item.link, file_name)
+        
+# Split our Files in Training, Validation and POS validation
+# 70% tranning and 15% validation and 15% pos_validation
+
 
 # In[4]:
 
@@ -86,8 +185,8 @@ import numpy as np
 seed = 2017
 np.random.seed(seed)
 
-train_data_dir = '../data/DeepLearningKeras/dataset/training/'
-validation_data_dir = '../data/DeepLearningKeras/dataset/validation/'
+train_data_dir = '../test/dataset/training/'
+validation_data_dir = '../test/dataset/validation/'
 
 
 
@@ -98,7 +197,7 @@ print('no. of trained samples = ', nb_train_samples, ' no. of validation samples
 
 
 #dimensions of our images.
-img_width, img_height = 300, 300
+img_width, img_height = 800, 600
 
 
 epochs = 20 
@@ -261,216 +360,7 @@ print(" f1-score ",metrics.f1_score(df.Reference,df.Predicted))
 # 
 # # How to use it?
 # 
-# ### Download the new Dataset, take the weights.hdf5 file and then use the code from cell [46]
-
-# # The cells bellow belongs to the first ML model 
-# ## Basically it creates the workflow: csv -> download pdf -> convert to png -> predict png in the ML model
-# 
-# ## I kept it for those which would like to do something similar. Moreover it contains the first discussion we had about the model and some suspicious reimbursements
-
-# In[10]:
-
-# detect duplicate reimbursements
-import os
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import cv2
-import urllib
-import glob
-from __future__ import print_function
-from wand.image import Image
-
-def convert_pdf_png_and_save(file_name,new_file_name):
-    """Convert a pdf file to png and save it at disk
-
-    arguments:
-    file_name -- the real path to access the pdf file on disk
-    new_file_name -- my_path/12312.png
-    """
-    try:
-        #Default arguments to read the file and has a good resolution
-        with Image(filename=file_name, resolution=300) as img:
-            img.compression_quality = 99
-            print('width =', img.width)
-            print('height =', img.height)
-            print('pages = ', len(img.sequence))
-            print('resolution = ', img.resolution)
-
-            #Format choosed to convert the pdf to image
-            with img.convert('png') as converted:
-                converted.save(filename=new_file_name)
-                return 1
-    except Exception as ex:
-        print(ex)
-        return 0
-            
-def downloadDoc(url,pdf_directory):
-    """Download a pdf file to a specified directory 
-    Returns the name of the file, e.g., 123123.pdf
-
-    arguments:
-    url -- the pdf url to chamber of deputies web site, e.g., http://www.../documentos/publ/2437/2015/5645177.pdf
-    pdf_directory -- the path to save the file on disk
-    
-    Exception -- returns None
-    """
-    #using the doc id as file name
-    full_name= url.split("/")
-    file_name = full_name[len(full_name)-1]
-    try:
-        print (url)
-        print (file_name)
-        #open the resquest and get the file
-        with urllib.request.urlopen(url) as response, open(pdf_directory+file_name, 'wb') as out_file:
-            data = response.read()
-            #write the file on disk
-            out_file.write(data)
-            # return the name 
-            return out_file.name 
-    except Exception as ex:
-        return None #case we get some exception we return None
-
-"""convert the row of a dataframe to a string represinting the url for the files in the chamber of deputies
-        Return a string to access the files in the chamber of deputies web site
-    
-        arguments:
-        record -- row of a dataframe
-"""
-def document_url(record):
-    return 'http://www.camara.gov.br/cota-parlamentar/documentos/publ/%s/%s/%s.pdf' %        (record['applicant_id'],record['year'], record['document_id'])
-
-"""Download the files related to a dataframe and store them in an informed directory
-        Returns the dataframe with the column filename filled
-        arguments:
-        sample -- the pandas dataframe
-        pdf_directory -- base directory where we can access the file
-"""  
-def download_sample(sample,pdf_directory):
-    for x in range(0,len(sample)):
-        url = document_url(sample.iloc[x]) #get the url representation
-        url = downloadDoc(url,pdf_directory) #download, store and get the file name
-        if url != None :
-            sample.iloc[x, sample.columns.get_loc('filename')]=url #fill the row with the filename
-
-    
-#Reading the reimbursements files
-data = pd.read_csv('../data/2016-11-19-last-year.xz',
-                   parse_dates=[16],
-                   dtype={'document_id': np.str,
-                          'congressperson_id': np.str,
-                          'congressperson_document': np.str,
-                          'term_id': np.str,
-                          'cnpj_cpf': np.str,
-                          'reimbursement_number': np.str})
-
-#Directory where we will store the pdf downloaded OR where they already exist
-pdf_directory="../data/pdfs/"
-
-#I will look only the meals
-data=data[data['subquota_description']=='Congressperson meal']
-
-#creating a column to access the files latter
-data['filename'] = ''
-
-
-# Reference for our model.
-link = 'https://drive.google.com/uc?export=download&id=0B6F2XOmMAf28dHM5M0tmSy1JZzA'
-
-response = urllib.request.urlopen(link)
-
-csv_ref = pd.DataFrame.from_csv(response)
-
-for index, refs in csv_ref:
-    full_name= refs['tocheck'].split("/")
-    file_name = full_name[len(full_name)-1]
-    doc_ids.append(file_name)
-    
-print ("recupered Referemces: {}".format(len(doc_ids)))    
-
-data=data[data['document_id'].isin(doc_ids)]
-
-#build a list of pdf_file_name to fill our dataframe directly
-file_list = []
-for x in range(0,len(data)):
-    string = pdf_directory+"{}.pdf".format(data.iloc[x, data.columns.get_loc('document_id')])
-    file_list.append(string)
-
-data['filename']=file_list #fill it
-
-file_png_list=[]
-bad_index=[] #Bad requests to conversion which must be removed
-for x in range(0,len(data)):
-    if data.iloc[x]['filename']!="":
-        #read the pdf file and convert to png
-        newName=data.iloc[x, data.columns.get_loc('filename')]
-        newName= newName.replace('.pdf','.png')
-        converted = convert_pdf_png_and_save(data.iloc[x, data.columns.get_loc('filename')],newName)
-        if(converted==1):
-            file_png_list.append(newName)
-        else:
-            print("PNG failed removing index {}".format(x))
-            bad_index.append(x)    
-
-#remove bad requests            
-data = data.drop(data.index[bad_index])
-print("new dataframe len: {}".format(data.shape))
-
-#Change the name of files
-data['filename']=file_png_list
-
-
-# # Here is where we play with our ML model
-# 
-# 1) Use the before trained network
-# 
-# 2) Get a new image and classify it as wrong or not
-# 
-# 3) Keep only predictions with more 80% probability
-# 
-# 4) Move it to another folder to future modifications
-# 
-
-# In[12]:
-
-from keras.models import load_model
-from keras.preprocessing.image import img_to_array, load_img
-import shutil
-
-
-#test_model = load_model('./first_try.h5')#I'm using the before model, if you want to load it from file use it
-for png_file in file_png_list:
-    try:
-        img = load_img(png_file,False,target_size=(img_width,img_height))#read a iamge
-        x = img_to_array(img)
-        x = np.expand_dims(x, axis=0) #convert it
-        preds = model.predict_classes(x) #predict it in our model :D
-        prob = model.predict_proba(x)
-        if(prob>=0.8):#Only keep the predictions with more than 80% of accuracy
-            shutil.move(png_file, '../data/toCheck2')
-            print(data[data['filename']==png_file])
-    except Exception as ex:
-
-
-# # Results:
-# 
-# I got 2483 suspicious reimbursements. You can download them here:
-# https://drive.google.com/file/d/0B6F2XOmMAf28eVBLUnRFQkZsSGs/view?usp=sharing
-# 
-# I will validate them by hand and use it to argument the the top layers of my pre-trained network.
-# 
-# # Conclusion
-# 
-# Using this method we can find a lot of suspicious reimbursements :) 
-# Using this we created new pre-trained networks with few data :D
-# 
-# It seems that our deputies are used to ask for reimbursements with poor description, #CHATEADO
-# 
-# CEAP: 
-# 
-# O documento que comprova o pagamento não pode ter rasura, acréscimos, emendas ou entrelinhas, deve conter data e deve conter os serviços ou materiais descritos item por item, sem generalizações ou abreviaturas, podendo ser:
-# 
+# ### See this PULL Request : https://github.com/datasciencebr/rosie/pull/66
 
 # # PS: I would like to discuss some data in the train set
 # 
@@ -479,13 +369,3 @@ for png_file in file_png_list:
 # It is clear to me that the description of the items was made by someone else than the restaurant, is it allowed ???
 # 
 # Are the deputies or assessors changing a document?? What are the implications about it?
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
-
-
