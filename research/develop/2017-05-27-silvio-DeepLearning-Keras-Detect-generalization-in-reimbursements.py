@@ -45,7 +45,7 @@
 # ## PS: The first training set was also reevaluated after discussion with @anaschwendler
 # ### In the spreadsheet they are in orange color.
 
-# In[20]:
+# In[1]:
 
 # First download the dataset
 from serenata_toolbox.datasets import Datasets
@@ -58,6 +58,9 @@ datasets.downloader.download('2016-11-19-last-year.xz')
 import os
 import unicodedata
 import shutil
+import random
+import glob
+import re
 from io import BytesIO
 from urllib.request import urlopen
 
@@ -77,17 +80,21 @@ def download_doc(url_link, file_name):
     try:
         # Open the resquest and get the file
         response = urlopen(url_link)
-        # Default arguments to read the file and has a good resolution
-        with Image(file=response, resolution=300) as img:
-            img.compression_quality = 99
-            # Chosen format to convert pdf to image
-            with img.convert('png') as converted:
-                    converted.save(filename=file_name)
+        if (response is not None):
+            # Default arguments to read the file and has a good resolution
+            with Image(file=response, resolution=300) as img:
+                img.compression_quality = 99
+                # Chosen format to convert pdf to image
+                with img.convert('png') as converted:
+                        converted.save(filename=file_name)
+                        return True
+        else:
+            return None
     except Exception as ex:
             print("Error during pdf download {}",url_link)
             print(ex)
             # Case we get some exception we return None
-            return
+            return None
         
 """ Creates a new column 'links' containing an url
         for the files in the chamber of deputies website
@@ -117,27 +124,33 @@ data = pd.read_csv('../test/2016-11-19-last-year.xz',
 
 # Build the Directory structure for our ML model
 CONST_DIR = '../test/dataset/'
-directories = [CONST_DIR, CONST_DIR+'dataset/training',
-                        CONST_DIR+'dataset/training/positive/',
-                        CONST_DIR+'dataset/training/negative/',
-                        CONST_DIR+'dataset/validation/',
-                        CONST_DIR+'dataset/validation/positive/',
-                        CONST_DIR+'dataset/validation/negative/',
-                        CONST_DIR+'dataset/pos_validation/',
-                        CONST_DIR+'dataset/pos_validation/positive/',
-                        CONST_DIR+'dataset/pos_validation/negative/',
+directories = [CONST_DIR, CONST_DIR+'training',
+                        CONST_DIR+'training/positive/',
+                        CONST_DIR+'training/negative/',
+                        CONST_DIR+'validation/',
+                        CONST_DIR+'validation/positive/',
+                        CONST_DIR+'validation/negative/',
+                        CONST_DIR+'pos_validation/',
+                        CONST_DIR+'pos_validation/positive/',
+                        CONST_DIR+'pos_validation/negative/',
                         CONST_DIR+'save_model/']
 
 for dirs in directories:
     if (not os.path.exists(dirs)):
         os.mkdir(dirs)
 
+positive = directories[2]
+negative = directories[3]
 
 #I will look only the meals
 data=data[data['subquota_description']=='Congressperson meal']
 
 # Reference for our model.
 link = 'https://drive.google.com/uc?export=download&id=0B6F2XOmMAf28OEdBLWVBZ2c1RVk'
+
+# Case you DO NOT WANT to download all dataset put some value bigger than 0
+# Case you WANT all put 0
+STOP_AFTER = 10
 
 response = urlopen(link)
 
@@ -157,20 +170,58 @@ data=data[data['document_id'].isin(doc_ids)]
 data['reference'] = csv_ref['standard']
 data = __document_url(data)
 
+pos_downloaded = 0
+neg_downloaded = 0
 for index, item in data.iterrows():
     file_name = item.document_id+'.png'
-    if(item.reference == 1):
+    if(item.reference == 1 and pos_downloaded <= STOP_AFTER):
         file_name = os.path.join(positive, file_name)
-        download_doc(item.link, file_name)
-    else:
+        request = download_doc(item.link, file_name)
+    elif(neg_downloaded <= STOP_AFTER):
         file_name = os.path.join(negative, file_name)
-        download_doc(item.link, file_name)
+        request = download_doc(item.link, file_name)
         
-# Split our Files in Training, Validation and POS validation
-# 70% tranning and 15% validation and 15% pos_validation
+    if(request is None):
+        print("Error while downloading reimbursement: ",item.link)
+    elif(item.reference == 1):
+        # Counting the references
+        pos_downloaded += 1
+    else:
+        neg_downloaded += 1
+    # Stop after to donwload all informed quantity
+    print(neg_downloaded,pos_downloaded,STOP_AFTER)
+    if(STOP_AFTER!=0 and neg_downloaded>STOP_AFTER and pos_downloaded>STOP_AFTER):
+        break
 
 
-# In[4]:
+# In[23]:
+
+def split_data(len_samples,directory_src,directory_dest):
+    for x in range(1,len_samples):
+        current_files = glob.glob(directory_src+'*.png')
+        print(directory_src)
+        print(directory_dest)
+        print(current_files[0])
+        file_name = re.sub(directory_src, r'', current_files[0])
+        shutil.move(os.path.join(directory_src, file_name),  os.path.join(directory_dest, file_name))
+
+# Split our Files in Training, Validation
+# 70% tranning and 30% validation
+len_val_positive = int(len(glob.glob(positive+'*.png'))*0.3)
+len_val_negative = int(len(glob.glob(negative+'*.png'))*0.3)
+
+split_data(len_val_positive,positive,directories[5])
+split_data(len_val_negative,negative,directories[6])
+
+# Split the Validation in 2 for POS validation
+len_val_positive = int(len(glob.glob(directories[5]+'*.png'))*0.5)
+len_val_negative = int(len(glob.glob(directories[6]+'*.png'))*0.5)
+
+split_data(len_val_positive,directories[5],directories[8])
+split_data(len_val_negative,directories[6],directories[9])
+
+
+# In[25]:
 
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
@@ -200,8 +251,8 @@ print('no. of trained samples = ', nb_train_samples, ' no. of validation samples
 img_width, img_height = 800, 600
 
 
-epochs = 20 
-batch_size = 15
+epochs = 10 
+batch_size = 2
 
 if K.image_data_format() == 'channels_first':
     input_shape = (3, img_width, img_height)
@@ -257,7 +308,7 @@ validation_generator = test_datagen.flow_from_directory(
     class_mode='binary')
 
 #It allow us to save only the best model between the iterations 
-checkpointer = ModelCheckpoint(filepath="weights.hdf5", verbose=1, save_best_only=True)
+checkpointer = ModelCheckpoint(filepath=os.path.join(directories[10],"weights.hdf5"), verbose=1, save_best_only=True)
 
 model.fit_generator(
     train_generator,
@@ -276,7 +327,7 @@ model.fit_generator(
 # # Let's use it on an external set of reimbursements!
 # ### @vmesel recommended it, thanks for the feedback :D
 
-# In[46]:
+# In[ ]:
 
 from keras.models import load_model
 from keras.preprocessing.image import img_to_array, load_img
@@ -294,15 +345,15 @@ def goldStandard(png_directory,value):
    
     return df
 
-png_directory='../data/DeepLearningKeras/dataset/pos_validation/positive/'
+png_directory='../test/dataset/pos_validation/positive/'
 df1 = goldStandard(png_directory,1)
-png_directory='../data/DeepLearningKeras/dataset/pos_validation/negative/'
+png_directory='../test/dataset/pos_validation/negative/'
 df2= goldStandard(png_directory,0)
 frames = [df1, df2]
 df = pd.concat(frames)
 print(df.head())
 print(df.tail())
-test_model = load_model('./weights.hdf5')#I'm using the saved file to load the model
+test_model = load_model(filepath=os.path.join(directories[10],"weights.hdf5"))#I'm using the saved file to load the model
 
 #dimensions of our images.
 img_width, img_height = 300, 300
@@ -328,7 +379,7 @@ df['Predicted']=predicted
 # # After to run the Model over the pos_validation set
 # ## Let's verify how is the performance!
 
-# In[47]:
+# In[ ]:
 
 from sklearn import metrics
 from sklearn.metrics import precision_recall_curve
