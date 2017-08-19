@@ -1,8 +1,10 @@
-FROM python:3.5
+FROM python:3.5.4-jessie
 
 USER root
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install apt-transport-https -y
+
+RUN apt-get install -y \
   build-essential \
   libxml2-dev \
   libxslt1-dev \
