@@ -2,7 +2,8 @@ version: "3"
 services:
   research:
     build:
-      context: research
+      context: ./
+      dockerfile: research/Dockerfile
     ports:
       - 8888:8888
     volumes:
