@@ -2,12 +2,17 @@
 
 import os
 import pip
+import argparse
 from shutil import copyfile, which
-
 
 RESEARCH_DIR = 'research'
 DATA_DIR = os.path.join(RESEARCH_DIR, 'data')
 
+parser = argparse.ArgumentParser(description='Setup serenata-de-amor using serenata-toolbox.')
+parser.add_argument('--all', dest='all', action='store_true',
+                    help='Force all datasets from serenata-toolbox to be downloaded')
+
+args = parser.parse_args()
 
 if not os.path.exists('config.ini'):
     copyfile('config.ini.example', 'config.ini')
@@ -26,4 +31,4 @@ print('Downloading datasets (this might take several minutes depending on your i
 # This is imported here because serenata_toolbox is only installed when pip.main is called (line 9)
 from serenata_toolbox.datasets import fetch_latest_backup
 os.makedirs(DATA_DIR, exist_ok=True)
-fetch_latest_backup(DATA_DIR)
+fetch_latest_backup(DATA_DIR, force_all=args.all)
