@@ -29,7 +29,7 @@ class Command(LoadCommand):
         each row of each file. It creates the related activity when needed.
         """
         skip = ('main_activity', 'secondary_activity')
-        keys = (f.name for f in Company._meta.fields if f not in skip)
+        keys = tuple(f.name for f in Company._meta.fields if f not in skip)
         with lzma.open(self.path, mode='rt') as file_handler:
             for row in csv.DictReader(file_handler):
                 main, secondary = self.save_activities(row)
