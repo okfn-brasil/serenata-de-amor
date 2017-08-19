@@ -5,15 +5,15 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
-from jarbas.dashboard.sites import DashboardSite, DummyUser, dashboard
+from jarbas.public_admin.sites import PublicAdminSite, DummyUser, public_admin
 
 User = get_user_model()
 
 
-class TestDashboardSite(TestCase):
+class TestPublicAdminSite(TestCase):
 
     def setUp(self):
-        self.site = dashboard
+        self.site = public_admin
 
     def test_init(self):
         self.assertEqual({}, dict(self.site.actions))
@@ -27,8 +27,8 @@ class TestDashboardSite(TestCase):
         self.assertTrue(self.site.valid_url(valid))
         self.assertFalse(self.site.valid_url(invalid))
 
-    @patch.object(DashboardSite, 'get_urls')
-    @patch.object(DashboardSite, 'valid_url')
+    @patch.object(PublicAdminSite, 'get_urls')
+    @patch.object(PublicAdminSite, 'valid_url')
     def test_urls(self, valid_url, get_urls):
         valid_url.side_effect = (True, False, True)
         get_urls.return_value = range(3)

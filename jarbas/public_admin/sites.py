@@ -3,7 +3,6 @@ from functools import update_wrapper
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponseForbidden
-from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 
 
@@ -16,7 +15,7 @@ class DummyUser(AnonymousUser):
         return permission == 'core.change_reimbursement'
 
 
-class DashboardSite(AdminSite):
+class PublicAdminSite(AdminSite):
 
     site_title = 'Dashboard'
     site_header = 'Jarbas Dashboard'
@@ -40,7 +39,7 @@ class DashboardSite(AdminSite):
 
     @property
     def urls(self):
-        urls = filter(self.valid_url, self.get_urls())
+        urls = (url for url in self.get_urls() if self.valid_url(url))
         return list(urls), 'admin', self.name
 
     def has_permission(self, request):
@@ -53,13 +52,10 @@ class DashboardSite(AdminSite):
                 return HttpResponseForbidden()
             return view(request, *args, **kwargs)
 
-        if not cacheable:
-            inner = never_cache(inner)
-
         if not getattr(view, 'csrf_exempt', False):
             inner = csrf_protect(inner)
 
         return update_wrapper(inner, view)
 
 
-dashboard = DashboardSite()
+public_admin = PublicAdminSite()

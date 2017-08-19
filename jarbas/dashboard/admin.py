@@ -1,14 +1,13 @@
 import json
-import re
 
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
-from django.contrib.admin import SimpleListFilter
 from django.forms.widgets import Widget
-from simple_history.admin import SimpleHistoryAdmin
+from django.contrib.admin import SimpleListFilter
 
 from jarbas.core.models import Reimbursement
-from jarbas.dashboard.sites import dashboard
+from jarbas.public_admin.admin import PublicAdminModelAdmin
+from jarbas.public_admin.sites import public_admin
 
 
 ALL_FIELDS = sorted(Reimbursement._meta.fields, key=lambda f: f.verbose_name)
@@ -231,7 +230,7 @@ class SubquotaListFilter(SimpleListFilter, Subquotas):
         return queryset.filter(subquota_description=self.en_us(subquota))
 
 
-class ReimbursementModelAdmin(SimpleHistoryAdmin):
+class ReimbursementModelAdmin(PublicAdminModelAdmin):
 
     list_display = (
         'short_document_id',
@@ -331,26 +330,6 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     def subquota_translated(self, obj):
         return Subquotas.pt_br(obj.subquota_description)
 
-    def has_add_permission(self, request):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return request.method == 'GET'
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    @staticmethod
-    def rename_change_url(url):
-        if 'change' in url.regex.pattern:
-            new_re = url.regex.pattern.replace('change', 'details')
-            url.regex = re.compile(new_re, re.UNICODE)
-        return url
-
-    def get_urls(self):
-        urls = filter(dashboard.valid_url, super().get_urls())
-        return list(map(self.rename_change_url, urls))
-
     def get_object(self, request, object_id, from_field=None):
         obj = super().get_object(request, object_id, from_field)
         if obj and not obj.receipt_fetched:
@@ -368,4 +347,4 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         return super().formfield_for_dbfield(db_field, **kwargs)
 
 
-dashboard.register(Reimbursement, ReimbursementModelAdmin)
+public_admin.register(Reimbursement, ReimbursementModelAdmin)
