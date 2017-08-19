@@ -4,9 +4,14 @@ import os
 import pip
 from shutil import copyfile, which
 
-copyfile('config.ini.example', 'config.ini')
+if not os.path.exists('config.ini'):
+    copyfile('config.ini.example', 'config.ini')
 
-pip.main(['install', '--upgrade', '-r', 'research/requirements.txt'])
+requirements = os.path.join('research', 'requirements.txt')  # local install
+if not os.path.exists(requirements):
+    requirements = 'requirements.txt'  # Docker
+
+pip.main(['install', '--upgrade', '-r', requirements])
 
 if which('unzip') == None:
     print('The following executables are needed and were not found: unzip')
