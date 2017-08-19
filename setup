@@ -18,7 +18,7 @@ if not os.path.exists(requirements):
 
 pip.main(['install', '--upgrade', '-r', requirements])
 
-if which('unzip') == None:
+if which('unzip') is None:
     print('The following executables are needed and were not found: unzip')
 
 print('Downloading datasets (this might take several minutes depending on your internet connection)')
