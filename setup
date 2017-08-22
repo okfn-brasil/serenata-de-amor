@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
 
+import os
 import pip
 from shutil import copyfile, which
-import subprocess
 
-copyfile('config.ini.example', 'config.ini')
+if not os.path.exists('config.ini'):
+    copyfile('config.ini.example', 'config.ini')
 
-pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
-subprocess.call(['conda', 'config', '--add', 'channels', 'conda-forge'])
-subprocess.call(['conda', 'install', '--yes', '--file', 'conda_requirements.txt'])
+requirements = os.path.join('research', 'requirements.txt')  # local install
+if not os.path.exists(requirements):
+    requirements = 'requirements.txt'  # Docker
+
+pip.main(['install', '--upgrade', '-r', requirements])
 
 if which('unzip') == None:
     print('The following executables are needed and were not found: unzip')
 
 print('Downloading datasets (this might take several minutes depending on your internet connection)')
 
-
 # This is imported here because serenata_toolbox is only installed when pip.main is called (line 9)
 from serenata_toolbox.datasets import fetch_latest_backup
-fetch_latest_backup('data/')
+os.makedirs('research/data', exist_ok=True)
+fetch_latest_backup('research/data')

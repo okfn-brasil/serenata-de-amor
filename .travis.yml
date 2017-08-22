@@ -1,0 +1,9 @@
+language: python
+cache:
+  pip: true
+  directories:
+  - ./research/data
+python: 3.6
+install:
+  - ./setup
+script: python -m unittest discover research/test

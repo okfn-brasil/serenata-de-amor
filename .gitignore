@@ -3,7 +3,7 @@
 .python-version
 __pycache__/
 config.ini
-data
+/research/data
 .idea/
 serenata-de-amor.iml
 **.DS_Store
