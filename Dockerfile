@@ -9,4 +9,6 @@ COPY jarbas /code/jarbas
 WORKDIR /code
 RUN echo "America/Sao_Paulo" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
 VOLUME /code/staticfiles
+RUN useradd -ms /bin/bash jarbas
+USER jarbas
 CMD ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8001", "--workers", "4"]
