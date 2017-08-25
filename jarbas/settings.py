@@ -187,3 +187,8 @@ CACHES = {
         'TIMEOUT': 60 * 60 * 6
     }
 }
+
+
+# Queue
+
+CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='amqp://guest:guest@localhost//')

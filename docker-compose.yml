@@ -1,5 +1,6 @@
 version: '2'
 services:
+
   jarbas:
     build:
       context: .
@@ -20,16 +21,31 @@ services:
        - AMAZON_S3_REGION=s3-sa-east-1
        - AMAZON_S3_CEAPTRANSLATION_DATE=2016-08-08
        - GOOGLE_STREET_VIEW_API_KEY
-
+       - CELERY_BROKER_URL=amqp://guest:guest@queue/
     depends_on:
        - elm
        - db
        - cache
+       - tasks
     networks:
       backend:
       frontend:
         aliases:
           - apps
+
+  tasks:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # image: datasciencebr/jarbas-backend
+    environment:
+       - SECRET_KEY=lets-rock
+       - DATABASE_URL=postgres://jarbas:mysecretpassword@db/jarbas
+       - CELERY_BROKER_URL=amqp://guest:guest@queue/
+    depends_on:
+       - db
+       - queue
+    command: [celery, worker, --app, jarbas]
 
   elm:
     image: datasciencebr/jarbas-frontend
@@ -65,6 +81,9 @@ services:
 
   cache:
     image: memcached:1.4
+
+  queue:
+    image: rabbitmq:3.6.11-alpine
 
 volumes:
   assets:

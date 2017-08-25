@@ -272,6 +272,10 @@ If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the proj
 
 * `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
 
+##### Message Broker
+
+* `CELERY_BROKER_URL` (_string_) [Celery](http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html) compatible message broker URL (e.g. `amqp://guest:guest@localhost//`)
+
 ##### Amazon S3 settings
 
 * `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
