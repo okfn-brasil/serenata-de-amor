@@ -1,4 +1,4 @@
-git+git://github.com/marcusrehm/neo4jupyter.git@master
+git+https://github.com/marcusrehm/neo4jupyter.git@master
 aiofiles==0.3.0
 aiohttp==1.3.1
 beautifulsoup4==4.6.0

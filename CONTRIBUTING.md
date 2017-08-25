@@ -72,9 +72,9 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
-1. Start the environment (it might take a while, the base image has 6.88GB and we also pull in lots of dependencies): `$ docker-compose up -d`.
 1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
-1. Run the script to download data and other useful files: `$ docker-compose run --rm research python src/fetch_datasets.py`
+1. Build the tags with `$ docker-compose build`
+1. Start the environment (it might take a while, hurry not): `$ docker-compose up -d`.
 1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm research jupyter notebook`
 
 If you want to access the console:
@@ -122,7 +122,7 @@ Beyond that we have five big directories with different purposes:
 | Directory | Purpose | File naming |
 |-----------|---------|-------------|
 | **`research/develop/`** | This is where we _explore_ data, feel free to create your own notebook for your exploration. | `[ISO 8601 date]-[author-username]-[2-4 word description].ipynb` (e.g. `2016-05-13-anaschwendler-air-tickets.ipynb`) |
-|**`research/report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
+|**`research/deliver/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
 | **`research/src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
 | **`research/data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `research/src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
 | **`docs/`** | Once a new subject, theme or dataset is added to project, would be nice to have some documentation describing these items and how others can use them. | Small caps whenever possible, no special character, `-` instead of spaces, preference for `.md` Markdown files. |  |
