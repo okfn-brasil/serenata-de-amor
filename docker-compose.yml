@@ -1,7 +1,10 @@
 version: '2'
 services:
   jarbas:
-    image: datasciencebr/jarbas-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: datasciencebr/jarbas-backend
     volumes:
        - "assets:/code/staticfiles"
        - "./:/code"
