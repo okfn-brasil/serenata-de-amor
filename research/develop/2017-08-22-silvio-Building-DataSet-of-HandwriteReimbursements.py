@@ -64,6 +64,7 @@ from serenata_toolbox.datasets import Datasets
 
 datasets = Datasets('../test/')
 datasets.downloader.download('2016-11-19-last-year.xz') 
+datasets.downloader.download('2016-08-08-previous-years.xz')
 
 
 # # Then we read the downloaded reimbursements
@@ -71,7 +72,11 @@ datasets.downloader.download('2016-11-19-last-year.xz')
 # In[3]:
 
 # Reading the downloaded reimbursements files
-data = pd.read_csv('../test/2016-11-19-last-year.xz',
+
+datasets = ['../test/2016-08-08-previous-years.xz','../test/2016-08-08-previous-years.xz']
+dfs = []
+for files in datasets:
+    df = pd.read_csv(files,
                    parse_dates=[16],
                    dtype={'document_id': np.str,
                           'congressperson_id': np.str,
@@ -79,6 +84,8 @@ data = pd.read_csv('../test/2016-11-19-last-year.xz',
                           'term_id': np.str,
                           'cnpj_cpf': np.str,
                           'reimbursement_number': np.str})
+    dfs.append(df)
+
 
 
 # # Next step build the folder structure 
@@ -119,12 +126,6 @@ response = urlopen(link)
 csv_ref = pd.DataFrame.from_csv(response)
 print(csv_ref.head(10))
 print(csv_ref.shape)
-
-
-# # Filter the reimbursements from the toolbox to be aligned to our reference
-
-# In[6]:
-
 doc_ids=[]
 for index, refs in csv_ref.iterrows():
     full_name= refs['tocheck'].split("/")
@@ -133,7 +134,16 @@ for index, refs in csv_ref.iterrows():
     
 print ("recupered References: {}".format(len(doc_ids)))    
 csv_ref['id'] = doc_ids
-data=data[data['document_id'].isin(doc_ids)]
+
+
+# # Filter the reimbursements from the toolbox to be aligned to our reference
+
+# In[1]:
+
+for data in dfs:
+    data=data[data['document_id'].isin(doc_ids)]
+
+data = pd.concat(dfs)
 
 refs=[]
 for index, item in tqdm(data.iterrows()):
@@ -146,7 +156,7 @@ print(len(data[data['reference']==0]))
 
 # # Build a direct link to PDFs
 
-# In[7]:
+# In[ ]:
 
 """ Creates a new column 'links' containing an url
         for the files in the chamber of deputies website
@@ -170,7 +180,7 @@ data = __document_url(data)
 
 # # Download the PDFs and convert them to PNG
 
-# In[8]:
+# In[ ]:
 
 # Case you DO NOT WANT to download all dataset set STOP_AFTER bigger than 0 and lower than 1600. 
 # It will download the same amount for positive and negative samples
@@ -178,7 +188,7 @@ data = __document_url(data)
 STOP_AFTER = 30
 
 
-# In[9]:
+# In[ ]:
 
 """Download a pdf file and transform it to png
         arguments:
@@ -237,7 +247,7 @@ else:
 # ### 15 % for validation
 # ### 15 % for pos validation
 
-# In[10]:
+# In[ ]:
 
 def split_data(len_samples,directory_src,directory_dest):
     for x in range(1,len_samples):
@@ -263,7 +273,7 @@ split_data(len_val_negative,directories[6],directories[9])
 
 # # Lets verify how much data we have
 
-# In[11]:
+# In[ ]:
 
 train_data_dir = CONST_DIR+'training'
 validation_data_dir =  CONST_DIR+'validation'
