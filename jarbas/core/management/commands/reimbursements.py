@@ -2,10 +2,10 @@ import csv
 import lzma
 
 from django.utils.timezone import now
-from reprint import output
 
 from jarbas.core.management.commands import LoadCommand
 from jarbas.core.models import Reimbursement
+from jarbas.core.tasks import create_or_update_reimbursement
 
 
 class Command(LoadCommand):
@@ -15,17 +15,10 @@ class Command(LoadCommand):
         self.started_at = now()
         self.path = options['dataset']
 
-        existing = Reimbursement.objects.count()
-        print('Starting with {:,} reimbursements'.format(existing))
-        self.count = {'updated': 0, 'created': 0, 'skip': 0}
-
         if options.get('drop', False):
             self.drop_all(Reimbursement)
 
-        with output() as status:
-            status.change(self.status)
-            self.create_or_update(self.reimbursements, status)
-
+        self.create_or_update(self.reimbursements)
         self.mark_not_updated_reimbursements()
 
     @property
@@ -77,40 +70,19 @@ class Command(LoadCommand):
         for key in floats:
             reimbursement[key] = self.to_number(reimbursement[key])
 
-        reimbursement['issue_date'] = self.to_date(reimbursement['issue_date'])
+        issue_date = self.to_date(reimbursement['issue_date'])
+        reimbursement['issue_date'] = issue_date.strftime('%Y-%m-%d')
 
         return reimbursement
 
-    def create_or_update(self, reimbursements_as_dicts, status):
-        for reimbursement in reimbursements_as_dicts:
-            document_id = reimbursement.get('document_id')
+    def create_or_update(self, reimbursements_as_dicts):
+        for index, reimbursement in enumerate(reimbursements_as_dicts):
+            create_or_update_reimbursement.delay(reimbursement)
+            count = index + 1
+            self.print_count(Reimbursement, count=count)
 
-            if not document_id:
-                self.count['skip'] += 1
-                status.change(self.status)
-                continue
-
-            _, created = Reimbursement.objects.update_or_create(
-                document_id=document_id,
-                defaults=reimbursement
-            )
-
-            key = 'created' if created else 'updated'
-            self.count[key] += 1
-            status.change(self.status)
+        print('{} reimbursements scheduled to creation/update'.format(count))
 
     def mark_not_updated_reimbursements(self):
         qs = Reimbursement.objects.filter(last_update__lt=self.started_at)
         qs.update(available_in_latest_dataset=False)
-
-    @property
-    def status(self):
-        label = '{}s'.format(self.get_model_name(Reimbursement)).lower()
-        total = sum(map(self.count.get, self.count.keys()))
-        output = [
-            'Processed: {} lines'.format(total),
-            'Updated: {} {}'.format(self.count['updated'], label),
-            'Created: {} {}'.format(self.count['created'], label),
-            'Skip: {} {}'.format(self.count['skip'], label),
-        ]
-        return output
