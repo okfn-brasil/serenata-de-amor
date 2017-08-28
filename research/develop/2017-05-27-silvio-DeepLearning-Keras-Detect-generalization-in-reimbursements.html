@@ -11794,32 +11794,9 @@ Ps: I only commented in my code the strong changes regarding they example.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="First-step:-Directory-to-access-the-downloaded-files">First step: Directory to access the downloaded files<a class="anchor-link" href="#First-step:-Directory-to-access-the-downloaded-files">&#182;</a></h1>
+<h1 id="Necessary-Imports">Necessary Imports<a class="anchor-link" href="#Necessary-Imports">&#182;</a></h1>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">CONST_DIR</span> <span class="o">=</span> <span class="s1">&#39;../test/dataset/&#39;</span>
-
-<span class="n">train_data_dir</span> <span class="o">=</span> <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;training/&#39;</span>
-<span class="n">validation_data_dir</span> <span class="o">=</span> <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;validation/&#39;</span>
-
-<span class="n">png_directory</span><span class="o">=</span> <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;pos_validation/positive/&#39;</span>
-<span class="n">png_directory</span><span class="o">=</span><span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;pos_validation/negative/&#39;</span>
-
-<span class="n">salve_model</span> <span class="o">=</span> <span class="s1">&#39;../test/model/&#39;</span>
-<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">salve_model</span><span class="p">)):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">salve_model</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -11835,8 +11812,76 @@ Ps: I only commented in my code the strong changes regarding they example.</p>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
 
-<span class="c1">#fix random seed for reproducibility</span>
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Using TensorFlow backend.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Directory-to-access-the-downloaded-files">Directory to access the downloaded files<a class="anchor-link" href="#Directory-to-access-the-downloaded-files">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">CONST_DIR</span> <span class="o">=</span> <span class="s1">&#39;../research/data/dataset/&#39;</span>
+
+<span class="n">train_data_dir</span> <span class="o">=</span> <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;training/&#39;</span>
+<span class="n">validation_data_dir</span> <span class="o">=</span> <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;validation/&#39;</span>
+
+<span class="n">png_directory</span><span class="o">=</span> <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;pos_validation/positive/&#39;</span>
+<span class="n">png_directory</span><span class="o">=</span><span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;pos_validation/negative/&#39;</span>
+
+<span class="n">salve_model</span> <span class="o">=</span> <span class="s1">&#39;../research/data/model/&#39;</span>
+<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">salve_model</span><span class="p">)):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">salve_model</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Build-the-ML-model-using-KERAS">Build the ML model using KERAS<a class="anchor-link" href="#Build-the-ML-model-using-KERAS">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#fix random seed for reproducibility</span>
 <span class="n">seed</span> <span class="o">=</span> <span class="mi">2017</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
@@ -11929,39 +11974,30 @@ Ps: I only commented in my code the strong changes regarding they example.</p>
 <div class="output_area">
 <div class="prompt"></div>
 
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Using TensorFlow backend.
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-<div class="prompt"></div>
-
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>no. of trained samples =  53  no. of validation samples=  12
-Found 53 images belonging to 2 classes.
-Found 12 images belonging to 2 classes.
+<pre>no. of trained samples =  47  no. of validation samples=  11
+Found 47 images belonging to 2 classes.
+Found 11 images belonging to 2 classes.
 Epoch 1/3
-25/26 [===========================&gt;..] - ETA: 3s - loss: 9.2900 - acc: 0.4000Epoch 00000: val_loss improved from inf to 9.29972, saving model to ../test/model/weights.hdf5
-26/26 [==============================] - 89s - loss: 9.5459 - acc: 0.3846 - val_loss: 9.2997 - val_acc: 0.4167
+22/23 [===========================&gt;..] - ETA: 3s - loss: 8.0015 - acc: 0.4773Epoch 00000: val_loss improved from inf to 9.56543, saving model to ../research/data/model/weights.hdf5
+23/23 [==============================] - 85s - loss: 8.3468 - acc: 0.4565 - val_loss: 9.5654 - val_acc: 0.4000
 Epoch 2/3
-25/26 [===========================&gt;..] - ETA: 3s - loss: 8.9277 - acc: 0.4400Epoch 00001: val_loss did not improve
-26/26 [==============================] - 86s - loss: 8.8974 - acc: 0.4419 - val_loss: 9.2997 - val_acc: 0.4167
+22/23 [===========================&gt;..] - ETA: 3s - loss: 8.6958 - acc: 0.4545Epoch 00001: val_loss did not improve
+23/23 [==============================] - 80s - loss: 9.0045 - acc: 0.4352 - val_loss: 10.6283 - val_acc: 0.3333
 Epoch 3/3
-25/26 [===========================&gt;..] - ETA: 3s - loss: 9.2626 - acc: 0.4000Epoch 00002: val_loss did not improve
-26/26 [==============================] - 86s - loss: 9.5264 - acc: 0.3842 - val_loss: 9.2997 - val_acc: 0.4167
+22/23 [===========================&gt;..] - ETA: 3s - loss: 8.4013 - acc: 0.4545Epoch 00002: val_loss improved from 9.56543 to 6.44724, saving model to ../research/data/model/weights.hdf5
+23/23 [==============================] - 79s - loss: 8.0435 - acc: 0.4778 - val_loss: 6.4472 - val_acc: 0.6000
 </pre>
 </div>
 </div>
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[1]:</div>
+<div class="prompt output_prompt">Out[3]:</div>
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;keras.callbacks.History at 0x7f64df37f390&gt;</pre>
+<pre>&lt;keras.callbacks.History at 0x7fb2901d3978&gt;</pre>
 </div>
 
 </div>
@@ -11983,7 +12019,7 @@ Epoch 3/3
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">load_model</span>
@@ -12044,49 +12080,35 @@ Epoch 3/3
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>                                               Image  Reference
-0  ../test/dataset/pos_validation/negative/559290...          1
-1  ../test/dataset/pos_validation/negative/560323...          1
-2  ../test/dataset/pos_validation/negative/562653...          1
-3  ../test/dataset/pos_validation/negative/563161...          1
-0  ../test/dataset/pos_validation/negative/559290...          0
+0  ../research/data/dataset/pos_validation/negati...          1
+1  ../research/data/dataset/pos_validation/negati...          1
+2  ../research/data/dataset/pos_validation/negati...          1
+0  ../research/data/dataset/pos_validation/negati...          0
+1  ../research/data/dataset/pos_validation/negati...          0
                                                Image  Reference
-3  ../test/dataset/pos_validation/negative/563161...          1
-0  ../test/dataset/pos_validation/negative/559290...          0
-1  ../test/dataset/pos_validation/negative/560323...          0
-2  ../test/dataset/pos_validation/negative/562653...          0
-3  ../test/dataset/pos_validation/negative/563161...          0
-../test/dataset/pos_validation/negative/5592902.png
+1  ../research/data/dataset/pos_validation/negati...          1
+2  ../research/data/dataset/pos_validation/negati...          1
+0  ../research/data/dataset/pos_validation/negati...          0
+1  ../research/data/dataset/pos_validation/negati...          0
+2  ../research/data/dataset/pos_validation/negati...          0
+../research/data/dataset/pos_validation/negative/5723111.png
 1/1 [==============================] - 0s
 1/1 [==============================] - 0s
-suspicious!!! prob: [[ 1.]]
-../test/dataset/pos_validation/negative/5603235.png
+../research/data/dataset/pos_validation/negative/5857331.png
 1/1 [==============================] - 0s
 1/1 [==============================] - 0s
-suspicious!!! prob: [[ 1.]]
-../test/dataset/pos_validation/negative/5626538.png
+../research/data/dataset/pos_validation/negative/5606673.png
 1/1 [==============================] - 0s
 1/1 [==============================] - 0s
-suspicious!!! prob: [[ 1.]]
-../test/dataset/pos_validation/negative/5631617.png
+../research/data/dataset/pos_validation/negative/5723111.png
 1/1 [==============================] - 0s
 1/1 [==============================] - 0s
-suspicious!!! prob: [[ 1.]]
-../test/dataset/pos_validation/negative/5592902.png
+../research/data/dataset/pos_validation/negative/5857331.png
 1/1 [==============================] - 0s
 1/1 [==============================] - 0s
-suspicious!!! prob: [[ 1.]]
-../test/dataset/pos_validation/negative/5603235.png
+../research/data/dataset/pos_validation/negative/5606673.png
 1/1 [==============================] - 0s
 1/1 [==============================] - 0s
-suspicious!!! prob: [[ 1.]]
-../test/dataset/pos_validation/negative/5626538.png
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-suspicious!!! prob: [[ 1.]]
-../test/dataset/pos_validation/negative/5631617.png
-1/1 [==============================] - 0s
-1/1 [==============================] - 0s
-suspicious!!! prob: [[ 1.]]
 </pre>
 </div>
 </div>
@@ -12106,7 +12128,7 @@ suspicious!!! prob: [[ 1.]]
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">metrics</span>
@@ -12138,13 +12160,25 @@ suspicious!!! prob: [[ 1.]]
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Confusion matrix
-[[0 4]
- [0 4]]
+[[3 0]
+ [3 0]]
  accuracy  0.5
  AUC  0.5
- precision  0.5
- recall  1.0
- f1-score  0.666666666667
+ precision  0.0
+ recall  0.0
+ f1-score  0.0
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/opt/conda/lib/python3.5/site-packages/sklearn/metrics/classification.py:1113: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 due to no predicted samples.
+  &#39;precision&#39;, &#39;predicted&#39;, average, warn_for)
+/opt/conda/lib/python3.5/site-packages/sklearn/metrics/classification.py:1113: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no predicted samples.
+  &#39;precision&#39;, &#39;predicted&#39;, average, warn_for)
 </pre>
 </div>
 </div>

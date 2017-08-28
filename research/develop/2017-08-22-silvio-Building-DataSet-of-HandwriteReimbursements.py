@@ -27,8 +27,9 @@
 # 
 # # To this task we built a  gold standard reference containing:
 # 
-# 1) 1691 reimbursements with generalized descriptions
-# 2) 1691 well described (* they are called, positive, negative)
+# 1) 1690 reimbursements with generalized descriptions
+# 
+# 2) 1690 well described (* they are called, positive, negative)
 # 
 # # All these reimbursements were validated by hand
 # # Thanks so much everyone involved on it :D
@@ -62,18 +63,40 @@ from serenata_toolbox.datasets import Datasets
 # In[2]:
 
 
-datasets = Datasets('../test/')
+datasets = Datasets('../research/data/')
 datasets.downloader.download('2016-11-19-last-year.xz') 
 datasets.downloader.download('2016-08-08-previous-years.xz')
 
 
-# # Then we read the downloaded reimbursements
+# # Download the csv file containing the references
 
 # In[3]:
 
-# Reading the downloaded reimbursements files
 
-datasets = ['../test/2016-08-08-previous-years.xz','../test/2016-08-08-previous-years.xz']
+link = 'https://drive.google.com/uc?export=download&id=0B6F2XOmMAf28OEdBLWVBZ2c1RVk'
+
+response = urlopen(link)
+
+csv_ref = pd.DataFrame.from_csv(response)
+csv_ref = csv_ref.drop_duplicates(['tocheck']).reset_index(drop=True)
+print(csv_ref.head(10))
+print(csv_ref.shape)
+doc_ids=[]
+for index, refs in csv_ref.iterrows():
+    full_name= refs['tocheck'].split("/")
+    file_name = full_name[len(full_name)-1]
+    doc_ids.append(str(file_name))
+    
+print ("recupered References: {}".format(len(doc_ids)))    
+csv_ref['id'] = doc_ids
+
+
+# # Then we read the downloaded reimbursements filtering the ids
+
+# In[4]:
+
+# Reading the downloaded reimbursements files
+datasets = ['../research/data/2016-11-19-last-year.xz','../research/data/2016-08-08-previous-years.xz']
 dfs = []
 for files in datasets:
     df = pd.read_csv(files,
@@ -84,18 +107,22 @@ for files in datasets:
                           'term_id': np.str,
                           'cnpj_cpf': np.str,
                           'reimbursement_number': np.str})
+    print(files)
+    df = df[pd.notnull(df['document_id'])]
+    df=df[df['document_id'].isin(doc_ids)]
     dfs.append(df)
-
+data = pd.concat(dfs).drop_duplicates(['document_id','applicant_id','year']).reset_index(drop=True)
+print(data.shape)
 
 
 # # Next step build the folder structure 
 # 
 # 
 
-# In[4]:
+# In[5]:
 
 # Build the Directory structure for our ML model
-CONST_DIR = '../test/dataset/'
+CONST_DIR = '../research/data/dataset/'
 directories = [CONST_DIR, CONST_DIR+'training',
                         CONST_DIR+'training/positive/',
                         CONST_DIR+'training/negative/',
@@ -114,36 +141,9 @@ positive = directories[2]
 negative = directories[3]
 
 
-# # Download the csv file containing the references
-
-# In[5]:
-
-
-link = 'https://drive.google.com/uc?export=download&id=0B6F2XOmMAf28OEdBLWVBZ2c1RVk'
-
-response = urlopen(link)
-
-csv_ref = pd.DataFrame.from_csv(response)
-print(csv_ref.head(10))
-print(csv_ref.shape)
-doc_ids=[]
-for index, refs in csv_ref.iterrows():
-    full_name= refs['tocheck'].split("/")
-    file_name = full_name[len(full_name)-1]
-    doc_ids.append(file_name)
-    
-print ("recupered References: {}".format(len(doc_ids)))    
-csv_ref['id'] = doc_ids
-
-
 # # Filter the reimbursements from the toolbox to be aligned to our reference
 
-# In[1]:
-
-for data in dfs:
-    data=data[data['document_id'].isin(doc_ids)]
-
-data = pd.concat(dfs)
+# In[6]:
 
 refs=[]
 for index, item in tqdm(data.iterrows()):
@@ -156,7 +156,7 @@ print(len(data[data['reference']==0]))
 
 # # Build a direct link to PDFs
 
-# In[ ]:
+# In[7]:
 
 """ Creates a new column 'links' containing an url
         for the files in the chamber of deputies website
@@ -179,16 +179,18 @@ data = __document_url(data)
 
 
 # # Download the PDFs and convert them to PNG
+# 
+# ## Case you DO NOT WANT to download all dataset set STOP_AFTER bigger than 0 and lower than 1690. 
+# ## It will download the same amount for positive and negative samples
+# ## Case you WANT all put 0
 
-# In[ ]:
+# In[8]:
 
-# Case you DO NOT WANT to download all dataset set STOP_AFTER bigger than 0 and lower than 1600. 
-# It will download the same amount for positive and negative samples
-# Case you WANT all put 0
+
 STOP_AFTER = 30
 
 
-# In[ ]:
+# In[9]:
 
 """Download a pdf file and transform it to png
         arguments:
@@ -247,7 +249,7 @@ else:
 # ### 15 % for validation
 # ### 15 % for pos validation
 
-# In[ ]:
+# In[10]:
 
 def split_data(len_samples,directory_src,directory_dest):
     for x in range(1,len_samples):
@@ -273,7 +275,7 @@ split_data(len_val_negative,directories[6],directories[9])
 
 # # Lets verify how much data we have
 
-# In[ ]:
+# In[11]:
 
 train_data_dir = CONST_DIR+'training'
 validation_data_dir =  CONST_DIR+'validation'

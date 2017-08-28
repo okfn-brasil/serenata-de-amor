@@ -20,22 +20,7 @@
 # 
 # # We will use the dataset of generalizations in reimbursements to train a Machine Learning model to predict those that are suspicious
 
-# # First step: Directory to access the downloaded files
-
-# In[ ]:
-
-CONST_DIR = '../test/dataset/'
-
-train_data_dir = CONST_DIR+'training/'
-validation_data_dir = CONST_DIR+'validation/'
-
-png_directory= CONST_DIR+'pos_validation/positive/'
-png_directory=CONST_DIR+'pos_validation/negative/'
-
-salve_model = '../test/model/'
-if (not os.path.exists(salve_model)):
-    os.mkdir(salve_model)
-
+# # Necessary Imports 
 
 # In[1]:
 
@@ -48,6 +33,29 @@ from keras.callbacks import ModelCheckpoint
 import os
 import os.path
 import numpy as np
+
+
+# # Directory to access the downloaded files
+
+# In[2]:
+
+CONST_DIR = '../research/data/dataset/'
+
+train_data_dir = CONST_DIR+'training/'
+validation_data_dir = CONST_DIR+'validation/'
+
+png_directory= CONST_DIR+'pos_validation/positive/'
+png_directory=CONST_DIR+'pos_validation/negative/'
+
+salve_model = '../research/data/model/'
+if (not os.path.exists(salve_model)):
+    os.mkdir(salve_model)
+
+
+# # Build the ML model using KERAS
+
+# In[3]:
+
 
 #fix random seed for reproducibility
 seed = 2017
@@ -139,7 +147,7 @@ model.fit_generator(
 # # Let's use it on an external set of reimbursements!
 # ### @vmesel recommended it, thanks for the feedback :D
 
-# In[3]:
+# In[4]:
 
 from keras.models import load_model
 from keras.preprocessing.image import img_to_array, load_img
@@ -189,7 +197,7 @@ df['Predicted']=predicted
 # # After to run the Model over the pos_validation set
 # ## Let's verify how is the performance!
 
-# In[4]:
+# In[5]:
 
 from sklearn import metrics
 from sklearn.metrics import precision_recall_curve

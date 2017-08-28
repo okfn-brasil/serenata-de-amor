@@ -18,10 +18,14 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt ./
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
+    USER jovyan
 
-USER jovyan
+    COPY ./research/requirements.txt ./requirements.txt
+    COPY ./config.ini ./config.ini
+    COPY ./setup ./setup
 
-COPY jupyter_notebook_config.py /home/jovyan/.jupyter/jupyter_notebook_config.py
+    RUN conda update setuptools
+    RUN pip install -r requirements.txt
+    RUN ./setup
+
+    COPY ./research/jupyter_notebook_config.py /home/jovyan/.jupyter/jupyter_notebook_config.py

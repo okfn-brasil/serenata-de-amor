@@ -11788,8 +11788,8 @@ div#notebook {
 <p>As you can see it doesn't has any description about the consummation</p>
 <p>And what is not a generalization?</p>
 <p><a href="http://www.camara.gov.br/cota-parlamentar//documentos/publ/1773/2014/5506259.pdf">http://www.camara.gov.br/cota-parlamentar//documentos/publ/1773/2014/5506259.pdf</a></p>
-<h1 id="Therefore,-the-goal-of-this-notebook-is-to-build-a-dataset-to-train-Machine-Learn-methods-to-detect-generalizations-in-reimbursements">Therefore, the goal of this notebook is to build a dataset to train Machine Learn methods to detect generalizations in reimbursements<a class="anchor-link" href="#Therefore,-the-goal-of-this-notebook-is-to-build-a-dataset-to-train-Machine-Learn-methods-to-detect-generalizations-in-reimbursements">&#182;</a></h1><h1 id="To-this-task-we-built-a--gold-standard-reference-containing:">To this task we built a  gold standard reference containing:<a class="anchor-link" href="#To-this-task-we-built-a--gold-standard-reference-containing:">&#182;</a></h1><p>1) 1691 reimbursements with generalized descriptions
-2) 1691 well described (* they are called, positive, negative)</p>
+<h1 id="Therefore,-the-goal-of-this-notebook-is-to-build-a-dataset-to-train-Machine-Learn-methods-to-detect-generalizations-in-reimbursements">Therefore, the goal of this notebook is to build a dataset to train Machine Learn methods to detect generalizations in reimbursements<a class="anchor-link" href="#Therefore,-the-goal-of-this-notebook-is-to-build-a-dataset-to-train-Machine-Learn-methods-to-detect-generalizations-in-reimbursements">&#182;</a></h1><h1 id="To-this-task-we-built-a--gold-standard-reference-containing:">To this task we built a  gold standard reference containing:<a class="anchor-link" href="#To-this-task-we-built-a--gold-standard-reference-containing:">&#182;</a></h1><p>1) 1690 reimbursements with generalized descriptions</p>
+<p>2) 1690 well described (* they are called, positive, negative)</p>
 <h1 id="All-these-reimbursements-were-validated-by-hand">All these reimbursements were validated by hand<a class="anchor-link" href="#All-these-reimbursements-were-validated-by-hand">&#182;</a></h1><h1 id="Thanks-so-much-everyone-involved-on-it-:D">Thanks so much everyone involved on it :D<a class="anchor-link" href="#Thanks-so-much-everyone-involved-on-it-:D">&#182;</a></h1><p><a href="https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing">https://drive.google.com/file/d/0B6F2XOmMAf28U1FsMTN0QXNPX28/view?usp=sharing</a></p>
 
 </div>
@@ -11846,7 +11846,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">datasets</span> <span class="o">=</span> <span class="n">Datasets</span><span class="p">(</span><span class="s1">&#39;../test/&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">datasets</span> <span class="o">=</span> <span class="n">Datasets</span><span class="p">(</span><span class="s1">&#39;../research/data/&#39;</span><span class="p">)</span>
 <span class="n">datasets</span><span class="o">.</span><span class="n">downloader</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;2016-11-19-last-year.xz&#39;</span><span class="p">)</span> 
 <span class="n">datasets</span><span class="o">.</span><span class="n">downloader</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;2016-08-08-previous-years.xz&#39;</span><span class="p">)</span>
 </pre></div>
@@ -11863,8 +11863,8 @@ div#notebook {
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Downloading 2016-11-19-last-year.xz: 100%|██████████| 6.28M/6.28M [00:06&lt;00:00, 981Kb/s]
-Downloading 2016-08-08-previous-years.xz: 100%|██████████| 25.0M/25.0M [00:25&lt;00:00, 975Kb/s]
+<pre>Downloading 2016-11-19-last-year.xz: 100%|██████████| 6.28M/6.28M [00:10&lt;00:00, 585Kb/s]
+Downloading 2016-08-08-previous-years.xz: 100%|██████████| 25.0M/25.0M [00:33&lt;00:00, 748Kb/s]
 </pre>
 </div>
 </div>
@@ -11878,7 +11878,7 @@ Downloading 2016-08-08-previous-years.xz: 100%|██████████| 2
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Then-we-read-the-downloaded-reimbursements">Then we read the downloaded reimbursements<a class="anchor-link" href="#Then-we-read-the-downloaded-reimbursements">&#182;</a></h1>
+<h1 id="Download-the-csv-file-containing-the-references">Download the csv file containing the references<a class="anchor-link" href="#Download-the-csv-file-containing-the-references">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -11887,9 +11887,73 @@ Downloading 2016-08-08-previous-years.xz: 100%|██████████| 2
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Reading the downloaded reimbursements files</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/uc?export=download&amp;id=0B6F2XOmMAf28OEdBLWVBZ2c1RVk&#39;</span>
 
-<span class="n">datasets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;../test/2016-08-08-previous-years.xz&#39;</span><span class="p">,</span><span class="s1">&#39;../test/2016-08-08-previous-years.xz&#39;</span><span class="p">]</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+
+<span class="n">csv_ref</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="n">csv_ref</span> <span class="o">=</span> <span class="n">csv_ref</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="s1">&#39;tocheck&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">csv_ref</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">csv_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">doc_ids</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">refs</span> <span class="ow">in</span> <span class="n">csv_ref</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">full_name</span><span class="o">=</span> <span class="n">refs</span><span class="p">[</span><span class="s1">&#39;tocheck&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">full_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">doc_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span>
+    
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;recupered References: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)))</span>    
+<span class="n">csv_ref</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc_ids</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                                             tocheck  standard
+0  https://jarbas.serenatadeamor.org/#/documentId...         1
+1  https://jarbas.serenatadeamor.org/#/documentId...         1
+2  https://jarbas.serenatadeamor.org/#/documentId...         1
+3  https://jarbas.serenatadeamor.org/#/documentId...         1
+4  https://jarbas.serenatadeamor.org/#/documentId...         1
+5  https://jarbas.serenatadeamor.org/#/documentId...         1
+6  https://jarbas.serenatadeamor.org/#/documentId...         1
+7  https://jarbas.serenatadeamor.org/#/documentId...         0
+8  https://jarbas.serenatadeamor.org/#/documentId...         1
+9  https://jarbas.serenatadeamor.org/#/documentId...         0
+(3380, 2)
+recupered References: 3380
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Then-we-read-the-downloaded-reimbursements-filtering-the-ids">Then we read the downloaded reimbursements filtering the ids<a class="anchor-link" href="#Then-we-read-the-downloaded-reimbursements-filtering-the-ids">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Reading the downloaded reimbursements files</span>
+<span class="n">datasets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;../research/data/2016-11-19-last-year.xz&#39;</span><span class="p">,</span><span class="s1">&#39;../research/data/2016-08-08-previous-years.xz&#39;</span><span class="p">]</span>
 <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">files</span><span class="p">,</span>
@@ -11900,10 +11964,33 @@ Downloading 2016-08-08-previous-years.xz: 100%|██████████| 2
                           <span class="s1">&#39;term_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">,</span>
                           <span class="s1">&#39;reimbursement_number&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">])]</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)]</span>
     <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="s1">&#39;document_id&#39;</span><span class="p">,</span><span class="s1">&#39;applicant_id&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>../research/data/2016-11-19-last-year.xz
+../research/data/2016-08-08-previous-years.xz
+(3380, 29)
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -11919,11 +12006,11 @@ Downloading 2016-08-08-previous-years.xz: 100%|██████████| 2
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Build the Directory structure for our ML model</span>
-<span class="n">CONST_DIR</span> <span class="o">=</span> <span class="s1">&#39;../test/dataset/&#39;</span>
+<span class="n">CONST_DIR</span> <span class="o">=</span> <span class="s1">&#39;../research/data/dataset/&#39;</span>
 <span class="n">directories</span> <span class="o">=</span> <span class="p">[</span><span class="n">CONST_DIR</span><span class="p">,</span> <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;training&#39;</span><span class="p">,</span>
                         <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;training/positive/&#39;</span><span class="p">,</span>
                         <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;training/negative/&#39;</span><span class="p">,</span>
@@ -11952,86 +12039,16 @@ Downloading 2016-08-08-previous-years.xz: 100%|██████████| 2
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Download-the-csv-file-containing-the-references">Download the csv file containing the references<a class="anchor-link" href="#Download-the-csv-file-containing-the-references">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/uc?export=download&amp;id=0B6F2XOmMAf28OEdBLWVBZ2c1RVk&#39;</span>
-
-<span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
-
-<span class="n">csv_ref</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_csv</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">csv_ref</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">csv_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">doc_ids</span><span class="o">=</span><span class="p">[]</span>
-<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">refs</span> <span class="ow">in</span> <span class="n">csv_ref</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-    <span class="n">full_name</span><span class="o">=</span> <span class="n">refs</span><span class="p">[</span><span class="s1">&#39;tocheck&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-    <span class="n">file_name</span> <span class="o">=</span> <span class="n">full_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">doc_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-    
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;recupered References: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)))</span>    
-<span class="n">csv_ref</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc_ids</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>                                                 tocheck  standard
-index                                                             
-1      https://jarbas.serenatadeamor.org/#/documentId...         1
-2      https://jarbas.serenatadeamor.org/#/documentId...         1
-3      https://jarbas.serenatadeamor.org/#/documentId...         1
-4      https://jarbas.serenatadeamor.org/#/documentId...         1
-5      https://jarbas.serenatadeamor.org/#/documentId...         1
-6      https://jarbas.serenatadeamor.org/#/documentId...         1
-7      https://jarbas.serenatadeamor.org/#/documentId...         1
-8      https://jarbas.serenatadeamor.org/#/documentId...         0
-9      https://jarbas.serenatadeamor.org/#/documentId...         1
-10     https://jarbas.serenatadeamor.org/#/documentId...         0
-(3382, 2)
-recupered References: 3382
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Filter-the-reimbursements-from-the-toolbox-to-be-aligned-to-our-reference">Filter the reimbursements from the toolbox to be aligned to our reference<a class="anchor-link" href="#Filter-the-reimbursements-from-the-toolbox-to-be-aligned-to-our-reference">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dfs</span><span class="p">:</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)]</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span>
-
-<span class="n">refs</span><span class="o">=</span><span class="p">[]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">refs</span><span class="o">=</span><span class="p">[]</span>
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()):</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="n">csv_ref</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">csv_ref</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="o">.</span><span class="n">document_id</span><span class="p">][</span><span class="s1">&#39;standard&#39;</span><span class="p">]</span>
         <span class="n">refs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -12051,18 +12068,27 @@ recupered References: 3382
 <div class="output_area">
 <div class="prompt"></div>
 
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-1-883368900a5b&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">for</span> data <span class="ansi-green-fg">in</span> dfs<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span>     data<span class="ansi-blue-fg">=</span>data<span class="ansi-blue-fg">[</span>data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;document_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>isin<span class="ansi-blue-fg">(</span>doc_ids<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> 
-<span class="ansi-green-intense-fg ansi-bold">      4</span> data <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>concat<span class="ansi-blue-fg">(</span>dfs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span> 
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>3380it [00:04, 687.40it/s]</pre>
+</div>
+</div>
 
-<span class="ansi-red-fg">NameError</span>: name &#39;dfs&#39; is not defined</pre>
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1690
+1690
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+</pre>
 </div>
 </div>
 
@@ -12081,7 +12107,7 @@ recupered References: 3382
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot; Creates a new column &#39;links&#39; containing an url</span>
@@ -12114,19 +12140,16 @@ recupered References: 3382
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Download-the-PDFs-and-convert-them-to-PNG">Download the PDFs and convert them to PNG<a class="anchor-link" href="#Download-the-PDFs-and-convert-them-to-PNG">&#182;</a></h1>
+<h1 id="Download-the-PDFs-and-convert-them-to-PNG">Download the PDFs and convert them to PNG<a class="anchor-link" href="#Download-the-PDFs-and-convert-them-to-PNG">&#182;</a></h1><h2 id="Case-you-DO-NOT-WANT-to-download-all-dataset-set-STOP_AFTER-bigger-than-0-and-lower-than-1690.">Case you DO NOT WANT to download all dataset set STOP_AFTER bigger than 0 and lower than 1690.<a class="anchor-link" href="#Case-you-DO-NOT-WANT-to-download-all-dataset-set-STOP_AFTER-bigger-than-0-and-lower-than-1690.">&#182;</a></h2><h2 id="It-will-download-the-same-amount-for-positive-and-negative-samples">It will download the same amount for positive and negative samples<a class="anchor-link" href="#It-will-download-the-same-amount-for-positive-and-negative-samples">&#182;</a></h2><h2 id="Case-you-WANT-all-put-0">Case you WANT all put 0<a class="anchor-link" href="#Case-you-WANT-all-put-0">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Case you DO NOT WANT to download all dataset set STOP_AFTER bigger than 0 and lower than 1600. </span>
-<span class="c1"># It will download the same amount for positive and negative samples</span>
-<span class="c1"># Case you WANT all put 0</span>
-<span class="n">STOP_AFTER</span> <span class="o">=</span> <span class="mi">30</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">STOP_AFTER</span> <span class="o">=</span> <span class="mi">30</span>
 </pre></div>
 
 </div>
@@ -12136,7 +12159,7 @@ recupered References: 3382
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;Download a pdf file and transform it to png</span>
@@ -12194,6 +12217,40 @@ recupered References: 3382
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>0it [00:00, ?it/s]</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>POSITIVE:  (1690, 31)
+NEGATIVE:  (1690, 31)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>60it [03:09,  2.62s/it]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
@@ -12206,7 +12263,7 @@ recupered References: 3382
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">split_data</span><span class="p">(</span><span class="n">len_samples</span><span class="p">,</span><span class="n">directory_src</span><span class="p">,</span><span class="n">directory_dest</span><span class="p">):</span>
@@ -12247,7 +12304,7 @@ recupered References: 3382
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_data_dir</span> <span class="o">=</span> <span class="n">CONST_DIR</span><span class="o">+</span><span class="s1">&#39;training&#39;</span>
@@ -12265,6 +12322,24 @@ recupered References: 3382
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>no. of trained samples =  47
+no. of validation samples=  11
+no. of pos validation samples=  6
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
