@@ -5,7 +5,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
-from jarbas.public_admin.sites import PublicAdminSite, DummyUser, public_admin
+from jarbas.public_admin.sites import DummyUser, PublicAdminSite, public_admin
 
 User = get_user_model()
 
