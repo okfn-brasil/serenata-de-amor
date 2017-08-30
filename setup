@@ -4,10 +4,15 @@ import os
 import pip
 from shutil import copyfile, which
 
+
+RESEARCH_DIR = 'research'
+DATA_DIR = os.path.join(RESEARCH_DIR, 'data')
+
+
 if not os.path.exists('config.ini'):
     copyfile('config.ini.example', 'config.ini')
 
-requirements = os.path.join('research', 'requirements.txt')  # local install
+requirements = os.path.join(RESEARCH_DIR, 'requirements.txt')  # local install
 if not os.path.exists(requirements):
     requirements = 'requirements.txt'  # Docker
 
@@ -20,5 +25,5 @@ print('Downloading datasets (this might take several minutes depending on your i
 
 # This is imported here because serenata_toolbox is only installed when pip.main is called (line 9)
 from serenata_toolbox.datasets import fetch_latest_backup
-os.makedirs('research/data', exist_ok=True)
-fetch_latest_backup('research/data')
+os.makedirs(DATA_DIR, exist_ok=True)
+fetch_latest_backup(DATA_DIR)
