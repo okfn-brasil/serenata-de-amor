@@ -48,6 +48,7 @@ class TestMonthlySubquotaLimitClassifier(TestCase):
 
     MONTHLY_SUBQUOTA_LIMIT_FIXTURE_FILE = 'rosie/chamber_of_deputies/tests/fixtures/monthly_subquota_limit_classifier.csv'
 
+
     def setUp(self):
         self.full_dataset = pd.read_csv(self.MONTHLY_SUBQUOTA_LIMIT_FIXTURE_FILE, dtype={'subquota_number': np.str})
         self.dataset = self.full_dataset[['applicant_id', 'subquota_number', 'issue_date', 'year', 'month', 'net_value']]
@@ -62,4 +63,4 @@ class TestMonthlySubquotaLimitClassifier(TestCase):
             self.assertEqual(
                 self.prediction[index],
                 row['expected_prediction'],
-                msg=row['test_case_description'])
+                msg='Line {0}: {1}'.format(row, row['test_case_description']))

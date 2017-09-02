@@ -42,9 +42,14 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
     def transform(self, X=None):
         self.limits = [
             {
-                # Automotive vehicle renting or charter
-                'data': self._X.query('(subquota_number == "120") & (reimbursement_month >= datetime(2015, 4, 1))'),
+                # Automotive vehicle renting or charter before 2017-06-15
+                'data': self._X.query('(subquota_number == "120") & ((reimbursement_month >= datetime(2015, 4, 1)) & (reimbursement_month <= datetime(2017, 4, 1)))'),
                 'monthly_limit': 1090000,
+            },
+            {
+                # Automotive vehicle renting or charter after 2017-05-16 (Ato de Mesa #183)
+                'data': self._X.query('(subquota_number == "120") & (reimbursement_month >= datetime(2017, 5, 1))'),
+                'monthly_limit': 1271300,
             },
             {
                 # Taxi, toll and parking

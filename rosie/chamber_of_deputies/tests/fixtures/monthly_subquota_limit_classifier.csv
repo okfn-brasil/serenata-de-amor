@@ -44,3 +44,7 @@ applicant_id,subquota_number,issue_date,year,month,net_value,expected_prediction
 4,137,2016-01-01,2016,1,7000,False,test_predict_true_when_over_the_limit
 4,137,2016-01-01,2016,1,698,True,test_predict_true_when_over_the_limit
 4,137,2016-01-01,2016,1,10,True,test_predict_true_when_over_the_limit
+100,120,2017-04-01,2017,4,12713,True,Ato de Mesa #183 - new limit for renting cars
+100,120,2017-04-01,2017,4,12713.01,True,Ato de Mesa #183 - new limit for renting cars
+100,120,2017-05-01,2017,5,12713,False,Ato de Mesa #183 - new limit for renting cars
+100,120,2017-05-01,2017,5,12713.01,True,Ato de Mesa #183 - new limit for renting cars
