@@ -72,8 +72,8 @@ class Reimbursement(models.Model):
     passenger = models.CharField('Passageiro', max_length=140, blank=True, null=True)
     leg_of_the_trip = models.CharField('Trecho', max_length=140, blank=True, null=True)
 
-    probability = models.DecimalField('Probabilidade', max_digits=6, decimal_places=5, blank=True, null=True)
-    suspicions = JSONField('Suspeitas', blank=True, null=True)
+    probability = models.DecimalField('Probabilidade', max_digits=6, decimal_places=5, blank=True, null=True, default=None)
+    suspicions = JSONField('Suspeitas', blank=True, null=True, default=None)
 
     receipt_fetched = models.BooleanField('Tentamos acessar a URL do documento fiscal?', default=False, db_index=True)
     receipt_url = models.CharField('URL do Documento Fiscal', max_length=140, blank=True, null=True)

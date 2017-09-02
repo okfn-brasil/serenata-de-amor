@@ -18,3 +18,4 @@ python-memcached==1.58
 python-twitter==3.3
 reprint==0.3.0 # pyup: ignore
 requests==2.18.4
+rows==0.3.1
