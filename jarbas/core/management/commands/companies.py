@@ -30,7 +30,7 @@ class Command(LoadCommand):
         """
         skip = ('main_activity', 'secondary_activity')
         keys = tuple(f.name for f in Company._meta.fields if f not in skip)
-        with lzma.open(self.path, mode='rt') as file_handler:
+        with lzma.open(self.path, mode='rt', encoding='utf-8') as file_handler:
             for row in csv.DictReader(file_handler):
                 main, secondary = self.save_activities(row)
 
