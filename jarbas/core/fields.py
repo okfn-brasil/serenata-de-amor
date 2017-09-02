@@ -24,6 +24,6 @@ class DateField(DateField):
     @classmethod
     def deserialize(cls, value, *args, **kwargs):
         try:
-            return datetime.strptime(value,'%Y-%m-%dT%H:%M:%S').date()
+            return datetime.strptime(value, '%Y-%m-%dT%H:%M:%S').date()
         except:
             return None
