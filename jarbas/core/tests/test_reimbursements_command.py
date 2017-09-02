@@ -88,7 +88,8 @@ class TestConventionMethods(TestCommand):
         output.return_value.__enter__.return_value = status
         reimbursements.return_value = (1, 2, 3)
         self.command.handle(dataset='reimbursements.xz')
-        print_.assert_called_once_with('Starting with 0 reimbursements')
+        print_.assert_any_call('Starting with 0 reimbursements')
+        print_.assert_any_call('Loading reimbursements.xz')
         create.assert_called_once_with(reimbursements, status)
         output.assert_called_once_with()
         status.change.assert_called_once_with(self.command.status)
@@ -105,7 +106,8 @@ class TestConventionMethods(TestCommand):
         status = MagicMock()
         output.return_value.__enter__.return_value = status
         self.command.handle(dataset='reimbursements.xz', drop=True)
-        print_.assert_called_once_with('Starting with 0 reimbursements')
+        print_.assert_any_call('Starting with 0 reimbursements')
+        print_.assert_any_call('Loading reimbursements.xz')
         drop_all.assert_called_once_with(Reimbursement)
         create.assert_called_once_with(reimbursements, status)
         mark.assert_called_once_with()
