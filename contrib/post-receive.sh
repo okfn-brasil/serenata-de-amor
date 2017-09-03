@@ -15,7 +15,7 @@ echo "==> Activating virtualenv…"
 . /opt/jarbas.venv/bin/activate
 
 echo "==> Installing NodeJS packages…"
-yarn install
+npm install
 
 echo "==> Installing Python packages…"
 pip install -r requirements.txt
@@ -27,7 +27,7 @@ echo "==> Updating CEAP dataset page"
 python manage.py ceapdatasets
 
 echo "==> Building assets"
-yarn assets
+npm run assets
 
 echo "==> Collecting static files"
 python manage.py collectstatic --no-input

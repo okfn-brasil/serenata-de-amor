@@ -183,10 +183,10 @@ $ docker-compose run --rm jarbas python manage.py createsuperuser
 
 #### Requirements
 
-Jarbas requires [Python 3.5](http://python.org), [Node.js 6+](https://nodejs.org/en/), [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org). Once you have `pip` and `yarn` available install the dependencies:
+Jarbas requires [Python 3.5](http://python.org), [Node.js 8](https://nodejs.org/en/), and [PostgreSQL 9.6](https://www.postgresql.org). Once you have `pip` and `npm` available install the dependencies:
 
 ```console
-$ yarn install
+$ npm install
 $ python -m pip install -r requirements-dev.txt
 ```
 
@@ -225,7 +225,7 @@ You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie)
 We generate assets through NodeJS, so run it before Django collecting static files:
 
 ```console
-$ yarn assets
+$ npm run assets
 $ python manage.py collectstatic
 
 ```
@@ -237,7 +237,7 @@ Not sure? Test it!
 ```
 $ python manage.py check
 $ python manage.py test
-$ yarn test
+$ npm test
 ```
 
 #### Ready!
