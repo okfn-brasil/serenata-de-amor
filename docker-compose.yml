@@ -1,78 +1,28 @@
-version: '2'
+version: '3'
 services:
-  jarbas:
-    image: datasciencebr/jarbas-backend
-    volumes:
-       - "assets:/code/staticfiles"
-       - "./:/code"
-       - ".env:/code/.env"
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
-       - SECRET_KEY=lets-rock
-       - DATABASE_URL=postgres://jarbas:mysecretpassword@db/jarbas
-       - CACHE_BACKEND=django.core.cache.backends.memcached.MemcachedCache
-       - CACHE_LOCATION=cache:11211
-       - DEBUG=True
+       - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
        - ALLOWED_HOSTS=localhost,127.0.0.1
        - AMAZON_S3_BUCKET=serenata-de-amor-data
        - AMAZON_S3_REGION=s3-sa-east-1
        - AMAZON_S3_CEAPTRANSLATION_DATE=2016-08-08
-       - GOOGLE_STREET_VIEW_API_KEY
-
     depends_on:
        - elm
-       - db
-       - cache
-    networks:
-      backend:
-      frontend:
-        aliases:
-          - apps
+       - postgres
 
   elm:
-    image: datasciencebr/jarbas-frontend
-    volumes:
-      - "./:/code"
-      - "/code/node_modules"
-      - "assets:/code/jarbas/frontend/static"
-    command: [yarn, watch]
+    build:
+      context: .
+      dockerfile: Dockerfile-elm
 
-  nginx:
-    image: datasciencebr/jarbas-server
-    volumes:
-      - "assets:/opt/jarbas/staticfiles"
-    ports:
-      - "8000:80"
-    depends_on:
-      - "jarbas"
-    networks:
-      - frontend
-
-  db:
-    image: postgres:9.6
+  postgres:
+    image: postgres:9.6.5-alpine
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_USER=jarbas
       - POSTGRES_DB=jarbas
-    ports:
-      - "5432:5432"
-    networks:
-        - backend
-    volumes:
-        - "db:/var/lib/postgresql"
-
-  cache:
-    image: memcached:1.4
-
-volumes:
-  assets:
-    external: false
-  staticfiles:
-    external: false
-  db:
-    external: false
-
-networks:
-  backend:
-    driver: bridge
-  frontend:
-    driver: bridge

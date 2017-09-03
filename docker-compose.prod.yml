@@ -1,0 +1,41 @@
+version: '3'
+services:
+
+  django:
+    env_file:
+      - .env
+    environment:
+       - DEBUG=False
+    depends_on:
+       - memcached
+    expose:
+      - "8000"
+    volumes:
+      - assets:/code/staticfiles
+    command: ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8000", "--workers", "4"]
+
+  elm:
+    command: ["npm", "run", "assets"]
+    volumes:
+      - assets:/code/jarbas/frontend/static
+
+  postgres:
+    expose:
+      - "5432"
+
+  memcached:
+    image: memcached:1.5.1-alpine
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    depends_on:
+      - django
+    ports:
+      - "80:80"
+    volumes:
+      - assets:/code/staticfiles
+
+volumes:
+  assets:
