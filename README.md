@@ -18,9 +18,9 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
     1. [Company](#company)
     1. [Tapioca Jarbas](#tapioca-jarbas)
 1. [Installing](#installing)
+    1. [Settings](#settings)
     1. [Using Docker](#using-docker)
     1. [Local install](#local-install)
-    1. [Settings](#settings)
 
 ## JSON API endpoints
 
@@ -130,54 +130,100 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 
 ## Installing
 
+### Settings
+
+If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
+
+##### Django settings
+
+* `DEBUG` (_bool_) enable or disable [Django debug mode](https://docs.djangoproject.com/en/1.10/ref/settings/#debug)
+* `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
+* `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
+* `USE_X_FORWARDED_HOST` (_bool_) [Whether to use the `X-Forwarded-Host` header](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-USE_X_FORWARDED_HOST)
+* `CACHE_BACKEND` (_str_) [Cache backend](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-CACHES-BACKEND) (e.g. `django.core.cache.backends.memcached.MemcachedCache`)
+* `CACHE_LOCATION` (_str_) [Cache location](https://docs.djangoproject.com/en/1.10/ref/settings/#location) (e.g. `localhost:11211`)
+* `SECURE_PROXY_SSL_HEADER` _(str)_ [Django secure proxy SSL header](https://docs.djangoproject.com/en/1.10/ref/settings/#secure-proxy-ssl-header) (e.g. `HTTP_X_FORWARDED_PROTO,https` transforms in tuple `('HTTP_X_FORWARDED_PROTO', 'https')`)
+
+##### Database
+
+* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
+
+##### Amazon S3 settings
+
+* `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
+* `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
+* `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
+
+##### Google settings
+
+* `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
+* `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
+
+##### Twitter settings
+
+* `TWITTER_CONSUMER_KEY` (_str_) Twitter API key
+* `TWITTER_CONSUMER_SECRET` (_str_) Twitter API secret
+* `TWITTER_ACCESS_TOKEN` (_str_) Twitter access token
+* `TWITTER_ACCESS_SECRET` (_str_) Twitter access token secret
+
+To get this credentials follow [`python-twitter`
+instructions](https://python-twitter.readthedocs.io/en/latest/getting_started.html#getting-your-application-tokens).
 
 ### Using Docker
 
-With [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)) installed just run:
+There are two combinations in terms of With [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)
+ environments.
 
-```console
-$ make run.devel
-```
+* **Develoment**: simply running `docker-compose …` will trigger `docker-compose.yml` and `docker-compose.override.yml` with optimun configuration for developing such as:
+  * automatic serving static files through Django
+  * restarting the Django on Python files changes
+  * rebuilding JS from Elm files on save
+  * skipping server cache
+* **Production**: passing a specific configurarion as `docker-compose -f docker-compose.yml -f docker-compose.prod.yml …` will launch a more robust environment with production in mind, among others:
+  * `nginx` in front of Django
+  * server-side cache with memcached
+  * manually generate JS after edits on Elm files
+  * manually run `collectstatic` command is static changes
+  * manually restarting server on change
 
-or
+That said instructions here keep it simple and runs with the development set up. To swicth always add `-f docker-compose.yml -f docker-compose.prod.yml` after `docker-compose`.
+
+#### Build and start services
 
 ```console
 $ docker-compose up -d
+```
+
+#### Create and seed the database with sample data
+
+Creating the database and applying migrations:
+
+```
 $ docker-compose run --rm jarbas python manage.py migrate
-$ docker-compose run --rm jarbas python manage.py ceapdatasets
+```
+
+Seeding it with sample data:
+
+```console
+$ docker-compose run --rm jarbas python manage.py reimbursements /mnt/data/reimbursements_sample.xz
+$ docker-compose run --rm jarbas python manage.py companies /mnt/data/companies_sample.xz
+$ docker-compose run --rm jarbas python manage.py suspicions /mnt/data/suspicions_sample.xz
 $ docker-compose run --rm jarbas python manage.py tweets
-$ docker-compose run --rm jarbas python manage.py collectstatic --no-input
 ```
 
-You can access it at [`localhost:8000`](http://localhost:8000/). However your database starts empty, but you can use sample data to development using this command:
+If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/datasciencebr/rosie). 
+To add a fresh new `reimbursements.xz` or `suspicions.xz` brewed by [Rosie](https://github.com/datasciencebr/rosie), or a `companies.xz` you've got from the [toolbox](https://github.com/datasciencebr/serenata-toolbox), you just need copy these files to `contrib/data` and refer to them inside the container from the path `/mnt/data/`.
 
-```console
-$ make seed.sample
-```
+#### Acessing Jabas
 
-or
+You can access it at [`localhost:8000`](http://localhost:8000/) in development mode or [`localhost`](http://localhost:80/) in production mode. 
 
-```console
-$ docker-compose run --rm jarbas python manage.py reimbursements contrib/sample-data/reimbursements_sample.xz
-$ docker-compose run --rm jarbas python manage.py companies contrib/sample-data/companies_sample.xz
-$ docker-compose run --rm jarbas python manage.py suspicions contrib/sample-data/suspicions_sample.xz
-```
-
-You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
-
-To add a fresh new `reimbursements.xz` brewed by [Rosie](https://github.com/datasciencebr/rosie) or made with our [toolbox](https://github.com/datasciencebr/rosie), you just need to have this file **inside project folder** and give the path at the end of the command, as bellow:
 
 ```console
 $ docker-compose run --rm jarbas python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
 ```
 
 To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
-
-Finally if you would like to access the Django Admin for an alternative view of the reimbursements, you can access it at [`localhost:8000/admin/`](http://localhost:8000/admin/) creating an user with:
-
-```console
-$ docker-compose run --rm jarbas python manage.py createsuperuser
-```
 
 ### Local install
 
@@ -219,7 +265,7 @@ $ python manage.py tweets
 $ python manage.py ceapdatasets
 ```
 
-You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/serenata-toolbox).
+There are sample files to seed yout database inside `contrib/data/`. You can get full datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/serenata-toolbox).
 
 #### Generate static files
 
@@ -252,44 +298,3 @@ If you would like to access the Django Admin for an alternative view of the reim
 
 ```console
 $ python manage.py createsuperuser
-```
-
-
-### Settings
-
-If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
-
-##### Django settings
-
-* `DEBUG` (_bool_) enable or disable [Django debug mode](https://docs.djangoproject.com/en/1.10/ref/settings/#debug)
-* `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
-* `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
-* `USE_X_FORWARDED_HOST` (_bool_) [Whether to use the `X-Forwarded-Host` header](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-USE_X_FORWARDED_HOST)
-* `CACHE_BACKEND` (_str_) [Cache backend](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-CACHES-BACKEND) (e.g. `django.core.cache.backends.memcached.MemcachedCache`)
-* `CACHE_LOCATION` (_str_) [Cache location](https://docs.djangoproject.com/en/1.10/ref/settings/#location) (e.g. `localhost:11211`)
-* `SECURE_PROXY_SSL_HEADER` _(str)_ [Django secure proxy SSL header](https://docs.djangoproject.com/en/1.10/ref/settings/#secure-proxy-ssl-header) (e.g. `HTTP_X_FORWARDED_PROTO,https` transforms in tuple `('HTTP_X_FORWARDED_PROTO', 'https')`)
-
-##### Database
-
-* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
-
-##### Amazon S3 settings
-
-* `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
-* `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
-* `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
-
-##### Google settings
-
-* `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
-* `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
-
-##### Twitter settings
-
-* `TWITTER_CONSUMER_KEY` (_str_) Twitter API key
-* `TWITTER_CONSUMER_SECRET` (_str_) Twitter API secret
-* `TWITTER_ACCESS_TOKEN` (_str_) Twitter access token
-* `TWITTER_ACCESS_SECRET` (_str_) Twitter access token secret
-
-To get this credentials follow [`python-twitter`
-instructions](https://python-twitter.readthedocs.io/en/latest/getting_started.html#getting-your-application-tokens).
