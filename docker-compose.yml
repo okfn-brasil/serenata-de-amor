@@ -26,3 +26,5 @@ services:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_USER=jarbas
       - POSTGRES_DB=jarbas
+    volumes:
+      - ./db:/var/lib/postgresql
