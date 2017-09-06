@@ -187,6 +187,7 @@ Jarbas requires [Python 3.5](http://python.org), [Node.js 8](https://nodejs.org/
 
 ```console
 $ npm install
+$ ./node_modules/.bin/elm-package install --yes  # this might not be necessary https://github.com/npm/npm/issues/17316
 $ python -m pip install -r requirements-dev.txt
 ```
 
