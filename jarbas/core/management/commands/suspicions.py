@@ -33,7 +33,7 @@ class Command(LoadCommand):
     def suspicions(self):
         """Returns a Generator with batches of suspicions."""
         print('Loading suspicions dataset…', end='\r')
-        with lzma.open(self.path, mode='rt') as file_handler:
+        with lzma.open(self.path, mode='rt', encoding='utf-8') as file_handler:
             batch = []
             for row in csv.DictReader(file_handler):
                 batch.append(self.serialize(row))
