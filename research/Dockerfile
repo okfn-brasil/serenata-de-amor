@@ -9,7 +9,8 @@ RUN apt-get update \
         libxml2-dev \
         libxslt-dev \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && sudo -u jovyan mkdir /home/jovyan/.jupyter
 
 USER jovyan
 
