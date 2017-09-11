@@ -30,21 +30,20 @@ before_install:
     fi
   - nvm install 6
   - nvm use 6
-  - npm install -g yarn
   - python -m pip install -U pip
 
 install:
   - psql -U postgres -c 'create database "jarbas";'
-  - yarn install
+  - npm install
   - python -m pip install -r requirements-dev.txt coveralls
 
 before_script:
-  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 yarn assets
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 npm run assets
   - python manage.py migrate
   - python manage.py collectstatic --no-input
 
 script:
-  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 yarn test
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 npm test
   - coverage run manage.py test -v 3
 
 after_success:
