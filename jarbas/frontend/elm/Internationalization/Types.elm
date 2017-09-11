@@ -23,6 +23,7 @@ type TranslationId
     | FieldsetTrip
     | FieldsetReimbursement
     | FieldsetCongressperson
+    | FieldsetCongresspersonProfile
     | FieldsetCompanyDetails
     | FieldsetCurrencyDetails
     | FieldsetCurrencyDetailsLink
