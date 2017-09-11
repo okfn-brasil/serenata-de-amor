@@ -51,6 +51,9 @@ translate lang trans =
                 FieldsetCompanyDetails ->
                     ReimbursementFieldset.companyDetails
 
+                FieldsetCongresspersonProfile ->
+                    ReimbursementFieldset.congresspersonProfile
+
                 FieldsetCurrencyDetails ->
                     ReimbursementFieldset.currencyDetails
 
