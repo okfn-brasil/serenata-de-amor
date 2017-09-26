@@ -307,14 +307,9 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     rosies_tweet.allow_tags = True
 
     def receipt_link(self, obj):
-        try:
-            receipt_url = obj.get_receipt_url()
-            if receipt_url:
-                return '<a target="_blank" href="{}">📃</a>'.format(receipt_url)
-            else:
-                return ''
-        except Exception:
+        if not obj.receipt_url:
             return ''
+        return '<a target="_blank" href="{}">📃</a>'.format(obj.receipt_url)
 
     receipt_link.short_description = ''
     receipt_link.allow_tags = True
