@@ -237,6 +237,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'short_document_id',
         'jarbas',
         'rosies_tweet',
+        'receipt_link',
         'congressperson_name',
         'year',
         'subquota_translated',
@@ -304,6 +305,14 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     rosies_tweet.short_description = ''
     rosies_tweet.allow_tags = True
+
+    def receipt_link(self, obj):
+        if not obj.receipt_url:
+            return ''
+        return '<a target="_blank" href="{}">📃</a>'.format(obj.receipt_url)
+
+    receipt_link.short_description = ''
+    receipt_link.allow_tags = True
 
     def suspicious(self, obj):
         return obj.suspicions is not None
