@@ -1,4 +1,5 @@
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from requests import head
 from simple_history.models import HistoricalRecords
@@ -78,6 +79,8 @@ class Reimbursement(models.Model):
     receipt_fetched = models.BooleanField('Tentamos acessar a URL do documento fiscal?', default=False, db_index=True)
     receipt_url = models.CharField('URL do Documento Fiscal', max_length=140, blank=True, null=True)
     receipt_text = models.TextField('Texto do Recibo', blank=True, null=True)
+
+    search_vector = SearchVectorField(null=True)
 
     history = HistoricalRecords()
 
