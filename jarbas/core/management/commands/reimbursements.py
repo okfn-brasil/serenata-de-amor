@@ -31,7 +31,7 @@ class Command(LoadCommand):
     @property
     def reimbursements(self):
         """Returns a Generator with a dict object for each row."""
-        with lzma.open(self.path, mode='rt') as file_handler:
+        with lzma.open(self.path, mode='rt', encoding='utf-8') as file_handler:
             for row in csv.DictReader(file_handler):
                 yield self.serialize(row)
 
