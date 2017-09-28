@@ -18,8 +18,8 @@ def get_reimbursement(**kwargs):
     kwargs['reimbursement_values'] = '200.00,500.00'
     kwargs['reimbursement_numbers'] = '2,3'
     if quantity == 1:
-        return mixer.blend(Reimbursement, **kwargs)
-    return mixer.cycle(quantity).blend(Reimbursement, **kwargs)
+        return mixer.blend(Reimbursement, search_vector=None, **kwargs)
+    return mixer.cycle(quantity).blend(Reimbursement, search_vector=None, **kwargs)
 
 
 class TestListApi(TestCase):
