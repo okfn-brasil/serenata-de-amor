@@ -86,6 +86,19 @@ class SuspiciousListFilter(JarbasListFilter):
         return queryset.suspicions() if self.value() == 'yes' else queryset
 
 
+class HaveReceipt(JarbasListFilter):
+
+    title = 'existência de recibo'
+    parameter_name = 'have_receipt'
+    options = (
+        ('yes', 'Sim'),
+        ('no', 'Não'),
+    )
+
+    def queryset(self, request, queryset):
+        return queryset.receipt() if self.value() == 'yes' else queryset
+
+
 class MonthListFilter(JarbasListFilter):
 
     title = 'mês'
@@ -259,6 +272,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     list_filter = (
         SuspiciousListFilter,
+        HaveReceipt,
         # 'available_in_latest_dataset',
         'state',
         'year',
@@ -311,6 +325,12 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     suspicious.short_description = 'suspeito'
     suspicious.boolean = True
 
+    def receipt(self, obj):
+        return obj.receipt_fetched is not False
+
+    receipt.short_description = 'recibo'
+    receipt.boolean = True
+
     def value(self, obj):
         return 'R$ {:.2f}'.format(obj.total_net_value).replace('.', ',')
 
@@ -353,7 +373,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     def get_object(self, request, object_id, from_field=None):
         obj = super().get_object(request, object_id, from_field)
-        if obj and not obj.receipt_fetched:
+        if obj and not obj. _fetched:
             obj.get_receipt_url()
         return obj
 

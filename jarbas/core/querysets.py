@@ -29,6 +29,9 @@ class ReimbursementQuerySet(models.QuerySet):
         self = self.values(field, order_by_field).order_by(order_by_field)
         return self.distinct()
 
+    def receipt(self):
+        return self.exclude(receipt_fetched=False)
+
     def suspicions(self):
         return self.exclude(suspicions=None)
 
