@@ -103,6 +103,7 @@ type Msg
     | SameDayMsg Int RelatedTable.Msg
     | SameSubquotaMsg Int RelatedTable.Msg
     | MapMsg
+    | TweetMsg
     | Mdl (Material.Msg Msg)
 
 
@@ -246,6 +247,9 @@ update msg model =
             subModuleUpdate index msg model
 
         MapMsg ->
+            ( model, Cmd.none )
+
+        TweetMsg ->
             ( model, Cmd.none )
 
         Mdl mdlMsg ->

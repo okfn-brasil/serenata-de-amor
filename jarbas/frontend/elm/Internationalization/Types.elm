@@ -23,6 +23,7 @@ type TranslationId
     | FieldsetTrip
     | FieldsetReimbursement
     | FieldsetCongressperson
+    | FieldsetCongresspersonProfile
     | FieldsetCompanyDetails
     | FieldsetCurrencyDetails
     | FieldsetCurrencyDetailsLink
@@ -71,6 +72,7 @@ type TranslationId
     | ReceiptFetch
     | ReceiptAvailable
     | ReceiptNotAvailable
+    | RosiesTweet
     | Map
     | CompanyCNPJ
     | CompanyTradeName

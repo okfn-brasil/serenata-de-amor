@@ -8,6 +8,7 @@ import Internationalization.Reimbursement.Field as ReimbursementField
 import Internationalization.Reimbursement.Fieldset as ReimbursementFieldset
 import Internationalization.Reimbursement.Receipt as ReimbursementReceipt
 import Internationalization.Reimbursement.Search as ReimbursementSearch
+import Internationalization.Reimbursement.Tweet as ReimbursementTweet
 import Internationalization.Suspicion as Suspicion
 import Internationalization.Types exposing (Language(..), TranslationId(..), TranslationSet)
 
@@ -49,6 +50,9 @@ translate lang trans =
 
                 FieldsetCompanyDetails ->
                     ReimbursementFieldset.companyDetails
+
+                FieldsetCongresspersonProfile ->
+                    ReimbursementFieldset.congresspersonProfile
 
                 FieldsetCurrencyDetails ->
                     ReimbursementFieldset.currencyDetails
@@ -295,6 +299,9 @@ translate lang trans =
 
                 Loading ->
                     ReimbursementSearch.loading
+
+                RosiesTweet ->
+                    ReimbursementTweet.rosiesTweet
 
                 PaginationPage ->
                     ReimbursementCommon.paginationPage

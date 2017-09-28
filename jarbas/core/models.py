@@ -1,4 +1,6 @@
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from requests import head
 from simple_history.models import HistoricalRecords
@@ -77,6 +79,9 @@ class Reimbursement(models.Model):
 
     receipt_fetched = models.BooleanField('Tentamos acessar a URL do documento fiscal?', default=False, db_index=True)
     receipt_url = models.CharField('URL do Documento Fiscal', max_length=140, blank=True, null=True)
+    receipt_text = models.TextField('Texto do Recibo', blank=True, null=True)
+
+    search_vector = SearchVectorField(null=True)
 
     history = HistoricalRecords()
 
@@ -86,8 +91,8 @@ class Reimbursement(models.Model):
         ordering = ('-year', '-issue_date')
         verbose_name = 'reembolso'
         verbose_name_plural = 'reembolsos'
-        index_together = [["year", "issue_date","id"]]
-
+        index_together = [['year', 'issue_date', 'id']]
+        indexes = [GinIndex(fields=['search_vector'])]
 
     def get_receipt_url(self, force=False, bulk=False):
         if self.receipt_url:
@@ -175,3 +180,22 @@ class Company(models.Model):
     longitude = models.DecimalField('Longitude', decimal_places=7, max_digits=10, blank=True, null=True)
 
     last_updated = models.DateTimeField('Last updated', blank=True, null=True)
+
+
+class Tweet(models.Model):
+
+    reimbursement = models.OneToOneField(Reimbursement)
+    status = models.DecimalField('Tweet ID', db_index=True, max_digits=25, decimal_places=0)
+
+    def get_url(self):
+        base_url = 'https://twitter.com/RosieDaSerenata/status/'
+        return base_url + str(self.status)
+
+    def __str__(self):
+        return self.get_url()
+
+    def __repr__(self):
+        return '<Tweet: status={}>'.format(self.status)
+
+    class Meta:
+        ordering = ('-status',)

@@ -30,6 +30,8 @@ import Reimbursement.SameDay.View as SameDay
 import Reimbursement.SameSubquota.View as SameSubquota
 import Reimbursement.Search.Update as SearchUpdate
 import Reimbursement.Search.View as SearchView
+import Reimbursement.Tweet.Model as TweetModel
+import Reimbursement.Tweet.View as TweetView
 import Reimbursement.Update exposing (Msg(..), onlyDigits, totalPages)
 import String
 
@@ -260,9 +262,8 @@ viewReimbursementBlockLine lang field =
             , Options.styled span (Typography.body1 :: styles) [ text <| Fields.getValue field ]
             ]
 
-
-viewPs : Language -> Reimbursement -> Html Msg
-viewPs lang reimbursement =
+viewSummaryPs : Language -> Reimbursement -> Html Msg
+viewSummaryPs lang reimbursement =
     let
         currencyUrl =
             String.concat
@@ -294,6 +295,25 @@ viewPs lang reimbursement =
             ]
 
 
+viewCongresspersonPs : Language -> Reimbursement -> Html Msg
+viewCongresspersonPs lang reimbursement =
+    let
+
+        congresspersonUrl =
+            url "http://www.camara.leg.br/Internet/Deputado/dep_Detalhe.asp"
+                [ ( "id", viewMaybeIntButZero reimbursement.congresspersonId ) ]
+
+        congresspersonLink =
+            a [ href congresspersonUrl ]
+              [ text (translate lang FieldsetCongresspersonProfile) ]
+    in
+        div []
+            [ Options.styled p
+                [ Typography.caption, Options.css "margin-top" "1rem" ]
+                [ congresspersonLink ]
+            ]
+
+
 viewReimbursementBlock : Language -> Reimbursement -> ( String, String, List Field ) -> Html Msg
 viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
     let
@@ -302,7 +322,9 @@ viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
 
         ps =
             if title == (translate lang FieldsetSummary) then
-                viewPs lang reimbursement
+                viewSummaryPs lang reimbursement
+            else if title == (translate lang FieldsetCongressperson) then
+                viewCongresspersonPs lang reimbursement
             else
                 text ""
     in
@@ -427,14 +449,20 @@ viewReimbursement lang index reimbursement =
             ]
 
         receipt =
-            ReceiptView.view reimbursement.receipt
+            reimbursement.receipt
+                |> ReceiptView.view
                 |> Html.map (ReceiptMsg index)
 
-        mapModel =
-            MapModel.modelFrom lang reimbursement.supplierInfo
+        tweet =
+            reimbursement.tweet
+                |> TweetModel.modelFrom lang
+                |> TweetView.view
+                |> Html.map (\_ -> TweetMsg)
 
         mapButton =
-            MapView.view mapModel
+            reimbursement.supplierInfo
+                |> MapModel.modelFrom lang
+                |> MapView.view
                 |> Html.map (\_ -> MapMsg)
 
         deletedTitle : Html Msg
@@ -500,7 +528,7 @@ viewReimbursement lang index reimbursement =
         , cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
             [ Options.styled div
                 [ Options.css "margin-top" "3rem", Typography.right ]
-                [ receipt, mapButton ]
+                [ tweet, receipt, mapButton ]
             ]
         , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
             [ Options.styled div [] blocks
