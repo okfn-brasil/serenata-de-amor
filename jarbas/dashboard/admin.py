@@ -86,17 +86,17 @@ class SuspiciousListFilter(JarbasListFilter):
         return queryset.suspicions() if self.value() == 'yes' else queryset
 
 
-class HaveReceiptFilter(JarbasListFilter):
+class HasReceiptFilter(JarbasListFilter):
 
-    title = 'existência de recibo'
-    parameter_name = 'have_receipt'
+    title = 'nota fiscal digitalizada'
+    parameter_name = 'has_receipt'
     options = (
         ('yes', 'Sim'),
         ('no', 'Não'),
     )
 
     def queryset(self, request, queryset):
-        return queryset.receipt() if self.value() == 'yes' else queryset
+        return queryset.has_receipt_url() if self.value() == 'yes' else queryset
 
 
 class MonthListFilter(JarbasListFilter):
@@ -272,7 +272,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     list_filter = (
         SuspiciousListFilter,
-        HaveReceiptFilter,
+        HasReceiptFilter,
         # 'available_in_latest_dataset',
         'state',
         'year',
@@ -325,11 +325,11 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     suspicious.short_description = 'suspeito'
     suspicious.boolean = True
 
-    def receipt(self, obj):
-        return obj.receipt_fetched is not False
+    def has_receipt_url(self, obj):
+        return obj.receipt_url is not None
 
-    receipt.short_description = 'recibo'
-    receipt.boolean = True
+    has_receipt_url.short_description = 'recibo'
+    has_receipt_url.boolean = True
 
     def value(self, obj):
         return 'R$ {:.2f}'.format(obj.total_net_value).replace('.', ',')
