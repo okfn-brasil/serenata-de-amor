@@ -4,6 +4,8 @@ import re
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.admin import SimpleListFilter
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
 from django.forms.widgets import Widget
 from simple_history.admin import SimpleHistoryAdmin
 
@@ -250,6 +252,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'short_document_id',
         'jarbas',
         'rosies_tweet',
+        'receipt_link',
         'congressperson_name',
         'year',
         'subquota_translated',
@@ -259,16 +262,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         # 'still_available',
     )
 
-    search_fields = (
-        'applicant_id',
-        'cnpj_cpf',
-        'congressperson_name',
-        'document_id',
-        'party',
-        'state',
-        'supplier',
-        'subquota_description',
-    )
+    search_fields = ('search_vector',)
 
     list_filter = (
         SuspiciousListFilter,
@@ -318,6 +312,14 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     rosies_tweet.short_description = ''
     rosies_tweet.allow_tags = True
+
+    def receipt_link(self, obj):
+        if not obj.receipt_url:
+            return ''
+        return '<a target="_blank" href="{}">📃</a>'.format(obj.receipt_url)
+
+    receipt_link.short_description = ''
+    receipt_link.allow_tags = True
 
     def suspicious(self, obj):
         return obj.suspicions is not None
@@ -386,6 +388,19 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
             )
             kwargs['widget'] = widgets.get(db_field.name)
         return super().formfield_for_dbfield(db_field, **kwargs)
+
+    def get_search_results(self, request, queryset, search_term):
+        if not search_term:
+            return super(ReimbursementModelAdmin, self) \
+                .get_search_results(request, queryset, search_term)
+
+        query = SearchQuery(search_term, config='portuguese')
+        rank = SearchRank(F('search_vector'), query)
+        queryset = Reimbursement.objects.annotate(rank=rank) \
+            .filter(search_vector=query) \
+            .order_by('-rank')
+
+        return queryset, False
 
 
 dashboard.register(Reimbursement, ReimbursementModelAdmin)

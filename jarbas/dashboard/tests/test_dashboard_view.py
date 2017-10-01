@@ -10,7 +10,7 @@ from jarbas.core.models import Reimbursement
 class TestDashboard(TestCase):
 
     def setUp(self):
-        obj = mixer.blend(Reimbursement)
+        obj = mixer.blend(Reimbursement, search_vector=None)
         self.urls = (
             resolve_url('dashboard:index'),
             resolve_url('dashboard:core_reimbursement_changelist'),
