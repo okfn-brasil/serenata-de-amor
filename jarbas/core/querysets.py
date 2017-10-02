@@ -29,8 +29,8 @@ class ReimbursementQuerySet(models.QuerySet):
         self = self.values(field, order_by_field).order_by(order_by_field)
         return self.distinct()
 
-    def suspicions(self):
-        return self.exclude(suspicions=None)
+    def suspicions(self, boolean):
+        return self.exclude(suspicions=None) if boolean else self.filter(suspicions=None)
 
     def in_latest_dataset(self, boolean):
         return self.filter(available_in_latest_dataset=boolean)
