@@ -29,8 +29,8 @@ class ReimbursementQuerySet(models.QuerySet):
         self = self.values(field, order_by_field).order_by(order_by_field)
         return self.distinct()
 
-    def has_receipt_url(self):
-        return self.exclude(receipt_url=None)
+    def has_receipt_url(self, boolean):
+        return self.exclude(receipt_url=None) if boolean else self.filter(receipt_url=None)
 
     def suspicions(self):
         return self.exclude(suspicions=None)

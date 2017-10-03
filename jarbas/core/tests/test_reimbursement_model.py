@@ -99,7 +99,18 @@ class TestManager(TestReimbursement):
         Reimbursement.objects.create(**data)
         Reimbursement.objects.create(**self.data)
 
-        self.assertEqual(1, Reimbursement.objects.has_receipt_url().count())
+        self.assertEqual(1, Reimbursement.objects.has_receipt_url(True).count())
+
+    def test_has_no_receipt_url(self):
+        # let's create a reimbursement with some receipt_url (self.data has none)
+        data = self.data.copy()
+        data['document_id'] = 42 * 2
+        data['receipt_url'] = None
+
+        # now let's save two reimbursements: one with and another one without receipt_url
+        Reimbursement.objects.create(**data)
+
+        self.assertEqual(1, Reimbursement.objects.has_receipt_url(False).count())
 
     def test_in_latest_dataset(self):
         data = self.data.copy()

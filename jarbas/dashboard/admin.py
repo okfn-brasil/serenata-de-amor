@@ -98,7 +98,7 @@ class HasReceiptFilter(JarbasListFilter):
     )
 
     def queryset(self, request, queryset):
-        return queryset.has_receipt_url() if self.value() == 'yes' else queryset
+        return queryset.has_receipt_url(self.value() == 'yes') if self.value() else queryset
 
 
 class MonthListFilter(JarbasListFilter):
