@@ -18,15 +18,15 @@ class TestMonthlySubquotaLimitClassifier(TestCase):
 
     def test_predict_false_when_not_in_date_range(self):
         assert_array_equal(np.repeat(False, 10),
-                           self.prediction[[0, 1, 9, 10, 18, 19, 27, 28, 36, 37]])
+                           self.prediction[[0, 1, 18, 19, 27, 28, 36, 37, 45, 46]])
 
     def test_predict_false_when_under_the_limit(self):
-        assert_array_equal(np.repeat(False, 10),
-                           self.prediction[[2, 3, 11, 12, 20, 21, 29, 30, 38, 39]])
+        assert_array_equal(np.repeat(False, 12),
+                           self.prediction[[2, 3, 11, 12, 20, 21, 29, 30, 38, 39, 47, 48]])
 
     def test_predict_false_when_exactly_on_the_limit(self):
-        assert_array_equal(np.repeat(False, 10),
-                           self.prediction[[4, 5, 13, 14, 22, 23, 31, 32, 40, 41]])
+        assert_array_equal(np.repeat(False, 12),
+                           self.prediction[[4, 5, 13, 14, 22, 23, 31, 32, 40, 41, 49, 50]])
 
     def test_predict_true_when_over_the_limit(self):
         assert_array_equal(np.r_[[False, True, True]],
@@ -39,6 +39,8 @@ class TestMonthlySubquotaLimitClassifier(TestCase):
                            self.prediction[[33, 34, 35]])
         assert_array_equal(np.r_[[False, True, True]],
                            self.prediction[[42, 43, 44]])
+        assert_array_equal(np.r_[[False, True, True]],
+                           self.prediction[[51, 52, 53]])
 
     def test_predict_proba(self):
         self.assertEqual(self.subject.predict_proba(), 1)
