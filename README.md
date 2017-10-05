@@ -28,3 +28,9 @@ We [were crowdfunded](https://catarse.me/serenata) to operate for the first two 
 ## License
 
 The project Serenata de Amor Operation is available under the [MIT license](LICENSE).
+
+
+
+## Donate
+
+[![Donate at https://apoia.se/serenata](https://img.shields.io/badge/donate-apoia.se-red.svg)](https://apoia.se/serenata)
