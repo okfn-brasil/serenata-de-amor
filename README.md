@@ -1,3 +1,5 @@
+[![donate](https://img.shields.io/badge/donate-apoia.se-EB4A3B.svg)](https://apoia.se/serenata)
+
 ![Operação Serenata de Amor](logo.png)
 
 The Serenata de Amor Operation arose from a combination of needs, from many people, of many nationalities:
@@ -22,8 +24,6 @@ We [were crowdfunded](https://catarse.me/serenata) to operate for the first two 
 
 * Participate in our [recurring crowdfunding campaign on Apoia.se](http://apoia.se/serenata)
 * Donate via Bitcoin:[`1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b`](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20Serenata%20de%20Amor%20Operation)
-
-
 
 ## License
 
