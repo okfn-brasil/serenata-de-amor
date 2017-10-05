@@ -1,3 +1,5 @@
+[![donate](https://img.shields.io/badge/donate-apoia.se-EB4A3B.svg)](https://apoia.se/serenata)
+
 ![Operação Serenata de Amor](logo.png)
 
 The Serenata de Amor Operation arose from a combination of needs, from many people, of many nationalities:
