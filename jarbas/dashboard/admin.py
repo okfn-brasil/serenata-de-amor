@@ -85,7 +85,11 @@ class SuspiciousListFilter(JarbasListFilter):
     )
 
     def queryset(self, request, queryset):
-        return queryset.suspicions() if self.value() == 'yes' else queryset
+        filter_option = {
+            'yes': queryset.suspicions(True),
+            'no': queryset.suspicions(False)
+        }
+        return filter_option.get(self.value(), queryset)
 
 
 class MonthListFilter(JarbasListFilter):
