@@ -27,3 +27,4 @@ h5py>=2.7.0
 Pillow>=4.2.1
 opencv-python
 opencv-contrib-python
+dhash
