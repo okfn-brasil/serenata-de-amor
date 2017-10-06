@@ -28,3 +28,4 @@ Pillow>=4.2.1
 opencv-python
 opencv-contrib-python
 dhash
+git+https://github.com/matejak/imreg_dft.git
