@@ -374,17 +374,17 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         return super().formfield_for_dbfield(db_field, **kwargs)
 
     def get_search_results(self, request, queryset, search_term):
-        if not search_term:
-            return super(ReimbursementModelAdmin, self) \
-                .get_search_results(request, queryset, search_term)
+        queryset, distinct = super(ReimbursementModelAdmin, self) \
+            .get_search_results(request, queryset, None)
 
-        query = SearchQuery(search_term, config='portuguese')
-        rank = SearchRank(F('search_vector'), query)
-        queryset = Reimbursement.objects.annotate(rank=rank) \
-            .filter(search_vector=query) \
-            .order_by('-rank')
+        if search_term:
+            query = SearchQuery(search_term, config='portuguese')
+            rank = SearchRank(F('search_vector'), query)
+            queryset = queryset.annotate(rank=rank) \
+                .filter(search_vector=query) \
+                .order_by('-rank')
 
-        return queryset, False
+        return queryset, distinct
 
 
 dashboard.register(Reimbursement, ReimbursementModelAdmin)
