@@ -85,9 +85,30 @@ class TestManager(TestReimbursement):
         data['document_id'] = 42 * 2
         del data['suspicions']
         del data['probability']
-        Reimbursement.objects.create(**data)
         Reimbursement.objects.create(**self.data)
-        self.assertEqual(1, Reimbursement.objects.suspicions().count())
+        Reimbursement.objects.create(**data)
+        self.assertEqual(1, Reimbursement.objects.suspicions(True).count())
+
+    def test_not_suspicions(self):
+        data = self.data.copy()
+        data['document_id'] = 42 * 2
+        del data['suspicions']
+        del data['probability']
+        Reimbursement.objects.create(**self.data)
+        Reimbursement.objects.create(**data)
+        self.assertEqual(1, Reimbursement.objects.suspicions(False).count())
+
+    def test_suspicions_filter(self):
+        data = self.data.copy()
+        data['document_id'] = 42 * 2
+        del data['suspicions']
+        del data['probability']
+        Reimbursement.objects.create(**self.data)
+        Reimbursement.objects.create(**data)
+        suspects = Reimbursement.objects.suspicions(True)
+        not_suspects = Reimbursement.objects.suspicions(False)
+        intersection = suspects & not_suspects
+        self.assertEqual(0, intersection.count())
 
     def test_has_receipt_url(self):
         # let's create a reimbursement with some receipt_url (self.data has none)

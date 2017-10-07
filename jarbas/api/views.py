@@ -27,8 +27,9 @@ class ReimbursementListView(ListAPIView):
         filters = {k: v for k, v in zip(params, values) if v}
 
         # filter suspicions
-        if self._bool_param('suspicions'):
-            self.queryset = self.queryset.suspicions()
+        suspicions = self._bool_param('suspicions')
+        if suspicions is not None:
+            self.queryset = self.queryset.suspicions(suspicions)
 
         # filter receipt_url
         receipt_url = self._bool_param('receipt_url')
