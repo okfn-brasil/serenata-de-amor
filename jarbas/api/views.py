@@ -30,10 +30,10 @@ class ReimbursementListView(ListAPIView):
         if self._bool_param('suspicions'):
             self.queryset = self.queryset.suspicions()
 
-        # filter has_receipt_url
-        has_receipt_url = self._bool_param('has_receipt_url')
-        if has_receipt_url is not None:
-            self.queryset = self.queryset.has_receipt_url(has_receipt_url)
+        # filter receipt_url
+        receipt_url = self._bool_param('receipt_url')
+        if receipt_url is not None:
+            self.queryset = self.queryset.has_receipt_url(receipt_url)
 
         # filter reimbursement in latest dataset
         in_latest = self._bool_param('in_latest_dataset')
