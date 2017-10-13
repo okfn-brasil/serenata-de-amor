@@ -18,6 +18,8 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+RUN sudo -u jovyan mkdir /home/jovyan/.jupyter
+
 USER jovyan
 
 COPY ./research/requirements.txt ./requirements.txt
