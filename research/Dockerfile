@@ -1,4 +1,4 @@
-FROM jupyter/datascience-notebook:bb222f49222e
+FROM jupyter/datascience-notebook:8f56e3c47fec
 MAINTAINER Serenata de Amor "datasciencebr@gmail.com"
 
 USER root
