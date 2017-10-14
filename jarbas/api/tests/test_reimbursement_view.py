@@ -9,7 +9,7 @@ from mixer.backend.django import mixer
 
 from jarbas.api.tests import get_sample_reimbursement_api_response
 from jarbas.chamber_of_deputies.models import Reimbursement, Tweet
-from jarbas.core.tests import random_tweet_status
+from jarbas.chamber_of_deputies.tests import random_tweet_status
 
 
 def get_reimbursement(**kwargs):

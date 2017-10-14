@@ -5,7 +5,7 @@ from django.test import TestCase
 from requests.exceptions import ConnectionError
 
 from jarbas.chamber_of_deputies.models import Reimbursement
-from jarbas.core.tests import sample_reimbursement_data
+from jarbas.chamber_of_deputies.tests import sample_reimbursement_data
 
 
 class TestReimbursement(TestCase):

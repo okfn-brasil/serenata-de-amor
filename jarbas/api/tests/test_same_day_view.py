@@ -5,7 +5,8 @@ from django.test import TestCase
 
 from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.core.models import Company
-from jarbas.core.tests import sample_company_data, sample_reimbursement_data
+from jarbas.chamber_of_deputies.tests import sample_reimbursement_data
+from jarbas.core.tests import sample_company_data
 from jarbas.api.serializers import format_cnpj
 
 
