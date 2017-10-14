@@ -5,7 +5,7 @@ from django.db import models
 from requests import head
 
 from simple_history.models import HistoricalRecords
-from jarbas.core.querysets import ReimbursementQuerySet
+from jarbas.chamber_of_deputies.querysets import ReimbursementQuerySet
 
 
 class Receipt:
