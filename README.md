@@ -286,7 +286,6 @@ Not sure? Test it!
 ```
 $ python manage.py check
 $ python manage.py test
-$ npm test
 ```
 
 #### Ready!
