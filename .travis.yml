@@ -5,10 +5,6 @@ language: python
 python:
   - 3.5
 
-cache:
-  directories:
-    - sysconfcpus
-
 addons:
     postgresql: "9.6"
 
@@ -19,31 +15,17 @@ env:
   - DATABASE_URL="postgres://postgres@localhost/jarbas"
 
 before_install:
-  - |
-    if [ ! -d sysconfcpus/bin ];
-    then
-      git clone https://github.com/obmarg/libsysconfcpus.git;
-      cd libsysconfcpus;
-      ./configure --prefix=$TRAVIS_BUILD_DIR/sysconfcpus;
-      make && make install;
-      cd ..;
-    fi
-  - nvm install 6
-  - nvm use 6
   - python -m pip install -U pip
 
 install:
   - psql -U postgres -c 'create database "jarbas";'
-  - npm install
   - python -m pip install -r requirements-dev.txt coveralls
 
 before_script:
-  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 npm run assets
   - python manage.py migrate
   - python manage.py collectstatic --no-input
 
 script:
-  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 npm test
   - coverage run manage.py test -v 3
 
 after_success:
