@@ -71,7 +71,7 @@ class TestHandle(TestCommand):
     @patch.object(Command, 'document_ids', new_callable=PropertyMock)
     @patch.object(Command, 'save_tweet')
     def test_existing_tweet(self, save_tweet, document_ids):
-        reimbursement = mixer.blend(Reimbursement, document_id=123456)
+        reimbursement = mixer.blend(Reimbursement, search_vector=None, document_id=123456)
         mixer.blend(Tweet, status=42, reimbursement=reimbursement)
 
         document_ids.return_value = ((42, 123456),)
@@ -82,7 +82,7 @@ class TestHandle(TestCommand):
     @patch.object(Command, 'document_ids', new_callable=PropertyMock)
     @patch.object(Command, 'save_tweet')
     def test_new_tweet(self, save_tweet, document_ids):
-        obj = mixer.blend(Reimbursement, document_id=123456)
+        obj = mixer.blend(Reimbursement, search_vector=None, document_id=123456)
         document_ids.return_value = ((42, 123456),)
         with self.settings(**self.credentials):
             Command().handle()
@@ -109,7 +109,7 @@ class TestMethods(TestCommand):
 
     def test_save_tweet(self):
         status = 9999999999999999999999999
-        reimbursement = mixer.blend(Reimbursement)
+        reimbursement = mixer.blend(Reimbursement, search_vector=None)
         command = Command()
         command.log = MagicMock()
         command.save_tweet(reimbursement, status)
@@ -119,7 +119,7 @@ class TestMethods(TestCommand):
 
     def test_save_duplicated_tweet(self):
         status = 9999999999999999999999999
-        reimbursement = mixer.blend(Reimbursement)
+        reimbursement = mixer.blend(Reimbursement, search_vector=None)
         tweet = mixer.blend(Tweet, status=status, reimbursement=reimbursement)
         command = Command()
         command.log = MagicMock()
@@ -150,7 +150,11 @@ class TestProperties(TestCommand):
 
     @patch('jarbas.core.management.commands.tweets.twitter.Api')
     def test_tweets_with_database(self, api):
-        tweet = mixer.blend(Tweet, status=random_tweet_status())
+        tweet = mixer.blend(
+            Tweet,
+            reimbursement__search_vector=None,
+            status=random_tweet_status()
+        )
         api.return_value.GetUserTimeline.return_value = range(3)
         with self.settings(**self.credentials):
             command = Command()

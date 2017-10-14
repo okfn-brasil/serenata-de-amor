@@ -15,9 +15,16 @@ echo "==> Activating virtualenv…"
 . /opt/jarbas.venv/bin/activate
 
 echo "==> Installing NodeJS packages…"
+if [ -d node_modules/ ]; then
+    rm -rf node_modules/
+fi
+if [ -d elm-stuff/ ]; then
+    rm -rf elm-stuff/
+fi
 npm install
 
 echo "==> Installing Python packages…"
+pip install -U pip
 pip install -r requirements.txt
 
 echo "==> Running migrations…"

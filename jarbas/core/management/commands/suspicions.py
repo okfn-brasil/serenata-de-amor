@@ -19,11 +19,16 @@ class Command(LoadCommand):
             '--batch-size', '-b', dest='batch_size', type=int, default=4096,
             help='Batch size for bulk update (default: 4096)'
         )
+        parser.add_argument(
+            '--workers', '-w', dest='workers', type=int, default=8,
+            help='Number of workers for the thread pool executor (default: 8)'
+        )
 
     def handle(self, *args, **options):
         self.queue = []
         self.path = options['dataset']
         self.batch_size = options['batch_size']
+        self.workers = options['workers']
         if not os.path.exists(self.path):
             raise FileNotFoundError(os.path.abspath(self.path))
 
@@ -72,7 +77,7 @@ class Command(LoadCommand):
 
     def main(self):
         for batch in self.suspicions():
-            with ThreadPoolExecutor(max_workers=32) as executor:
+            with ThreadPoolExecutor(max_workers=self.workers) as executor:
                 executor.map(self.schedule_update, batch)
             self.update()
 
