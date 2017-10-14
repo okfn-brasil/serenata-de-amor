@@ -10,10 +10,10 @@ from django.views.decorators.csrf import csrf_protect
 class DummyUser(AnonymousUser):
 
     def has_module_perms(self, app_label):
-        return app_label == 'core'
+        return app_label == 'chamber_of_deputies'
 
     def has_perm(self, permission, obj=None):
-        return permission == 'core.change_reimbursement'
+        return permission == 'chamber_of_deputies.change_reimbursement'
 
 
 class DashboardSite(AdminSite):
