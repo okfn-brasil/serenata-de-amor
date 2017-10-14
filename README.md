@@ -134,7 +134,7 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 
 ### Settings
 
-If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
+Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
 
 ##### Django settings
 
@@ -301,44 +301,3 @@ If you would like to access the Django Admin for an alternative view of the reim
 ```console
 $ python manage.py createsuperuser
 ```
-
-
-### Settings
-
-If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
-
-##### Django settings
-
-* `DEBUG` (_bool_) enable or disable [Django debug mode](https://docs.djangoproject.com/en/1.10/ref/settings/#debug)
-* `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
-* `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
-* `USE_X_FORWARDED_HOST` (_bool_) [Whether to use the `X-Forwarded-Host` header](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-USE_X_FORWARDED_HOST)
-* `CACHE_BACKEND` (_str_) [Cache backend](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-CACHES-BACKEND) (e.g. `django.core.cache.backends.memcached.MemcachedCache`)
-* `CACHE_LOCATION` (_str_) [Cache location](https://docs.djangoproject.com/en/1.10/ref/settings/#location) (e.g. `localhost:11211`)
-* `SECURE_PROXY_SSL_HEADER` _(str)_ [Django secure proxy SSL header](https://docs.djangoproject.com/en/1.10/ref/settings/#secure-proxy-ssl-header) (e.g. `HTTP_X_FORWARDED_PROTO,https` transforms in tuple `('HTTP_X_FORWARDED_PROTO', 'https')`)
-
-##### Database
-
-* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
-
-##### Amazon S3 settings
-
-* `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
-* `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
-* `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
-
-##### Google settings
-
-* `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
-* `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
-
-##### Twitter settings
-
-* `TWITTER_CONSUMER_KEY` (_str_) Twitter API key
-* `TWITTER_CONSUMER_SECRET` (_str_) Twitter API secret
-* `TWITTER_ACCESS_TOKEN` (_str_) Twitter access token
-* `TWITTER_ACCESS_SECRET` (_str_) Twitter access token secret
-
-To get this credentials follow [`python-twitter`
-instructions](https://python-twitter.readthedocs.io/en/latest/getting_started.html#getting-your-application-tokens).
->>>>>>> master
