@@ -4,17 +4,17 @@ from django.test import TestCase
 from django.db.models import QuerySet
 from requests.exceptions import ConnectionError
 
-from jarbas.core.management.commands.receipts import Command
+from jarbas.chamber_of_deputies.management.commands.receipts import Command
 
 
 class TestCommandHandler(TestCase):
 
-    @patch('jarbas.core.management.commands.receipts.Command.get_queryset')
-    @patch('jarbas.core.management.commands.receipts.Command.fetch')
-    @patch('jarbas.core.management.commands.receipts.Command.print_count')
-    @patch('jarbas.core.management.commands.receipts.Command.print_pause')
-    @patch('jarbas.core.management.commands.receipts.sleep')
-    @patch('jarbas.core.management.commands.receipts.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.get_queryset')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.fetch')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.print_count')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.print_pause')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.sleep')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.print')
     def test_handler_with_queryset(self, print_, sleep, print_pause, print_count, fetch, get_queryset):
         get_queryset.side_effect = (True, True, True, False)
         command = Command()
@@ -28,9 +28,9 @@ class TestCommandHandler(TestCase):
         self.assertEqual(42, command.pause)
         self.assertEqual(0, command.count)
 
-    @patch('jarbas.core.management.commands.receipts.Command.get_queryset')
-    @patch('jarbas.core.management.commands.receipts.Command.fetch')
-    @patch('jarbas.core.management.commands.receipts.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.get_queryset')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.fetch')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.print')
     def test_handler_without_queryset(self, print_, fetch, get_queryset):
         get_queryset.return_value = False
         command = Command()
@@ -54,9 +54,9 @@ class TestCommandHandler(TestCase):
 
 class TestCommandMethods(TestCase):
 
-    @patch('jarbas.core.management.commands.receipts.Command.update')
-    @patch('jarbas.core.management.commands.receipts.Command.bulk_update')
-    @patch('jarbas.core.management.commands.receipts.Command.print_count')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.update')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.bulk_update')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.print_count')
     def test_fetch(self, print_count, bulk_update, update):
         command = Command()
         command.count = 0
@@ -94,8 +94,8 @@ class TestCommandMethods(TestCase):
         reimbursement.get_receipt_url.assert_called_once_with(bulk=True)
         self.assertEqual(0, len(command.queue))
 
-    @patch('jarbas.core.management.commands.receipts.bulk_update')
-    @patch('jarbas.core.management.commands.receipts.Command.print_saving')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.bulk_update')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.print_saving')
     def test_bulk_update(self, print_saving, bulk_update):
         command = Command()
         command.queue = [1, 2, 3]
@@ -113,7 +113,7 @@ class TestCommandPrintMethods(TestCase):
         command.count = 42
         self.assertEqual('42 receipt URLs fetched', command.count_msg())
 
-    @patch('jarbas.core.management.commands.receipts.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.print')
     def test_print_msg(self, print_):
         Command.print_msg('42')
         print_.assert_has_calls((
@@ -121,13 +121,13 @@ class TestCommandPrintMethods(TestCase):
             call('42')
         ))
 
-    @patch('jarbas.core.management.commands.receipts.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.print')
     def test_print_permanent_msg(self, print_):
         Command.print_msg('42', permanent=True)
         print_.assert_called_once_with('42')
 
-    @patch('jarbas.core.management.commands.receipts.Command.count_msg')
-    @patch('jarbas.core.management.commands.receipts.Command.print_msg')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.count_msg')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.print_msg')
     def test_print_count(self, print_msg, count_msg):
         count_msg.return_value = '42'
         command = Command()
@@ -135,16 +135,16 @@ class TestCommandPrintMethods(TestCase):
         command.print_count(permanent=True)
         print_msg.assert_has_calls((call('42'), call('42', permanent=True)))
 
-    @patch('jarbas.core.management.commands.receipts.Command.count_msg')
-    @patch('jarbas.core.management.commands.receipts.Command.print_msg')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.count_msg')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.print_msg')
     def test_print_pause(self, print_msg, count_msg):
         count_msg.return_value = '42'
         command = Command()
         command.print_pause()
         print_msg.assert_called_once_with('42 (Taking a break to avoid being blocked…)')
 
-    @patch('jarbas.core.management.commands.receipts.Command.count_msg')
-    @patch('jarbas.core.management.commands.receipts.Command.print_msg')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.count_msg')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts.Command.print_msg')
     def test_print_saving(self, print_msg, count_msg):
         count_msg.return_value = '42'
         command = Command()

@@ -3,7 +3,7 @@ from unittest.mock import Mock, call, patch
 
 from django.test import TestCase
 
-from jarbas.core.management.commands.receipts_text import Command
+from jarbas.chamber_of_deputies.management.commands.receipts_text import Command
 from jarbas.chamber_of_deputies.models import Reimbursement
 
 
@@ -41,9 +41,9 @@ class TestSerializer(TestCommand):
 
 class TestCustomMethods(TestCommand):
 
-    @patch('jarbas.core.management.commands.receipts_text.Command.receipts')
-    @patch('jarbas.core.management.commands.receipts_text.Command.schedule_update')
-    @patch('jarbas.core.management.commands.receipts_text.Command.update')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.receipts')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.schedule_update')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.update')
     def test_main(self, update, schedule_update, receipts):
         receipts.return_value = (range(21), range(21, 43))
         self.command.main()
@@ -72,8 +72,8 @@ class TestCustomMethods(TestCommand):
         get.assert_called_once_with(document_id=42)
         self.assertEqual([], self.command.queue)
 
-    @patch('jarbas.core.management.commands.receipts_text.bulk_update')
-    @patch('jarbas.core.management.commands.receipts_text.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.bulk_update')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.print')
     def test_update(self, print_, bulk_update):
         self.command.count = 40
         self.command.queue = list(range(2))
@@ -86,10 +86,10 @@ class TestCustomMethods(TestCommand):
 
 class TestConventionMethods(TestCommand):
 
-    @patch('jarbas.core.management.commands.receipts_text.Command.receipts')
-    @patch('jarbas.core.management.commands.receipts_text.Command.main')
-    @patch('jarbas.core.management.commands.receipts_text.os.path.exists')
-    @patch('jarbas.core.management.commands.receipts_text.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.receipts')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.main')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.os.path.exists')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.print')
     def test_handler_with_options(self, print_, exists, main, receipts):
         self.command.handle(dataset='receipts-texts.xz', batch_size=42)
         main.assert_called_once_with()
@@ -97,10 +97,10 @@ class TestConventionMethods(TestCommand):
         self.assertEqual(self.command.path, 'receipts-texts.xz')
         self.assertEqual(self.command.batch_size, 42)
 
-    @patch('jarbas.core.management.commands.receipts_text.Command.receipts')
-    @patch('jarbas.core.management.commands.receipts_text.Command.main')
-    @patch('jarbas.core.management.commands.receipts_text.os.path.exists')
-    @patch('jarbas.core.management.commands.receipts_text.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.receipts')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.main')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.os.path.exists')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.print')
     def test_handler_without_options(self, print_, exists, main, receipts):
         self.command.handle(dataset='receipts-texts.xz', batch_size=4096)
         main.assert_called_once_with()
@@ -108,9 +108,9 @@ class TestConventionMethods(TestCommand):
         self.assertEqual(self.command.path, 'receipts-texts.xz')
         self.assertEqual(self.command.batch_size, 4096)
 
-    @patch('jarbas.core.management.commands.receipts_text.Command.receipts')
-    @patch('jarbas.core.management.commands.receipts_text.Command.main')
-    @patch('jarbas.core.management.commands.receipts_text.os.path.exists')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.receipts')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.main')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.os.path.exists')
     def test_handler_with_non_existing_file(self, exists, update, receipts):
         exists.return_value = False
         with self.assertRaises(FileNotFoundError):
@@ -120,10 +120,10 @@ class TestConventionMethods(TestCommand):
 
 class TestFileLoader(TestCommand):
 
-    @patch('jarbas.core.management.commands.receipts_text.print')
-    @patch('jarbas.core.management.commands.receipts_text.lzma')
-    @patch('jarbas.core.management.commands.receipts_text.csv.DictReader')
-    @patch('jarbas.core.management.commands.receipts_text.Command.serialize')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.lzma')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.csv.DictReader')
+    @patch('jarbas.chamber_of_deputies.management.commands.receipts_text.Command.serialize')
     def test_receipts(self, serialize, rows, lzma, print_):
         serialize.return_value = '.'
         lzma.return_value = StringIO()

@@ -27,7 +27,7 @@ class TestDownloadedStatic(TestCase):
         if path.exists(file_path):
             remove(file_path)
 
-    @patch('jarbas.core.management.commands.ceapdatasets.urlretrieve')
+    @patch('jarbas.chamber_of_deputies.management.commands.ceapdatasets.urlretrieve')
     def test_ceap_datasets(self, mock_urlretrieve):
 
         # backup existing file if exists

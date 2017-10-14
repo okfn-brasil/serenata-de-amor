@@ -2,14 +2,14 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
-from jarbas.core.management.commands.searchvector import Command
+from jarbas.chamber_of_deputies.management.commands.searchvector import Command
 from jarbas.chamber_of_deputies.models import Reimbursement
 
 
 class TestCommandHandler(TestCase):
 
     @patch.object(Reimbursement.objects, 'update')
-    @patch('jarbas.core.management.commands.searchvector.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.searchvector.print')
     def test_handler(self, print_, update):
         command = Command()
         command.handle()

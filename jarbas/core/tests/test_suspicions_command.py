@@ -3,7 +3,7 @@ from unittest.mock import Mock, call, patch
 
 from django.test import TestCase
 
-from jarbas.core.management.commands.suspicions import Command
+from jarbas.chamber_of_deputies.management.commands.suspicions import Command
 from jarbas.chamber_of_deputies.models import Reimbursement
 
 
@@ -70,9 +70,9 @@ class TestSerializer(TestCommand):
 
 class TestCustomMethods(TestCommand):
 
-    @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
-    @patch('jarbas.core.management.commands.suspicions.Command.schedule_update')
-    @patch('jarbas.core.management.commands.suspicions.Command.update')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.suspicions')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.schedule_update')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.update')
     def test_main(self, update, schedule_update, suspicions):
         suspicions.return_value = (range(21), range(21, 43))
         self.command.workers = 8
@@ -105,8 +105,8 @@ class TestCustomMethods(TestCommand):
         get.assert_called_once_with(document_id=42)
         self.assertEqual([], self.command.queue)
 
-    @patch('jarbas.core.management.commands.suspicions.bulk_update')
-    @patch('jarbas.core.management.commands.suspicions.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.bulk_update')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.print')
     def test_update(self, print_, bulk_update):
         self.command.count = 40
         self.command.queue = list(range(2))
@@ -134,10 +134,10 @@ class TestCustomMethods(TestCommand):
 
 class TestConventionMethods(TestCommand):
 
-    @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
-    @patch('jarbas.core.management.commands.suspicions.Command.main')
-    @patch('jarbas.core.management.commands.suspicions.os.path.exists')
-    @patch('jarbas.core.management.commands.suspicions.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.suspicions')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.main')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.os.path.exists')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.print')
     def test_handler_with_options(self, print_, exists, main, suspicions):
         self.command.handle(dataset='suspicions.xz', batch_size=42, workers=7)
         main.assert_called_once_with()
@@ -146,10 +146,10 @@ class TestConventionMethods(TestCommand):
         self.assertEqual(self.command.batch_size, 42)
         self.assertEqual(self.command.workers, 7)
 
-    @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
-    @patch('jarbas.core.management.commands.suspicions.Command.main')
-    @patch('jarbas.core.management.commands.suspicions.os.path.exists')
-    @patch('jarbas.core.management.commands.suspicions.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.suspicions')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.main')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.os.path.exists')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.print')
     def test_handler_without_options(self, print_, exists, main, suspicions):
         self.command.handle(dataset='suspicions.xz', batch_size=4096, workers=8)
         main.assert_called_once_with()
@@ -158,9 +158,9 @@ class TestConventionMethods(TestCommand):
         self.assertEqual(self.command.batch_size, 4096)
         self.assertEqual(self.command.workers, 8)
 
-    @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
-    @patch('jarbas.core.management.commands.suspicions.Command.main')
-    @patch('jarbas.core.management.commands.suspicions.os.path.exists')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.suspicions')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.main')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.os.path.exists')
     def test_handler_with_non_existing_file(self, exists, update, suspicions):
         exists.return_value = False
         with self.assertRaises(FileNotFoundError):
@@ -170,10 +170,10 @@ class TestConventionMethods(TestCommand):
 
 class TestFileLoader(TestCommand):
 
-    @patch('jarbas.core.management.commands.suspicions.print')
-    @patch('jarbas.core.management.commands.suspicions.lzma')
-    @patch('jarbas.core.management.commands.suspicions.csv.DictReader')
-    @patch('jarbas.core.management.commands.suspicions.Command.serialize')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.print')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.lzma')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.csv.DictReader')
+    @patch('jarbas.chamber_of_deputies.management.commands.suspicions.Command.serialize')
     def test_suspicions(self, serialize, rows, lzma, print_):
         serialize.return_value = '.'
         lzma.return_value = StringIO()

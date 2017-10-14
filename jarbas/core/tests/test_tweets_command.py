@@ -6,7 +6,7 @@ from django.test import TestCase
 from mixer.backend.django import mixer
 
 from jarbas.chamber_of_deputies.models import Reimbursement, Tweet
-from jarbas.core.management.commands.tweets import Command
+from jarbas.chamber_of_deputies.management.commands.tweets import Command
 from jarbas.chamber_of_deputies.tests import random_tweet_status
 
 
@@ -29,8 +29,8 @@ class TestCommand(TestCase):
 
 class TestAuthWithoutCredential(TestCommand):
 
-    @patch('jarbas.core.management.commands.tweets.logging.getLogger')
-    @patch('jarbas.core.management.commands.tweets.twitter.api')
+    @patch('jarbas.chamber_of_deputies.management.commands.tweets.logging.getLogger')
+    @patch('jarbas.chamber_of_deputies.management.commands.tweets.twitter.api')
     @patch.object(Tweet.objects, 'first')
     def test_handler_without_credentials(self, first, api, log):
         missing_values = tuple(set(permutations(['', '42', '42', '42'])))
@@ -45,7 +45,7 @@ class TestAuthWithoutCredential(TestCommand):
 
 class TestAuthWithCredentials(TestCommand):
 
-    @patch('jarbas.core.management.commands.tweets.twitter.Api')
+    @patch('jarbas.chamber_of_deputies.management.commands.tweets.twitter.Api')
     @patch.object(Tweet.objects, 'first')
     def test_credentials(self, first, api):
         with self.settings(**self.credentials):
@@ -131,7 +131,7 @@ class TestMethods(TestCommand):
 
 class TestProperties(TestCommand):
 
-    @patch('jarbas.core.management.commands.tweets.twitter.Api')
+    @patch('jarbas.chamber_of_deputies.management.commands.tweets.twitter.Api')
     def test_tweets_with_clean_database(self, api):
         api.return_value.GetUserTimeline.return_value = range(3)
         with self.settings(**self.credentials):
@@ -148,7 +148,7 @@ class TestProperties(TestCommand):
             exclude_replies=True
         )
 
-    @patch('jarbas.core.management.commands.tweets.twitter.Api')
+    @patch('jarbas.chamber_of_deputies.management.commands.tweets.twitter.Api')
     def test_tweets_with_database(self, api):
         tweet = mixer.blend(
             Tweet,
