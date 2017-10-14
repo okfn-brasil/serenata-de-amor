@@ -43,11 +43,9 @@ import String
 
 {-| Adjust the width of the jump to page field:
 
-    >>> jumpToWidth "8"
-    "1.618em"
+    jumpToWidth "8" --> "1.618em"
 
-    >>> jumpToWidth "42"
-    "2em"
+    jumpToWidth "42" --> "2em"
 
 -}
 jumpToWidth : String -> String
@@ -207,14 +205,11 @@ viewCompany reimbursement =
 
 {-| Convert a Maybe Int to String except if it's zero:
 
-    >>> viewMaybeIntButZero ( Just 42 )
-    "42"
+    viewMaybeIntButZero ( Just 42 ) --> "42"
 
-    >>> viewMaybeIntButZero ( Just 0 )
-    ""
+    viewMaybeIntButZero ( Just 0 ) --> ""
 
-    >>> viewMaybeIntButZero Nothing
-    ""
+    viewMaybeIntButZero Nothing --> ""
 
 -}
 viewMaybeIntButZero : Maybe Int -> String
@@ -262,6 +257,7 @@ viewReimbursementBlockLine lang field =
             , Options.styled span (Typography.body1 :: styles) [ text <| Fields.getValue field ]
             ]
 
+
 viewSummaryPs : Language -> Reimbursement -> Html Msg
 viewSummaryPs lang reimbursement =
     let
@@ -298,14 +294,13 @@ viewSummaryPs lang reimbursement =
 viewCongresspersonPs : Language -> Reimbursement -> Html Msg
 viewCongresspersonPs lang reimbursement =
     let
-
         congresspersonUrl =
             url "http://www.camara.leg.br/Internet/Deputado/dep_Detalhe.asp"
                 [ ( "id", viewMaybeIntButZero reimbursement.congresspersonId ) ]
 
         congresspersonLink =
             a [ href congresspersonUrl ]
-              [ text (translate lang FieldsetCongresspersonProfile) ]
+                [ text (translate lang FieldsetCongresspersonProfile) ]
     in
         div []
             [ Options.styled p
