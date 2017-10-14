@@ -2,7 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from jarbas.api import serializers
-from jarbas.core.models import Reimbursement, Company
+from jarbas.chamber_of_deputies.models import Reimbursement
+from jarbas.core.models import Company
 
 
 class ReimbursementListView(ListAPIView):

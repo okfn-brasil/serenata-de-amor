@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from jarbas.core.models import Activity, Reimbursement, Company
+from jarbas.chamber_of_deputies.models import Reimbursement
+from jarbas.core.models import Activity, Company
 
 
 class ReimbursementSerializer(serializers.ModelSerializer):

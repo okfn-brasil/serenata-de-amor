@@ -5,7 +5,7 @@ import twitter
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from jarbas.core.models import Reimbursement, Tweet
+from jarbas.chamber_of_deputies.models import Reimbursement, Tweet
 
 
 class Command(BaseCommand):

@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 from django.test import TestCase
 
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.dashboard.admin import (
     ReceiptUrlWidget,
     ReimbursementModelAdmin,

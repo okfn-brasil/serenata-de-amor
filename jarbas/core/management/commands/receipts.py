@@ -5,7 +5,7 @@ from bulk_update.helper import bulk_update
 from django.core.management.base import BaseCommand
 from requests.exceptions import ConnectionError
 
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 
 
 class Command(BaseCommand):

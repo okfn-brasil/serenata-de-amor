@@ -3,7 +3,7 @@ from random import randrange
 
 from django.utils import timezone
 
-from jarbas.core.models import Tweet
+from jarbas.chamber_of_deputies.models import Tweet
 
 
 suspicions = {

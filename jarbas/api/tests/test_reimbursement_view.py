@@ -8,7 +8,7 @@ from freezegun import freeze_time
 from mixer.backend.django import mixer
 
 from jarbas.api.tests import get_sample_reimbursement_api_response
-from jarbas.core.models import Reimbursement, Tweet
+from jarbas.chamber_of_deputies.models import Reimbursement, Tweet
 from jarbas.core.tests import random_tweet_status
 
 
@@ -154,7 +154,7 @@ class TestReceiptApi(TestCase):
         self.url_no_receipt = resolve_url(
             'api:reimbursement-receipt', document_id=self.reimbursement_no_receipt.document_id)
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_fetch_existing_receipt(self, mocked_head):
         mocked_head.return_value.status_code = 200
         resp = self.client.get(self.url)
@@ -162,7 +162,7 @@ class TestReceiptApi(TestCase):
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, content)
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_fetch_non_existing_receipt(self, mocked_head):
         mocked_head.return_value.status_code = 404
         resp = self.client.get(self.url_no_receipt)
@@ -170,7 +170,7 @@ class TestReceiptApi(TestCase):
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(expected, content)
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_refetch_existing_receipt(self, mocked_head):
         expected = dict(url=self.reimbursement.receipt_url)
         self.reimbursement.receipt_fetched = True

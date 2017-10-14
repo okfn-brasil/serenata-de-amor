@@ -3,7 +3,7 @@ from unittest.mock import patch
 from django.test import TestCase
 
 from jarbas.core.management.commands.searchvector import Command
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 
 
 class TestCommandHandler(TestCase):

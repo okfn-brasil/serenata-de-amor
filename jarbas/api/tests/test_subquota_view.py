@@ -4,7 +4,7 @@ from django.core.cache import cache
 from django.shortcuts import resolve_url
 from django.test import TestCase
 
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.core.tests import sample_reimbursement_data
 
 

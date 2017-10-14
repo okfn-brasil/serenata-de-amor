@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, PropertyMock, patch
 from django.test import TestCase
 from mixer.backend.django import mixer
 
-from jarbas.core.models import Reimbursement, Tweet
+from jarbas.chamber_of_deputies.models import Reimbursement, Tweet
 from jarbas.core.management.commands.tweets import Command
 from jarbas.core.tests import random_tweet_status
 

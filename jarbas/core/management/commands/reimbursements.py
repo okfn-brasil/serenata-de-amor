@@ -5,7 +5,7 @@ from django.utils.timezone import now
 from reprint import output
 
 from jarbas.core.management.commands import LoadCommand
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 
 
 class Command(LoadCommand):

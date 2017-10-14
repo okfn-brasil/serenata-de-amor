@@ -4,7 +4,7 @@ from unittest.mock import Mock, call, patch
 from django.test import TestCase
 
 from jarbas.core.management.commands.suspicions import Command
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 
 
 class TestCommand(TestCase):

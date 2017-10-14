@@ -4,7 +4,7 @@ from django.db.utils import IntegrityError
 from django.test import TestCase
 from requests.exceptions import ConnectionError
 
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.core.tests import sample_reimbursement_data
 
 
@@ -204,7 +204,7 @@ class TestReceipt(TestCase):
         self.assertIsNone(self.obj.receipt_url)
         self.assertFalse(self.obj.receipt_fetched)
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_get_existing_url(self, mocked_head):
         mocked_head.return_value.status_code = 200
         self.assertEqual(self.expected_receipt_url, self.obj.get_receipt_url())
@@ -212,7 +212,7 @@ class TestReceipt(TestCase):
         self.assertTrue(self.obj.receipt_fetched)
         mocked_head.assert_called_once_with(self.expected_receipt_url)
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_get_non_existing_url(self, mocked_head):
         mocked_head.return_value.status_code = 404
         self.assertIsNone(self.obj.get_receipt_url())
@@ -220,13 +220,13 @@ class TestReceipt(TestCase):
         self.assertTrue(self.obj.receipt_fetched)
         mocked_head.assert_called_once_with(self.expected_receipt_url)
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_get_non_existing_url_with_error(self, mocked_head):
         mocked_head.side_effect = ConnectionError
         with self.assertRaises(ConnectionError):
             self.obj.get_receipt_url()
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_get_fetched_existing_url(self, mocked_head):
         self.obj.receipt_fetched = True
         self.obj.receipt_url = '42'
@@ -236,7 +236,7 @@ class TestReceipt(TestCase):
         self.assertTrue(self.obj.receipt_fetched)
         mocked_head.assert_not_called()
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_get_fetched_non_existing_url(self, mocked_head):
         self.obj.receipt_fetched = True
         self.obj.receipt_url = None
@@ -246,7 +246,7 @@ class TestReceipt(TestCase):
         self.assertTrue(self.obj.receipt_fetched)
         mocked_head.assert_not_called()
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_force_get_receipt_url(self, mocked_head):
         mocked_head.return_value.status_code = 200
         self.obj.receipt_fetched = True
@@ -260,7 +260,7 @@ class TestReceipt(TestCase):
         self.assertTrue(self.obj.receipt_fetched)
         mocked_head.assert_called_once_with(self.expected_receipt_url)
 
-    @patch('jarbas.core.models.head')
+    @patch('jarbas.chamber_of_deputies.models.head')
     def test_bulk_get_receipt_url(self, mocked_head):
         mocked_head.return_value.status_code = 200
         updated = self.obj.get_receipt_url(bulk=True)

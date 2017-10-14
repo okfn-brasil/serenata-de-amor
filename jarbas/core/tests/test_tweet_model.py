@@ -1,7 +1,7 @@
 from django.test import TestCase
 from mixer.backend.django import mixer
 
-from jarbas.core.models import Tweet
+from jarbas.chamber_of_deputies.models import Tweet
 
 
 class TestTweet(TestCase):

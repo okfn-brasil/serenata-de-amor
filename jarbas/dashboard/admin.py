@@ -9,7 +9,7 @@ from django.db.models import F
 from django.forms.widgets import Widget
 from simple_history.admin import SimpleHistoryAdmin
 
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.dashboard.sites import dashboard
 
 
