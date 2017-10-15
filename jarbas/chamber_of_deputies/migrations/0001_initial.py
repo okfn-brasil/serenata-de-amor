@@ -16,9 +16,10 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('core', '0041_migrate_data_to_chamber_of_deputies_app'),
     ]
 
-    operations = [
+    state_operations = [
         migrations.CreateModel(
             name='HistoricalReimbursement',
             fields=[
@@ -70,6 +71,7 @@ class Migration(migrations.Migration):
                 'get_latest_by': 'history_date',
                 'ordering': ('-history_date', '-history_id'),
                 'verbose_name': 'historical reembolso',
+                'db_table': 'chamber_of_deputies_historicalreimbursement',
             },
         ),
         migrations.CreateModel(
@@ -120,6 +122,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'reembolsos',
                 'ordering': ('-year', '-issue_date'),
                 'verbose_name': 'reembolso',
+                'db_table': 'chamber_of_deputies_reimbursement',
             },
         ),
         migrations.CreateModel(
@@ -131,6 +134,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ('-status',),
+                'db_table': 'chamber_of_deputies_tweet',
             },
         ),
         migrations.AddIndex(
@@ -146,4 +150,8 @@ class Migration(migrations.Migration):
             name='history_user',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL),
         ),
+    ]
+
+    operations = [
+        migrations.SeparateDatabaseAndState(state_operations=state_operations)
     ]

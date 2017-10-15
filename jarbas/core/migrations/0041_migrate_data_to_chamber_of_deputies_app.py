@@ -11,17 +11,15 @@ class Migration(migrations.Migration):
         ('core', '0040_create_gin_index_with_search_vector'),
     ]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='historicalreimbursement',
-            name='history_user',
-        ),
+    database_operations = [
+        migrations.AlterModelTable('Reimbursement', 'chamber_of_deputies_reimbursement'),
+        migrations.AlterModelTable('HistoricalReimbursement', 'chamber_of_deputies_historicalreimbursement'),
+        migrations.AlterModelTable('Tweet', 'chamber_of_deputies_tweet'),
+    ]
+
+    state_operations = [
         migrations.DeleteModel(
             name='Reimbursement',
-        ),
-        migrations.RemoveField(
-            model_name='tweet',
-            name='reimbursement',
         ),
         migrations.DeleteModel(
             name='HistoricalReimbursement',
@@ -29,4 +27,10 @@ class Migration(migrations.Migration):
         migrations.DeleteModel(
             name='Tweet',
         ),
+    ]
+
+    operations = [
+        migrations.SeparateDatabaseAndState(
+            database_operations=database_operations,
+            state_operations=state_operations)
     ]
