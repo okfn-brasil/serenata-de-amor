@@ -201,16 +201,16 @@ $ docker-compose up -d
 Creating the database and applying migrations:
 
 ```
-$ docker-compose run --rm jarbas python manage.py migrate
+$ docker-compose run --rm django python manage.py migrate
 ```
 
 Seeding it with sample data:
 
 ```console
-$ docker-compose run --rm jarbas python manage.py reimbursements /mnt/data/reimbursements_sample.xz
-$ docker-compose run --rm jarbas python manage.py companies /mnt/data/companies_sample.xz
-$ docker-compose run --rm jarbas python manage.py suspicions /mnt/data/suspicions_sample.xz
-$ docker-compose run --rm jarbas python manage.py tweets
+$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.xz
+$ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
+$ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
+$ docker-compose run --rm django python manage.py tweets
 ```
 
 If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/datasciencebr/rosie). 
@@ -222,7 +222,7 @@ You can access it at [`localhost:8000`](http://localhost:8000/) in development m
 
 
 ```console
-$ docker-compose run --rm jarbas python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
+$ docker-compose run --rm django python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
 ```
 
 To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
