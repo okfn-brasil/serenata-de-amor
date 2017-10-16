@@ -1,5 +1,5 @@
 git+git://github.com/cuducos/django-simple-history.git@cuducos-missing-translations-in-pt-br
-Django==1.11.5
+Django==1.11.6
 brazilnum==0.8.8
 dj-database-url==0.4.2
 django-assets==0.12
