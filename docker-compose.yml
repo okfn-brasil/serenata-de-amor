@@ -2,9 +2,7 @@ version: '3'
 services:
 
   django:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: datasciencebr/jarbas-backend
     environment:
        - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
        - ALLOWED_HOSTS=localhost,127.0.0.1
@@ -18,9 +16,7 @@ services:
       - "./contrib/data:/mnt/data"
 
   elm:
-    build:
-      context: .
-      dockerfile: Dockerfile-elm
+    image: datasciencebr/jarbas-frontend
 
   postgres:
     image: postgres:9.6.5-alpine
