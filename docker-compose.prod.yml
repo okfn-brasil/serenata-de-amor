@@ -27,9 +27,7 @@ services:
     image: memcached:1.5.1-alpine
 
   nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile-nginx
+    image: datasciencebr/jarbas-server
     depends_on:
       - django
     ports:
