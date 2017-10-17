@@ -30,5 +30,5 @@ ratings:
     - "**.sh"
 
 exclude_paths:
-  - "jarbas/core/migrations/"
+  - "**/migrations/"
   - "**/tests/*.py"
