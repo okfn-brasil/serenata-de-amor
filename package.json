@@ -7,20 +7,15 @@
   "scripts": {
     "postinstall": "elm-package install --yes",
     "assets": "gulp elm",
-    "watch": "gulp watch",
-    "pretest": "sed 's/\\/jarbas\\/frontend/./g' elm-package.json > jarbas/frontend/tests/elm-package.json && cd jarbas/frontend/ && elm-doc-test",
-    "test": "elm-test jarbas/frontend/tests/Doc/Main.elm",
-    "posttest": "rm jarbas/frontend/tests/elm-package.json"
+    "watch": "gulp watch"
   },
   "dependencies": {
     "elm": "^0.18",
-    "elm-doc-test": "^2.1.1",
-    "elm-test": "^0.18.2",
     "gulp": "^3.9.1",
     "gulp-cli": "^1.2.2",
-    "gulp-elm": "^0.5.0",
+    "gulp-elm": "^0.7.2",
     "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^2.0.0",
+    "gulp-uglify": "^3.0.0",
     "gulp-watch": "^4.3.11"
   }
 }

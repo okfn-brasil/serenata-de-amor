@@ -1,18 +1,17 @@
 resolver 127.0.0.11 valid=1s;
 
-
 server {
     access_log /dev/stdout;
     server_name localhost;
-    set $alias "apps";
+    set $alias "django";
     access_log on;
 
     location /static/ {
-        alias /opt/jarbas/staticfiles/;
+        alias /code/staticfiles/;
     }
 
     location / {
-        proxy_pass http://$alias:8001;
+        proxy_pass http://$alias:8000;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Host $server_name;
         proxy_set_header X-Real-IP $remote_addr;

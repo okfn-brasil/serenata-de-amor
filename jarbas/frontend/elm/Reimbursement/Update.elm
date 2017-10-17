@@ -23,14 +23,11 @@ import String
 
 {-| Give the total page number based on the number of reimbursement found:
 
-    >>> totalPages 3
-    1
+    totalPages 3 --> 1
 
-    >>> totalPages 8
-    2
+    totalPages 8 --> 2
 
-    >>> totalPages 314
-    45
+    totalPages 314 --> 45
 -}
 totalPages : Int -> Int
 totalPages results =
@@ -41,8 +38,7 @@ totalPages results =
 
 {-| Clean up a numbers only input field:
 
-    >>> onlyDigits "a1b2c3"
-    "123"
+    onlyDigits "a1b2c3" --> "123"
 -}
 onlyDigits : String -> String
 onlyDigits value =
@@ -69,20 +65,15 @@ newSearch model =
 
 {-| Given a page and the total pages, return if the
 
-    >>> isValidPage 1 42
-    True
+    isValidPage 1 42 --> True
 
-    >>> isValidPage 42 42
-    True
+    isValidPage 42 42 --> True
 
-    >>> isValidPage 3 42
-    True
+    isValidPage 3 42 --> True
 
-    >>> isValidPage 0 42
-    False
+    isValidPage 0 42 --> False
 
-    >>> isValidPage 100 42
-    False
+    isValidPage 100 42 --> False
 
 -}
 isValidPage : Int -> Int -> Bool
@@ -370,11 +361,9 @@ updateRelatedTableParentId reimbursement =
 
 {-| Convert from camelCase to underscore:
 
-    >>> convertQueryKey "applicationId"
-    "application_id"
+    convertQueryKey "applicationId" --> "application_id"
 
-    >>> convertQueryKey "subquotaGroupId"
-    "subquota_group_id"
+    convertQueryKey "subquotaGroupId" --> "subquota_group_id"
 
 -}
 convertQueryKey : String -> String
@@ -386,8 +375,7 @@ convertQueryKey key =
 
 {-| Convert from keys from a query tuple to underscore:
 
-    >>> convertQuery [("applicantId", "1"), ("subqotaGroupId", "2")]
-    [("applicant_id", "1"), ("subqota_group_id", "2")]
+    convertQuery [("applicantId", "1"), ("subqotaGroupId", "2")] --> [("applicant_id", "1"), ("subqota_group_id", "2")]
 
 -}
 convertQuery : List ( String, a ) -> List ( String, a )

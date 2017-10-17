@@ -19,11 +19,9 @@ import Reimbursement.Update as ParentMsg exposing (Msg(..))
 
 {-| Matches a date un the YYYY-MM-DD format
 
-    >>> matchDate "1970-01-01"
-    True
+    matchDate "1970-01-01" --> True
 
-    >>> matchDate "foo-42-01"
-    False
+    matchDate "foo-42-01" --> False
 
 -}
 matchDate : String -> Bool
@@ -111,11 +109,9 @@ viewFieldset model ( index, ( title, labels ) ) =
 {-| Creates an unique index for each field, using the hundreds for the
 filedset, and the units for the field itself:
 
-    >>> correctedFieldIndex 0 42
-    142
+    correctedFieldIndex 0 42 --> 142
 
-    >>> correctedFieldIndex 100 8
-    10108
+    correctedFieldIndex 100 8 --> 10108
 
 -}
 correctedFieldIndex : Int -> Int -> Int
