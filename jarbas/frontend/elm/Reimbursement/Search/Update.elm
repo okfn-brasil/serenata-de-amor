@@ -90,19 +90,16 @@ updateFromQuery model query =
 
 
 {-| Convert a list of non-empty, searchable fields into a url:
-    >>> import Reimbursement.Fields exposing (Field(..), Label(..))
 
-    >>> toUrl [ Field Year "2016" ]
-    "year/2016"
+    import Reimbursement.Fields exposing (Field(..), Label(..))
 
-    >>> toUrl [ Field Year "2016", Field Month "10" ]
-    "year/2016/month/10"
+    toUrl [ Field Year "2016" ] --> "year/2016"
 
-    >>> toUrl [ Field LegOfTheTrip "any" ]
-    ""
+    toUrl [ Field Year "2016", Field Month "10" ] --> "year/2016/month/10"
 
-    >>> toUrl [ Field Year "" ]
-    ""
+    toUrl [ Field LegOfTheTrip "any" ] --> ""
+
+    toUrl [ Field Year "" ] --> ""
 
 -}
 toUrl : Model -> String

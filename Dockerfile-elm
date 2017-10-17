@@ -1,14 +1,20 @@
-FROM node:6.9.1
+FROM node:8.4.0
 
-RUN npm install yarn
-RUN ln -s /node_modules/yarn/bin/yarn.js /usr/bin/yarn
+# npm5 issue with updating itself: https://github.com/npm/npm/issues/18278
+# RUN npm install -g npm@latest
+
 WORKDIR /code
 
-COPY yarn.lock yarn.lock
 COPY package.json package.json
+COPY package-lock.json package-lock.json
 COPY elm-package.json elm-package.json
 COPY gulpfile.js gulpfile.js
-RUN yarn install --pure-lockfile
 
-COPY jarbas jarbas
-CMD ["yarn", "assets"]
+RUN npm install
+
+# npm5 issue w/ postinstall: https://github.com/npm/npm/issues/17316
+RUN ./node_modules/.bin/elm-package install --yes
+
+COPY ./jarbas /code/jarbas
+
+CMD ["npm", "run", "watch"]

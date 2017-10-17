@@ -6,8 +6,7 @@ import String
 
 {-| Creates an URL from an UniqueId:
 
-    >>> getUrl 42
-    "/api/reimbursement/42/same_day/?format=json"
+    getUrl 42 --> "/api/reimbursement/42/same_day/?format=json"
 
 -}
 getUrl : Int -> String
