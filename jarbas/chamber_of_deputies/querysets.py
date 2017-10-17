@@ -28,7 +28,7 @@ class ReimbursementQuerySet(models.QuerySet):
 
         self = self.values(field, order_by_field).order_by(order_by_field)
         return self.distinct()
-      
+
     def suspicions(self, boolean):
         if not boolean:
             return self.filter(suspicions=None)
