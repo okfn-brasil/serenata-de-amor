@@ -5,8 +5,7 @@ import String
 
 {-| Format a CPF number:
 
-    >>> formatCpf "12345678901"
-    "123.456.789-01"
+    formatCpf "12345678901" --> "123.456.789-01"
 
 -}
 formatCpf : String -> String
@@ -37,8 +36,7 @@ formatCpf cpf =
 
 {-| Format a CNPJ number:
 
-    >>> formatCnpj "12345678901234"
-    "12.345.678/9012-34"
+    formatCnpj "12345678901234" --> "12.345.678/9012-34"
 
 -}
 formatCnpj : String -> String
@@ -74,14 +72,11 @@ formatCnpj cnpj =
 
 {-| Format a CNPJ or CPF number:
 
-    >>> formatCnpjCpf "12345678901"
-    "123.456.789-01"
+    formatCnpjCpf "12345678901" --> "123.456.789-01"
 
-    >>> formatCnpjCpf "12345678901234"
-    "12.345.678/9012-34"
+    formatCnpjCpf "12345678901234" --> "12.345.678/9012-34"
 
-    >>> formatCnpjCpf "42"
-    "42"
+    formatCnpjCpf "42" --> "42"
 
 -}
 formatCnpjCpf : String -> String

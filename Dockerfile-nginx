@@ -1,3 +1,5 @@
-FROM nginx:1.11.5
+FROM nginx:1.13.3-alpine
+
 COPY contrib/nginx.docker /etc/nginx/conf.d/default.conf
-RUN mkdir -p /opt/jarbas
+
+RUN mkdir -p /code/staticfiles
