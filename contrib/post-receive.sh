@@ -14,14 +14,14 @@ git pull $GIT_REPO master
 echo "==> Activating virtualenv…"
 . /opt/jarbas.venv/bin/activate
 
-echo "\n==> Installing NodeJS packages…\n"
+echo "==> Installing NodeJS packages…"
 if [ -d node_modules/ ]; then
     rm -rf node_modules/
 fi
 if [ -d elm-stuff/ ]; then
     rm -rf elm-stuff/
 fi
-yarn install
+npm install
 
 echo "==> Installing Python packages…"
 pip install -U pip
@@ -34,7 +34,7 @@ echo "==> Updating CEAP dataset page"
 python manage.py ceapdatasets
 
 echo "==> Building assets"
-yarn assets
+npm run assets
 
 echo "==> Collecting static files"
 python manage.py collectstatic --no-input

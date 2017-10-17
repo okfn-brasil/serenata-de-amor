@@ -16,8 +16,7 @@ type Msg
 
 {-| Cleans up a CNPJ field allowing numbers only:
 
-    >>> cleanUp (Just "12.345.678/9012-34")
-    "12345678901234"
+    cleanUp (Just "12.345.678/9012-34") --> "12345678901234"
 
 -}
 cleanUp : Maybe String -> String
@@ -29,17 +28,13 @@ cleanUp cnpj =
 
 {-| CNPJ validator:
 
-    >>> isValid (Just "12.345.678/9012-34")
-    True
+    isValid (Just "12.345.678/9012-34") --> True
 
-    >>> isValid (Just "12345678901234")
-    True
+    isValid (Just "12345678901234") --> True
 
-    >>> isValid (Just "123.456.789-01")
-    False
+    isValid (Just "123.456.789-01") --> False
 
-    >>> isValid Nothing
-    False
+    isValid Nothing --> False
 
 -}
 isValid : Maybe String -> Bool

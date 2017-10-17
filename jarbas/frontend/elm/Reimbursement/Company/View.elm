@@ -16,11 +16,12 @@ import Reimbursement.Company.Update exposing (Msg)
 
 {-| Generates a link to a Google Street View image:
 
-    >>> streetImageUrl (Just "foobar") 42 3 "3.14" "1.99" 1
-    "https://maps.googleapis.com/maps/api/streetview?size=42x3&location=3.14%2C1.99&fov=90&heading=1&pitch=10&key=foobar"
+    streetImageUrl (Just "foobar") 42 3 "3.14" "1.99" 1
+    --> "https://maps.googleapis.com/maps/api/streetview?size=42x3&location=3.14%2C1.99&fov=90&heading=1&pitch=10&key=foobar"
 
-    >>> streetImageUrl Nothing 42 3 "3.14" "1.99" 1
-    "https://maps.googleapis.com/maps/api/streetview?size=42x3&location=3.14%2C1.99&fov=90&heading=1&pitch=10&key="
+    streetImageUrl Nothing 42 3 "3.14" "1.99" 1
+    --> "https://maps.googleapis.com/maps/api/streetview?size=42x3&location=3.14%2C1.99&fov=90&heading=1&pitch=10&key="
+
 -}
 streetImageUrl : Maybe String -> Int -> Int -> String -> String -> Int -> String
 streetImageUrl apiKey width height latitude longitude heading =
