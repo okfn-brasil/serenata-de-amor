@@ -235,7 +235,7 @@ To change any of the default environment variables defined in the `docker-compos
 
 #### Requirements
 
-Jarbas requires [Python 3.5](http://python.org), [Node.js 8](https://nodejs.org/en/), and [PostgreSQL 9.6](https://www.postgresql.org). Once you have `pip` and `npm` available install the dependencies:
+Jarbas requires [Python 3.5](http://python.org), [Node.js 8](https://nodejs.org/en/), [RabbitMQ 3.6](https://www.rabbitmq.com), and [PostgreSQL 9.6](https://www.postgresql.org). Once you have `pip` and `npm` available install the dependencies:
 
 ```console
 $ npm install
@@ -260,6 +260,12 @@ $ python manage.py migrate
 ```
 
 #### Load data
+
+To load data you need RabbitMQ running and a Celery worker:
+
+```
+$ celery worker --app jarbas
+```
 
 Now you can load the data from our datasets and get some other data as static files:
 
