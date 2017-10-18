@@ -75,6 +75,7 @@ class TestCustomMethods(TestCommand):
     @patch('jarbas.core.management.commands.suspicions.Command.update')
     def test_main(self, update, schedule_update, suspicions):
         suspicions.return_value = (range(21), range(21, 43))
+        self.command.workers = 8
         self.command.main()
         update.assert_has_calls([call()] * 2)
         schedule_update.assert_has_calls(call(i) for i in range(42))
@@ -138,22 +139,24 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.suspicions.os.path.exists')
     @patch('jarbas.core.management.commands.suspicions.print')
     def test_handler_with_options(self, print_, exists, main, suspicions):
-        self.command.handle(dataset='suspicions.xz', batch_size=42)
+        self.command.handle(dataset='suspicions.xz', batch_size=42, workers=7)
         main.assert_called_once_with()
         print_.assert_called_once_with('0 reimbursements updated.')
         self.assertEqual(self.command.path, 'suspicions.xz')
         self.assertEqual(self.command.batch_size, 42)
+        self.assertEqual(self.command.workers, 7)
 
     @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
     @patch('jarbas.core.management.commands.suspicions.Command.main')
     @patch('jarbas.core.management.commands.suspicions.os.path.exists')
     @patch('jarbas.core.management.commands.suspicions.print')
     def test_handler_without_options(self, print_, exists, main, suspicions):
-        self.command.handle(dataset='suspicions.xz', batch_size=4096)
+        self.command.handle(dataset='suspicions.xz', batch_size=4096, workers=8)
         main.assert_called_once_with()
         print_.assert_called_once_with('0 reimbursements updated.')
         self.assertEqual(self.command.path, 'suspicions.xz')
         self.assertEqual(self.command.batch_size, 4096)
+        self.assertEqual(self.command.workers, 8)
 
     @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
     @patch('jarbas.core.management.commands.suspicions.Command.main')
@@ -161,7 +164,7 @@ class TestConventionMethods(TestCommand):
     def test_handler_with_non_existing_file(self, exists, update, suspicions):
         exists.return_value = False
         with self.assertRaises(FileNotFoundError):
-            self.command.handle(dataset='suspicions.xz', batch_size=4096)
+            self.command.handle(dataset='suspicions.xz', batch_size=4096, workers=8)
         update.assert_not_called()
 
 
@@ -181,10 +184,9 @@ class TestFileLoader(TestCommand):
         self.assertEqual(expected, list(self.command.suspicions()))
         self.assertEqual(42, serialize.call_count)
 
-
 class TestAddArguments(TestCase):
 
     def test_add_arguments(self):
         mock = Mock()
         Command().add_arguments(mock)
-        self.assertEqual(2, mock.add_argument.call_count)
+        self.assertEqual(3, mock.add_argument.call_count)

@@ -10,7 +10,8 @@ class TestCreateOrUpdateTask(TestCase):
 
     def test_create(self):
         with mixer.ctx(commit=False):
-            fixture = model_to_dict(mixer.blend(Reimbursement))
+            obj = mixer.blend(Reimbursement, search_vector=None)
+            fixture = model_to_dict(obj)
 
         self.assertEqual(0, Reimbursement.objects.count())
         create_or_update_reimbursement(fixture)
@@ -19,7 +20,7 @@ class TestCreateOrUpdateTask(TestCase):
     def test_update(self):
         self.assertEqual(0, Reimbursement.objects.count())
 
-        fixture = model_to_dict(mixer.blend(Reimbursement))
+        fixture = model_to_dict(mixer.blend(Reimbursement, search_vector=None))
         self.assertEqual(1, Reimbursement.objects.count())
 
         create_or_update_reimbursement(fixture)

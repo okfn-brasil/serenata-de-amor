@@ -43,11 +43,9 @@ import String
 
 {-| Adjust the width of the jump to page field:
 
-    >>> jumpToWidth "8"
-    "1.618em"
+    jumpToWidth "8" --> "1.618em"
 
-    >>> jumpToWidth "42"
-    "2em"
+    jumpToWidth "42" --> "2em"
 
 -}
 jumpToWidth : String -> String
@@ -207,14 +205,11 @@ viewCompany reimbursement =
 
 {-| Convert a Maybe Int to String except if it's zero:
 
-    >>> viewMaybeIntButZero ( Just 42 )
-    "42"
+    viewMaybeIntButZero ( Just 42 ) --> "42"
 
-    >>> viewMaybeIntButZero ( Just 0 )
-    ""
+    viewMaybeIntButZero ( Just 0 ) --> ""
 
-    >>> viewMaybeIntButZero Nothing
-    ""
+    viewMaybeIntButZero Nothing --> ""
 
 -}
 viewMaybeIntButZero : Maybe Int -> String
@@ -263,8 +258,8 @@ viewReimbursementBlockLine lang field =
             ]
 
 
-viewPs : Language -> Reimbursement -> Html Msg
-viewPs lang reimbursement =
+viewSummaryPs : Language -> Reimbursement -> Html Msg
+viewSummaryPs lang reimbursement =
     let
         currencyUrl =
             String.concat
@@ -296,6 +291,24 @@ viewPs lang reimbursement =
             ]
 
 
+viewCongresspersonPs : Language -> Reimbursement -> Html Msg
+viewCongresspersonPs lang reimbursement =
+    let
+        congresspersonUrl =
+            url "http://www.camara.leg.br/Internet/Deputado/dep_Detalhe.asp"
+                [ ( "id", viewMaybeIntButZero reimbursement.congresspersonId ) ]
+
+        congresspersonLink =
+            a [ href congresspersonUrl ]
+                [ text (translate lang FieldsetCongresspersonProfile) ]
+    in
+        div []
+            [ Options.styled p
+                [ Typography.caption, Options.css "margin-top" "1rem" ]
+                [ congresspersonLink ]
+            ]
+
+
 viewReimbursementBlock : Language -> Reimbursement -> ( String, String, List Field ) -> Html Msg
 viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
     let
@@ -304,7 +317,9 @@ viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
 
         ps =
             if title == (translate lang FieldsetSummary) then
-                viewPs lang reimbursement
+                viewSummaryPs lang reimbursement
+            else if title == (translate lang FieldsetCongressperson) then
+                viewCongresspersonPs lang reimbursement
             else
                 text ""
     in

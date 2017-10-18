@@ -1,14 +1,30 @@
-FROM python:3.5
-COPY requirements.txt /requirements.txt
-COPY requirements-dev.txt /requirements-dev.txt
-RUN python -m pip install -U pip
-RUN python -m pip install -r requirements-dev.txt
-RUN apt-get update && apt-get install -y postgresql postgresql-contrib
+FROM python:3.5.4-alpine
+ENV PYTHONUNBUFFERED 1
+
+# set timezone
+RUN apk update && apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
+    echo "America/Sao_Paulo" >  /etc/timezone
+
+# pyscopg2 dependencies
+RUN apk update && apk add --no-cache \
+    gcc \
+    musl-dev \
+    postgresql-dev \
+    python3-dev
+
+# install git so we can pip install from github repos
+RUN apk update && apk add --no-cache git
+
+WORKDIR /code
+
+COPY ./requirements.txt /code/requirements.txt
+COPY ./requirements-dev.txt /code/requirements-dev.txt
+RUN python -m pip install -U pip && \
+    python -m pip install -r requirements-dev.txt
+
 COPY manage.py /code/manage.py
 COPY jarbas /code/jarbas
-WORKDIR /code
-RUN echo "America/Sao_Paulo" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
-VOLUME /code/staticfiles
-RUN useradd -ms /bin/bash jarbas
-USER jarbas
-CMD ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8001", "--workers", "4"]
+RUN python manage.py collectstatic --no-input
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

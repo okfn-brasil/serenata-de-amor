@@ -83,8 +83,7 @@ updateFromFlags flags model =
 
 {-| Group a list of strings in a list of string pairs:
 
-    >>> pair ["a", "b", "c", "d", "e"]
-    [["a", "b"], ["c", "d"], ["e"]]
+    pair ["a", "b", "c", "d", "e"] --> [["a", "b"], ["c", "d"], ["e"]]
 
 -}
 pair : List String -> List (List String)
@@ -99,20 +98,15 @@ pair query =
 
 {-| Convert a list of lists of strings in a list of key/value tuples:
 
-    >>> toTuples ["foo", "bar"]
-    ( "foo", "bar" )
+    toTuples ["foo", "bar"] --> ( "foo", "bar" )
 
-    >>> toTuples ["foo", ""]
-    ( "foo", "" )
+    toTuples ["foo", ""] --> ( "foo", "" )
 
-    >>> toTuples ["", "bar"]
-    ( "", "bar" )
+    toTuples ["", "bar"] --> ( "", "bar" )
 
-    >>> toTuples ["foobar"]
-    ( "foobar", "" )
+    toTuples ["foobar"] --> ( "foobar", "" )
 
-    >>> toTuples ["fo", "ob", "ar"]
-    ( "fo", "ob" )
+    toTuples ["fo", "ob", "ar"] --> ( "fo", "ob" )
 
 -}
 toTuples : List String -> ( String, String )
@@ -136,17 +130,13 @@ toTuples query =
 
 {-| Filter tuples to make sure they have two strings:
 
-    >>> isValidKeyValue ("foo", "bar")
-    True
+    isValidKeyValue ("foo", "bar") --> True
 
-    >>> isValidKeyValue ("", "bar")
-    False
+    isValidKeyValue ("", "bar") --> False
 
-    >>> isValidKeyValue ("foo", "")
-    False
+    isValidKeyValue ("foo", "") --> False
 
-    >>> isValidKeyValue ("", "")
-    False
+    isValidKeyValue ("", "") --> False
 
 -}
 isValidKeyValue : ( String, String ) -> Bool
@@ -159,8 +149,7 @@ isValidKeyValue ( key, value ) =
 
 {-| Generates a list of URL paramenters (query string) from a URL hash:
 
-   >>> fromHash "#/year/2016/document/42/"
-   [ ( "year", "2016" ), ( "documentId", "42" ) ]
+   fromHash "#/year/2016/document/42/" --> [ ( "year", "2016" ), ( "documentId", "42" ) ]
 
 -}
 fromHash : String -> List ( String, String )
