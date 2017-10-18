@@ -24,7 +24,7 @@ services:
       context: .
     # image: datasciencebr/jarbas-backend
     environment:
-       - DATABASE_URL=postgres://jarbas:mysecretpassword@db/jarbas
+       - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
        - CELERY_BROKER_URL=amqp://guest:guest@queue/
     depends_on:
        - postgres
