@@ -14,11 +14,11 @@ class ElectionExpensesClassifier(TransformerMixin):
         Brazilian Federal Revenue category of companies, preceded by its code.
     """
 
-    def fit(self, X):
+    def fit(self, dataset):
         return self
 
-    def transform(self, X=None):
+    def transform(self, dataset=None):
         return self
 
-    def predict(self, X):
-        return X['legal_entity'] == '409-0 - CANDIDATO A CARGO POLITICO ELETIVO'
+    def predict(self, dataset):
+        return dataset['legal_entity'] == '409-0 - CANDIDATO A CARGO POLITICO ELETIVO'
