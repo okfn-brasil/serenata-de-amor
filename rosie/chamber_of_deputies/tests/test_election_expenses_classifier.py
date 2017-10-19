@@ -9,18 +9,18 @@ from rosie.chamber_of_deputies.classifiers import ElectionExpensesClassifier
 class TestElectionExpensesClassifier(TestCase):
 
     def setUp(self):
-        self.dataset = pd.read_csv('rosie/chamber_of_deputies/tests/fixtures/election_expenses_classifier.csv',
+        self.dataframe = pd.read_csv('rosie/chamber_of_deputies/tests/fixtures/election_expenses_classifier.csv',
                                    dtype={'name': np.str, 'legal_entity': np.str})
         self.election_expenser_classifier = ElectionExpensesClassifier()
 
     def test_is_election_company(self):
-        self.assertEqual(self.election_expenser_classifier.predict(self.dataset)[0], True)
+        self.assertEqual(self.election_expenser_classifier.predict(self.dataframe)[0], True)
 
     def test_is_not_election_company(self):
-        self.assertEqual(self.election_expenser_classifier.predict(self.dataset)[1], False)
+        self.assertEqual(self.election_expenser_classifier.predict(self.dataframe)[1], False)
 
     def test_fit(self):
-        self.assertEqual(self.election_expenser_classifier.fit(self.dataset), self.election_expenser_classifier)
+        self.assertEqual(self.election_expenser_classifier.fit(self.dataframe), self.election_expenser_classifier)
 
     def test_tranform(self):
         self.assertEqual(self.election_expenser_classifier.transform(), self.election_expenser_classifier)
