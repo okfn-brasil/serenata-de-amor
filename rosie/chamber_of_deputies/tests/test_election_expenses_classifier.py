@@ -14,10 +14,14 @@ class TestElectionExpensesClassifier(TestCase):
         self.election_expenser_classifier = ElectionExpensesClassifier()
 
     def test_is_election_company(self):
-        self.assertEqual(self.election_expenser_classifier.predict(self.dataframe)[0], True)
+        prediction_result = self.election_expenser_classifier.predict(self.dataframe)
+
+        self.assertEqual(prediction_result[0], True)
 
     def test_is_not_election_company(self):
-        self.assertEqual(self.election_expenser_classifier.predict(self.dataframe)[1], False)
+        prediction_result = self.election_expenser_classifier.predict(self.dataframe)
+
+        self.assertEqual(prediction_result[1], False)
 
     def test_fit(self):
         self.assertEqual(self.election_expenser_classifier.fit(self.dataframe), self.election_expenser_classifier)
