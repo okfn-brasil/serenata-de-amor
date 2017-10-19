@@ -150,6 +150,10 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 * `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
 
+##### Message Broker
+
+* `CELERY_BROKER_URL` (_string_) [Celery](http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html) compatible message broker URL (e.g. `amqp://guest:guest@localhost//`)
+
 ##### Amazon S3 settings
 
 * `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
@@ -231,7 +235,7 @@ To change any of the default environment variables defined in the `docker-compos
 
 #### Requirements
 
-Jarbas requires [Python 3.5](http://python.org), [Node.js 8](https://nodejs.org/en/), and [PostgreSQL 9.6](https://www.postgresql.org). Once you have `pip` and `npm` available install the dependencies:
+Jarbas requires [Python 3.5](http://python.org), [Node.js 8](https://nodejs.org/en/), [RabbitMQ 3.6](https://www.rabbitmq.com), and [PostgreSQL 9.6](https://www.postgresql.org). Once you have `pip` and `npm` available install the dependencies:
 
 ```console
 $ npm install
@@ -256,6 +260,12 @@ $ python manage.py migrate
 ```
 
 #### Load data
+
+To load data you need RabbitMQ running and a Celery worker:
+
+```
+$ celery worker --app jarbas
+```
 
 Now you can load the data from our datasets and get some other data as static files:
 

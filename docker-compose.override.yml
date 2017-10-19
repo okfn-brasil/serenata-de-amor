@@ -11,6 +11,13 @@ services:
     ports:
       - "8000:8000"
 
+  tasks:
+    volumes:
+       - .:/code
+    environment:
+       - SECRET_KEY=my_dear_secret
+       - DEBUG=True
+
   elm:
     volumes:
        - ./jarbas:/code/jarbas
