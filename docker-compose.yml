@@ -2,9 +2,7 @@ version: '3'
 services:
 
   django:
-    build:
-      context: .
-    # image: datasciencebr/jarbas-backend
+    image: datasciencebr/jarbas-backend
     environment:
        - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
        - ALLOWED_HOSTS=localhost,127.0.0.1
@@ -20,9 +18,7 @@ services:
        - "./contrib/data:/mnt/data"
 
   tasks:
-    build:
-      context: .
-    # image: datasciencebr/jarbas-backend
+    image: datasciencebr/jarbas-backend
     environment:
        - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
        - CELERY_BROKER_URL=amqp://guest:guest@queue/
