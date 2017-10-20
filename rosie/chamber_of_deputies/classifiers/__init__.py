@@ -1,0 +1,1 @@
+from rosie.chamber_of_deputies.classifiers.election_expenses_classifier import ElectionExpensesClassifier
