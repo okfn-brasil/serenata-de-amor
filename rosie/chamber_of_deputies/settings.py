@@ -3,7 +3,7 @@ from rosie.chamber_of_deputies.classifiers import IrregularCompaniesClassifier
 from rosie.chamber_of_deputies.classifiers import MealPriceOutlierClassifier
 from rosie.chamber_of_deputies.classifiers import MonthlySubquotaLimitClassifier
 from rosie.chamber_of_deputies.classifiers import TraveledSpeedsClassifier
-from rosie.core.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
+from rosie.core.classifiers import InvalidCnpjCpfClassifier
 
 CLASSIFIERS = {
     'meal_price_outlier': MealPriceOutlierClassifier,
