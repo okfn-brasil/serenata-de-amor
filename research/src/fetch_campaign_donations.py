@@ -90,15 +90,14 @@ donations_data_parties_2012 = pd.read_csv('prestacao_final_2012/receitas_partido
                                           encoding = "ISO-8859-1", sep = ';')
 donations_data_committees_2012 = pd.read_csv('prestacao_final_2012/receitas_comites_2012_brasil.txt', low_memory=False,
                                              encoding = "ISO-8859-1", sep = ';')
-                                             
-                                             donations_data_candidates_2014 = pd.read_csv('prestacao_final_2014/receitas_candidatos_2014_brasil.txt', low_memory=False,
-                                             encoding = "ISO-8859-1", sep = ';')
+
+donations_data_candidates_2014 = pd.read_csv('prestacao_final_2014/receitas_candidatos_2014_brasil.txt', 						     low_memory=False,encoding = "ISO-8859-1", sep = ';')
 donations_data_parties_2014 = pd.read_csv('prestacao_final_2014/receitas_partidos_2014_brasil.txt', low_memory=False,
                                            encoding = "ISO-8859-1", sep = ';')
 donations_data_committees_2014 = pd.read_csv('prestacao_final_2014/receitas_comites_2014_brasil.txt', low_memory=False,
                                           encoding = "ISO-8859-1", sep = ';')
                                           
-                                          donations_data_candidates_2016_chunks = pd.read_csv('prestacao_contas_final_2016/receitas_candidatos_prestacao_contas_final_2016_brasil.txt',
+donations_data_candidates_2016_chunks = pd.read_csv('prestacao_contas_final_2016/receitas_candidatos_prestacao_contas_final_2016_brasil.txt',
                                              encoding = "ISO-8859-1", sep = ';', low_memory=True, chunksize=10000)
 
 donations_data_candidates_2016 = []
@@ -110,7 +109,7 @@ donations_data_candidates_2016 = pd.concat(donations_data_candidates_2016)
 donations_data_parties_2016 = pd.read_csv('prestacao_contas_final_2016/receitas_partidos_prestacao_contas_final_2016_brasil.txt',
                                           low_memory=False, encoding = "ISO-8859-1", sep = ';')
                                           
- columns_candidates_2010 = donations_data_candidates_2010.columns.values
+columns_candidates_2010 = donations_data_candidates_2010.columns.values
 columns_candidates_2012 = donations_data_candidates_2012.columns.values
 columns_candidates_2014 = donations_data_candidates_2014.columns.values
 columns_candidates_2016 = donations_data_candidates_2016.columns.values
