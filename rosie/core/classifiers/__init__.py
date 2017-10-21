@@ -1,0 +1,1 @@
+from core.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier

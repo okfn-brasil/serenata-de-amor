@@ -3,7 +3,7 @@ from unittest import TestCase
 import numpy as np
 import pandas as pd
 
-from rosie.core.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
+from rosie.core.classifiers import InvalidCnpjCpfClassifier
 
 
 class TestInvalidCnpjCpfClassifier(TestCase):

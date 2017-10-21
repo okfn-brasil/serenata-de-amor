@@ -3,7 +3,7 @@ from unittest import TestCase
 import numpy as np
 import pandas as pd
 
-from rosie.chamber_of_deputies.classifiers.election_expenses_classifier import ElectionExpensesClassifier
+from rosie.chamber_of_deputies.classifiers import ElectionExpensesClassifier
 
 
 class TestElectionExpensesClassifier(TestCase):
