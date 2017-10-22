@@ -1,6 +1,6 @@
-from datetime import date
+
 from io import StringIO
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import call, patch
 
 from django.test import TestCase
 
