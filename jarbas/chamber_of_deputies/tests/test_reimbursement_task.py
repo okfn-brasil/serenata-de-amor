@@ -1,8 +1,8 @@
 from django.test import TestCase
 from mixer.backend.django import mixer
 
-from jarbas.core.models import Reimbursement
-from jarbas.core.tasks import (
+from jarbas.chamber_of_deputies.models import Reimbursement
+from jarbas.chamber_of_deputies.tasks import (
     create_or_update_reimbursement,
     serialize_reimbursement
 )

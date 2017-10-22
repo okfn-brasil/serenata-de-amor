@@ -1,6 +1,6 @@
 from celery import shared_task
 
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.core.management.commands import LoadCommand
 
 
