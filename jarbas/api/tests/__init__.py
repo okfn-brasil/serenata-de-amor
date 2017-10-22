@@ -1,4 +1,11 @@
+from django.utils import timezone
+
+
 def get_sample_reimbursement_api_response(obj):
+
+    # freezegun API to return timezone aware objects is not simple
+    last_update_naive = timezone.make_naive(obj.last_update)
+
     return dict(
         applicant_id=obj.applicant_id,
         batch_number=obj.batch_number,
@@ -34,7 +41,7 @@ def get_sample_reimbursement_api_response(obj):
         probability=obj.probability,
         suspicions=obj.suspicions,
         receipt_text=obj.receipt_text,
-        last_update=obj.last_update.strftime('%Y-%m-%dT%H:%M:%SZ'),
+        last_update=last_update_naive.strftime('%Y-%m-%dT%H:%M:%S-03:00'),
         available_in_latest_dataset=obj.available_in_latest_dataset,
         receipt=dict(fetched=obj.receipt_fetched, url=obj.receipt_url),
         search_vector=None
