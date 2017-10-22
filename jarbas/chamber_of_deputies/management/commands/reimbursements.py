@@ -4,7 +4,6 @@ import lzma
 from django.utils.timezone import now
 
 from jarbas.core.management.commands import LoadCommand
-
 from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.chamber_of_deputies.tasks import create_or_update_reimbursement
 

@@ -1,4 +1,3 @@
-
 from io import StringIO
 from unittest.mock import call, patch
 
@@ -20,7 +19,6 @@ class TestCreate(TestCommand):
     @patch('jarbas.chamber_of_deputies.management.commands.reimbursements.print')
     @patch('jarbas.chamber_of_deputies.management.commands.reimbursements.create_or_update_reimbursement')
     def test_create_or_update(self, create, print_, print_count):
-
         reimbursements = (
             dict(ahoy=42, document_id=1),
             dict(ahoy=84, document_id=2)
