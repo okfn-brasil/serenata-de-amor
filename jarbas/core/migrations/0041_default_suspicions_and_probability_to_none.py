@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0038_auto_20170728_1748'),
+        ('core', '0040_create_gin_index_with_search_vector'),
     ]
 
     operations = [

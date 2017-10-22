@@ -1,4 +1,6 @@
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from requests import head
 from simple_history.models import HistoricalRecords
@@ -79,6 +81,8 @@ class Reimbursement(models.Model):
     receipt_url = models.CharField('URL do Documento Fiscal', max_length=140, blank=True, null=True)
     receipt_text = models.TextField('Texto do Recibo', blank=True, null=True)
 
+    search_vector = SearchVectorField(null=True)
+
     history = HistoricalRecords()
 
     objects = models.Manager.from_queryset(ReimbursementQuerySet)()
@@ -88,6 +92,7 @@ class Reimbursement(models.Model):
         verbose_name = 'reembolso'
         verbose_name_plural = 'reembolsos'
         index_together = [['year', 'issue_date', 'id']]
+        indexes = [GinIndex(fields=['search_vector'])]
 
     def get_receipt_url(self, force=False, bulk=False):
         if self.receipt_url:

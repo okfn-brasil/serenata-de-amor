@@ -103,11 +103,9 @@ sets =
 
 {-| Filter to get numbers only fields:
 
-    >>> isNumeric Year
-    True
+    isNumeric Year --> True
 
-    >>> isNumeric Company
-    False
+    isNumeric Company --> False
 
 -}
 isNumeric : Label -> Bool
@@ -162,14 +160,11 @@ getLabel (Field label _) =
 
 
 {-| Convert a field into what may be a search query:
-    >>> toQuery ( Field Year "2016" )
-    Just ( "year", "2016" )
+    toQuery ( Field Year "2016" ) --> Just ( "year", "2016" )
 
-    >>> toQuery ( Field Year "" )
-    Nothing
+    toQuery ( Field Year "" ) --> Nothing
 
-    >>> toQuery ( Field LegOfTheTrip "any" )
-    Nothing
+    toQuery ( Field LegOfTheTrip "any" ) --> Nothing
 -}
 toQuery : Field -> Maybe ( String, String )
 toQuery (Field label value) =

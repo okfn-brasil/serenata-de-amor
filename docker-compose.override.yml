@@ -1,0 +1,27 @@
+version: '3'
+services:
+
+  django:
+    volumes:
+       - .:/code
+    environment:
+       - SECRET_KEY=my_dear_secret
+       - DEBUG=True
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    ports:
+      - "8000:8000"
+
+  tasks:
+    volumes:
+       - .:/code
+    environment:
+       - SECRET_KEY=my_dear_secret
+       - DEBUG=True
+
+  elm:
+    volumes:
+       - ./jarbas:/code/jarbas
+
+  postgres:
+    ports:
+      - "5432:5432"

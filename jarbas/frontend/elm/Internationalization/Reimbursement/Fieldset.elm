@@ -45,6 +45,13 @@ congressperson =
         "Detalhes do(a) deputado(a)"
 
 
+congresspersonProfile : TranslationSet
+congresspersonProfile =
+    TranslationSet
+        "Congressperson profile"
+        "Perfil do(a) deputado(a)"
+
+
 trip : TranslationSet
 trip =
     TranslationSet

@@ -4,6 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/datasciencebr/jarbas/badges/gpa.svg)](https://codeclimate.com/github/datasciencebr/jarbas)
 [![Coverage Status](https://coveralls.io/repos/github/datasciencebr/jarbas/badge.svg?branch=master)](https://coveralls.io/github/datasciencebr/jarbas?branch=master)
 [![Updates](https://pyup.io/repos/github/datasciencebr/jarbas/shield.svg)](https://pyup.io/repos/github/datasciencebr/jarbas/)
+[![donate](https://img.shields.io/badge/donate-apoia.se-EB4A3B.svg)](https://apoia.se/serenata)
 
 [Jarbas](http://jarbas.serenatadeamor.org/) is part of [Serenata de Amor](http://github.com/datasciencebr/serenata-de-amor) — we fight corruption with data science.
 
@@ -18,9 +19,9 @@ Jarbas is in charge of making data from [CEAP](https://github.com/datasciencebr/
     1. [Company](#company)
     1. [Tapioca Jarbas](#tapioca-jarbas)
 1. [Installing](#installing)
+    1. [Settings](#settings)
     1. [Using Docker](#using-docker)
     1. [Local install](#local-install)
-    1. [Settings](#settings)
 
 ## JSON API endpoints
 
@@ -62,6 +63,7 @@ All these endpoints accepts any combination of the following parameters:
 * `month`
 * `subquota_id`
 * `suspicions` (_boolean_, `1` parses to `True`, `0` to `False`)
+* `has_receipt` (_boolean_, `1` parses to `True`, `0` to `False`)
 * `year`
 * `order_by`: `issue_date` (default) or `probability` (both descending)
 * `in_latest_dataset` (_boolean_, `1` parses to `True`, `0` to `False`)
@@ -130,133 +132,9 @@ There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapp
 
 ## Installing
 
-
-### Using Docker
-
-With [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)) installed just run:
-
-```console
-$ make run.devel
-```
-
-or
-
-```console
-$ docker-compose up -d
-$ docker-compose run --rm jarbas python manage.py migrate
-$ docker-compose run --rm jarbas python manage.py ceapdatasets
-$ docker-compose run --rm jarbas python manage.py tweets
-$ docker-compose run --rm jarbas python manage.py collectstatic --no-input
-```
-
-You can access it at [`localhost:8000`](http://localhost:8000/). However your database starts empty, but you can use sample data to development using this command:
-
-```console
-$ make seed.sample
-```
-
-or
-
-```console
-$ docker-compose run --rm jarbas python manage.py reimbursements contrib/sample-data/reimbursements_sample.xz
-$ docker-compose run --rm jarbas python manage.py companies contrib/sample-data/companies_sample.xz
-$ docker-compose run --rm jarbas python manage.py suspicions contrib/sample-data/suspicions_sample.xz
-```
-
-You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/rosie).
-
-To add a fresh new `reimbursements.xz` brewed by [Rosie](https://github.com/datasciencebr/rosie) or made with our [toolbox](https://github.com/datasciencebr/rosie), you just need to have this file **inside project folder** and give the path at the end of the command, as bellow:
-
-```console
-$ docker-compose run --rm jarbas python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
-```
-
-To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
-
-Finally if you would like to access the Django Admin for an alternative view of the reimbursements, you can access it at [`localhost:8000/admin/`](http://localhost:8000/admin/) creating an user with:
-
-```console
-$ docker-compose run --rm jarbas python manage.py createsuperuser
-```
-
-### Local install
-
-#### Requirements
-
-Jarbas requires [Python 3.5](http://python.org), [Node.js 6+](https://nodejs.org/en/), [Yarn](https://yarnpkg.com), and [PostgreSQL 9.4+](https://www.postgresql.org). Once you have `pip` and `yarn` available install the dependencies:
-
-```console
-$ yarn install
-$ python -m pip install -r requirements-dev.txt
-```
-
-##### Python's `lzma` module
-
-In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` or in macOS with `$ brew install xz` — but you might have to re-compile your Python.
-
-#### Setup your environment variables
-
-Basically this means copying `contrib/.env.sample` as `.env` in the project's root folder — but there is [an entire section on that](#settings).
-
-#### Migrations
-
-Once you're done with requirements, dependencies and settings, create the basic database structure:
-
-```console
-$ python manage.py migrate
-```
-
-#### Load data
-
-Now you can load the data from our datasets and get some other data as static files:
-
-```
-$ python manage.py reimbursements <path to reimbursements.xz>
-$ python manage.py suspicions <path to suspicions.xz file>
-$ python manage.py companies <path to companies.xz>
-$ python manage.py tweets
-$ python manage.py ceapdatasets
-```
-
-You can get the datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/serenata-toolbox).
-
-#### Generate static files
-
-We generate assets through NodeJS, so run it before Django collecting static files:
-
-```console
-$ yarn assets
-$ python manage.py collectstatic
-
-```
-
-#### Ready?
-
-Not sure? Test it!
-
-```
-$ python manage.py check
-$ python manage.py test
-$ yarn test
-```
-
-#### Ready!
-
-Run the server with `$ python manage.py runserver` and load [localhost:8000](http://localhost:8000) in your favorite browser.
-
-#### Using Django Admin
-
-
-If you would like to access the Django Admin for an alternative view of the reimbursements, you can access it at [`localhost:8000/admin/`](http://localhost:8000/admin/) creating an user with:
-
-```console
-$ python manage.py createsuperuser
-```
-
-
 ### Settings
 
-If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
+Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
 
 ##### Django settings
 
@@ -271,6 +149,10 @@ If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the proj
 ##### Database
 
 * `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
+
+##### Message Broker
+
+* `CELERY_BROKER_URL` (_string_) [Celery](http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html) compatible message broker URL (e.g. `amqp://guest:guest@localhost//`)
 
 ##### Amazon S3 settings
 
@@ -292,3 +174,139 @@ If **you are not** using Docker copy `contrib/.env.sample` as `.env` in the proj
 
 To get this credentials follow [`python-twitter`
 instructions](https://python-twitter.readthedocs.io/en/latest/getting_started.html#getting-your-application-tokens).
+
+### Using Docker
+
+There are two combinations in terms of With [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)
+ environments.
+
+* **Develoment**: simply running `docker-compose …` will trigger `docker-compose.yml` and `docker-compose.override.yml` with optimun configuration for developing such as:
+  * automatic serving static files through Django
+  * restarting the Django on Python files changes
+  * rebuilding JS from Elm files on save
+  * skipping server cache
+* **Production**: passing a specific configurarion as `docker-compose -f docker-compose.yml -f docker-compose.prod.yml …` will launch a more robust environment with production in mind, among others:
+  * `nginx` in front of Django
+  * server-side cache with memcached
+  * manually generate JS after edits on Elm files
+  * manually run `collectstatic` command is static changes
+  * manually restarting server on change
+
+That said instructions here keep it simple and runs with the development set up. To swicth always add `-f docker-compose.yml -f docker-compose.prod.yml` after `docker-compose`.
+
+#### Build and start services
+
+```console
+$ docker-compose up -d
+```
+
+#### Create and seed the database with sample data
+
+Creating the database and applying migrations:
+
+```
+$ docker-compose run --rm django python manage.py migrate
+```
+
+Seeding it with sample data:
+
+```console
+$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.xz
+$ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
+$ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
+$ docker-compose run --rm django python manage.py tweets
+```
+
+If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/datasciencebr/rosie). 
+To add a fresh new `reimbursements.xz` or `suspicions.xz` brewed by [Rosie](https://github.com/datasciencebr/rosie), or a `companies.xz` you've got from the [toolbox](https://github.com/datasciencebr/serenata-toolbox), you just need copy these files to `contrib/data` and refer to them inside the container from the path `/mnt/data/`.
+
+#### Acessing Jabas
+
+You can access it at [`localhost:8000`](http://localhost:8000/) in development mode or [`localhost`](http://localhost:80/) in production mode. 
+
+
+```console
+$ docker-compose run --rm django python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
+```
+
+To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
+
+### Local install
+
+#### Requirements
+
+Jarbas requires [Python 3.5](http://python.org), [Node.js 8](https://nodejs.org/en/), [RabbitMQ 3.6](https://www.rabbitmq.com), and [PostgreSQL 9.6](https://www.postgresql.org). Once you have `pip` and `npm` available install the dependencies:
+
+```console
+$ npm install
+$ ./node_modules/.bin/elm-package install --yes  # this might not be necessary https://github.com/npm/npm/issues/17316
+$ python -m pip install -r requirements-dev.txt
+```
+
+##### Python's `lzma` module
+
+In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` or in macOS with `$ brew install xz` — but you might have to re-compile your Python.
+
+#### Setup your environment variables
+
+Basically this means copying `contrib/.env.sample` as `.env` in the project's root folder — but there is [an entire section on that](#settings).
+
+#### Migrations
+
+Once you're done with requirements, dependencies and settings, create the basic database structure:
+
+```console
+$ python manage.py migrate
+```
+
+#### Load data
+
+To load data you need RabbitMQ running and a Celery worker:
+
+```
+$ celery worker --app jarbas
+```
+
+Now you can load the data from our datasets and get some other data as static files:
+
+```
+$ python manage.py reimbursements <path to reimbursements.xz>
+$ python manage.py suspicions <path to suspicions.xz file>
+$ python manage.py companies <path to companies.xz>
+$ python manage.py tweets
+$ python manage.py ceapdatasets
+```
+
+There are sample files to seed yout database inside `contrib/data/`. You can get full datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/serenata-toolbox).
+
+#### Generate static files
+
+We generate assets through NodeJS, so run it before Django collecting static files:
+
+```console
+$ npm run assets
+$ python manage.py collectstatic
+
+```
+
+#### Ready?
+
+Not sure? Test it!
+
+```
+$ python manage.py check
+$ python manage.py test
+```
+
+#### Ready!
+
+Run the server with `$ python manage.py runserver` and load [localhost:8000](http://localhost:8000) in your favorite browser.
+
+#### Using Django Admin
+
+
+If you would like to access the Django Admin for an alternative view of the reimbursements, you can access it at [`localhost:8000/admin/`](http://localhost:8000/admin/) creating an user with:
+
+```console
+$ python manage.py createsuperuser
+```

@@ -27,8 +27,14 @@ class ReimbursementListView(ListAPIView):
         filters = {k: v for k, v in zip(params, values) if v}
 
         # filter suspicions
-        if self._bool_param('suspicions'):
-            self.queryset = self.queryset.suspicions()
+        suspicions = self._bool_param('suspicions')
+        if suspicions is not None:
+            self.queryset = self.queryset.suspicions(suspicions)
+
+        # filter receipt_url
+        receipt_url = self._bool_param('receipt_url')
+        if receipt_url is not None:
+            self.queryset = self.queryset.has_receipt_url(receipt_url)
 
         # filter reimbursement in latest dataset
         in_latest = self._bool_param('in_latest_dataset')

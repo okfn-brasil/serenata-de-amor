@@ -4,6 +4,8 @@ import re
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.admin import SimpleListFilter
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
 from django.forms.widgets import Widget
 from simple_history.admin import SimpleHistoryAdmin
 
@@ -83,7 +85,28 @@ class SuspiciousListFilter(JarbasListFilter):
     )
 
     def queryset(self, request, queryset):
-        return queryset.suspicions() if self.value() == 'yes' else queryset
+        filter_option = {
+            'yes': queryset.suspicions(True),
+            'no': queryset.suspicions(False)
+        }
+        return filter_option.get(self.value(), queryset)
+
+
+class HasReceiptFilter(JarbasListFilter):
+
+    title = 'nota fiscal digitalizada'
+    parameter_name = 'has_receipt'
+    options = (
+        ('yes', 'Sim'),
+        ('no', 'Não'),
+    )
+
+    def queryset(self, request, queryset):
+        receipt_url_filter = {
+            'yes': queryset.has_receipt_url(True),
+            'no': queryset.has_receipt_url(False)
+        }
+        return receipt_url_filter.get(self.value(), queryset)
 
 
 class MonthListFilter(JarbasListFilter):
@@ -237,6 +260,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'short_document_id',
         'jarbas',
         'rosies_tweet',
+        'receipt_link',
         'congressperson_name',
         'year',
         'subquota_translated',
@@ -246,19 +270,11 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         # 'still_available',
     )
 
-    search_fields = (
-        'applicant_id',
-        'cnpj_cpf',
-        'congressperson_name',
-        'document_id',
-        'party',
-        'state',
-        'supplier',
-        'subquota_description',
-    )
+    search_fields = ('search_vector',)
 
     list_filter = (
         SuspiciousListFilter,
+        HasReceiptFilter,
         # 'available_in_latest_dataset',
         'state',
         'year',
@@ -305,11 +321,25 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
     rosies_tweet.short_description = ''
     rosies_tweet.allow_tags = True
 
+    def receipt_link(self, obj):
+        if not obj.receipt_url:
+            return ''
+        return '<a target="_blank" href="{}">📃</a>'.format(obj.receipt_url)
+
+    receipt_link.short_description = ''
+    receipt_link.allow_tags = True
+
     def suspicious(self, obj):
         return obj.suspicions is not None
 
     suspicious.short_description = 'suspeito'
     suspicious.boolean = True
+
+    def has_receipt_url(self, obj):
+        return obj.receipt_url is not None
+
+    has_receipt_url.short_description = 'recibo'
+    has_receipt_url.boolean = True
 
     def value(self, obj):
         return 'R$ {:.2f}'.format(obj.total_net_value).replace('.', ',')
@@ -366,6 +396,19 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
             )
             kwargs['widget'] = widgets.get(db_field.name)
         return super().formfield_for_dbfield(db_field, **kwargs)
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, distinct = super(ReimbursementModelAdmin, self) \
+            .get_search_results(request, queryset, None)
+
+        if search_term:
+            query = SearchQuery(search_term, config='portuguese')
+            rank = SearchRank(F('search_vector'), query)
+            queryset = queryset.annotate(rank=rank) \
+                .filter(search_vector=query) \
+                .order_by('-rank')
+
+        return queryset, distinct
 
 
 dashboard.register(Reimbursement, ReimbursementModelAdmin)
