@@ -151,6 +151,10 @@ class TestManager(TestReimbursement):
         existing = Reimbursement.objects.in_latest_dataset(True)
         self.assertEqual(1, existing.count())
 
+    def test_was_ordered(self):
+        self.assertFalse(Reimbursement.objects.was_ordered())
+        self.assertTrue(Reimbursement.objects.order_by('pk').was_ordered())
+
 
 class TestCustomMethods(TestReimbursement):
 
