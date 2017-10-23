@@ -31,23 +31,23 @@ Each `Reimbursement` object is a reimbursement claimed by a congressperson and i
 
 #### Retrieving a specific reimbursement
 
-##### `GET /api/reimbursement/<document_id>/`
+##### `GET /api/chamber_of_deputies/reimbursement/<document_id>/`
 
 Details from a specific reimbursement. If `receipt_url` wasn't fetched yet, the server **won't** try to fetch it automatically.
 
-##### `GET /api/reimbursement/<document_id>/receipt/`
+##### `GET /api/chamber_of_deputies/reimbursement/<document_id>/receipt/`
 
 URL of the digitalized version of the receipt of this specific reimbursement.
 
 If `receipt_url` wasn't fetched yet, the server **will** try to fetch it automatically.
 
-If you append the parameter `force` (i.e. `GET /api/reimbursement/<document_id>/receipt/?force=1`) the server will re-fetch the receipt URL.
+If you append the parameter `force` (i.e. `GET /api/chamber_of_deputies/reimbursement/<document_id>/receipt/?force=1`) the server will re-fetch the receipt URL.
 
 Not all receipts are available, so this URL can be `null`.
 
 #### Listing reimbursements
 
-##### `GET /api/reimbursement/`
+##### `GET /api/chamber_of_deputies/reimbursement/`
 
 Lists all reimbursements.
 
@@ -72,7 +72,7 @@ All these endpoints accepts any combination of the following parameters:
 For example:
 
 ```
-GET /api/reimbursement/?year=2016&cnpj_cpf=11111111111111&subquota_id=42&order_by=probability
+GET /api/chamber_of_deputies/reimbursement/?year=2016&cnpj_cpf=11111111111111&subquota_id=42&order_by=probability
 ```
 
 This request will list:
@@ -84,7 +84,7 @@ This request will list:
 
 Also you can pass more than one value per field (e.g. `document_id=111111,222222`).
 
-##### `GET /api/reimbursement/<document_id>/same_day/`
+##### `GET /api/chamber_of_deputies/reimbursement/<document_id>/same_day/`
 
 Lists all reimbursements of expenses from the same day as `document_id`.
 
@@ -94,13 +94,13 @@ Subqoutas are categories of expenses that can be reimbursed by congresspeople.
 
 #### Listing subquotas
 
-##### `GET /api/subquota/`
+##### `GET /api/chamber_of_deputies/subquota/`
 
 Lists all subquotas names and IDs.
 
 ##### Filtering
 
-Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/subquota/?q=meal` list all applicant that have `meal` in their names.
+Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/chamber_of_deputies/subquota/?q=meal` list all applicant that have `meal` in their names.
 
 ### Applicant
 
@@ -108,13 +108,13 @@ An applicant is the person (congressperson or theleadership of aparty or governm
 
 #### List applicants
 
-##### `GET /api/applicant/`
+##### `GET /api/chamber_of_deputies/applicant/`
 
 Lists all names of applicants together with their IDs.
 
 ##### Filtering
 
-Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/applicant/?q=lideranca` list all applicant that have `lideranca` in their names.
+Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/chamber_of_deputies/applicant/?q=lideranca` list all applicant that have `lideranca` in their names.
 
 ### Company
 
@@ -217,12 +217,12 @@ $ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicion
 $ docker-compose run --rm django python manage.py tweets
 ```
 
-If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/datasciencebr/rosie). 
+If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/datasciencebr/rosie).
 To add a fresh new `reimbursements.xz` or `suspicions.xz` brewed by [Rosie](https://github.com/datasciencebr/rosie), or a `companies.xz` you've got from the [toolbox](https://github.com/datasciencebr/serenata-toolbox), you just need copy these files to `contrib/data` and refer to them inside the container from the path `/mnt/data/`.
 
 #### Acessing Jabas
 
-You can access it at [`localhost:8000`](http://localhost:8000/) in development mode or [`localhost`](http://localhost:80/) in production mode. 
+You can access it at [`localhost:8000`](http://localhost:8000/) in development mode or [`localhost`](http://localhost:80/) in production mode.
 
 
 ```console

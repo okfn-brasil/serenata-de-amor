@@ -15,12 +15,12 @@ type alias Filter =
 {-| Creates an URL from a Filter:
 
     getUrl { year = 2016, applicantId = 13,  subquotaId = 42, month = 2 }
-    --> "/api/reimbursement/?applicant_id=13&year=2016&month=2&subquota_id=42&format=json"
+    --> "/api/chamber_of_deputies/reimbursement/?applicant_id=13&year=2016&month=2&subquota_id=42&format=json"
 
 -}
 getUrl : Filter -> String
 getUrl filter =
-    url "/api/reimbursement/"
+    url "/api/chamber_of_deputies/reimbursement/"
         [ ( "applicant_id", toString filter.applicantId )
         , ( "year", toString filter.year )
         , ( "month", toString filter.month )

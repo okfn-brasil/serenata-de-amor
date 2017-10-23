@@ -393,7 +393,7 @@ loadReimbursements lang apiKey query =
             jsonQuery =
                 ( "format", "json" ) :: convertQuery query
         in
-            Http.get (url "/api/reimbursement/" jsonQuery)
+            Http.get (url "/api/chamber_of_deputies/reimbursement/" jsonQuery)
                 (decoder lang apiKey jsonQuery)
                 |> Http.send LoadReimbursements
 
