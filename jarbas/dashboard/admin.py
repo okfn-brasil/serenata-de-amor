@@ -2,8 +2,10 @@ import json
 
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
-from django.forms.widgets import Widget
 from django.contrib.admin import SimpleListFilter
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
+from django.forms.widgets import Widget
 
 from jarbas.core.models import Reimbursement
 from jarbas.public_admin.admin import PublicAdminModelAdmin
@@ -82,7 +84,28 @@ class SuspiciousListFilter(JarbasListFilter):
     )
 
     def queryset(self, request, queryset):
-        return queryset.suspicions() if self.value() == 'yes' else queryset
+        filter_option = {
+            'yes': queryset.suspicions(True),
+            'no': queryset.suspicions(False)
+        }
+        return filter_option.get(self.value(), queryset)
+
+
+class HasReceiptFilter(JarbasListFilter):
+
+    title = 'nota fiscal digitalizada'
+    parameter_name = 'has_receipt'
+    options = (
+        ('yes', 'Sim'),
+        ('no', 'Não'),
+    )
+
+    def queryset(self, request, queryset):
+        receipt_url_filter = {
+            'yes': queryset.has_receipt_url(True),
+            'no': queryset.has_receipt_url(False)
+        }
+        return receipt_url_filter.get(self.value(), queryset)
 
 
 class MonthListFilter(JarbasListFilter):
@@ -246,19 +269,11 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
         # 'still_available',
     )
 
-    search_fields = (
-        'applicant_id',
-        'cnpj_cpf',
-        'congressperson_name',
-        'document_id',
-        'party',
-        'state',
-        'supplier',
-        'subquota_description',
-    )
+    search_fields = ('search_vector',)
 
     list_filter = (
         SuspiciousListFilter,
+        HasReceiptFilter,
         # 'available_in_latest_dataset',
         'state',
         'year',
@@ -319,6 +334,12 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     suspicious.short_description = 'suspeito'
     suspicious.boolean = True
 
+    def has_receipt_url(self, obj):
+        return obj.receipt_url is not None
+
+    has_receipt_url.short_description = 'recibo'
+    has_receipt_url.boolean = True
+
     def value(self, obj):
         return 'R$ {:.2f}'.format(obj.total_net_value).replace('.', ',')
 
@@ -354,6 +375,19 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
             )
             kwargs['widget'] = widgets.get(db_field.name)
         return super().formfield_for_dbfield(db_field, **kwargs)
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, distinct = super(ReimbursementModelAdmin, self) \
+            .get_search_results(request, queryset, None)
+
+        if search_term:
+            query = SearchQuery(search_term, config='portuguese')
+            rank = SearchRank(F('search_vector'), query)
+            queryset = queryset.annotate(rank=rank) \
+                .filter(search_vector=query) \
+                .order_by('-rank')
+
+        return queryset, distinct
 
 
 public_admin.register(Reimbursement, ReimbursementModelAdmin)

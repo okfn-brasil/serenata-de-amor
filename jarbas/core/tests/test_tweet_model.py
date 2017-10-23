@@ -7,10 +7,10 @@ from jarbas.core.models import Tweet
 class TestTweet(TestCase):
 
     def setUp(self):
-        self.tweet = mixer.blend(Tweet, status=42)
+        self.tweet = mixer.blend(Tweet, reimbursement__search_vector=None, status=42)
 
     def test_ordering(self):
-        mixer.blend(Tweet, status=1)
+        mixer.blend(Tweet, reimbursement__search_vector=None, status=1)
         self.assertEqual(42, Tweet.objects.first().status)
 
     def test_get_url(self):
