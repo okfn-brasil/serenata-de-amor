@@ -15,14 +15,6 @@ class TestCommand(TestCase):
         self.command = Command()
 
 
-class TestFixKeys(TestCommand):
-
-    def test_rename(self):
-        expected = {'subquota_id': 42, 'total_reimbursement_value': '42'}
-        input = {'subquota_number': 42, 'reimbursement_value_total': '42'}
-        self.assertEqual(self.command.rename(input), expected)
-
-
 class TestCreate(TestCommand):
 
     @patch.object(Command, 'print_count')
@@ -95,7 +87,7 @@ class TestFileLoader(TestCommand):
             'document_type': 7,
             'document_value': 8.90,
             'installment': 7,
-            'issue_date': date(2014, 2, 12),
+            'issue_date': '2014-02-12',
             'leg_of_the_trip': '8',
             'month': 1,
             'net_values': '1.99,2.99',
@@ -108,12 +100,13 @@ class TestFileLoader(TestCommand):
             'subquota_description': 'Subquota description',
             'subquota_group_description': 'Subquota group desc',
             'subquota_group_id': 5,
-            'subquota_id': 4,
+            'subquota_number': 4,
             'supplier': 'Acme',
             'term': 1970,
             'term_id': 3,
             'total_net_value': 4.56,
-            'total_reimbursement_value': None,
+            'reimbursement_value_total': None,
             'year': 1970
         }
+        self.maxDiff = 1024
         self.assertEqual(output[0], expected)

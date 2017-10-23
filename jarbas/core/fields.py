@@ -1,29 +1,25 @@
-from datetime import datetime
+from datetime import date
 
-from rows.fields import DateField
-from rows.fields import IntegerField as RowsIntegerField
+from rows import fields
 
 
-class IntegerField(RowsIntegerField):
+class IntegerField(fields.IntegerField):
 
     @classmethod
     def deserialize(cls, value, *args, **kwargs):
-        try:
-            # Rows cannot convert values such as '2011.0' to integer
-            value = float(value)
+        try:  # Rows cannot convert values such as '2011.0' to integer
+            value = int(float(value))
         except:
             pass
         return super(IntegerField, cls).deserialize(value)
 
 
-class DateField(DateField):
-    """
-    Convert YYYY-MM-DDTHH:MM:SS to date object.
-    """
+class DateAsStringField(fields.DateField):
+    INPUT_FORMAT = '%Y-%m-%dT%H:%M:%S'
+    OUTPUT_FORMAT = '%Y-%m-%d'
 
     @classmethod
     def deserialize(cls, value, *args, **kwargs):
-        try:
-            return datetime.strptime(value, '%Y-%m-%dT%H:%M:%S').date()
-        except:
-            return None
+        value = super(DateAsStringField, cls).deserialize(value)
+        if value:  # useful when serializing it to Celery
+            return value.strftime(cls.OUTPUT_FORMAT)
