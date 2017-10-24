@@ -7,7 +7,7 @@ from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.core.models import Company
 from jarbas.chamber_of_deputies.tests import sample_reimbursement_data
 from jarbas.core.tests import sample_company_data
-from jarbas.api.serializers import format_cnpj
+from jarbas.chamber_of_deputies.serializers import format_cnpj
 
 
 class TestSameDay(TestCase):
