@@ -128,6 +128,7 @@ def to_float(number):
     except TypeError:
         return None
 
+
 def format_cnpj(cnpj):
     return '{}.{}.{}/{}-{}'.format(
         cnpj[0:2],
