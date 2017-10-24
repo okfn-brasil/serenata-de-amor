@@ -49,6 +49,9 @@ class ReimbursementQuerySet(models.QuerySet):
             self = self.filter(filter_)
         return self
 
+    def was_ordered(self):
+        return bool(self.query.order_by)
+
 
 def _str_to_tuple(filters):
     """

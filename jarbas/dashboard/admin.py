@@ -404,9 +404,10 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         if search_term:
             query = SearchQuery(search_term, config='portuguese')
             rank = SearchRank(F('search_vector'), query)
-            queryset = queryset.annotate(rank=rank) \
-                .filter(search_vector=query) \
-                .order_by('-rank')
+            queryset = queryset.annotate(rank=rank).filter(search_vector=query)
+
+            if not queryset.was_ordered():
+                queryset.order_by('-rank')
 
         return queryset, distinct
 
