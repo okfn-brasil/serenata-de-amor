@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from jarbas.dashboard.sites import DummyUser
+from jarbas.public_admin.sites import DummyUser
 
 
 class TestDummyUser(TestCase):
