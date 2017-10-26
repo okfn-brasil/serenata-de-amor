@@ -46,7 +46,7 @@ class TestSameDay(TestCase):
         data4['cnpj_cpf'] = '11111111111111'
         Reimbursement.objects.create(**data4)
 
-        url = resolve_url('api:reimbursement-same-day', document_id=84)
+        url = resolve_url('chamber_of_deputies:reimbursement-same-day', document_id=84)
         self.resp = self.client.get(url)
 
     def test_status_code(self):

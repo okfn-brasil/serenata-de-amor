@@ -12,7 +12,7 @@ class TestSubquota(TestCase):
 
     def setUp(self):
         Reimbursement.objects.create(**sample_reimbursement_data)
-        self.url = resolve_url('api:subquota-list')
+        self.url = resolve_url('chamber_of_deputies:subquota-list')
 
     def test_status_code(self):
         resp = self.client.get(self.url)

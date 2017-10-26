@@ -16,7 +16,7 @@ class TestApi(TestCase):
         self.company.main_activity.add(activity)
         self.company.save()
         cnpj = re.compile(r'\D').sub('', self.company.cnpj)
-        self.url = resolve_url('api:company-detail', cnpj)
+        self.url = resolve_url('core:company-detail', cnpj)
 
 
 class TestGet(TestApi):
@@ -42,7 +42,7 @@ class TestGet(TestApi):
 class TestGetNonExistentCompany(TestApi):
 
     def setUp(self):
-        url = resolve_url('api:company-detail', '42424242424242')
+        url = resolve_url('core:company-detail', '42424242424242')
         self.resp = self.client.get(url)
 
     def test_status_code(self):

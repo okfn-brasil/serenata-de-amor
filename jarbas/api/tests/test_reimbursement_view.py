@@ -26,7 +26,7 @@ class TestListApi(TestCase):
 
     def setUp(self):
         get_reimbursement(quantity=3)
-        self.url = resolve_url('api:reimbursement-list')
+        self.url = resolve_url('chamber_of_deputies:reimbursement-list')
 
     def test_status(self):
         resp = self.client.get(self.url)
@@ -104,7 +104,7 @@ class TestRetrieveApi(TestCase):
         self.sample_response = get_sample_reimbursement_api_response(
             self.reimbursement
         )
-        url = resolve_url('api:reimbursement-detail',
+        url = resolve_url('chamber_of_deputies:reimbursement-detail',
                           document_id=self.reimbursement.document_id)
         self.resp = self.client.get(url)
         self.maxDiff = 2 ** 11
@@ -122,7 +122,7 @@ class TestRetrieveApi(TestCase):
         mixer.blend(Tweet, reimbursement=self.reimbursement, status=status)
         expected = self.sample_response
         expected['rosies_tweet'] = self.reimbursement.tweet.get_url()
-        url = resolve_url('api:reimbursement-detail',
+        url = resolve_url('chamber_of_deputies:reimbursement-detail',
                           document_id=self.reimbursement.document_id)
         resp = self.client.get(url)
         contents = loads(resp.content.decode('utf-8'))
@@ -132,7 +132,7 @@ class TestRetrieveApi(TestCase):
         expected = self.sample_response
         expected['rosies_tweet'] = None
         expected['receipt_text'] = self.reimbursement.receipt_text
-        url = resolve_url('api:reimbursement-detail',
+        url = resolve_url('chamber_of_deputies:reimbursement-detail',
                           document_id=self.reimbursement.document_id)
         resp = self.client.get(url)
         contents = loads(resp.content.decode('utf-8'))
@@ -150,9 +150,13 @@ class TestReceiptApi(TestCase):
         )
         self.reimbursement_no_receipt = get_reimbursement(receipt_url=None)
         self.url = resolve_url(
-            'api:reimbursement-receipt', document_id=self.reimbursement.document_id)
+            'chamber_of_deputies:reimbursement-receipt',
+            document_id=self.reimbursement.document_id
+        )
         self.url_no_receipt = resolve_url(
-            'api:reimbursement-receipt', document_id=self.reimbursement_no_receipt.document_id)
+            'chamber_of_deputies:reimbursement-receipt',
+            document_id=self.reimbursement_no_receipt.document_id
+        )
 
     @patch('jarbas.chamber_of_deputies.models.head')
     def test_fetch_existing_receipt(self, mocked_head):
