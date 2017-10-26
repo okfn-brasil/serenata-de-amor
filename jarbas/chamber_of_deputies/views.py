@@ -1,15 +1,11 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
-from jarbas.core.models import Company
-from jarbas.core.serializers import CompanySerializer
 from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.chamber_of_deputies.serializers import (ReimbursementSerializer,
                                                     ReceiptSerializer,
                                                     SameDayReimbursementSerializer,
                                                     ApplicantSerializer,
-                                                    SubquotaSerializer,
-                                                    format_cnpj)
+                                                    SubquotaSerializer)
 
 
 class ReimbursementListView(ListAPIView):
@@ -116,14 +112,3 @@ class SubquotaListView(ListAPIView):
         query = self.request.query_params.get('q')
         args = ('subquota_id', 'subquota_description', query)
         return Reimbursement.objects.list_distinct(*args)
-
-
-class CompanyDetailView(RetrieveAPIView):
-
-    lookup_field = 'cnpj'
-    queryset = Company.objects.all()
-    serializer_class = CompanySerializer
-
-    def get_object(self):
-        cnpj = self.kwargs.get(self.lookup_field, '00000000000000')
-        return get_object_or_404(Company, cnpj=format_cnpj(cnpj))
