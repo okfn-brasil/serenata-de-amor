@@ -5,6 +5,7 @@ from jarbas.core.models import Company
 from jarbas.core.serializers import CompanySerializer
 from jarbas.chamber_of_deputies.serializers import format_cnpj
 
+
 class CompanyDetailView(RetrieveAPIView):
 
     lookup_field = 'cnpj'
