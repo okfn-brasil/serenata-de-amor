@@ -18,7 +18,7 @@ class ElectionExpensesClassifier(TransformerMixin):
         return self
 
     def transform(self, dataframe=None):
-        return self
+        pass
 
     def predict(self, dataframe):
         ELECTION_LEGAL_ENTITY = '409-0 - CANDIDATO A CARGO POLITICO ELETIVO'
