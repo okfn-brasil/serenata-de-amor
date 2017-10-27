@@ -156,238 +156,61 @@ def correct_columns(donations_data):
 
 
 def translate_columns(donations_data):
+    translations = {'Cargo': 'post',
+                    'CNPJ Prestador Conta': 'accountable_company_id',
+                    'Cod setor econômico do doador': 'donor_economic_setor_id',
+                    'Cód. Eleição': 'election_id',
+                    'CPF do candidato': 'candidate_cpf',
+                    'CPF do vice/suplente': 'substitute_cpf',
+                    'CPF/CNPJ do doador': 'donor_cnpj_or_cpf',
+                    'CPF/CNPJ do doador originário':
+                    'original_donor_cnpj_or_cpf',
+                    'Data da receita': 'revenue_date',
+                    'Data e hora': 'date_and_time',
+                    'Desc. Eleição': 'election_description',
+                    'Descrição da receita': 'revenue_description',
+                    'Entrega em conjunto?': 'batch',
+                    'Espécie recurso': 'type_of_revenue',
+                    'Fonte recurso': 'source_of_revenue',
+                    'Município': 'city',
+                    'Nome candidato': 'candidate_name',
+                    'Nome da UE': 'electoral_unit_name',
+                    'Nome do doador': 'donor_name',
+                    'Nome do doador (Receita Federal)':
+                    'donor_name_for_federal_revenue',
+                    'Nome do doador originário': 'original_donor_name',
+                    'Nome do doador originário (Receita Federal)':
+                    'original_donor_name_for_federal_revenue',
+                    'Número candidato': 'candidate_number',
+                    'Número candidato doador': 'donor_candidate_number',
+                    'Número do documento': 'document_number',
+                    'Número partido doador': 'donor_party_number',
+                    'Número Recibo Eleitoral': 'electoral_receipt_number',
+                    'Número UE': 'electoral_unit_number',
+                    'Sequencial Candidato': 'candidate_sequence',
+                    'Sequencial prestador conta': 'accountable_sequence',
+                    'Sequencial comite': 'committee_sequence',
+                    'Setor econômico do doador': 'donor_economic_sector',
+                    'Setor econômico do doador originário':
+                    'original_donor_economic_sector',
+                    'Sigla da UE': 'electoral_unit_abbreviation',
+                    'Sigla Partido': 'party_acronym',
+                    'Sigla UE doador': 'donor_electoral_unit_abbreviation',
+                    'Tipo de documento': 'document_type',
+                    'Tipo doador originário': 'original_donor_type',
+                    'Tipo partido': 'party_type',
+                    'Tipo receita': 'revenue_type',
+                    'Tipo comite': 'committee_type',
+                    'UF': 'state',
+                    'Valor receita': 'revenue_value'}
     if 'candidates' in donations_data.keys():
-        donations_data['candidates'].rename(columns={'Cargo': 'post',
-                                                     'CNPJ Prestador Conta':
-                                                     'accountable_company_id',
-                                                     'Cod setor econômico do doador':  # noqa
-                                                     'donor_economic_setor_id',
-                                                     'Cód. Eleição':
-                                                     'election_id',
-                                                     'CPF do candidato':
-                                                     'candidate_cpf',
-                                                     'CPF do vice/suplente':
-                                                     'substitute_cpf',
-                                                     'CPF/CNPJ do doador':
-                                                     'donor_cnpj_or_cpf',
-                                                     'CPF/CNPJ do doador originário':  # noqa
-                                                     'original_donor_cnpj_or_cpf',  # noqa
-                                                     'Data da receita':
-                                                     'revenue_date',
-                                                     'Data e hora':
-                                                     'date_and_time',
-                                                     'Desc. Eleição':
-                                                     'election_description',
-                                                     'Descrição da receita':
-                                                     'revenue_description',
-                                                     'Entrega em conjunto?':
-                                                     'batch',
-                                                     'Especie recurso':
-                                                     'type_of_revenue',
-                                                     'Fonte recurso':
-                                                     'source_of_revenue',
-                                                     'Municipio':
-                                                     'city',
-                                                     'Nome candidato':
-                                                     'candidate_name',
-                                                     'Nome da UE':
-                                                     'electoral_unit_name',
-                                                     'Nome do doador':
-                                                     'donor_name',
-                                                     'Nome do doador (Receita Federal)':  # noqa
-                                                     'donor_name_for_federal_revenue',  # noqa
-                                                     'Nome do doador originário':  # noqa
-                                                     'original_donor_name',
-                                                     'Nome do doador originário (Receita Federal)':  # noqa
-                                                     'original_donor_name_for_federal_revenue',  # noqa
-                                                     'Numero candidato':
-                                                     'candidate_number',
-                                                     'Número candidato doador':
-                                                     'donor_candidate_number',
-                                                     'Numero do documento':
-                                                     'document_number',
-                                                     'Número partido doador':
-                                                     'donor_party_number',
-                                                     'Numero Recibo Eleitoral':
-                                                     'electoral_receipt_number',  # noqa
-                                                     'Numero UE':
-                                                     'electoral_unit_number',
-                                                     'Sequencial Candidato':
-                                                     'candidate_sequence',
-                                                     'Setor econômico do doador':  # noqa
-                                                     'donor_economic_sector',
-                                                     'Setor econômico do doador originário':  # noqa
-                                                     'original_donor_economic_sector',  # noqa
-                                                     'Sigla da UE':
-                                                     'electoral_unit_abbreviation',  # noqa
-                                                     'Sigla Partido':
-                                                     'party_acronym',
-                                                     'Sigla UE doador':
-                                                     'donor_electoral_unit_abbreviation',  # noqa
-                                                     'Tipo doador originário':
-                                                     'original_donor_type',
-                                                     'Tipo receita':
-                                                     'revenue_type',
-                                                     'UF':
-                                                     'state',
-                                                     'Valor receita':
-                                                     'revenue_value'},
+        donations_data['candidates'].rename(columns={translations},
                                             inplace=True)
     if 'parties' in donations_data.keys():
-        donations_data['parties'].rename(columns={'Cargo':
-                                                  'post',
-                                                  'CNPJ Prestador Conta':
-                                                  'accountable_company_id',
-                                                  'Cod setor econômico do doador':  # noqa
-                                                  'donor_economic_setor_id',
-                                                  'Cód. Eleição':
-                                                  'election_id',
-                                                  'CPF do candidato':
-                                                  'candidate_cpf',
-                                                  'CPF do vice/suplente':
-                                                  'substitute_cpf',
-                                                  'CPF/CNPJ do doador':
-                                                  'donor_cnpj_or_cpf',
-                                                  'CPF/CNPJ do doador originário':  # noqa
-                                                  'original_donor_cnpj_or_cpf',
-                                                  'Data da receita':
-                                                  'revenue_date',
-                                                  'Data e hora':
-                                                  'date_and_time',
-                                                  'Desc. Eleição':
-                                                  'election_description',
-                                                  'Descrição da receita':
-                                                  'revenue_description',
-                                                  'Entrega em conjunto?':
-                                                  'batch',
-                                                  'Especie recurso':
-                                                  'type_of_revenue',
-                                                  'Fonte recurso':
-                                                  'source_of_revenue',
-                                                  'Municipio':
-                                                  'city',
-                                                  'Nome candidato':
-                                                  'candidate_name',
-                                                  'Nome da UE':
-                                                  'electoral_unit_name',
-                                                  'Nome do doador':
-                                                  'donor_name',
-                                                  'Nome do doador (Receita Federal)':  # noqa
-                                                  'donor_name_for_federal_revenue',  # noqa
-                                                  'Nome do doador originário':
-                                                  'original_donor_name',
-                                                  'Nome do doador originário (Receita Federal)':  # noqa
-                                                  'original_donor_name_for_federal_revenue',  # noqa
-                                                  'Numero candidato':
-                                                  'candidate_number',
-                                                  'Número candidato doador':
-                                                  'donor_candidate_number',
-                                                  'Numero do documento':
-                                                  'document_number',
-                                                  'Número partido doador':
-                                                  'donor_party_number',
-                                                  'Numero Recibo Eleitoral':
-                                                  'electoral_receipt_number',
-                                                  'Numero UE':
-                                                  'electoral_unit_number',
-                                                  'Sequencial Candidato':
-                                                  'candidate_sequence',
-                                                  'Setor econômico do doador':
-                                                  'donor_economic_sector',
-                                                  'Setor econômico do doador originário':  # noqa
-                                                  'original_donor_economic_sector',  # noqa
-                                                  'Sigla da UE':
-                                                  'electoral_unit_abbreviation',  # noqa
-                                                  'Sigla Partido':
-                                                  'party_acronym',
-                                                  'Sigla UE doador':
-                                                  'donor_electoral_unit_abbreviation',  # noqa
-                                                  'Tipo doador originário':
-                                                  'original_donor_type',
-                                                  'Tipo receita':
-                                                  'revenue_type',
-                                                  'UF':
-                                                  'state',
-                                                  'Valor receita':
-                                                  'revenue_value'},
+        donations_data['parties'].rename(columns={translations},
                                          inplace=True)
     if 'committees' in donations_data.keys():
-        donations_data['committees'].rename(columns={'Cargo':
-                                                     'post',
-                                                     'CNPJ Prestador Conta':
-                                                     'accountable_company_id',
-                                                     'Cod setor econômico do doador':  # noqa
-                                                     'donor_economic_setor_id',
-                                                     'Cód. Eleição':
-                                                     'election_id',
-                                                     'CPF do candidato':
-                                                     'candidate_cpf',
-                                                     'CPF do vice/suplente':
-                                                     'substitute_cpf',
-                                                     'CPF/CNPJ do doador':
-                                                     'donor_cnpj_or_cpf',
-                                                     'CPF/CNPJ do doador originário':  # noqa
-                                                     'original_donor_cnpj_or_cpf',  # noqa
-                                                     'Data da receita':
-                                                     'revenue_date',
-                                                     'Data e hora':
-                                                     'date_and_time',
-                                                     'Desc. Eleição':
-                                                     'election_description',
-                                                     'Descrição da receita':
-                                                     'revenue_description',
-                                                     'Entrega em conjunto?':
-                                                     'batch',
-                                                     'Espécie recurso':
-                                                     'type_of_revenue',
-                                                     'Fonte recurso':
-                                                     'source_of_revenue',
-                                                     'Município':
-                                                     'city',
-                                                     'Nome candidato':
-                                                     'candidate_name',
-                                                     'Nome da UE':
-                                                     'electoral_unit_name',
-                                                     'Nome do doador':
-                                                     'donor_name',
-                                                     'Nome do doador (Receita Federal)':  # noqa
-                                                     'donor_name_for_federal_revenue',  # noqa
-                                                     'Nome do doador originário':
-                                                     'original_donor_name',
-                                                     'Nome do doador originário (Receita Federal)':  # noqa
-                                                     'original_donor_name_for_federal_revenue',  # noqa
-                                                     'Número candidato':
-                                                     'candidate_number',
-                                                     'Número candidato doador':
-                                                     'donor_candidate_number',
-                                                     'Número do documento':
-                                                     'document_number',
-                                                     'Número partido doador':
-                                                     'donor_party_number',
-                                                     'Número Recibo Eleitoral':
-                                                     'electoral_receipt_number',  # noqa
-                                                     'Número UE':
-                                                     'electoral_unit_number',
-                                                     'Sequencial Candidato':
-                                                     'candidate_sequence',
-                                                     'Setor econômico do doador':  # noqa
-                                                     'donor_economic_sector',
-                                                     'Setor econômico do doador originário':  # noqa
-                                                     'original_donor_economic_sector',  # noqa
-                                                     'Sigla da UE':
-                                                     'electoral_unit_abbreviation',  # noqa
-                                                     'Sigla Partido':
-                                                     'party_acronym',
-                                                     'Sigla UE doador':
-                                                     'donor_electoral_unit_abbreviation',  # noqa
-                                                     'Tipo doador originário':
-                                                     'original_donor_type',
-                                                     'Tipo receita':
-                                                     'revenue_type',
-                                                     'UF':
-                                                     'state',
-                                                     'Valor receita':
-                                                     'revenue_value'},
+        donations_data['committees'].rename(columns={translations},
                                             inplace=True)
 
 
