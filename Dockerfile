@@ -11,7 +11,6 @@ RUN apt-get update \
         build-essential \
         libxml2-dev \
         libxslt1-dev \
-        python3 \
         python3-dev \
         unzip \
         zlib1g-dev \
