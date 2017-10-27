@@ -23,8 +23,8 @@ class TestElectionExpensesClassifier(TestCase):
 
         self.assertEqual(prediction_result[1], False)
 
-    def test_fit(self):
-        self.assertEqual(self.election_expenser_classifier.fit(self.dataframe), self.election_expenser_classifier)
+    def test_fit_just_for_formality_because_its_never_used(self):
+        self.assertTrue(self.election_expenser_classifier.fit(self.dataframe) is None)
 
     def test_transform_just_for_formality_because_its_never_used(self):
         self.assertTrue(self.election_expenser_classifier.transform() is None)

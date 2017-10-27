@@ -15,7 +15,7 @@ class ElectionExpensesClassifier(TransformerMixin):
     """
 
     def fit(self, dataframe):
-        return self
+        pass
 
     def transform(self, dataframe=None):
         pass
