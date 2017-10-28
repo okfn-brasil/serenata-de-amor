@@ -52,6 +52,7 @@ loadUrl reimbursement =
         path =
             String.join "/"
                 [ "/api"
+                , "chamber_of_deputies"
                 , "reimbursement"
                 , toString reimbursement.year
                 , toString reimbursement.applicantId

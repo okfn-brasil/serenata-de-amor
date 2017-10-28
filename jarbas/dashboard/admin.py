@@ -7,7 +7,7 @@ from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import F
 from django.forms.widgets import Widget
 
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.public_admin.admin import PublicAdminModelAdmin
 from jarbas.public_admin.sites import public_admin
 

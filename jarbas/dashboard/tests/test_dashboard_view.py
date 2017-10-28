@@ -4,7 +4,7 @@ from django.shortcuts import resolve_url
 from django.test import TestCase
 from mixer.backend.django import mixer
 
-from jarbas.core.models import Reimbursement
+from jarbas.chamber_of_deputies.models import Reimbursement
 
 
 class TestDashboard(TestCase):
@@ -13,9 +13,9 @@ class TestDashboard(TestCase):
         obj = mixer.blend(Reimbursement, search_vector=None)
         self.urls = (
             resolve_url('dashboard:index'),
-            resolve_url('dashboard:core_reimbursement_changelist'),
-            resolve_url('dashboard:core_reimbursement_change', obj.pk),
-            resolve_url('dashboard:core_reimbursement_history', obj.pk),
+            resolve_url('dashboard:chamber_of_deputies_reimbursement_changelist'),
+            resolve_url('dashboard:chamber_of_deputies_reimbursement_change', obj.pk),
+            resolve_url('dashboard:chamber_of_deputies_reimbursement_history', obj.pk),
         )
         self.forbidden = (
             '/login/',

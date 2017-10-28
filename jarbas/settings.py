@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'simple_history',
     'rest_framework',
     'jarbas.core.app.CoreConfig',
-    'jarbas.api',
+    'jarbas.chamber_of_deputies.app.ChamberOfDeputiesConfig',
     'jarbas.frontend',
     'jarbas.dashboard',
     'django.contrib.admin',
