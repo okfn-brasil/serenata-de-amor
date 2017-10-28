@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.base import TransformerMixin
-
-from pycpfcnpj import cpfcnpj
+from brutils import cpf, cnpj
 
 
 class InvalidCnpjCpfClassifier(TransformerMixin):
@@ -28,9 +27,7 @@ class InvalidCnpjCpfClassifier(TransformerMixin):
         return self
 
     def predict(self, X):
-        return np.r_[X.apply(self.__is_invalid, axis=1)]
-
-    def __is_invalid(self, row):
-        document_types = ['bill_of_sale', 'simple_receipt', 'unknown']
-        return (row['document_type'] in document_types) \
-            & (not cpfcnpj.validate(str(row['recipient_id'])))
+        cpf_or_cnpj = lambda doc: cpf.validate(str(doc).zfill(11)) or cnpj.validate(str(doc).zfill(14))
+        is_invalid = lambda row: row['document_type'] in ('bill_of_sale', 'simple_receipt', 'unknown') and \
+                                 (not cpf_or_cnpj(row['recipient_id']))
+        return np.r_[X.apply(is_invalid, axis=1)]
