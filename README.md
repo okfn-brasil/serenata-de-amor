@@ -13,11 +13,17 @@ A Python application reading receipts from the [Quota for Exercising Parliamenta
 
 ```console
 $ docker build -t rosie .
-$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data rosie
-
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data rosie run <module_name>
 ```
 
 Then check your `/tmp/serenata-data/` directory in you host machine for `irregularities.xz`.
+
+For testing
+
+```console
+$ docker build -t rosie .
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data rosie test
+```
 
 ### Without Docker
 
