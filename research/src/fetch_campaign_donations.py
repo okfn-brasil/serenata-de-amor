@@ -24,104 +24,95 @@ def reporthook(blocknum, blocksize, totalsize):
         sys.stderr.write("read %d\n" % (readsofar,))
 
 
-def folder_walk_2010():
-    donations_data_candidates_2010 = []
-    donations_data_parties_2010 = []
-    donations_data_committees_2010 = []
-    for root, dirs, files in os.walk("prestacao_contas_2010", topdown=False):
-        for name in files:
-            if 'Receitas' in name:
-                data = pd.read_csv(os.path.join(root, name), low_memory=False,
-                                   encoding="ISO-8859-1", sep=';')
-                if 'candidato' in os.path.join(root, name):
-                    donations_data_candidates_2010.append(data)
-                elif 'comite' in os.path.join(root, name):
-                    donations_data_committees_2010.append(data)
-                elif 'partido' in os.path.join(root, name):
-                    donations_data_parties_2010.append(data)
+def folder_walk(year):
+    ret_dict = {}
+    if year == '2010':
+        donations_data_candidates = []
+        donations_data_parties = []
+        donations_data_committees = []
+        for root, dirs, files in os.walk("prestacao_contas_2010", topdown=False):
+            for name in files:
+                if 'Receitas' in name:
+                    data = pd.read_csv(os.path.join(root, name), low_memory=False,
+                                       encoding="ISO-8859-1", sep=';')
+                    if 'candidato' in os.path.join(root, name):
+                        donations_data_candidates.append(data)
+                    elif 'comite' in os.path.join(root, name):
+                        donations_data_committees.append(data)
+                    elif 'partido' in os.path.join(root, name):
+                        donations_data_parties.append(data)
 
-    donations_data_candidates_2010 = pd.concat(donations_data_candidates_2010)
-    donations_data_parties_2010 = pd.concat(donations_data_parties_2010)
-    donations_data_committees_2010 = pd.concat(donations_data_committees_2010)
-    shutil.rmtree('prestacao_contas_2010')
-    return {'candidates': donations_data_candidates_2010,
-            'parties': donations_data_parties_2010,
-            'committees': donations_data_committees_2010}
+        donations_data_candidates = pd.concat(donations_data_candidates)
+        donations_data_parties = pd.concat(donations_data_parties)
+        donations_data_committees = pd.concat(donations_data_committees)
+        shutil.rmtree('prestacao_contas_2010')
+        ret_dict = {'candidates': donations_data_candidates,
+                    'parties': donations_data_parties,
+                    'committees': donations_data_committees}
+    else:
+        if year == '2012':
+            path_candid = os.path.join('prestacao_final_2012',
+                                       'receitas_candidatos_2012_brasil.txt')
+            path_parties = os.path.join('prestacao_final_2012',
+                                        'receitas_partidos_2012_brasil.txt')
+            path_committ = os.path.join('prestacao_final_2012',
+                                        'receitas_comites_2012_brasil.txt')
+        elif year == '2014':
+            path_candid = os.path.join('prestacao_final_2014',
+                                       'receitas_candidatos_2014_brasil.txt')
+            path_parties = os.path.join('prestacao_final_2014',
+                                        'receitas_partidos_2014_brasil.txt')
+            path_committ = os.path.join('prestacao_final_2014',
+                                        'receitas_comites_2014_brasil.txt')
+        elif year == '2016':
+            path_candid = os.path.join('prestacao_contas_final_2016',
+                                   ('receitas_candidatos_prestacao_contas_final_2016_brasil'  # noqa
+                                    '.txt'))
+            path_parties = os.path.join('prestacao_contas_final_2016',
+                                        ('receitas_partidos_prestacao_contas_final_2016_brasil'  # noqa
+                                         '.txt'))
 
+        donations_data_candidates_chunks = pd.read_csv(path_candid,
+                                                       low_memory=True,
+                                                       encoding="ISO-8859-1",
+                                                       sep=';',
+                                                       chunksize=10000)
+        donations_data_candidates = []
+        for chunk in donations_data_candidates_chunks:
+            donations_data_candidates.append(chunk)
+        donations_data_candidates = pd.concat(donations_data_candidates)
+        ret_dict['candidates'] = donations_data_candidates
 
-def folder_walk_2012():
-    path_candid = os.path.join('prestacao_final_2012',
-                               'receitas_candidatos_2012_brasil.txt')
-    path_parties = os.path.join('prestacao_final_2012',
-                                'receitas_partidos_2012_brasil.txt')
-    path_committ = os.path.join('prestacao_final_2012',
-                                'receitas_comites_2012_brasil.txt')
-    donations_data_candidates_2012_chunks = pd.read_csv(path_candid,
-                                                        low_memory=True,
-                                                        encoding="ISO-8859-1",
-                                                        sep=';',
-                                                        chunksize=10000)
-    donations_data_candidates_2012 = []
-    for chunk in donations_data_candidates_2012_chunks:
-        donations_data_candidates_2012.append(chunk)
+        donations_data_parties_chunks = pd.read_csv(path_parties,
+                                                    low_memory=True,
+                                                    encoding="ISO-8859-1",
+                                                    sep=';',
+                                                    chunksize=10000)
 
-    donations_data_candidates_2012 = pd.concat(donations_data_candidates_2012)
+        donations_data_parties = []
+        for chunk in donations_data_parties_chunks:
+            donations_data_parties.append(chunk)
+        donations_data_parties = pd.concat(donations_data_parties)
+        ret_dict['parties'] = donations_data_parties
 
-    donations_data_parties_2012 = pd.read_csv(path_parties, low_memory=False,
-                                              encoding="ISO-8859-1", sep=';')
-    donations_data_committees_2012 = pd.read_csv(path_committ,
-                                                 low_memory=False,
-                                                 encoding="ISO-8859-1",
-                                                 sep=';')
-    shutil.rmtree('prestacao_final_2012')
-    return {'candidates': donations_data_candidates_2012,
-            'parties': donations_data_parties_2012,
-            'committees': donations_data_committees_2012}
+        if year != '2016':
+            donations_data_committees_chunks = pd.read_csv(path_committ,
+                                                           low_memory=True,
+                                                           encoding="ISO-8859-1",
+                                                           sep=';',
+                                                           chunksize=10000)
+            donations_data_committees = []
+            for chunk in donations_data_committees_chunks:
+                donations_data_committees.append(chunk)
+            donations_data_committees = pd.concat(donations_data_committees)
+            ret_dict['committees'] = donations_data_committees
 
+        if year != '2016':
+            shutil.rmtree('prestacao_final_' + year)
+        else:
+            shutil.rmtree('prestacao_contas_final_2016')
 
-def folder_walk_2014():
-    path_candid = os.path.join('prestacao_final_2014',
-                               'receitas_candidatos_2014_brasil.txt')
-    path_parties = os.path.join('prestacao_final_2014',
-                                'receitas_partidos_2014_brasil.txt')
-    path_committ = os.path.join('prestacao_final_2014',
-                                'receitas_comites_2014_brasil.txt')
-    donations_data_candidates_2014 = pd.read_csv(path_candid, low_memory=False,
-                                                 encoding="ISO-8859-1",
-                                                 sep=';')
-    donations_data_parties_2014 = pd.read_csv(path_parties, low_memory=False,
-                                              encoding="ISO-8859-1", sep=';')
-    donations_data_committees_2014 = pd.read_csv(path_committ,
-                                                 low_memory=False,
-                                                 encoding="ISO-8859-1",
-                                                 sep=';')
-    shutil.rmtree('prestacao_final_2014')
-    return {'candidates': donations_data_candidates_2014,
-            'parties': donations_data_parties_2014,
-            'committees': donations_data_committees_2014}
-
-
-def folder_walk_2016():
-    path_candid = os.path.join('prestacao_contas_final_2016',
-                               ('receitas_candidatos_prestacao_contas_final_2016_brasil'  # noqa
-                                '.txt'))
-    path_parties = os.path.join('prestacao_contas_final_2016',
-                                ('receitas_partidos_prestacao_contas_final_2016_brasil'  # noqa
-                                 '.txt'))
-    donations_data_candidates_2016_chunks = pd.read_csv(path_candid,
-                                                        encoding="ISO-8859-1",
-                                                        sep=';',
-                                                        low_memory=True,
-                                                        chunksize=10000)
-    donations_data_candidates_2016 = []
-    for chunk in donations_data_candidates_2016_chunks:
-        donations_data_candidates_2016.append(chunk)
-    donations_data_candidates_2016 = pd.concat(donations_data_candidates_2016)
-    donations_data_parties_2016 = pd.read_csv(path_parties, low_memory=False,
-                                              encoding="ISO-8859-1", sep=';')
-    shutil.rmtree('prestacao_contas_final_2016')
-    return {'candidates': donations_data_candidates_2016,
-            'parties': donations_data_parties_2016}
+    return ret_dict
 
 
 def correct_columns(donations_data):
@@ -204,17 +195,27 @@ def translate_columns(donations_data):
                     'UF': 'state',
                     'Valor receita': 'revenue_value'}
     if 'candidates' in donations_data.keys():
-        donations_data['candidates'].rename(columns={translations},
+        donations_data['candidates'].rename(columns=translations,
                                             inplace=True)
     if 'parties' in donations_data.keys():
-        donations_data['parties'].rename(columns={translations},
+        donations_data['parties'].rename(columns=translations,
                                          inplace=True)
     if 'committees' in donations_data.keys():
-        donations_data['committees'].rename(columns={translations},
+        donations_data['committees'].rename(columns=translations,
                                             inplace=True)
 
 
-def download_base(url, folder_walk_function):
+def strip_columns_names(donations_data, key):
+    if key in donations_data.keys():
+        columns_candidates = donations_data[key].columns.values
+        columns_mod_candidates = {}
+        for name in columns_candidates:
+            columns_mod_candidates[name] = name.strip()
+        donations_data[key].rename(columns=columns_mod_candidates,
+                                   inplace=True)
+
+
+def download_base(url, year):
     file_name = url.split('/')[-1]
     print("Downloading " + file_name)
     urllib.request.urlretrieve(url, file_name, reporthook)
@@ -225,67 +226,47 @@ def download_base(url, folder_walk_function):
 
     print("Reading all the data and creating the dataframes...")
 
-    donations_data = folder_walk_function()
+    donations_data = folder_walk(year)
 
-    if 'candidates' in donations_data.keys():
-        columns_candidates = donations_data['candidates'].columns.values
-        columns_mod_candidates = {}
-        for name in columns_candidates:
-            columns_mod_candidates[name] = name.strip()
-        donations_data['candidates'].rename(columns=columns_mod_candidates,
-                                            inplace=True)
-
-    if 'parties' in donations_data.keys():
-        columns_parties = donations_data['parties'].columns.values
-        columns_mod_parties = {}
-        for name in columns_parties:
-            columns_mod_parties[name] = name.strip()
-        donations_data['parties'].rename(columns=columns_mod_parties,
-                                         inplace=True)
-
-    if 'committees' in donations_data.keys():
-        columns_committees = donations_data['committees'].columns.values
-        columns_mod_committees = {}
-        for name in columns_committees:
-            columns_mod_committees[name] = name.strip()
-        donations_data['committees'].rename(columns=columns_mod_committees,
-                                            inplace=True)
+    strip_columns_names(donations_data, 'candidates')
+    strip_columns_names(donations_data, 'parties')
+    strip_columns_names(donations_data, 'committees')
 
     return donations_data
+
 
 if __name__ == "__main__":
     base_url = ('http://agencia.tse.jus.br/estatistica/sead/odsele/'
                 'prestacao_contas/')
     url = base_url + 'prestacao_contas_2010.zip'
-    donations_data_2010 = download_base(url, folder_walk_2010)
+    donations_data_2010 = download_base(url, '2010')
     url = base_url + 'prestacao_final_2012.zip'
-    donations_data_2012 = download_base(url, folder_walk_2012)
+    donations_data_2012 = download_base(url, '2012')
     url = base_url + 'prestacao_final_2014.zip'
-    donations_data_2014 = download_base(url, folder_walk_2014)
+    donations_data_2014 = download_base(url, '2014')
     url = base_url + 'prestacao_contas_final_2016.zip'
-    donations_data_2016 = download_base(url, folder_walk_2016)
+    donations_data_2016 = download_base(url, '2016')
 
-    correct_columns(donations_data_2010)
-    correct_columns(donations_data_2012)
-    correct_columns(donations_data_2014)
-    correct_columns(donations_data_2016)
+    donations_data = [donations_data_2010, donations_data_2012,
+                      donations_data_2014, donations_data_2016]
 
-    translate_columns(donations_data_2010)
-    translate_columns(donations_data_2012)
-    translate_columns(donations_data_2014)
-    translate_columns(donations_data_2016)
+    donations_candidates_concatenated = []
+    donations_parties_concatenated = []
+    donations_committees_concatenated = []
 
-    donations_candidates_concatenated = pd.concat([donations_data_2010['candidates'],  # noqa
-                                                   donations_data_2012['candidates'],  # noqa
-                                                   donations_data_2014['candidates'],  # noqa
-                                                   donations_data_2016['candidates']])  # noqa
-    donations_parties_concatenated = pd.concat([donations_data_2010['parties'],
-                                                donations_data_2012['parties'],
-                                                donations_data_2014['parties'],
-                                                donations_data_2016['parties']])  # noqa
-    donations_committees_concatenated = pd.concat([donations_data_2010['committees'],  # noqa
-                                                   donations_data_2012['committees'],  # noqa
-                                                   donations_data_2014['committees']])  # noqa
+    for data in donations_data:
+        correct_columns(data)
+        translate_columns(data)
+        if 'candidates' in data.keys():
+            donations_candidates_concatenated.append(data['candidates'])
+        if 'parties' in data.keys():
+            donations_parties_concatenated.append(data['parties'])
+        if 'committees' in data.keys():
+            donations_committees_concatenated.append(data['committees'])
+
+    donations_candidates_concatenated = pd.concat(donations_candidates_concatenated)  # noqa
+    donations_parties_concatenated = pd.concat(donations_parties_concatenated)
+    donations_committees_concatenated = pd.concat(donations_committees_concatenated)  # noqa
 
     print("Saving dataframes in csv files (.xz)...")
 
