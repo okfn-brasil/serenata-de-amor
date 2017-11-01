@@ -220,6 +220,14 @@ $ docker-compose run --rm django python manage.py tweets
 If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/datasciencebr/rosie).
 To add a fresh new `reimbursements.xz` or `suspicions.xz` brewed by [Rosie](https://github.com/datasciencebr/rosie), or a `companies.xz` you've got from the [toolbox](https://github.com/datasciencebr/serenata-toolbox), you just need copy these files to `contrib/data` and refer to them inside the container from the path `/mnt/data/`.
 
+#### Creating search vector
+
+For text search in the dashboard:
+
+```console
+$ docker-compose run --rm django python manage.py searchvector
+```
+
 #### Acessing Jabas
 
 You can access it at [`localhost:8000`](http://localhost:8000/) in development mode or [`localhost`](http://localhost:80/) in production mode.
@@ -278,6 +286,14 @@ $ python manage.py ceapdatasets
 ```
 
 There are sample files to seed yout database inside `contrib/data/`. You can get full datasets running [Rosie](https://github.com/datasciencebr/rosie) or directly with the [toolbox](https://github.com/datasciencebr/serenata-toolbox).
+
+#### Creating search vector
+
+For text search in the dashboard:
+
+```console
+$ python manage.py searchvector
+```
 
 #### Generate static files
 
