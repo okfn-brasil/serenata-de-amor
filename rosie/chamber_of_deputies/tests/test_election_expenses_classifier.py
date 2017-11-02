@@ -12,20 +12,24 @@ class TestElectionExpensesClassifier(TestCase):
         self.election_expenser_classifier = ElectionExpensesClassifier()
 
     def test_legal_entity_is_a_election_company(self):
-        self.dataframe = pd.read_csv('rosie/chamber_of_deputies/tests/fixtures/election_expenses_classifier.csv',
-                                     dtype={'name': np.str, 'legal_entity': np.str})
+        self.dataframe = pd.DataFrame(
+            data=[['CARLOS ALBERTO DA SILVA', 'ELEICAO 2006 CARLOS ALBERTO DA SILVA DEPUTADO', '409-0 - CANDIDATO A CARGO POLITICO ELETIVO']],
+            columns=['congressperson_name', 'name', 'legal_entity']
+        )
 
         prediction_result = self.election_expenser_classifier.predict(self.dataframe)
 
         self.assertEqual(prediction_result[0], True)
 
     def test_legal_entity_is_not_election_company(self):
-        self.dataframe = pd.read_csv('rosie/chamber_of_deputies/tests/fixtures/election_expenses_classifier.csv',
-                                      dtype={'name': np.str, 'legal_entity': np.str})
+        self.dataframe = pd.DataFrame(
+            data=[['PAULO ROGERIO ROSSETO DE MELO', 'POSTO ROTA 116 DERIVADOS DE PETROLEO LTDA', '401-4 - EMPRESA INDIVIDUAL IMOBILIARIA']],
+            columns=['congressperson_name', 'name', 'legal_entity']
+        )
 
         prediction_result = self.election_expenser_classifier.predict(self.dataframe)
 
-        self.assertEqual(prediction_result[1], False)
+        self.assertEqual(prediction_result[0], False)
 
     def test_fit_just_for_formality_because_its_never_used(self):
         empty_dataframe = pd.DataFrame()
