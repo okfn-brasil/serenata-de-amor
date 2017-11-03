@@ -12,14 +12,22 @@ class TestElectionExpensesClassifier(TestCase):
         self.election_expenser_classifier = ElectionExpensesClassifier()
 
     def test_legal_entity_is_a_election_company(self):
-        self.dataframe = self._create_dataframe([['CARLOS ALBERTO DA SILVA', 'ELEICAO 2006 CARLOS ALBERTO DA SILVA DEPUTADO', '409-0 - CANDIDATO A CARGO POLITICO ELETIVO']])
+        self.dataframe = self._create_dataframe([[
+            'CARLOS ALBERTO DA SILVA',
+            'ELEICAO 2006 CARLOS ALBERTO DA SILVA DEPUTADO',
+            '409-0 - CANDIDATO A CARGO POLITICO ELETIVO'
+        ]])
 
         prediction_result = self.election_expenser_classifier.predict(self.dataframe)
 
         self.assertEqual(prediction_result[0], True)
 
     def test_legal_entity_is_not_election_company(self):
-        self.dataframe = self._create_dataframe([['PAULO ROGERIO ROSSETO DE MELO', 'POSTO ROTA 116 DERIVADOS DE PETROLEO LTDA', '401-4 - EMPRESA INDIVIDUAL IMOBILIARIA']])
+        self.dataframe = self._create_dataframe([[
+            'PAULO ROGERIO ROSSETO DE MELO',
+            'POSTO ROTA 116 DERIVADOS DE PETROLEO LTDA',
+            '401-4 - EMPRESA INDIVIDUAL IMOBILIARIA'
+        ]])
 
         prediction_result = self.election_expenser_classifier.predict(self.dataframe)
 
