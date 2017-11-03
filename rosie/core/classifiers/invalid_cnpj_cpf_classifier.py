@@ -19,15 +19,15 @@ class InvalidCnpjCpfClassifier(TransformerMixin):
     recipient_id : string column
         A CNPJ (Brazilian company ID) or CPF (Brazilian personal tax ID).
     """
-
-    def fit(self, X):
+    def fit(self, dataframe):
         return self
 
-    def transform(self, X=None):
+    def transform(self, dataframe=None):
         return self
 
-    def predict(self, X):
+    def predict(self, dataframe):
         cpf_or_cnpj = lambda doc: cpf.validate(str(doc).zfill(11)) or cnpj.validate(str(doc).zfill(14))
-        is_invalid = lambda row: row['document_type'] in ('bill_of_sale', 'simple_receipt', 'unknown') and \
-                                 (not cpf_or_cnpj(row['recipient_id']))
-        return np.r_[X.apply(is_invalid, axis=1)]
+        good_doctype = lambda doctype: doctype in ('bill_of_sale', 'simple_receipt', 'unknown')
+        is_invalid = lambda row: good_doctype(row['document_type']) and (not cpf_or_cnpj(row['recipient_id']))
+
+        return np.r_[dataframe.apply(is_invalid, axis=1)]
