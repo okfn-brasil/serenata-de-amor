@@ -1,6 +1,8 @@
 from sklearn.base import TransformerMixin
 
 
+ELECTION_LEGAL_ENTITY = '409-0 - CANDIDATO A CARGO POLITICO ELETIVO'
+
 class ElectionExpensesClassifier(TransformerMixin):
     """
     Election Expenses classifier.
@@ -21,6 +23,4 @@ class ElectionExpensesClassifier(TransformerMixin):
         pass
 
     def predict(self, dataframe):
-        ELECTION_LEGAL_ENTITY = '409-0 - CANDIDATO A CARGO POLITICO ELETIVO'
-
         return dataframe['legal_entity'] == ELECTION_LEGAL_ENTITY
