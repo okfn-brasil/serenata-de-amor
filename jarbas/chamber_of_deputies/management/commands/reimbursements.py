@@ -1,10 +1,8 @@
 import lzma
+from csv import DictReader
 
 from django.utils.timezone import now
-from rows import import_from_csv
-from rows.fields import FloatField, TextField
 
-from jarbas.core.fields import DateAsStringField, IntegerField
 from jarbas.core.management.commands import LoadCommand
 from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.chamber_of_deputies.tasks import create_or_update_reimbursement
@@ -26,22 +24,8 @@ class Command(LoadCommand):
     @property
     def reimbursements(self):
         """Returns a Generator with a dict object for each row."""
-        force_types = {
-            'cnpj_cpf': TextField,
-            'document_number': TextField,
-            'leg_of_the_trip': TextField,
-            'congressperson_id': IntegerField,
-            'congressperson_document': IntegerField,
-            'reimbursement_value_total': FloatField,
-            'reimbursement_values': TextField,
-            'issue_date': DateAsStringField,
-            'term': IntegerField,
-            'term_id': IntegerField
-        }
-        with lzma.open(self.path) as file_handler:
-            for row in import_from_csv(file_handler, force_types=force_types):
-                as_dict = dict(row._asdict())  # _asdict returns OrderedDict
-                yield as_dict
+        with lzma.open(self.path, 'rt') as file_handler:
+            yield from DictReader(file_handler)
 
     def create_or_update(self, rows):
         for count, row in enumerate(rows, 1):
