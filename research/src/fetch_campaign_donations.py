@@ -181,6 +181,8 @@ def translate_columns(donations_data):
                     'Sequencial Candidato': 'candidate_sequence',
                     'Sequencial prestador conta': 'accountable_sequence',
                     'Sequencial comite': 'committee_sequence',
+                    'Sequencial Diretorio': 'party_board_sequence',
+                    'Tipo diretorio': 'party_board_type',
                     'Setor econômico do doador': 'donor_economic_sector',
                     'Setor econômico do doador originário':
                     'original_donor_economic_sector',
