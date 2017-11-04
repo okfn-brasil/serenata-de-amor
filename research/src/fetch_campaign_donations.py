@@ -182,7 +182,6 @@ def translate_columns(donations_data):
                     'Sequencial prestador conta': 'accountable_sequence',
                     'Sequencial comite': 'committee_sequence',
                     'Sequencial Diretorio': 'party_board_sequence',
-                    'Tipo diretorio': 'party_board_type',
                     'Setor econômico do doador': 'donor_economic_sector',
                     'Setor econômico do doador originário':
                     'original_donor_economic_sector',
@@ -190,6 +189,7 @@ def translate_columns(donations_data):
                     'Sigla Partido': 'party_acronym',
                     'Sigla UE doador': 'donor_electoral_unit_abbreviation',
                     'Tipo de documento': 'document_type',
+                    'Tipo diretorio': 'party_board_type',
                     'Tipo doador originário': 'original_donor_type',
                     'Tipo partido': 'party_type',
                     'Tipo receita': 'revenue_type',
