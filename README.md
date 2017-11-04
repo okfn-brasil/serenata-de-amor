@@ -12,7 +12,7 @@ A Python application reading receipts from the [Quota for Exercising Parliamenta
 ### With Docker
 
 ```console
-$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datascience/rosie run <module_name>
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie run <module_name>
 ```
 
 Then check your `/tmp/serenata-data/` directory in you host machine for `irregularities.xz`.
