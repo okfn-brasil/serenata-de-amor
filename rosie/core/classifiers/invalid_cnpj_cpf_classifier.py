@@ -26,8 +26,9 @@ class InvalidCnpjCpfClassifier(TransformerMixin):
         return self
 
     def predict(self, dataframe):
-        cpf_or_cnpj = lambda doc: cpf.validate(str(doc).zfill(11)) or cnpj.validate(str(doc).zfill(14))
-        good_doctype = lambda doctype: doctype in ('bill_of_sale', 'simple_receipt', 'unknown')
-        is_invalid = lambda row: good_doctype(row['document_type']) and (not cpf_or_cnpj(row['recipient_id']))
-
+        def is_invalid(row):
+            valid_cpf = cpf.validate(str(row['recipient_id']).zfill(11))
+            valid_cnpj = cnpj.validate(str(row['recipient_id']).zfill(14))
+            good_doctype = row['document_type'] in ('bill_of_sale', 'simple_receipt', 'unknown')
+            return good_doctype and (not (valid_cpf or valid_cnpj))
         return np.r_[dataframe.apply(is_invalid, axis=1)]
