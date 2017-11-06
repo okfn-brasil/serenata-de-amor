@@ -8,7 +8,7 @@ install:
   - ./setup
   - pip install coveralls
 script:
-  - docker run --rm -i lukasmartinelli/hadolint - < Dockerfile
+  - docker run --rm -i lukasmartinelli/hadolint < Dockerfile
   - coverage run rosie.py test
   - python rosie.py run federal_senate
 after_success:
