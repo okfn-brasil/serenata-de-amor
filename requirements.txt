@@ -1,5 +1,5 @@
 geopy>=1.11.0
-numpy==1.13.1
+numpy==1.13.3
 # scipy must come before scikit-learn in order to build the wheel in docker image
 scipy==0.19.0
 pycpfcnpj==1.0.2
