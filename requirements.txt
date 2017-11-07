@@ -1,7 +1,7 @@
 geopy>=1.11.0
 numpy==1.13.3
 # scipy must come before scikit-learn in order to build the wheel in docker image
-scipy==0.19.0
+scipy==1.0.0
 pycpfcnpj==1.0.2
 scikit-learn==0.18.1
 serenata-toolbox
