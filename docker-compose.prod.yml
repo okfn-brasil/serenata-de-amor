@@ -12,7 +12,8 @@ services:
       - "8000"
     volumes:
       - assets:/code/staticfiles
-    command: ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8000", "--workers", "4"]
+    entrypoint: ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8000", "--workers", "4"]
+    command: []
 
   tasks:
     env_file:

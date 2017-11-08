@@ -2,7 +2,7 @@ version: '3'
 services:
 
   django:
-    image: datasciencebr/jarbas-backend
+    image: jarbas
     environment:
        - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
        - ALLOWED_HOSTS=localhost,127.0.0.1
