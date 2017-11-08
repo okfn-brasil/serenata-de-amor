@@ -139,7 +139,7 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 ##### Django settings
 
 * `DEBUG` (_bool_) enable or disable [Django debug mode](https://docs.djangoproject.com/en/1.10/ref/settings/#debug)
-* `GOSS_VERSION` (_str_) [Version for goss tester in docker](https://goss.rocks)
+* `GOSS_VERSION` (_str_) [Version for Goss tester in Docker](https://goss.rocks)
 * `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
 * `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
 * `USE_X_FORWARDED_HOST` (_bool_) [Whether to use the `X-Forwarded-Host` header](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-USE_X_FORWARDED_HOST)
