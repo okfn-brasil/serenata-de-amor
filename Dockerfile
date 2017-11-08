@@ -30,7 +30,7 @@ RUN set -ex && \
     python manage.py collectstatic --no-input && \
     apk del --purge .build-dependencies .goss-dependencies
 
-HEALTHCHECK --interval=1s --timeout=2m CMD goss -g /goss/goss.yaml validate
+HEALTHCHECK --interval=1m --timeout=2m CMD goss -g /goss/goss.yaml validate
 EXPOSE 8000
 ENTRYPOINT ["python", "manage.py"]
 CMD ["runserver", "0.0.0.0:8000"]
