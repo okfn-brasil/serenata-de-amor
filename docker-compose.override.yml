@@ -7,7 +7,6 @@ services:
     environment:
        - SECRET_KEY=my_dear_secret
        - DEBUG=True
-    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     ports:
       - "8000:8000"
 

@@ -139,12 +139,14 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 ##### Django settings
 
 * `DEBUG` (_bool_) enable or disable [Django debug mode](https://docs.djangoproject.com/en/1.10/ref/settings/#debug)
+* `GOSS_VERSION` (_str_) [Version for Goss tester in Docker](https://goss.rocks)
 * `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
 * `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
 * `USE_X_FORWARDED_HOST` (_bool_) [Whether to use the `X-Forwarded-Host` header](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-USE_X_FORWARDED_HOST)
 * `CACHE_BACKEND` (_str_) [Cache backend](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-CACHES-BACKEND) (e.g. `django.core.cache.backends.memcached.MemcachedCache`)
 * `CACHE_LOCATION` (_str_) [Cache location](https://docs.djangoproject.com/en/1.10/ref/settings/#location) (e.g. `localhost:11211`)
 * `SECURE_PROXY_SSL_HEADER` _(str)_ [Django secure proxy SSL header](https://docs.djangoproject.com/en/1.10/ref/settings/#secure-proxy-ssl-header) (e.g. `HTTP_X_FORWARDED_PROTO,https` transforms in tuple `('HTTP_X_FORWARDED_PROTO', 'https')`)
+
 
 ##### Database
 
@@ -205,16 +207,16 @@ $ docker-compose up -d
 Creating the database and applying migrations:
 
 ```
-$ docker-compose run --rm django python manage.py migrate
+$ docker-compose run --rm django migrate
 ```
 
 Seeding it with sample data:
 
 ```console
-$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.xz
-$ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
-$ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
-$ docker-compose run --rm django python manage.py tweets
+$ docker-compose run --rm django reimbursements /mnt/data/reimbursements_sample.xz
+$ docker-compose run --rm django companies /mnt/data/companies_sample.xz
+$ docker-compose run --rm django suspicions /mnt/data/suspicions_sample.xz
+$ docker-compose run --rm django tweets
 ```
 
 If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/datasciencebr/rosie).
@@ -225,7 +227,7 @@ To add a fresh new `reimbursements.xz` or `suspicions.xz` brewed by [Rosie](http
 For text search in the dashboard:
 
 ```console
-$ docker-compose run --rm django python manage.py searchvector
+$ docker-compose run --rm django searchvector
 ```
 
 #### Acessing Jabas
@@ -234,10 +236,19 @@ You can access it at [`localhost:8000`](http://localhost:8000/) in development m
 
 
 ```console
-$ docker-compose run --rm django python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
+$ docker-compose run --rm django reimbursements path/to/my/fresh_new_reimbursements.xz
 ```
 
 To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
+
+#### Docker Ready?
+
+Not sure? Test it!
+
+```console
+$ docker-compose run --rm django check
+$ docker-compose run --rm django test
+```
 
 ### Local install
 
