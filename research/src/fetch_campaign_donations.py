@@ -1,27 +1,26 @@
 import os
-import sys
-import time
 import shutil
+import time
 import zipfile
-import urllib.request
 
 import pandas as pd
+import requests
+from tqdm import tqdm
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, 'data')
+DOWNLOAD_BOCK_SIZE = 2 ** 19  # ~ 500kB
 
 
-def reporthook(blocknum, blocksize, totalsize):
-    readsofar = blocknum * blocksize
-    if totalsize > 0:
-        percent = readsofar * 1e2 / totalsize
-        s = "\r%5.1f%% %*d / %d" % (
-            percent, len(str(totalsize)), readsofar, totalsize)
-        sys.stderr.write(s)
-        if readsofar >= totalsize:
-            sys.stderr.write("\n")
-    else:
-        sys.stderr.write("read %d\n" % (readsofar,))
+def download(url, path, block_size=None):
+    """Saves file from remote `url` into local `path` showing a progress bar"""
+    block_size = block_size or DOWNLOAD_BOCK_SIZE
+    request = requests.get(url, stream=True)
+    total = int(request.headers.get('content-length', 0))
+    with open(path, 'wb') as file_handler:
+        kwargs = dict(total=total, unit='B', unit_scale=True)
+        for data in tqdm(request.iter_content(block_size), **kwargs):
+            file_handler.write(data)
 
 
 def folder_walk(year):
@@ -220,7 +219,7 @@ def strip_columns_names(donations_data, key):
 def download_base(url, year):
     file_name = url.split('/')[-1]
     print("Downloading " + file_name)
-    urllib.request.urlretrieve(url, file_name, reporthook)
+    download(url, file_name)
     print("Uncompressing downloaded data.")
     with zipfile.ZipFile(file_name, "r") as zip_ref:
         zip_ref.extractall(file_name.split('.')[0])
