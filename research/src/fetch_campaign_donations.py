@@ -7,9 +7,15 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, 'data')
 DOWNLOAD_BOCK_SIZE = 2 ** 19  # ~ 500kB
+READ_KWARGS = dict(
+    low_memory=False,
+    encoding="ISO-8859-1",
+    sep=';'
+)
 
 
 def download(url, path, block_size=None):
@@ -23,6 +29,16 @@ def download(url, path, block_size=None):
             file_handler.write(data)
 
 
+def read_csv(path, chunksize=None):
+    """Wrapper to read CSV with default args and an optional `chunksize`"""
+    kwargs = READ_KWARGS.copy()
+    if chunksize:
+        kwargs['chunksize'] = 10000
+
+    data = pd.read_csv(path, **kwargs)
+    return pd.concat([chunk for chunk in data]) if chuncksize else data
+
+
 def folder_walk(year):
     ret_dict = {}
     if year == '2010':
@@ -32,8 +48,7 @@ def folder_walk(year):
         for root, dirs, files in os.walk("prestacao_contas_2010", topdown=False):
             for name in files:
                 if 'Receitas' in name:
-                    data = pd.read_csv(os.path.join(root, name), low_memory=False,
-                                       encoding="ISO-8859-1", sep=';')
+                    data = read_csv(os.path.join(root, name))
                     if 'candidato' in os.path.join(root, name):
                         donations_data_candidates.append(data)
                     elif 'comite' in os.path.join(root, name):
@@ -71,39 +86,14 @@ def folder_walk(year):
                                         ('receitas_partidos_prestacao_contas_final_2016_brasil'  # noqa
                                          '.txt'))
 
-        donations_data_candidates_chunks = pd.read_csv(path_candid,
-                                                       low_memory=True,
-                                                       encoding="ISO-8859-1",
-                                                       sep=';',
-                                                       chunksize=10000)
-        donations_data_candidates = []
-        for chunk in donations_data_candidates_chunks:
-            donations_data_candidates.append(chunk)
-        donations_data_candidates = pd.concat(donations_data_candidates)
+        donations_data_candidates = read_csv(path_candid, 10000)
         ret_dict['candidates'] = donations_data_candidates
 
-        donations_data_parties_chunks = pd.read_csv(path_parties,
-                                                    low_memory=True,
-                                                    encoding="ISO-8859-1",
-                                                    sep=';',
-                                                    chunksize=10000)
-
-        donations_data_parties = []
-        for chunk in donations_data_parties_chunks:
-            donations_data_parties.append(chunk)
-        donations_data_parties = pd.concat(donations_data_parties)
+        donations_data_parties = read_csv(path_parties, 10000)
         ret_dict['parties'] = donations_data_parties
 
         if year != '2016':
-            donations_data_committees_chunks = pd.read_csv(path_committ,
-                                                           low_memory=True,
-                                                           encoding="ISO-8859-1",
-                                                           sep=';',
-                                                           chunksize=10000)
-            donations_data_committees = []
-            for chunk in donations_data_committees_chunks:
-                donations_data_committees.append(chunk)
-            donations_data_committees = pd.concat(donations_data_committees)
+            donations_data_committees = read_csv(path_committ, 10000)
             ret_dict['committees'] = donations_data_committees
 
         if year != '2016':
