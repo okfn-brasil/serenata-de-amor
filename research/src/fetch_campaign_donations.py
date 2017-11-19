@@ -2,6 +2,7 @@ import os
 import shutil
 import time
 import zipfile
+from contextlib import contextmanager
 from pathlib import Path
 
 import pandas as pd
@@ -11,12 +12,43 @@ from tqdm import tqdm
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, 'data')
-DOWNLOAD_BOCK_SIZE = 2 ** 19  # ~ 500kB
+
+BASE_URL = 'http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas'
+YEARS = range(2010, 2017, 2)
+
+DIRNAMES = {
+    2010: 'prestacao_contas_2010',
+    2012: 'prestacao_final_2010',
+    2014: 'prestacao_final_2014',
+    2016: 'prestacao_contas_final_2016',
+}
+
+ZIPNAMES = {key: '{}.zip'.format(value) for key, value in DIRNAMES.items()}
+
+FILENAMES = {
+    2012: (
+        'receitas_candidatos_2012_brasil.txt',
+        'receitas_partidos_2012_brasil.txt',
+        'receitas_comites_2012_brasil.txt'
+    ),
+    2014: (
+        'receitas_candidatos_2014_brasil.txt',
+        'receitas_partidos_2014_brasil.txt',
+        'receitas_comites_2014_brasil.txt'
+    ),
+    2016: (
+        'receitas_candidatos_prestacao_contas_final_2016_brasil.txt',
+        'receitas_partidos_prestacao_contas_final_2016_brasil.txt',
+        None
+    )
+}
+
 READ_KWARGS = dict(
     low_memory=False,
     encoding="ISO-8859-1",
     sep=';'
 )
+DOWNLOAD_BOCK_SIZE = 2 ** 19  # ~ 500kB
 
 
 def download(url, path, block_size=None):
@@ -37,7 +69,7 @@ def read_csv(path, chunksize=None):
         kwargs['chunksize'] = 10000
 
     data = pd.read_csv(path, **kwargs)
-    return pd.concat([chunk for chunk in data]) if chuncksize else data
+    return pd.concat([chunk for chunk in data]) if chunksize else data
 
 
 class ReadAndRemove:
@@ -63,54 +95,30 @@ class ReadAndRemove:
         shutil.rmtree(self.directory)
 
 
+@contextmanager
+def paths_by_year(year):
+    """For 2012-2016 return the paths of the relevant files"""
+    directory = DIRNAMES.get(year)
+    yield (os.path.join(directory, f) for f in FILENAMES.get(year))
+    shutil.rmtree(directory)
+
+
 def folder_walk(year):
-    if year == '2010':
-        with ReadAndRemove('prestacao_contas_2010') as dir:
+    if year == 2010:
+        with ReadAndRemove(DIRNAMES.get(year)) as dir:
             return {
                 'candidates': dir.data_for('Receitas', 'candidato'),
                 'parties': dir.data_for('Receitas', 'comite'),
                 'committees': dir.data_for('Receitas', 'partido')
             }
 
-    else:
-        if year == '2012':
-            path_candid = os.path.join('prestacao_final_2012',
-                                       'receitas_candidatos_2012_brasil.txt')
-            path_parties = os.path.join('prestacao_final_2012',
-                                        'receitas_partidos_2012_brasil.txt')
-            path_committ = os.path.join('prestacao_final_2012',
-                                        'receitas_comites_2012_brasil.txt')
-        elif year == '2014':
-            path_candid = os.path.join('prestacao_final_2014',
-                                       'receitas_candidatos_2014_brasil.txt')
-            path_parties = os.path.join('prestacao_final_2014',
-                                        'receitas_partidos_2014_brasil.txt')
-            path_committ = os.path.join('prestacao_final_2014',
-                                        'receitas_comites_2014_brasil.txt')
-        elif year == '2016':
-            path_candid = os.path.join('prestacao_contas_final_2016',
-                                   ('receitas_candidatos_prestacao_contas_final_2016_brasil'  # noqa
-                                    '.txt'))
-            path_parties = os.path.join('prestacao_contas_final_2016',
-                                        ('receitas_partidos_prestacao_contas_final_2016_brasil'  # noqa
-                                         '.txt'))
-
-        donations_data_candidates = read_csv(path_candid, 10000)
-        ret_dict['candidates'] = donations_data_candidates
-
-        donations_data_parties = read_csv(path_parties, 10000)
-        ret_dict['parties'] = donations_data_parties
-
-        if year != '2016':
-            donations_data_committees = read_csv(path_committ, 10000)
-            ret_dict['committees'] = donations_data_committees
-
-        if year != '2016':
-            shutil.rmtree('prestacao_final_' + year)
-        else:
-            shutil.rmtree('prestacao_contas_final_2016')
-
-    return ret_dict
+    with paths_by_year(year) as paths:
+        candidates, parties, committees = paths
+        return {
+            'candidates': read_csv(candidates, 10000),
+            'parties': read_csv(parties, 10000),
+            'committees': read_csv(committees, 10000) if committees else None
+        }
 
 
 def correct_columns(donations_data):
@@ -215,16 +223,18 @@ def strip_columns_names(donations_data, key):
                                    inplace=True)
 
 
-def download_base(url, year):
-    file_name = url.split('/')[-1]
-    print("Downloading " + file_name)
+def download_year(year):
+    file_name = ZIPNAMES.get(year)
+    url = '{}/{}'.format(BASE_URL, file_name)
+    print('Downloading {}…'.format(file_name))
     download(url, file_name)
-    print("Uncompressing downloaded data.")
+
+    print("Uncompressing downloaded data…")
     with zipfile.ZipFile(file_name, "r") as zip_ref:
-        zip_ref.extractall(file_name.split('.')[0])
+        zip_ref.extractall(DIRNAMES.get(year))
     os.remove(file_name)
 
-    print("Reading all the data and creating the dataframes...")
+    print("Reading all the data and creating the dataframes…")
 
     donations_data = folder_walk(year)
 
@@ -236,19 +246,7 @@ def download_base(url, year):
 
 
 if __name__ == "__main__":
-    base_url = ('http://agencia.tse.jus.br/estatistica/sead/odsele/'
-                'prestacao_contas/')
-    url = base_url + 'prestacao_contas_2010.zip'
-    donations_data_2010 = download_base(url, '2010')
-    url = base_url + 'prestacao_final_2012.zip'
-    donations_data_2012 = download_base(url, '2012')
-    url = base_url + 'prestacao_final_2014.zip'
-    donations_data_2014 = download_base(url, '2014')
-    url = base_url + 'prestacao_contas_final_2016.zip'
-    donations_data_2016 = download_base(url, '2016')
-
-    donations_data = [donations_data_2010, donations_data_2012,
-                      donations_data_2014, donations_data_2016]
+    donations_data = [download_year(year) for year in YEARS]
 
     donations_candidates_concatenated = []
     donations_parties_concatenated = []
