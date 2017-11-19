@@ -2,6 +2,7 @@ import os
 import shutil
 import time
 import zipfile
+from pathlib import Path
 
 import pandas as pd
 import requests
@@ -39,30 +40,38 @@ def read_csv(path, chunksize=None):
     return pd.concat([chunk for chunk in data]) if chuncksize else data
 
 
-def folder_walk(year):
-    ret_dict = {}
-    if year == '2010':
-        donations_data_candidates = []
-        donations_data_parties = []
-        donations_data_committees = []
-        for root, dirs, files in os.walk("prestacao_contas_2010", topdown=False):
-            for name in files:
-                if 'Receitas' in name:
-                    data = read_csv(os.path.join(root, name))
-                    if 'candidato' in os.path.join(root, name):
-                        donations_data_candidates.append(data)
-                    elif 'comite' in os.path.join(root, name):
-                        donations_data_committees.append(data)
-                    elif 'partido' in os.path.join(root, name):
-                        donations_data_parties.append(data)
+class ReadAndRemove:
+    """Context manager to read a directory and then delete it"""
 
-        donations_data_candidates = pd.concat(donations_data_candidates)
-        donations_data_parties = pd.concat(donations_data_parties)
-        donations_data_committees = pd.concat(donations_data_committees)
-        shutil.rmtree('prestacao_contas_2010')
-        ret_dict = {'candidates': donations_data_candidates,
-                    'parties': donations_data_parties,
-                    'committees': donations_data_committees}
+    def __init__(self, directory):
+        self.directory = directory
+        self.path = Path(directory)
+
+    def data_for(self, *patterns):
+        """
+        Given a list of words, loads all files matching these words, and then
+        concats them all in a single data frame
+        """
+        pattern = '*{}*'.format('*'.join(patterns))
+        data = [read_csv(filename) for filename in self.path.glob(pattern)]
+        return pd.concat(data)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        shutil.rmtree(self.directory)
+
+
+def folder_walk(year):
+    if year == '2010':
+        with ReadAndRemove('prestacao_contas_2010') as dir:
+            return {
+                'candidates': dir.data_for('Receitas', 'candidato'),
+                'parties': dir.data_for('Receitas', 'comite'),
+                'committees': dir.data_for('Receitas', 'partido')
+            }
+
     else:
         if year == '2012':
             path_candid = os.path.join('prestacao_final_2012',
