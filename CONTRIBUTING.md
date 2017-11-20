@@ -75,7 +75,6 @@ You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker 
 1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
 1. Build the tags with `$ docker-compose build`
 1. Start the environment (it might take a while, hurry not): `$ docker-compose up -d`.
-1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --service-ports research jupyter notebook`
 
 If you want to access the console:
 
