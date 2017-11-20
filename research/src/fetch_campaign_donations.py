@@ -14,92 +14,18 @@ DATA_PATH = os.path.join(BASE_DIR, 'data')
 KEYS = ('candidates', 'parties', 'committees')
 YEARS = range(2010, 2017, 2)
 
-NORMALIZE_COLUMNS = {
-    'candidates': {
-        'Descricao da receita': 'Descrição da receita',
-        'Especie recurso': 'Espécie recurso',
-        'Numero candidato': 'Número candidato',
-        'Numero do documento': 'Número do documento',
-        'Numero Recibo Eleitoral': 'Número Recibo Eleitoral',
-        'Sigla  Partido': 'Sigla Partido'
-    },
-    'parties': {
-        'Sigla  Partido': 'Sigla Partido',
-        'Número recibo eleitoral': 'Número Recibo Eleitoral'
-    },
-    'committees': {
-        'Sigla  Partido': 'Sigla Partido',
-        'Tipo comite': 'Tipo Comite',
-        'Número recibo eleitoral': 'Número Recibo Eleitoral'
-    }
-}
-
-TRANSLATIONS = {
-    'Cargo': 'post',
-    'CNPJ Prestador Conta': 'accountable_company_id',
-    'Cod setor econômico do doador': 'donor_economic_setor_id',
-    'Cód. Eleição': 'election_id',
-    'CPF do candidato': 'candidate_cpf',
-    'CPF do vice/suplente': 'substitute_cpf',
-    'CPF/CNPJ do doador': 'donor_cnpj_or_cpf',
-    'CPF/CNPJ do doador originário':
-    'original_donor_cnpj_or_cpf',
-    'Data da receita': 'revenue_date',
-    'Data e hora': 'date_and_time',
-    'Desc. Eleição': 'election_description',
-    'Descrição da receita': 'revenue_description',
-    'Entrega em conjunto?': 'batch',
-    'Espécie recurso': 'type_of_revenue',
-    'Fonte recurso': 'source_of_revenue',
-    'Município': 'city',
-    'Nome candidato': 'candidate_name',
-    'Nome da UE': 'electoral_unit_name',
-    'Nome do doador': 'donor_name',
-    'Nome do doador (Receita Federal)':
-    'donor_name_for_federal_revenue',
-    'Nome do doador originário': 'original_donor_name',
-    'Nome do doador originário (Receita Federal)':
-    'original_donor_name_for_federal_revenue',
-    'Número candidato': 'candidate_number',
-    'Número candidato doador': 'donor_candidate_number',
-    'Número do documento': 'document_number',
-    'Número partido doador': 'donor_party_number',
-    'Número Recibo Eleitoral': 'electoral_receipt_number',
-    'Número UE': 'electoral_unit_number',
-    'Sequencial Candidato': 'candidate_sequence',
-    'Sequencial prestador conta': 'accountable_sequence',
-    'Sequencial comite': 'committee_sequence',
-    'Sequencial Diretorio': 'party_board_sequence',
-    'Setor econômico do doador': 'donor_economic_sector',
-    'Setor econômico do doador originário':
-    'original_donor_economic_sector',
-    'Sigla da UE': 'electoral_unit_abbreviation',
-    'Sigla Partido': 'party_acronym',
-    'Sigla UE doador': 'donor_electoral_unit_abbreviation',
-    'Tipo de documento': 'document_type',
-    'Tipo diretorio': 'party_board_type',
-    'Tipo doador originário': 'original_donor_type',
-    'Tipo partido': 'party_type',
-    'Tipo receita': 'revenue_type',
-    'Tipo comite': 'committee_type',
-    'UF': 'state',
-    'Valor receita': 'revenue_value'
-}
-
 
 class Donation:
     """Context manager to download, read data from a given year and cleanup"""
 
     URL = 'http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas'
 
-    DIRNAMES = {
-        2010: 'prestacao_contas_2010',
-        2012: 'prestacao_final_2010',
-        2014: 'prestacao_final_2014',
-        2016: 'prestacao_contas_final_2016',
+    ZIPNAMES = {
+        2010: 'prestacao_contas_2010.zip',
+        2012: 'prestacao_final_2010.zip',
+        2014: 'prestacao_final_2014.zip',
+        2016: 'prestacao_contas_final_2016.zip',
     }
-
-    ZIPNAMES = {key: '{}.zip'.format(value) for key, value in DIRNAMES.items()}
 
     FILENAMES = {
         2012: (
@@ -119,11 +45,83 @@ class Donation:
         )
     }
 
+    NORMALIZE_COLUMNS = {
+        'candidates': {
+            'Descricao da receita': 'Descrição da receita',
+            'Especie recurso': 'Espécie recurso',
+            'Numero candidato': 'Número candidato',
+            'Numero do documento': 'Número do documento',
+            'Numero Recibo Eleitoral': 'Número Recibo Eleitoral',
+            'Sigla  Partido': 'Sigla Partido'
+        },
+        'parties': {
+            'Sigla  Partido': 'Sigla Partido',
+            'Número recibo eleitoral': 'Número Recibo Eleitoral'
+        },
+        'committees': {
+            'Sigla  Partido': 'Sigla Partido',
+            'Tipo comite': 'Tipo Comite',
+            'Número recibo eleitoral': 'Número Recibo Eleitoral'
+        }
+    }
+
+    TRANSLATIONS = {
+        'Cargo': 'post',
+        'CNPJ Prestador Conta': 'accountable_company_id',
+        'Cod setor econômico do doador': 'donor_economic_setor_id',
+        'Cód. Eleição': 'election_id',
+        'CPF do candidato': 'candidate_cpf',
+        'CPF do vice/suplente': 'substitute_cpf',
+        'CPF/CNPJ do doador': 'donor_cnpj_or_cpf',
+        'CPF/CNPJ do doador originário':
+        'original_donor_cnpj_or_cpf',
+        'Data da receita': 'revenue_date',
+        'Data e hora': 'date_and_time',
+        'Desc. Eleição': 'election_description',
+        'Descrição da receita': 'revenue_description',
+        'Entrega em conjunto?': 'batch',
+        'Espécie recurso': 'type_of_revenue',
+        'Fonte recurso': 'source_of_revenue',
+        'Município': 'city',
+        'Nome candidato': 'candidate_name',
+        'Nome da UE': 'electoral_unit_name',
+        'Nome do doador': 'donor_name',
+        'Nome do doador (Receita Federal)':
+        'donor_name_for_federal_revenue',
+        'Nome do doador originário': 'original_donor_name',
+        'Nome do doador originário (Receita Federal)':
+        'original_donor_name_for_federal_revenue',
+        'Número candidato': 'candidate_number',
+        'Número candidato doador': 'donor_candidate_number',
+        'Número do documento': 'document_number',
+        'Número partido doador': 'donor_party_number',
+        'Número Recibo Eleitoral': 'electoral_receipt_number',
+        'Número UE': 'electoral_unit_number',
+        'Sequencial Candidato': 'candidate_sequence',
+        'Sequencial prestador conta': 'accountable_sequence',
+        'Sequencial comite': 'committee_sequence',
+        'Sequencial Diretorio': 'party_board_sequence',
+        'Setor econômico do doador': 'donor_economic_sector',
+        'Setor econômico do doador originário':
+        'original_donor_economic_sector',
+        'Sigla da UE': 'electoral_unit_abbreviation',
+        'Sigla Partido': 'party_acronym',
+        'Sigla UE doador': 'donor_electoral_unit_abbreviation',
+        'Tipo de documento': 'document_type',
+        'Tipo diretorio': 'party_board_type',
+        'Tipo doador originário': 'original_donor_type',
+        'Tipo partido': 'party_type',
+        'Tipo receita': 'revenue_type',
+        'Tipo comite': 'committee_type',
+        'UF': 'state',
+        'Valor receita': 'revenue_value'
+    }
+
     def __init__(self, year):
         self.year = year
         self.zip_file = self.ZIPNAMES.get(year)
         self.url = '{}/{}'.format(self.URL, self.zip_file)
-        self.directory = self.DIRNAMES.get(year)
+        self.directory, _ = os.path.splitext(self.zip_file)
         self.path = Path(self.directory)
 
     def _download(self):
@@ -194,7 +192,7 @@ class Donation:
                 data[key].rename(columns=cleaned_columns, inplace=True)
                 # normalize & translate
                 data[key].rename(columns=normalize_columns, inplace=True)
-                data[key].rename(columns=TRANSLATIONS, inplace=True)
+                data[key].rename(columns=self.TRANSLATIONS, inplace=True)
         return data
 
     def __enter__(self):
@@ -203,6 +201,7 @@ class Donation:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        print('Cleaning up source files from {}…'.format(self.year))
         os.remove(self.zip_file)
         shutil.rmtree(self.directory)
 
