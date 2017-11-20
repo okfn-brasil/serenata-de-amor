@@ -2,7 +2,6 @@ import os
 import shutil
 import time
 import zipfile
-from contextlib import contextmanager
 from pathlib import Path
 
 import pandas as pd
@@ -12,113 +11,110 @@ from tqdm import tqdm
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, 'data')
-
-BASE_URL = 'http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas'
 YEARS = range(2010, 2017, 2)
 
-DIRNAMES = {
-    2010: 'prestacao_contas_2010',
-    2012: 'prestacao_final_2010',
-    2014: 'prestacao_final_2014',
-    2016: 'prestacao_contas_final_2016',
-}
 
-ZIPNAMES = {key: '{}.zip'.format(value) for key, value in DIRNAMES.items()}
+class Donation:
+    """Context manager to download  a zip, read data them and cleanup"""
 
-FILENAMES = {
-    2012: (
-        'receitas_candidatos_2012_brasil.txt',
-        'receitas_partidos_2012_brasil.txt',
-        'receitas_comites_2012_brasil.txt'
-    ),
-    2014: (
-        'receitas_candidatos_2014_brasil.txt',
-        'receitas_partidos_2014_brasil.txt',
-        'receitas_comites_2014_brasil.txt'
-    ),
-    2016: (
-        'receitas_candidatos_prestacao_contas_final_2016_brasil.txt',
-        'receitas_partidos_prestacao_contas_final_2016_brasil.txt',
-        None
-    )
-}
+    URL = 'http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas'
 
-READ_KWARGS = dict(
-    low_memory=False,
-    encoding="ISO-8859-1",
-    sep=';'
-)
-DOWNLOAD_BOCK_SIZE = 2 ** 19  # ~ 500kB
+    DIRNAMES = {
+        2010: 'prestacao_contas_2010',
+        2012: 'prestacao_final_2010',
+        2014: 'prestacao_final_2014',
+        2016: 'prestacao_contas_final_2016',
+    }
 
+    ZIPNAMES = {key: '{}.zip'.format(value) for key, value in DIRNAMES.items()}
 
-def download(url, path, block_size=None):
-    """Saves file from remote `url` into local `path` showing a progress bar"""
-    block_size = block_size or DOWNLOAD_BOCK_SIZE
-    request = requests.get(url, stream=True)
-    total = int(request.headers.get('content-length', 0))
-    with open(path, 'wb') as file_handler:
-        kwargs = dict(total=total, unit='B', unit_scale=True)
-        for data in tqdm(request.iter_content(block_size), **kwargs):
-            file_handler.write(data)
+    FILENAMES = {
+        2012: (
+            'receitas_candidatos_2012_brasil.txt',
+            'receitas_partidos_2012_brasil.txt',
+            'receitas_comites_2012_brasil.txt'
+        ),
+        2014: (
+            'receitas_candidatos_2014_brasil.txt',
+            'receitas_partidos_2014_brasil.txt',
+            'receitas_comites_2014_brasil.txt'
+        ),
+        2016: (
+            'receitas_candidatos_prestacao_contas_final_2016_brasil.txt',
+            'receitas_partidos_prestacao_contas_final_2016_brasil.txt',
+            None
+        )
+    }
 
+    def __init__(self, year):
+        self.year = year
+        self.zip_file = self.ZIPNAMES.get(year)
+        self.url = '{}/{}'.format(self.URL, self.zip_file)
+        self.directory = self.DIRNAMES.get(year)
+        self.path = Path(self.directory)
 
-def read_csv(path, chunksize=None):
-    """Wrapper to read CSV with default args and an optional `chunksize`"""
-    kwargs = READ_KWARGS.copy()
-    if chunksize:
-        kwargs['chunksize'] = 10000
+    def _download(self):
+        """Saves file from `url` into local `path` showing a progress bar"""
+        print('Downloading {}…'.format(self.url))
+        request = requests.get(self.url, stream=True)
+        total = int(request.headers.get('content-length', 0))
+        with open(self.zip_file, 'wb') as file_handler:
+            kwargs = dict(total=total, unit='B', unit_scale=True)
+            bock_size = 2 ** 19  # ~ 500kB
+            for data in tqdm(request.iter_content(bock_size), **kwargs):
+                file_handler.write(data)
 
-    data = pd.read_csv(path, **kwargs)
-    return pd.concat([chunk for chunk in data]) if chunksize else data
+    def _unzip(self):
+        print('Uncompressing {}…'.format(self.zip_file))
+        with zipfile.ZipFile(self.zip_file, 'r') as zip_handler:
+            zip_handler.extractall(self.directory)
 
+    def _read_csv(self, path, chunksize=None):
+        """Wrapper to read CSV with default args and an optional `chunksize`"""
+        kwargs = dict(low_memory=False, encoding="ISO-8859-1", sep=';')
+        if chunksize:
+            kwargs['chunksize'] = 10000
 
-class ReadAndRemove:
-    """Context manager to read a directory and then delete it"""
+        data = pd.read_csv(path, **kwargs)
+        return pd.concat([chunk for chunk in data]) if chunksize else data
 
-    def __init__(self, directory):
-        self.directory = directory
-        self.path = Path(directory)
-
-    def data_for(self, *patterns):
+    def _data_by_pattern(self, *patterns):
         """
         Given a list of words, loads all files matching these words, and then
         concats them all in a single data frame
         """
         pattern = '*{}*'.format('*'.join(patterns))
-        data = [read_csv(filename) for filename in self.path.glob(pattern)]
+        data = [self._read_csv(name) for name in self.path.glob(pattern)]
         return pd.concat(data)
 
+    def data(self):
+        """
+        Returns a dictionary with data frames for candidates, parties and
+        committees
+        """
+        files = self.FILENAMES.get(year)
+        if not files:  # it's 2010, a different file architecture
+            return {
+                'candidates': self._data_by_pattern('Receitas', 'candidato'),
+                'parties': self._data_by_pattern('Receitas', 'partido'),
+                'committees': self._data_by_pattern('Receitas', 'comite')
+            }
+
+        paths = (os.path.join(self.directory, filename) for filename in files)
+        keys = ('candidates', 'parties', 'committees')
+        return {
+            key: self._read_csv(path, chunksize=10000)
+            for path, key in zip(keys, paths)
+        }
+
     def __enter__(self):
+        self._download()
+        self._extract()
         return self
 
     def __exit__(self):
+        os.remove(self.zip_file)
         shutil.rmtree(self.directory)
-
-
-@contextmanager
-def paths_by_year(year):
-    """For 2012-2016 return the paths of the relevant files"""
-    directory = DIRNAMES.get(year)
-    yield (os.path.join(directory, f) for f in FILENAMES.get(year))
-    shutil.rmtree(directory)
-
-
-def folder_walk(year):
-    if year == 2010:
-        with ReadAndRemove(DIRNAMES.get(year)) as dir:
-            return {
-                'candidates': dir.data_for('Receitas', 'candidato'),
-                'parties': dir.data_for('Receitas', 'comite'),
-                'committees': dir.data_for('Receitas', 'partido')
-            }
-
-    with paths_by_year(year) as paths:
-        candidates, parties, committees = paths
-        return {
-            'candidates': read_csv(candidates, 10000),
-            'parties': read_csv(parties, 10000),
-            'committees': read_csv(committees, 10000) if committees else None
-        }
 
 
 def correct_columns(donations_data):
@@ -223,30 +219,16 @@ def strip_columns_names(donations_data, key):
                                    inplace=True)
 
 
-def download_year(year):
-    file_name = ZIPNAMES.get(year)
-    url = '{}/{}'.format(BASE_URL, file_name)
-    print('Downloading {}…'.format(file_name))
-    download(url, file_name)
-
-    print("Uncompressing downloaded data…")
-    with zipfile.ZipFile(file_name, "r") as zip_ref:
-        zip_ref.extractall(DIRNAMES.get(year))
-    os.remove(file_name)
-
-    print("Reading all the data and creating the dataframes…")
-
-    donations_data = folder_walk(year)
-
-    strip_columns_names(donations_data, 'candidates')
-    strip_columns_names(donations_data, 'parties')
-    strip_columns_names(donations_data, 'committees')
-
-    return donations_data
+def data_by_year(year):
+    with Donation(year) as donation:
+        data = donation.data()
+        for key in ('candidates', 'parties', 'committees'):
+            strip_columns_names(data, key)
+        return data
 
 
-if __name__ == "__main__":
-    donations_data = [download_year(year) for year in YEARS]
+if __name__ == '__main__':
+    donations_data = [data_by_year(year) for year in YEARS]
 
     donations_candidates_concatenated = []
     donations_parties_concatenated = []
