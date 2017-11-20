@@ -132,10 +132,12 @@ class Donation:
         request = requests.get(self.url, stream=True)
         total = int(request.headers.get('content-length', 0))
         with open(self.zip_file, 'wb') as file_handler:
+            block_size = 2 ** 15  # ~ 32kB
             kwargs = dict(total=total, unit='B', unit_scale=True)
-            bock_size = 2 ** 19  # ~ 500kB
-            for data in tqdm(request.iter_content(bock_size), **kwargs):
-                file_handler.write(data)
+            with tqdm(**kwargs) as progress_bar:
+                for data in request.iter_content(block_size):
+                    file_handler.write(data)
+                    progress_bar.update(block_size)
 
     def _unzip(self):
         print('Uncompressing {}…'.format(self.zip_file))
