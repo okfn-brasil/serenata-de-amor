@@ -22,7 +22,7 @@ class Donation:
 
     ZIPNAMES = {
         2010: 'prestacao_contas_2010.zip',
-        2012: 'prestacao_final_2010.zip',
+        2012: 'prestacao_final_2012.zip',
         2014: 'prestacao_final_2014.zip',
         2016: 'prestacao_contas_final_2016.zip',
     }
@@ -151,12 +151,11 @@ class Donation:
         data = pd.read_csv(path, **kwargs)
         return pd.concat([chunk for chunk in data]) if chunksize else data
 
-    def _data_by_pattern(self, *patterns):
+    def _data_by_pattern(self, pattern):
         """
-        Given a list of words, loads all files matching these words, and then
+        Given a glob pattern, loads all files matching this pattern, and then
         concats them all in a single data frame
         """
-        pattern = '*{}*'.format('*'.join(patterns))
         data = [self._read_csv(name) for name in self.path.glob(pattern)]
         return pd.concat(data)
 
@@ -168,9 +167,9 @@ class Donation:
         files = self.FILENAMES.get(self.year)
         if not files:  # it's 2010, a different file architecture
             return {
-                'candidates': self._data_by_pattern('Receitas', 'candidato'),
-                'parties': self._data_by_pattern('Receitas', 'partido'),
-                'committees': self._data_by_pattern('Receitas', 'comite')
+                'candidates': self._data_by_pattern('**/ReceitasCandidatos*'),
+                'parties': self._data_by_pattern('**/ReceitasPartidos*'),
+                'committees': self._data_by_pattern('**/ReceitasComites*')
             }
 
         paths = (os.path.join(self.directory, filename) for filename in files)
