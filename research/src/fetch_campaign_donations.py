@@ -175,7 +175,8 @@ class Donation:
         paths = (os.path.join(self.directory, filename) for filename in files)
         return {
             key: self._read_csv(path, chunksize=10000)
-            for path, key in zip(KEYS, paths)
+            for key, path in zip(KEYS, paths)
+            if os.path.exists(path)
         }
 
     @property
