@@ -1,8 +1,8 @@
 import os
 import shutil
-import time
-import zipfile
+from datetime import date
 from pathlib import Path
+from zipfile import ZipFile
 
 import pandas as pd
 import requests
@@ -139,7 +139,7 @@ class Donation:
 
     def _unzip(self):
         print('Uncompressing {}…'.format(self.zip_file))
-        with zipfile.ZipFile(self.zip_file, 'r') as zip_handler:
+        with ZipFile(self.zip_file, 'r') as zip_handler:
             zip_handler.extractall(self.directory)
 
     def _read_csv(self, path, chunksize=None):
@@ -165,7 +165,7 @@ class Donation:
         Returns a dictionary with data frames for candidates, parties and
         committees
         """
-        files = self.FILENAMES.get(year)
+        files = self.FILENAMES.get(self.year)
         if not files:  # it's 2010, a different file architecture
             return {
                 'candidates': self._data_by_pattern('Receitas', 'candidato'),
@@ -197,47 +197,32 @@ class Donation:
 
     def __enter__(self):
         self._download()
-        self._extract()
+        self._unzip()
         return self
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_value, traceback):
         os.remove(self.zip_file)
         shutil.rmtree(self.directory)
 
 
-if __name__ == '__main__':
-    donations_data = [Donation(year).data for year in YEARS]
-
-    donations_candidates_concatenated = []
-    donations_parties_concatenated = []
-    donations_committees_concatenated = []
-
-    for data in donations_data:
-        if 'candidates' in data.keys():
-            donations_candidates_concatenated.append(data['candidates'])
-        if 'parties' in data.keys():
-            donations_parties_concatenated.append(data['parties'])
-        if 'committees' in data.keys():
-            donations_committees_concatenated.append(data['committees'])
-
-    donations_candidates_concatenated = pd.concat(donations_candidates_concatenated)  # noqa
-    donations_parties_concatenated = pd.concat(donations_parties_concatenated)
-    donations_committees_concatenated = pd.concat(donations_committees_concatenated)  # noqa
-
-    print("Saving dataframes in csv files (.xz)...")
-
+def save(key, data):
+    """Given a key and a data frame, saves it compressed in LZMA"""
     if not os.path.exists(DATA_PATH):
         os.makedirs(DATA_PATH)
 
-    donations_candidates_concatenated.to_csv(os.path.join(DATA_PATH,
-                                             time.strftime("%Y-%m-%d") +
-                                             '-donations_candidates.xz'),
-                                             compression='xz')
-    donations_parties_concatenated.to_csv(os.path.join(DATA_PATH,
-                                          time.strftime("%Y-%m-%d") +
-                                          '-donations_parties.xz'),
-                                          compression='xz')
-    donations_committees_concatenated.to_csv(os.path.join(DATA_PATH,
-                                             time.strftime("%Y-%m-%d") +
-                                             '-donations_committees.xz'),
-                                             compression='xz')
+    prefix = date.today().strftime('%Y-%m-%d')
+    filename = '{}-donations-{}.xz'.format(prefix, key)
+    print('Saving {}…'.format(filename))
+    data.to_csv(os.path.join(DATA_PATH, filename), compression='xz')
+
+
+def fetch_data_from(year):
+    with Donation(year) as donation:
+        return donation.data
+
+
+if __name__ == '__main__':
+    by_year = tuple(fetch_data_from(year) for year in YEARS)
+    for key in KEYS:
+        data = pd.concat([d.get(key) for d in by_year if d.get(key)])
+        save(key, data)
