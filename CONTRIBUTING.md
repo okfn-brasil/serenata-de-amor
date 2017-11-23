@@ -22,7 +22,7 @@ A lot of discussions about ideas take place in the [Issues](https://github.com/d
 
 ### Local Installation Environment (without Docker)
 
-#### Video tutorial (in Portuguese)
+#### Video tutorial
 
 [![Installing serenata-de-amor](http://img.youtube.com/vi/g9hmMFVp4rs/0.jpg)](http://www.youtube.com/watch?v=g9hmMFVp4rs)
 
@@ -76,7 +76,7 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 ### Docker Installation Environment
 
-#### Video tutorial (in Portuguese)
+#### Video tutorial
 
 [![IInstalling serenata-de-amor with Docker](http://img.youtube.com/vi/3XwvZbCvZKQ/0.jpg)](http://www.youtube.com/watch?v=3XwvZbCvZKQ)
 
