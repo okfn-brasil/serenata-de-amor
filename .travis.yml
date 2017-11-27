@@ -8,9 +8,7 @@ install:
   - ./setup
   - pip install coveralls
 script:
-  # ignoring DL4000 for MAINTAINER because this is deprecated
-  # see https://github.com/lukasmartinelli/hadolint/issues/93
-  - docker run --rm -i lukasmartinelli/hadolint hadolint --ignore DL4000 - < Dockerfile
+  - docker run --rm -i lukasmartinelli/hadolint < Dockerfile
   - coverage run rosie.py test
   - python rosie.py run federal_senate
 after_success:
