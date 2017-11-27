@@ -24,7 +24,7 @@ import seaborn as sns
 # In[2]:
 
 
-reimbursements = pd.read_csv('../../research/data/2017-07-04-reimbursements.xz',
+reimbursements = pd.read_csv('../data/2017-07-04-reimbursements.xz',
                    parse_dates=[16],
                    low_memory=False,
                    dtype={'document_id': np.str,
