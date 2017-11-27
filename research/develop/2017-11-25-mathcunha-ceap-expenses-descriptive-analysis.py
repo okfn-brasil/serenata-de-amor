@@ -24,7 +24,7 @@ import seaborn as sns
 # In[2]:
 
 
-reimbursements = pd.read_csv('../data/2017-07-04-reimbursements.xz',
+reimbursements = pd.read_csv('../../research/data/2017-07-04-reimbursements.xz',
                    parse_dates=[16],
                    low_memory=False,
                    dtype={'document_id': np.str,
@@ -86,73 +86,78 @@ year_months = reimbursements[reimbursements["year_month"].notna()]["year_month"]
 # reimbursements = reimbursements[(reimbursements['year'] == 2015) | (reimbursements['year'] == 2016) | (reimbursements['year'] == 2017)]
 
 
-# ## 1. Monthly average per congressperson
-# Monthly average per congressperson (grouped per state, as values varies across states)
+# ### Defining ploting functions
 
 # In[10]:
 
 
-states
+#This function plots values grouped by states sharing the same x axis.
+def plot_data_same_axis(data, size, aspect, x_column, y_column, x_label, y_label):
+    g = sns.FacetGrid(row="state", data=data, palette="YlOrRd", sharey=False, size=size, aspect=aspect)
+    g.map(sns.barplot, x_column, y_column, palette="YlOrRd")
+    g.set_axis_labels(x_label, y_label)
+    for ax in g.axes.ravel():
+        for p in ax.patches:
+            ax.text(p.get_width(), p.get_y()+0.5, '%1.2f' % p.get_width(), fontsize=10, color='black', ha='left', va='center')
+    plt.show()
 
 
 # In[11]:
 
 
+#This function plots independents charts with values grouped by states. The charts do not share the axis or sizes.
+def plot_data_diff_axis(data, x_column, y_column, x_label, y_label):
+    for state in states:
+        selection = data[data.state == state].sort_values(['total_net_value'])
+        if len(selection) > 35:
+            plt.figure(figsize=(10,25))
+        ax = sns.barplot(y=y_column, x=x_column, data=selection, palette="YlOrRd")
+        for p in ax.patches:
+            ax.text(p.get_width(), p.get_y()+0.5, '%1.2f' % p.get_width(), fontsize=10, color='black', ha='left', va='center')
+        ax.set_title(state)
+        ax.set(ylabel=y_label, xlabel=x_label)
+        plt.show()
+
+
+# ## 1. Monthly average per congressperson
+# Monthly average per congressperson (grouped per state, as values varies across states)
+
+# In[12]:
+
+
+states
+
+
+# In[13]:
+
+
 monthly_avg_by_month = reimbursements.groupby(['state', 'congressperson_name', 'year_month']).agg({'total_net_value': 'mean'})
 
 
-# In[12]:
+# In[14]:
 
 
 monthly_avg = monthly_avg_by_month.groupby(['state', 'congressperson_name']).agg({'total_net_value': 'mean'})
 
 
-# ### Same scale
-
-# In[13]:
-
-
-ax = pd.DataFrame(monthly_avg.to_records())
-ax.sort_values(['state','total_net_value'], inplace=True)
-g = sns.FacetGrid(row="state", data=ax, palette="YlOrRd", sharey=False, size=15, aspect=1)
-g.map(sns.barplot, 'total_net_value', 'congressperson_name', palette="YlOrRd")
-g.set_axis_labels('Monthly Avg (R$)', 'Congress Person')
-plt.show()
-
-
-# ### Scale per state
-
-# In[14]:
-
-
-'''current_palette = sns.color_palette("YlOrRd")
-for state in states:
-    selection = monthly_avg.xs(state).sort_values(['total_net_value'])
-    if len(selection) > 35:
-        plt.figure(figsize=(10,25))
-    ax = sns.barplot(y=selection.index, x="total_net_value", data=selection, palette="YlOrRd")
-    ax.set_title(state)
-    ax.set(ylabel='Congress Person', xlabel='Monthly Avg (R$)')
-    plt.show()
-'''
-
+# ### Ploting data
 
 # In[15]:
 
 
-'''
-for year_month in year_months:
-    for state in states:
-        selection = reimbursements[(reimbursements["year_month"]==year_month) & (reimbursements["state"]==state)].groupby(['congressperson_name'])['total_net_value'].mean()
-        if len(selection) == 0 :
-            continue
-        if len(selection) > 25:
-            selection.plot(kind='barh', title=year_month+" "+state, figsize=(10,30))
-        else:
-            selection.plot(kind='barh', title=year_month+" "+state)
-        plt.ylabel('Congress Person')
-        plt.show()
-'''
+data = pd.DataFrame(monthly_avg.to_records()).sort_values(['state','total_net_value'])
+
+
+# In[16]:
+
+
+plot_data_diff_axis(data,'total_net_value', 'congressperson_name', 'Monthly Avg (R$)', 'Congress Person')
+
+
+# In[17]:
+
+
+#plot_data_same_axis(data, 30, 1, 'total_net_value', 'congressperson_name', 'Monthly Avg (R$)', 'Congress Person')
 
 
 # ---
@@ -162,7 +167,7 @@ for year_month in year_months:
 # ### Computing estimated CEAP values for years in between 2009 and 2017 using CAGR
 # thanks to luipillmann for the notebook **2017-05-01-luipillmann-intro-to-reimbursements.ipynb**!
 
-# In[16]:
+# In[18]:
 
 
 # Source 2017-05-01-luipillmann-intro-to-reimbursements.ipynb. Thanks!
@@ -201,13 +206,13 @@ for i in range(2018-ini_year):
 ceap_values.head(2)
 
 
-# In[17]:
+# In[19]:
 
 
 monthly_sum = reimbursements.groupby(['state', 'congressperson_name', 'year_month']).agg({'total_net_value': 'sum'})
 
 
-# In[18]:
+# In[20]:
 
 
 def calc_ratio(state, name, year_month, total_net_value):
@@ -217,90 +222,65 @@ def calc_ratio(state, name, year_month, total_net_value):
     return ratio
 
 
-# In[19]:
+# In[21]:
 
 
 monthly_sum_with_ratio = pd.DataFrame(monthly_sum.to_records())
 monthly_sum_with_ratio['ratio'] = monthly_sum_with_ratio.apply(lambda x: calc_ratio(*x), axis=1)
 
 
-# In[20]:
+# In[22]:
 
 
 monthly_avg = monthly_sum_with_ratio.groupby(['state', 'congressperson_name']).agg({'ratio': 'mean'})
 
 
-# In[21]:
+# ### Ploting the data
+
+# In[23]:
 
 
-ax = pd.DataFrame(monthly_avg.to_records())
-ax.sort_values(['state','ratio'], inplace=True)
-g = sns.FacetGrid(row="state", data=ax, palette="YlOrRd", sharey=False, size=15, aspect=1)
-g.map(sns.barplot, 'ratio', 'congressperson_name', palette="YlOrRd")
-g.set_axis_labels('Monthly Ratio Avg (R$)', 'Congress Person')
-plt.show()
+data = pd.DataFrame(monthly_avg.to_records()).sort_values(['state','ratio'])
+
+
+# In[24]:
+
+
+#plot_data_diff_axis(data,'ratio', 'congressperson_name', 'Monthly Ratio Avg (R$)', 'Congress Person')
+
+
+# In[25]:
+
+
+plot_data_same_axis(data, 30, 1, 'ratio', 'congressperson_name', 'Monthly Ratio Avg (R$)', 'Congress Person')
 
 
 # ---
 # ## 3. Monthly average per subquota
 # Monthly average per subquota (grouped per state, as values varies across states)
 
-# In[22]:
+# In[26]:
 
 
 monthly_avg_by_month = reimbursements.groupby(['state', 'subquota_description', 'year_month']).agg({'total_net_value': 'mean'})
 
 
-# In[23]:
+# In[27]:
 
 
 monthly_avg = monthly_avg_by_month.groupby(['state', 'subquota_description']).agg({'total_net_value': 'mean'})
 
 
-# ### Same scale
+# ### Ploting the data
 
-# In[24]:
-
-
-ax = pd.DataFrame(monthly_avg.to_records())
-ax.sort_values(['state','total_net_value'], inplace=True)
-g = sns.FacetGrid(row="state", data=ax, palette="YlOrRd", sharey=False, size=4, aspect=2)
-g.map(sns.barplot, 'total_net_value', 'subquota_description', palette="YlOrRd")
-g.set_axis_labels('Monthly Avg (R$)', 'Subquota Description')
-plt.show()
+# In[28]:
 
 
-# ### Scale per state
-
-# In[25]:
+data = pd.DataFrame(monthly_avg.to_records()).sort_values(['state','total_net_value'])
 
 
-'''current_palette = sns.color_palette("YlOrRd")
-for state in states:
-    selection = monthly_avg.xs(state).sort_values(['total_net_value'])
-    if len(selection) > 35:
-        plt.figure(figsize=(10,25))
-    ax = sns.barplot(y=selection.index, x="total_net_value", data=selection, palette="YlOrRd")
-    ax.set_title(state)
-    ax.set(ylabel='Subquota Description', xlabel='Monthly Avg (R$)')
-    plt.show()
-'''
+# In[29]:
 
 
-# In[26]:
-
-
-'''
-for year_month in year_months:
-    for state in states:
-        selection = reimbursements[(reimbursements["year_month"]==year_month) & (reimbursements["state"]==state)].groupby(['subquota_description'])['total_net_value'].mean()
-        if len(selection) == 0 :
-            continue
-        if len(selection) > 25:
-            selection.plot(kind='barh', title=year_month+" "+state, figsize=(10,30))
-        else:
-            selection.plot(kind='barh', title=year_month+" "+state)
-        plt.ylabel('Subquota Description')
-        plt.show()
-'''
+plot_data_same_axis(data, 4, 2, 'total_net_value', 'subquota_description', 'Monthly Avg (R$)', 'Subquota Description')
 
