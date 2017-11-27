@@ -1,289 +1,229 @@
 import os
-import sys
-import time
 import shutil
-import zipfile
-import urllib.request
+from datetime import date
+from pathlib import Path
+from zipfile import ZipFile
 
 import pandas as pd
+import requests
+from tqdm import tqdm
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, 'data')
+KEYS = ('candidates', 'parties', 'committees')
+YEARS = range(2010, 2017, 2)
 
 
-def reporthook(blocknum, blocksize, totalsize):
-    readsofar = blocknum * blocksize
-    if totalsize > 0:
-        percent = readsofar * 1e2 / totalsize
-        s = "\r%5.1f%% %*d / %d" % (
-            percent, len(str(totalsize)), readsofar, totalsize)
-        sys.stderr.write(s)
-        if readsofar >= totalsize:
-            sys.stderr.write("\n")
-    else:
-        sys.stderr.write("read %d\n" % (readsofar,))
+class Donation:
+    """Context manager to download, read data from a given year and cleanup"""
+
+    URL = 'http://agencia.tse.jus.br/estatistica/sead/odsele/prestacao_contas'
+
+    ZIPNAMES = {
+        2010: 'prestacao_contas_2010.zip',
+        2012: 'prestacao_final_2012.zip',
+        2014: 'prestacao_final_2014.zip',
+        2016: 'prestacao_contas_final_2016.zip',
+    }
+
+    FILENAMES = {
+        2012: (
+            'receitas_candidatos_2012_brasil.txt',
+            'receitas_partidos_2012_brasil.txt',
+            'receitas_comites_2012_brasil.txt'
+        ),
+        2014: (
+            'receitas_candidatos_2014_brasil.txt',
+            'receitas_partidos_2014_brasil.txt',
+            'receitas_comites_2014_brasil.txt'
+        ),
+        2016: (
+            'receitas_candidatos_prestacao_contas_final_2016_brasil.txt',
+            'receitas_partidos_prestacao_contas_final_2016_brasil.txt',
+            None
+        )
+    }
+
+    NORMALIZE_COLUMNS = {
+        'candidates': {
+            'Descricao da receita': 'Descrição da receita',
+            'Especie recurso': 'Espécie recurso',
+            'Numero candidato': 'Número candidato',
+            'Numero do documento': 'Número do documento',
+            'Numero Recibo Eleitoral': 'Número Recibo Eleitoral',
+            'Sigla  Partido': 'Sigla Partido'
+        },
+        'parties': {
+            'Sigla  Partido': 'Sigla Partido',
+            'Número recibo eleitoral': 'Número Recibo Eleitoral'
+        },
+        'committees': {
+            'Sigla  Partido': 'Sigla Partido',
+            'Tipo comite': 'Tipo Comite',
+            'Número recibo eleitoral': 'Número Recibo Eleitoral'
+        }
+    }
+
+    TRANSLATIONS = {
+        'Cargo': 'post',
+        'CNPJ Prestador Conta': 'accountable_company_id',
+        'Cod setor econômico do doador': 'donor_economic_setor_id',
+        'Cód. Eleição': 'election_id',
+        'CPF do candidato': 'candidate_cpf',
+        'CPF do vice/suplente': 'substitute_cpf',
+        'CPF/CNPJ do doador': 'donor_cnpj_or_cpf',
+        'CPF/CNPJ do doador originário':
+        'original_donor_cnpj_or_cpf',
+        'Data da receita': 'revenue_date',
+        'Data e hora': 'date_and_time',
+        'Desc. Eleição': 'election_description',
+        'Descrição da receita': 'revenue_description',
+        'Entrega em conjunto?': 'batch',
+        'Espécie recurso': 'type_of_revenue',
+        'Fonte recurso': 'source_of_revenue',
+        'Município': 'city',
+        'Nome candidato': 'candidate_name',
+        'Nome da UE': 'electoral_unit_name',
+        'Nome do doador': 'donor_name',
+        'Nome do doador (Receita Federal)':
+        'donor_name_for_federal_revenue',
+        'Nome do doador originário': 'original_donor_name',
+        'Nome do doador originário (Receita Federal)':
+        'original_donor_name_for_federal_revenue',
+        'Número candidato': 'candidate_number',
+        'Número candidato doador': 'donor_candidate_number',
+        'Número do documento': 'document_number',
+        'Número partido doador': 'donor_party_number',
+        'Número Recibo Eleitoral': 'electoral_receipt_number',
+        'Número UE': 'electoral_unit_number',
+        'Sequencial Candidato': 'candidate_sequence',
+        'Sequencial prestador conta': 'accountable_sequence',
+        'Sequencial comite': 'committee_sequence',
+        'Sequencial Diretorio': 'party_board_sequence',
+        'Setor econômico do doador': 'donor_economic_sector',
+        'Setor econômico do doador originário':
+        'original_donor_economic_sector',
+        'Sigla da UE': 'electoral_unit_abbreviation',
+        'Sigla Partido': 'party_acronym',
+        'Sigla UE doador': 'donor_electoral_unit_abbreviation',
+        'Tipo de documento': 'document_type',
+        'Tipo diretorio': 'party_board_type',
+        'Tipo doador originário': 'original_donor_type',
+        'Tipo partido': 'party_type',
+        'Tipo receita': 'revenue_type',
+        'Tipo comite': 'committee_type',
+        'UF': 'state',
+        'Valor receita': 'revenue_value'
+    }
+
+    def __init__(self, year):
+        self.year = year
+        self.zip_file = self.ZIPNAMES.get(year)
+        self.url = '{}/{}'.format(self.URL, self.zip_file)
+        self.directory, _ = os.path.splitext(self.zip_file)
+        self.path = Path(self.directory)
+
+    def _download(self):
+        """Saves file from `url` into local `path` showing a progress bar"""
+        print('Downloading {}…'.format(self.url))
+        request = requests.get(self.url, stream=True)
+        total = int(request.headers.get('content-length', 0))
+        with open(self.zip_file, 'wb') as file_handler:
+            block_size = 2 ** 15  # ~ 32kB
+            kwargs = dict(total=total, unit='B', unit_scale=True)
+            with tqdm(**kwargs) as progress_bar:
+                for data in request.iter_content(block_size):
+                    file_handler.write(data)
+                    progress_bar.update(block_size)
+
+    def _unzip(self):
+        print('Uncompressing {}…'.format(self.zip_file))
+        with ZipFile(self.zip_file, 'r') as zip_handler:
+            zip_handler.extractall(self.directory)
+
+    def _read_csv(self, path, chunksize=None):
+        """Wrapper to read CSV with default args and an optional `chunksize`"""
+        kwargs = dict(low_memory=False, encoding="ISO-8859-1", sep=';')
+        if chunksize:
+            kwargs['chunksize'] = 10000
+
+        data = pd.read_csv(path, **kwargs)
+        return pd.concat([chunk for chunk in data]) if chunksize else data
+
+    def _data_by_pattern(self, pattern):
+        """
+        Given a glob pattern, loads all files matching this pattern, and then
+        concats them all in a single data frame
+        """
+        data = [self._read_csv(name) for name in self.path.glob(pattern)]
+        return pd.concat(data)
+
+    def _data(self):
+        """
+        Returns a dictionary with data frames for candidates, parties and
+        committees
+        """
+        files = self.FILENAMES.get(self.year)
+        if not files:  # it's 2010, a different file architecture
+            return {
+                'candidates': self._data_by_pattern('**/ReceitasCandidatos*'),
+                'parties': self._data_by_pattern('**/ReceitasPartidos*'),
+                'committees': self._data_by_pattern('**/ReceitasComites*')
+            }
+
+        paths = (os.path.join(self.directory, filename) for filename in files)
+        return {
+            key: self._read_csv(path, chunksize=10000)
+            for key, path in zip(KEYS, paths)
+            if os.path.exists(path)
+        }
+
+    @property
+    def data(self):
+        """Takes self._data, clean, normalizes and translate it"""
+        data = self._data()
+        for key in KEYS:
+            normalize_columns = self.NORMALIZE_COLUMNS.get(key)
+            if key in data:
+                # strip columns names ('foobar ' -> 'foobar')
+                names = data[key].columns.values
+                cleaned_columns = {name: name.strip() for name in names}
+                data[key].rename(columns=cleaned_columns, inplace=True)
+                # normalize & translate
+                data[key].rename(columns=normalize_columns, inplace=True)
+                data[key].rename(columns=self.TRANSLATIONS, inplace=True)
+        return data
+
+    def __enter__(self):
+        self._download()
+        self._unzip()
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        print('Cleaning up source files from {}…'.format(self.year))
+        os.remove(self.zip_file)
+        shutil.rmtree(self.directory)
 
 
-def folder_walk(year):
-    ret_dict = {}
-    if year == '2010':
-        donations_data_candidates = []
-        donations_data_parties = []
-        donations_data_committees = []
-        for root, dirs, files in os.walk("prestacao_contas_2010", topdown=False):
-            for name in files:
-                if 'Receitas' in name:
-                    data = pd.read_csv(os.path.join(root, name), low_memory=False,
-                                       encoding="ISO-8859-1", sep=';')
-                    if 'candidato' in os.path.join(root, name):
-                        donations_data_candidates.append(data)
-                    elif 'comite' in os.path.join(root, name):
-                        donations_data_committees.append(data)
-                    elif 'partido' in os.path.join(root, name):
-                        donations_data_parties.append(data)
-
-        donations_data_candidates = pd.concat(donations_data_candidates)
-        donations_data_parties = pd.concat(donations_data_parties)
-        donations_data_committees = pd.concat(donations_data_committees)
-        shutil.rmtree('prestacao_contas_2010')
-        ret_dict = {'candidates': donations_data_candidates,
-                    'parties': donations_data_parties,
-                    'committees': donations_data_committees}
-    else:
-        if year == '2012':
-            path_candid = os.path.join('prestacao_final_2012',
-                                       'receitas_candidatos_2012_brasil.txt')
-            path_parties = os.path.join('prestacao_final_2012',
-                                        'receitas_partidos_2012_brasil.txt')
-            path_committ = os.path.join('prestacao_final_2012',
-                                        'receitas_comites_2012_brasil.txt')
-        elif year == '2014':
-            path_candid = os.path.join('prestacao_final_2014',
-                                       'receitas_candidatos_2014_brasil.txt')
-            path_parties = os.path.join('prestacao_final_2014',
-                                        'receitas_partidos_2014_brasil.txt')
-            path_committ = os.path.join('prestacao_final_2014',
-                                        'receitas_comites_2014_brasil.txt')
-        elif year == '2016':
-            path_candid = os.path.join('prestacao_contas_final_2016',
-                                   ('receitas_candidatos_prestacao_contas_final_2016_brasil'  # noqa
-                                    '.txt'))
-            path_parties = os.path.join('prestacao_contas_final_2016',
-                                        ('receitas_partidos_prestacao_contas_final_2016_brasil'  # noqa
-                                         '.txt'))
-
-        donations_data_candidates_chunks = pd.read_csv(path_candid,
-                                                       low_memory=True,
-                                                       encoding="ISO-8859-1",
-                                                       sep=';',
-                                                       chunksize=10000)
-        donations_data_candidates = []
-        for chunk in donations_data_candidates_chunks:
-            donations_data_candidates.append(chunk)
-        donations_data_candidates = pd.concat(donations_data_candidates)
-        ret_dict['candidates'] = donations_data_candidates
-
-        donations_data_parties_chunks = pd.read_csv(path_parties,
-                                                    low_memory=True,
-                                                    encoding="ISO-8859-1",
-                                                    sep=';',
-                                                    chunksize=10000)
-
-        donations_data_parties = []
-        for chunk in donations_data_parties_chunks:
-            donations_data_parties.append(chunk)
-        donations_data_parties = pd.concat(donations_data_parties)
-        ret_dict['parties'] = donations_data_parties
-
-        if year != '2016':
-            donations_data_committees_chunks = pd.read_csv(path_committ,
-                                                           low_memory=True,
-                                                           encoding="ISO-8859-1",
-                                                           sep=';',
-                                                           chunksize=10000)
-            donations_data_committees = []
-            for chunk in donations_data_committees_chunks:
-                donations_data_committees.append(chunk)
-            donations_data_committees = pd.concat(donations_data_committees)
-            ret_dict['committees'] = donations_data_committees
-
-        if year != '2016':
-            shutil.rmtree('prestacao_final_' + year)
-        else:
-            shutil.rmtree('prestacao_contas_final_2016')
-
-    return ret_dict
-
-
-def correct_columns(donations_data):
-    if 'candidates' in donations_data.keys():
-        donations_data['candidates'].rename(columns={'Descricao da receita':
-                                                     'Descrição da receita',
-                                                     'Especie recurso':
-                                                     'Espécie recurso',
-                                                     'Numero candidato':
-                                                     'Número candidato',
-                                                     'Numero do documento':
-                                                     'Número do documento',
-                                                     'Numero Recibo Eleitoral':
-                                                     'Número Recibo Eleitoral',
-                                                     'Sigla  Partido':
-                                                     'Sigla Partido'},
-                                            inplace=True)
-    if 'parties' in donations_data.keys():
-        donations_data['parties'].rename(columns={'Sigla  Partido':
-                                                  'Sigla Partido',
-                                                  'Número recibo eleitoral':
-                                                  'Número Recibo Eleitoral'},
-                                         inplace=True)
-    if 'committees' in donations_data.keys():
-        donations_data['committees'].rename(columns={'Sigla  Partido':
-                                                     'Sigla Partido',
-                                                     'Tipo comite':
-                                                     'Tipo Comite',
-                                                     'Número recibo eleitoral':
-                                                     'Número Recibo Eleitoral'},  # noqa
-                                            inplace=True)
-
-
-def translate_columns(donations_data):
-    translations = {'Cargo': 'post',
-                    'CNPJ Prestador Conta': 'accountable_company_id',
-                    'Cod setor econômico do doador': 'donor_economic_setor_id',
-                    'Cód. Eleição': 'election_id',
-                    'CPF do candidato': 'candidate_cpf',
-                    'CPF do vice/suplente': 'substitute_cpf',
-                    'CPF/CNPJ do doador': 'donor_cnpj_or_cpf',
-                    'CPF/CNPJ do doador originário':
-                    'original_donor_cnpj_or_cpf',
-                    'Data da receita': 'revenue_date',
-                    'Data e hora': 'date_and_time',
-                    'Desc. Eleição': 'election_description',
-                    'Descrição da receita': 'revenue_description',
-                    'Entrega em conjunto?': 'batch',
-                    'Espécie recurso': 'type_of_revenue',
-                    'Fonte recurso': 'source_of_revenue',
-                    'Município': 'city',
-                    'Nome candidato': 'candidate_name',
-                    'Nome da UE': 'electoral_unit_name',
-                    'Nome do doador': 'donor_name',
-                    'Nome do doador (Receita Federal)':
-                    'donor_name_for_federal_revenue',
-                    'Nome do doador originário': 'original_donor_name',
-                    'Nome do doador originário (Receita Federal)':
-                    'original_donor_name_for_federal_revenue',
-                    'Número candidato': 'candidate_number',
-                    'Número candidato doador': 'donor_candidate_number',
-                    'Número do documento': 'document_number',
-                    'Número partido doador': 'donor_party_number',
-                    'Número Recibo Eleitoral': 'electoral_receipt_number',
-                    'Número UE': 'electoral_unit_number',
-                    'Sequencial Candidato': 'candidate_sequence',
-                    'Sequencial prestador conta': 'accountable_sequence',
-                    'Sequencial comite': 'committee_sequence',
-                    'Sequencial Diretorio': 'party_board_sequence',
-                    'Setor econômico do doador': 'donor_economic_sector',
-                    'Setor econômico do doador originário':
-                    'original_donor_economic_sector',
-                    'Sigla da UE': 'electoral_unit_abbreviation',
-                    'Sigla Partido': 'party_acronym',
-                    'Sigla UE doador': 'donor_electoral_unit_abbreviation',
-                    'Tipo de documento': 'document_type',
-                    'Tipo diretorio': 'party_board_type',
-                    'Tipo doador originário': 'original_donor_type',
-                    'Tipo partido': 'party_type',
-                    'Tipo receita': 'revenue_type',
-                    'Tipo comite': 'committee_type',
-                    'UF': 'state',
-                    'Valor receita': 'revenue_value'}
-    if 'candidates' in donations_data.keys():
-        donations_data['candidates'].rename(columns=translations,
-                                            inplace=True)
-    if 'parties' in donations_data.keys():
-        donations_data['parties'].rename(columns=translations,
-                                         inplace=True)
-    if 'committees' in donations_data.keys():
-        donations_data['committees'].rename(columns=translations,
-                                            inplace=True)
-
-
-def strip_columns_names(donations_data, key):
-    if key in donations_data.keys():
-        columns_candidates = donations_data[key].columns.values
-        columns_mod_candidates = {}
-        for name in columns_candidates:
-            columns_mod_candidates[name] = name.strip()
-        donations_data[key].rename(columns=columns_mod_candidates,
-                                   inplace=True)
-
-
-def download_base(url, year):
-    file_name = url.split('/')[-1]
-    print("Downloading " + file_name)
-    urllib.request.urlretrieve(url, file_name, reporthook)
-    print("Uncompressing downloaded data.")
-    with zipfile.ZipFile(file_name, "r") as zip_ref:
-        zip_ref.extractall(file_name.split('.')[0])
-    os.remove(file_name)
-
-    print("Reading all the data and creating the dataframes...")
-
-    donations_data = folder_walk(year)
-
-    strip_columns_names(donations_data, 'candidates')
-    strip_columns_names(donations_data, 'parties')
-    strip_columns_names(donations_data, 'committees')
-
-    return donations_data
-
-
-if __name__ == "__main__":
-    base_url = ('http://agencia.tse.jus.br/estatistica/sead/odsele/'
-                'prestacao_contas/')
-    url = base_url + 'prestacao_contas_2010.zip'
-    donations_data_2010 = download_base(url, '2010')
-    url = base_url + 'prestacao_final_2012.zip'
-    donations_data_2012 = download_base(url, '2012')
-    url = base_url + 'prestacao_final_2014.zip'
-    donations_data_2014 = download_base(url, '2014')
-    url = base_url + 'prestacao_contas_final_2016.zip'
-    donations_data_2016 = download_base(url, '2016')
-
-    donations_data = [donations_data_2010, donations_data_2012,
-                      donations_data_2014, donations_data_2016]
-
-    donations_candidates_concatenated = []
-    donations_parties_concatenated = []
-    donations_committees_concatenated = []
-
-    for data in donations_data:
-        correct_columns(data)
-        translate_columns(data)
-        if 'candidates' in data.keys():
-            donations_candidates_concatenated.append(data['candidates'])
-        if 'parties' in data.keys():
-            donations_parties_concatenated.append(data['parties'])
-        if 'committees' in data.keys():
-            donations_committees_concatenated.append(data['committees'])
-
-    donations_candidates_concatenated = pd.concat(donations_candidates_concatenated)  # noqa
-    donations_parties_concatenated = pd.concat(donations_parties_concatenated)
-    donations_committees_concatenated = pd.concat(donations_committees_concatenated)  # noqa
-
-    print("Saving dataframes in csv files (.xz)...")
-
+def save(key, data):
+    """Given a key and a data frame, saves it compressed in LZMA"""
     if not os.path.exists(DATA_PATH):
         os.makedirs(DATA_PATH)
 
-    donations_candidates_concatenated.to_csv(os.path.join(DATA_PATH,
-                                             time.strftime("%Y-%m-%d") +
-                                             '-donations_candidates.xz'),
-                                             compression='xz')
-    donations_parties_concatenated.to_csv(os.path.join(DATA_PATH,
-                                          time.strftime("%Y-%m-%d") +
-                                          '-donations_parties.xz'),
-                                          compression='xz')
-    donations_committees_concatenated.to_csv(os.path.join(DATA_PATH,
-                                             time.strftime("%Y-%m-%d") +
-                                             '-donations_committees.xz'),
-                                             compression='xz')
+    prefix = date.today().strftime('%Y-%m-%d')
+    filename = '{}-donations-{}.xz'.format(prefix, key)
+    print('Saving {}…'.format(filename))
+    data.to_csv(os.path.join(DATA_PATH, filename), compression='xz')
+
+
+def fetch_data_from(year):
+    with Donation(year) as donation:
+        return donation.data
+
+
+if __name__ == '__main__':
+    by_year = tuple(fetch_data_from(year) for year in YEARS)
+    for key in KEYS:
+        data = pd.concat([d.get(key) for d in by_year if d.get(key)])
+        save(key, data)
