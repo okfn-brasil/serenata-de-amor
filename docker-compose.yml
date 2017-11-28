@@ -25,7 +25,8 @@ services:
     depends_on:
        - postgres
        - queue
-    command: [celery, worker, --app, jarbas]
+    entrypoint: ['/bin/sh', '-c']
+    command: ['celery worker --app jarbas']
 
   elm:
     image: datasciencebr/jarbas-frontend
