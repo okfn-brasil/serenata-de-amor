@@ -22,6 +22,12 @@ A lot of discussions about ideas take place in the [Issues](https://github.com/d
 
 ### Local Installation Environment (without Docker)
 
+#### Video tutorial
+
+[![Installing serenata-de-amor](http://img.youtube.com/vi/g9hmMFVp4rs/0.jpg)](http://www.youtube.com/watch?v=g9hmMFVp4rs)
+
+#### Tutorial
+
 The recommended way of setting your environment up is with [Anaconda](https://www.continuum.io/), a Python distribution with useful packages for Data Science.
 
 The project uses Python 3 (specified in the `python=3` bit of the commands below). [Download Anaconda](https://www.continuum.io/downloads) and create an _environment_ for the project.
@@ -69,6 +75,12 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 ```
 
 ### Docker Installation Environment
+
+#### Video tutorial
+
+[![Installing serenata-de-amor with Docker](http://img.youtube.com/vi/3XwvZbCvZKQ/0.jpg)](http://www.youtube.com/watch?v=3XwvZbCvZKQ)
+
+#### Tutorial
 
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
