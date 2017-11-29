@@ -78,7 +78,7 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 #### Video tutorial
 
-[![IInstalling serenata-de-amor with Docker](http://img.youtube.com/vi/3XwvZbCvZKQ/0.jpg)](http://www.youtube.com/watch?v=3XwvZbCvZKQ)
+[![Installing serenata-de-amor with Docker](http://img.youtube.com/vi/3XwvZbCvZKQ/0.jpg)](http://www.youtube.com/watch?v=3XwvZbCvZKQ)
 
 #### Tutorial
 
