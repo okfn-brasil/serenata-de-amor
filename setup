@@ -1,21 +1,39 @@
 #!/usr/bin/env python3
 
+import os
 import pip
+import argparse
 from shutil import copyfile, which
-import subprocess
 
-copyfile('config.ini.example', 'config.ini')
+RESEARCH_DIR = 'research'
+DATA_DIR = os.path.join(RESEARCH_DIR, 'data')
 
-pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
-subprocess.call(['conda', 'config', '--add', 'channels', 'conda-forge'])
-subprocess.call(['conda', 'install', '--yes', '--file', 'conda_requirements.txt'])
+parser = argparse.ArgumentParser(
+    description='Setup serenata-de-amor using serenata-toolbox.')
 
-if which('unzip') == None:
+parser.add_argument('--all', dest='all', action='store_true',
+                    help='Force all datasets from serenata-toolbox \
+                    to be downloaded')
+
+args = parser.parse_args()
+
+if not os.path.exists('config.ini'):
+    copyfile('config.ini.example', 'config.ini')
+
+requirements = os.path.join(RESEARCH_DIR, 'requirements.txt')  # local install
+if not os.path.exists(requirements):
+    requirements = 'requirements.txt'  # Docker
+
+pip.main(['install', '--upgrade', '-r', requirements])
+
+if which('unzip') is None:
     print('The following executables are needed and were not found: unzip')
 
-print('Downloading datasets (this might take several minutes depending on your internet connection)')
+print('Downloading datasets (this might take several minutes \
+    depending on your internet connection)')
 
-
-# This is imported here because serenata_toolbox is only installed when pip.main is called (line 9)
+# This is imported here because serenata_toolbox is only
+# installed when pip.main is called (line 27)
 from serenata_toolbox.datasets import fetch_latest_backup
-fetch_latest_backup('data/')
+os.makedirs(DATA_DIR, exist_ok=True)
+fetch_latest_backup(DATA_DIR, force_all=args.all)

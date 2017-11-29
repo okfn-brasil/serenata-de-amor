@@ -22,6 +22,12 @@ A lot of discussions about ideas take place in the [Issues](https://github.com/d
 
 ### Local Installation Environment (without Docker)
 
+#### Video tutorial
+
+[![Installing serenata-de-amor](http://img.youtube.com/vi/g9hmMFVp4rs/0.jpg)](http://www.youtube.com/watch?v=g9hmMFVp4rs)
+
+#### Tutorial
+
 The recommended way of setting your environment up is with [Anaconda](https://www.continuum.io/), a Python distribution with useful packages for Data Science.
 
 The project uses Python 3 (specified in the `python=3` bit of the commands below). [Download Anaconda](https://www.continuum.io/downloads) and create an _environment_ for the project.
@@ -70,17 +76,22 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 ### Docker Installation Environment
 
+#### Video tutorial
+
+[![Installing serenata-de-amor with Docker](http://img.youtube.com/vi/3XwvZbCvZKQ/0.jpg)](http://www.youtube.com/watch?v=3XwvZbCvZKQ)
+
+#### Tutorial
+
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
-1. Start the environment (it might take a while, the base image has 5.8GB and we also pull in lots of dependencies): `$ docker-compose up -d`.
 1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
-1. Run the script to download data and other useful files: `$ docker-compose run --rm jupyter python src/fetch_datasets.py`
-1. You can start Jupyter Notebooks and access them at [localhost:8888](http://localhost:8888): `$ docker-compose run --rm jupyter jupyter notebook`
+1. Build the tags with `$ docker-compose build`
+1. Start the environment (it might take a while, hurry not): `$ docker-compose up -d`.
 
 If you want to access the console:
 
 ```console
-$ docker-compose run --rm jupyter bash
+$ docker-compose run --rm research bash
 ```
 
 ### Using Neo4j in graph analysis
@@ -121,81 +132,88 @@ Beyond that we have five big directories with different purposes:
 
 | Directory | Purpose | File naming |
 |-----------|---------|-------------|
-| **`develop/`** | This is where we _explore_ data, feel free to create your own notebook for your exploration. | `[ISO 8601 date]-[author-username]-[2-4 word description].ipynb` (e.g. `2016-05-13-anaschwendler-air-tickets.ipynb`) |
-|**`report/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
-| **`src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
-| **`data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
-| **`docs/`** | Once a new subject, theme or datset is added to project, would be nice to have some documentation describing these items and how others can use them. | Small caps whenever possible, no special character, `-` instead of spaces, preference for `.md` Markdown files. |  |
+| **`research/develop/`** | This is where we _explore_ data, feel free to create your own notebook for your exploration. | `[ISO 8601 date]-[author-username]-[2-4 word description].ipynb` (e.g. `2016-05-13-anaschwendler-air-tickets.ipynb`) |
+|**`research/deliver/`** | This is where we write up the findings and results, here is where we put together different data, analysis and strategies to make a point, feel free to jump in. | Meaningful title for the report (e.g. `Transport-allowances.ipynb` |
+| **`research/src/`** | This is where our auxiliary scripts lie: code to scrap data, to convert stuff, etc. | Small caps, no special character, `-` instead of spaces. |
+| **`research/data/`** | This is not supposed to be committed, but it is where saved databases will be stored locally (scripts from `research/src/` should be able to get this data for you); a copy of this data will be available elsewhere (_just in case_). | Date prefix, small caps, no special character, `-` instead of spaces, preference for `.xz` compressed CSV (`YYYY-MM-DD-my-dataset.xz`). |
+| **`docs/`** | Once a new subject, theme or dataset is added to project, would be nice to have some documentation describing these items and how others can use them. | Small caps whenever possible, no special character, `-` instead of spaces, preference for `.md` Markdown files. |  |
 
-### The toolbox and our the source files (`src/`)
+### The toolbox and our the source files (`research/src/`)
 
-Here we explain what each script from `src/` and the `serenata_toolbox` do for you:
+Here we explain what each script from `research/src/` and the `serenata_toolbox` do for you:
 
 ##### One toolbox to rule them all
 
 With the [toolbox](https://github.com/datasciencebr/serenata-toolbox) you can download, translate and convert the dataset from XML to CSV. You can chec the [toolbox docs](http://serenata-toolbox.readthedocs.io/en/latest/) too.
 
 
-When you run our setup, the toolbox is installed and all our datasets are downloaded to your `data/` directory. This is handled by these two single lines:
+When you run our setup, the toolbox is installed and all our datasets are downloaded to your `research/data/` directory. This is handled by these two single lines:
 ```python
 from serenata_toolbox.datasets import fetch_latest_backup
 fetch_latest_backup('data/')
 ```
 
 ##### Quota for Exercising Parliamentary Activity (CEAP)
-1. `src/group_receipts.py` creates a `data/YYYY-MM-DD-reimbursements.xz` file with grouped data from all of the available datasets (`data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`)
-1. `src/translation_table.py` creates a `data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
+1. `research/src/group_receipts.py` creates a `research/data/YYYY-MM-DD-reimbursements.xz` file with grouped data from all of the available datasets (`research/data/YYYY-MM-DD-current-year.xz`, `research/data/YYYY-MM-DD-last-year.xz` and `research/data/YYYY-MM-DD-previous-years.xz`)
+1. `research/src/translation_table.py` creates a `research/data/YYYY-MM-DD-ceap-datasets.md` file with details of the meaning and of the translation of each variable from the _Quota for Exercising Parliamentary Activity_ datasets.
 
 
 ##### Suppliers information (CNPJ)
-1. `src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info, after that, cleans up and translates the dataset.
-1. `src/geocode_addresses.py` iterates over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
-1. `src/fetch_sex_places.py` fetches the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (use `--help` for further instructions).
+1. `research/src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info, after that, cleans up and translates the dataset.
+1. `research/src/geocode_addresses.py` iterates over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
+1. `research/src/fetch_sex_places.py` fetches the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (use `--help` for further instructions).
 
 ##### Miscellaneous
-1. `src/backup_data.py` uploads files from `data/` to an Amazon S3 bucket set on `config.ini` .
+1. `research/src/backup_data.py` uploads files from `research/data/` to an Amazon S3 bucket set on `config.ini` .
 
 ##### Politician's relatives
-1. `src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
+1. `research/src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `research/data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `research/data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)
 
 ##### Deputies Advisors
-1. `src/fetch_deputies_advisors.py` gets the name and point number (and act's issued place and date when available) of all advisors of current deputies from Chamber of Deputies website and saves to `data/YYYY-MM-DD-deputies-advisors.xz`
+1. `research/src/fetch_deputies_advisors.py` gets the name and point number (and act's issued place and date when available) of all advisors of current deputies from Chamber of Deputies website and saves to `research/data/YYYY-MM-DD-deputies-advisors.xz`
 
 ##### Federal Budget
-1. `src/fetch_federal_budget_datasets.py` downloads datasets files of agreements made with Federal Budget and their related amendments.  The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
+1. `research/src/fetch_federal_budget_datasets.py` downloads datasets files of agreements made with Federal Budget and their related amendments.  The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `research/data/`. The files are named as follows:
  - Agreements:  `YYYY-MM-DD-agreements.xz`
  - Amendments: `YYYY-MM-DD-amendments.xz`
 
 ##### Electoral information
-1. `src/fetch_tse_data.py` downloads datasets files from TSE website and organize them in the dataset `data/YYYY-MM-DD-tse-candidates.xz`.
+1. `research/src/fetch_tse_data.py` downloads datasets files from TSE website and organize them in the dataset `research/data/YYYY-MM-DD-tse-candidates.xz`.
 
 ##### Companies and Non-Profit Entities with sanctions (CEIS, CEPIM and CNEP).
-1. `src/fetch_federal_sanctions.py` downloads all three datasets files (CEIS, CEPIM and CNEP) from official source. The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `data/`. The files are named as follows:
+1. `research/src/fetch_federal_sanctions.py` downloads all three datasets files (CEIS, CEPIM and CNEP) from official source. The script gets the lastest version available for each dataset, unpacks, translates columns to english and saves them into `research/data/`. The files are named as follows:
  - CEIS: `YYYY-MM-DD-inident-and-suspended-companies.xz`
  - CEPIM: `YYYY-MM-DD-impeded-non-profit-entities.xz`
  - CNEP: `YYYY-MM-DD-national-register-punished-companies.xz`
 
 ##### Purchase suppliers
-1. `src/fetch_purchase_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchase-suppliers.xz`.
+1. `research/src/fetch_purchase_suppliers.py` collects the data of all suppliers related with purchases made by federal government. The purchases could be by a company or by a person. The file is named as follows: `YYYY-MM-DD-purchase-suppliers.xz`.
 
 ##### Congresspeople details
-1. `src/fetch_congressperson_details.py` collects personal details (civil name, birth date and gender) from congresspeople. The file is named as follows: `YYYY-MM-DD-congressperson-details.xz`.
+1. `research/src/fetch_congressperson_details.py` collects personal details (civil name, birth date and gender) from congresspeople. The file is named as follows: `YYYY-MM-DD-congressperson-details.xz`.
 
-### Datasets (`data/`)
+#### Brazilian cities
+1. `research/src/grequests_transparency_portal_cities.py` generates a dataset containing all available
+links for transparency portal from each Brazilian city that already have them. The output file can be found at `research/data/` and is named as follows: `YYYY-MM-DD-cities-with-tp-url.xz`.
 
-Here we explain what are the datasets inside `data/`. They are not part of this repository, but can be downloaded with the [toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
+### Datasets (`research/data/`)
+
+Here we explain what are the datasets inside `research/data/`. They are not part of this repository, but can be downloaded with the [toolbox](https://github.com/datasciencebr/serenata-toolbox). Most files are `.xz` compressed CSV.
 All files are named with a [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date suffix.
 
-1. `data/YYYY-MM-DD-current-year.xz`, `data/YYYY-MM-DD-last-year.xz` and `data/YYYY-MM-DD-previous-years.xz`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `data/YYYY-MM-DD-ceap-datasets.md`.
-1. `data/datasets-format.html`: Original HTML in Portuguese from the Chamber of Deputies explaining CEAP dataset variables.
-1. `data/YYYY-MM-DD-ceap-datasets.md`: Table comparing contents from `data/YYYY-MM-DD-datasets_format.html` and our translation of variable names and descriptions.
-1. `data/YYYY-MM-DD-companies.xz`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
-1. `data/YYYY-MM-DD-congressperson_relatives.xz` contains data on the relatives of congresspeople and the nature of their relationship.
-1. `data/YYYY-MM-DD-congressperson_relatives_raw.xz` also contains data on the relatives of congresspeople, but is only created if `src/get_family_names.py` fails to handle some names.
-1. `data/YYYY-MM-DD-deputies-advisors.xz` contains data from advisors of each deputy in the current term along with the deputy number and deputy name.
-1. `data/YYYY-MM-DD-sex-place-distances` contains data from the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (including distance in meters) — this dataset is just a sample (check [this notebook](develop/2017-04-21-cuducos-explore-sex-places-dataset.ipynb) for details).
-1. `data/YYYY-MM-DD-tse-candidates.xz` contains information about politicians candidacy over the last years. Can be used to extract a list of all politicians in Brazil.
-1. `data/YYYY-MM-DD-congressperson-details.xz` contains the birth date, gender and civil name of congresspeople.
+1. `research/data/YYYY-MM-DD-current-year.xz`, `research/data/YYYY-MM-DD-last-year.xz` and `research/data/YYYY-MM-DD-previous-years.xz`: Datasets from the _Quota for Exercising Parliamentary Activity_; for details on its variables and meaning, check `research/data/YYYY-MM-DD-ceap-datasets.md`.
+1. `research/data/datasets-format.html`: Original HTML in Portuguese from the Chamber of Deputies explaining CEAP dataset variables.
+1. `research/data/YYYY-MM-DD-ceap-datasets.md`: Table comparing contents from `data/YYYY-MM-DD-datasets_format.html` and our translation of variable names and descriptions.
+1. `research/data/YYYY-MM-DD-companies.xz`: Dataset with suppliers info containing all the fields offered in the [Federal Revenue alternative API](http://receitaws.com.br) and complemented with geolocation (latitude and longitude) gathered from Google Maps.
+1. `research/data/YYYY-MM-DD-congressperson_relatives.xz` contains data on the relatives of congresspeople and the nature of their relationship.
+1. `research/data/YYYY-MM-DD-congressperson_relatives_raw.xz` also contains data on the relatives of congresspeople, but is only created if `research/src/get_family_names.py` fails to handle some names.
+1. `research/data/YYYY-MM-DD-deputies-advisors.xz` contains data from advisors of each deputy in the current term along with the deputy number and deputy name.
+1. `research/data/YYYY-MM-DD-sex-place-distances` contains data from the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (including distance in meters) — this dataset is just a sample (check [this notebook](research/develop/2017-04-21-cuducos-explore-sex-places-dataset.ipynb) for details).
+1. `research/data/YYYY-MM-DD-tse-candidates.xz` contains information about politicians candidacy over the last years. Can be used to extract a list of all politicians in Brazil.
+1. `research/data/YYYY-MM-DD-congressperson-details.xz` contains the birth date, gender and civil name of congresspeople.
+1. `research/data/YYYY-MM-DD-brazilian-cities.csv` contains information about all Brazilian cities (e.g. city code, state and name).
+1. `research/data/YYYY-MM-DD-receipts-texts.xz` OCR of nearly 200k reimbursement receipts using Google's Cloud Vision API, for more information see the documentation on [docs/receipts-ocr.md](docs/receipts-ocr.md)
+
 
 ## Four moments
 
@@ -204,15 +222,15 @@ The project basically happens in four moments, and contributions are welcomed in
 | Moment | Description | Focus | Target |
 |--------|-------------|-------|--------|
 | **Possibilities** | To structure hypotheses and strategies taking into account (a) the source of the data, (b) how feasible it is to get this data, and (c) what is the purpose of bringing this data into the project.| Contributions here require more sagacity than technical skills.| [GitHub Issues](https://github.com/codelandev/serenata-de-amor/issues) |
-| **Data collection** | Once one agrees that a certain _possibility_ is worth it, one might want to start writing code to get the data (these scripts go into `src/`). | Technical skills in scrapping data and using APIs. | `src/`, `data/` and `docs/` |
-| **Exploring** | Once data is ready to be used, one might want to start exploring and analyzing it. | Here what matters is mostly data science skills. | `develop/` |
-| **Reporting** | Once a relevant finding emerges from the previous stages, this finding might be gathered with other similar findings (e.g. put together explorations on airline tickets, car rentals and geolocation under a report on transportation) on a report. | Contributions here require good communication skills and very basic understanding of quantitative methods. | `report/` |
+| **Data collection** | Once one agrees that a certain _possibility_ is worth it, one might want to start writing code to get the data (these scripts go into `research/src/`). | Technical skills in scrapping data and using APIs. | `research/src/`, `research/data/` and `docs/` |
+| **Exploring** | Once data is ready to be used, one might want to start exploring and analyzing it. | Here what matters is mostly data science skills. | `research/develop/` |
+| **Reporting** | Once a relevant finding emerges from the previous stages, this finding might be gathered with other similar findings (e.g. put together explorations on airline tickets, car rentals and geolocation under a report on transportation) on a report. | Contributions here require good communication skills and very basic understanding of quantitative methods. | `research/report/` |
 
 ## More about the Quota for Exercising Parliamentary Activity (CEAP)
 
 If you read Portuguese there is [the official page](http://www2.camara.leg.br/participe/fale-conosco/perguntas-frequentes/cota-para-o-exercicio-da-atividade-parlamentar) with the legal pieces defining the quota and also [a human version of the main text](docs/CEAP.md) we made.
 
-Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `data/YYYY-MM-DD-ceap-datasets.md` that was downloaded when you [ran the setup](#one-toolbox-to-rule-them-all).
+Also you can find more about the dataset variables [in Jarbas](http://jarbas.datasciencebr.com/static/ceap-datasets.html) or in `research/data/YYYY-MM-DD-ceap-datasets.md` that was downloaded when you [ran the setup](#one-toolbox-to-rule-them-all).
 
 ## More about Federal Budget
 

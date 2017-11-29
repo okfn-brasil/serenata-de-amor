@@ -23,9 +23,9 @@ TEMP_PATH = mkdtemp()
 
 FILENAME_PREFIX = 'consulta_cand_'
 TSE_CANDIDATES_URL = 'http://agencia.tse.jus.br/estatistica/sead/odsele/consulta_cand/'
-TODAY = pd.datetime.today().date().isoformat()
-OUTPUT_FILENAME = TODAY + '-tse-candidates.xz'
-OUTPUT_DATASET_PATH = os.path.join(os.pardir, 'data', OUTPUT_FILENAME)
+TODAY = pd.datetime.today().date()
+OUTPUT_FILENAME = TODAY.isoformat() + '-tse-candidates.xz'
+OUTPUT_DATASET_PATH = os.path.join('data', OUTPUT_FILENAME)
 # setting year range from 2004 up to now. this will be modified further to
 # include yearsfrom 1994 to 2002
 year_list = [str(year) for year in (range(2004, TODAY.year + 1, 2))]
@@ -273,8 +273,8 @@ post_translation = {
     '1º SUPLENTE SENADO': 'senate_first_alternate',
     '2º SUPLENTE': 'senate_second_alternate',
     '1º SUPLENTE': 'senate_first_alternate',
-    'VICE-PRESIDENTE': 'president',
-    'PRESIDENTE': 'vice_president',
+    'VICE-PRESIDENTE': 'vice_president',
+    'PRESIDENTE': 'president',
 }
 result_translation = {
     'SUPLENTE': 'alternate',

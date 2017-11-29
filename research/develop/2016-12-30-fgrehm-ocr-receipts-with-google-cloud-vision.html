@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>2017-05-21-luizcavalcant-chamber-ceap-api-version-comparison</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>2016-12-30-fgrehm-ocr-receipts-with-google-cloud-vision</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11,8 +13,8 @@
 *
 */
 /*!
- * Bootstrap v3.3.7 (http://getbootstrap.com)
- * Copyright 2011-2016 Twitter, Inc.
+ * Bootstrap v3.3.6 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -1107,6 +1109,7 @@ a:focus {
   text-decoration: underline;
 }
 a:focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2535,6 +2538,7 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -3025,6 +3029,7 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -8755,9 +8760,6 @@ body > #header .header-bar {
     margin-left: 10px;
   }
 }
-[dir="rtl"] #ipython_notebook {
-  float: right !important;
-}
 #noscript {
   width: auto;
   padding-top: 16px;
@@ -8960,14 +8962,8 @@ span#login_widget > .button .badge,
  *
  * Author: Jupyter Development Team
  */
-[dir="rtl"] #tabs li {
-  float: right;
-}
 ul#tabs {
   margin-bottom: 4px;
-}
-[dir="rtl"] ul#tabs {
-  margin-right: 0px;
 }
 ul#tabs a {
   padding-top: 6px;
@@ -8990,16 +8986,6 @@ ul.breadcrumb span {
 }
 .list_toolbar .tree-buttons {
   padding-top: 1px;
-}
-[dir="rtl"] .list_toolbar .tree-buttons {
-  float: left !important;
-}
-[dir="rtl"] .list_toolbar .pull-right {
-  padding-top: 1px;
-  float: left !important;
-}
-[dir="rtl"] .list_toolbar .pull-left {
-  float: right !important;
 }
 .dynamic-buttons {
   padding-top: 3px;
@@ -9136,9 +9122,6 @@ ul.breadcrumb span {
 #tree-selector {
   padding-right: 0px;
 }
-[dir="rtl"] #tree-selector a {
-  float: right;
-}
 #button-select-all {
   min-width: 50px;
 }
@@ -9228,9 +9211,6 @@ ul#new-menu {
   left: auto;
   right: 0;
 }
-[dir="rtl"] #new-menu {
-  text-align: right;
-}
 .kernel-menu-icon {
   padding-right: 12px;
   width: 24px;
@@ -9275,9 +9255,6 @@ ul#new-menu {
 }
 #running .panel-group .panel .panel-body .list_container .list_item:last-child {
   border-bottom: 0px;
-}
-[dir="rtl"] #running .col-sm-8 {
-  float: right !important;
 }
 .delete-button {
   display: none;
@@ -9574,7 +9551,6 @@ div.cell.selected.jupyter-soft-selected {
   }
 }
 div.inner_cell {
-  min-width: 0;
   /* Old browsers */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -9595,6 +9571,11 @@ div.inner_cell {
   box-flex: 1;
   /* Modern browsers */
   flex: 1;
+}
+@-moz-document url-prefix() {
+  div.inner_cell {
+    overflow-x: hidden;
+  }
 }
 /* input_area and input_prompt must match in top border and margin for alignment */
 div.input_area {
@@ -11265,7 +11246,7 @@ div#pager .ui-resizable-handle::after {
 }
 .shortcut_key {
   display: inline-block;
-  width: 21ex;
+  width: 20ex;
   text-align: right;
   font-family: monospace;
 }
@@ -11577,7 +11558,6 @@ ul.typeahead-list > li > a {
   box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
 }
 .terminal-app .terminal {
-  width: 100%;
   float: left;
   font-family: monospace;
   color: white;
@@ -11591,9 +11571,6 @@ ul.typeahead-list > li > a {
 .terminal-app .terminal dummy-screen {
   line-height: 1em;
   font-size: 14px;
-}
-.terminal-app .terminal .xterm-rows {
-  padding: 10px;
 }
 .terminal-app .terminal-cursor {
   color: black;
@@ -11654,10 +11631,8 @@ ul.typeahead-list > li > a {
 .highlight .mh { color: #666666 } /* Literal.Number.Hex */
 .highlight .mi { color: #666666 } /* Literal.Number.Integer */
 .highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
 .highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
 .highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
 .highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
 .highlight .s2 { color: #BA2121 } /* Literal.String.Double */
 .highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
@@ -11668,11 +11643,9 @@ ul.typeahead-list > li > a {
 .highlight .s1 { color: #BA2121 } /* Literal.String.Single */
 .highlight .ss { color: #19177C } /* Literal.String.Symbol */
 .highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
 .highlight .vc { color: #19177C } /* Name.Variable.Class */
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
 <style type="text/css">
@@ -11778,8 +11751,39 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Comparison-between-Chamber-of-Deputies-CEAP-datasets-1.0-and-2.0">Comparison between Chamber of Deputies CEAP datasets 1.0 and 2.0<a class="anchor-link" href="#Comparison-between-Chamber-of-Deputies-CEAP-datasets-1.0-and-2.0">&#182;</a></h1><p>This notebook compares the old Chamber's CEAP dataset (the huge XML files) with the new one (CSV by year). The main objective of this comparison is to show we didn't lose any data on the migration from the 1.0 to the much more efficient 2.0 version of the data. This validates changes to serenata-toolbox so we can ditch 1.0 datasets for good and be prepare to their extinction by the Chamber's Open Data team.</p>
-<p>Let's begin by loading both old and new datasets</p>
+<h1 id="Applying-OCR-to-receipts">Applying OCR to receipts<a class="anchor-link" href="#Applying-OCR-to-receipts">&#182;</a></h1><p>As part of some analysis we might want to know the exact time when a receipt was issued and / or want to know the items that makes up for it in order to analyse its contents.</p>
+<p>For example, we can:</p>
+<ul>
+<li>Match the timestamp of a receipt in a city far away from Brasilia when we believe the congress person was supposed to be in a session.</li>
+<li>Match two timestamps of receipts made on the same day on cities really far from each other /</li>
+<li>Look for things like alcoholic beverages.</li>
+<li>See if the congressperson ordered too many dishes for "himself".</li>
+<li>Check in and check out dates from hotels.</li>
+</ul>
+<p>Even though we have lots of libraries for doing OCR in Python, I believe <a href="https://cloud.google.com/vision/">Google's Cloud Vision API</a> should be the "State of the art" when it comes to that type of thing since it is backed by Google, not to say that it is really easy to use. This notebook outlines the results of OCR'ing the receipts of the following 10 reimbursements picked from another analysis I did:</p>
+<ul>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/5631309">https://jarbas.datasciencebr.com/#/document_id/5631309</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631309.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631309.pdf</a></li>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/5631380">https://jarbas.datasciencebr.com/#/document_id/5631380</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631380.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631380.pdf</a></li>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/5928875">https://jarbas.datasciencebr.com/#/document_id/5928875</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/1564/2016/5928875.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/1564/2016/5928875.pdf</a></li>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/5768932">https://jarbas.datasciencebr.com/#/document_id/5768932</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/80/2015/5768932.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/80/2015/5768932.pdf</a></li>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/5962849">https://jarbas.datasciencebr.com/#/document_id/5962849</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962849.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962849.pdf</a></li>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/5962903">https://jarbas.datasciencebr.com/#/document_id/5962903</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962903.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962903.pdf</a></li>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/5855221">https://jarbas.datasciencebr.com/#/document_id/5855221</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5855221.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5855221.pdf</a></li>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/5856784">https://jarbas.datasciencebr.com/#/document_id/5856784</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5856784.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5856784.pdf</a></li>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/5921187">https://jarbas.datasciencebr.com/#/document_id/5921187</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2871/2016/5921187.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/2871/2016/5921187.pdf</a></li>
+<li><a href="https://jarbas.datasciencebr.com/#/document_id/6069360">https://jarbas.datasciencebr.com/#/document_id/6069360</a> -&gt; <a href="http://www.camara.gov.br/cota-parlamentar/documentos/publ/2935/2016/6069360.pdf">http://www.camara.gov.br/cota-parlamentar/documentos/publ/2935/2016/6069360.pdf</a></li>
+</ul>
+<p><strong>NOTE</strong>: While this could have been done in Python, it would take me a while to get it going so I kept things as simple as possible with bash since this is just a spike.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Setup">Setup<a class="anchor-link" href="#Setup">&#182;</a></h1><p><em>Make sure your <code>config.ini</code> has the Google APIKey set.</em></p>
 
 </div>
 </div>
@@ -11789,23 +11793,79 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">configparser</span>
 
-<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;max_columns&#39;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">settings</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;../config.ini&#39;</span><span class="p">)</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/tmp/cloud-vision.key&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">target</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Google&#39;</span><span class="p">,</span> <span class="s1">&#39;APIKey&#39;</span><span class="p">))</span>
+<span class="n">target</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You'll also need the <code>pdftoppm</code> command to convert PDFs to PNGs and <code>jq</code> to pretty print the JSON output returned by Google's API.</p>
+<p>On the Docker environment provided, you'll need to <code>docker exec -u root -ti CONTAINER bash</code> in order to have permissions to install the packages with a</p>
+
+<pre><code>apt-get update &amp;&amp; apt-get install -y poppler-utils jq</code></pre>
+<h2 id="Download-receipts,-convert-to-PNG-and-OCR-them">Download receipts, convert to PNG and OCR them<a class="anchor-link" href="#Download-receipts,-convert-to-PNG-and-OCR-them">&#182;</a></h2>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;2017-05-21-reimbursements.old.xz&#39;</span><span class="p">,</span>
-                          <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;xz&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+
+ocr<span class="o">()</span> <span class="o">{</span>
+  <span class="nv">id</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="nv">url</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">&quot;</span>
+  mkdir -p <span class="s2">&quot;/tmp/reimbursements/</span><span class="si">${</span><span class="nv">id</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="nb">cd</span> <span class="s2">&quot;/tmp/reimbursements/</span><span class="si">${</span><span class="nv">id</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;---&gt; </span><span class="nv">$id</span><span class="s2">&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;     Downloading PDF from &#39;</span><span class="nv">$url</span><span class="s2">&#39;...&quot;</span>
+  curl -s <span class="s2">&quot;</span><span class="si">${</span><span class="nv">url</span><span class="si">}</span><span class="s2">&quot;</span> &gt; <span class="s2">&quot;document.pdf&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;     Generating PNGs...&quot;</span>
+  pdftoppm -rx <span class="m">300</span> -ry <span class="m">300</span> -png <span class="s2">&quot;document.pdf&quot;</span> page
+  
+  <span class="k">for</span> img in page*.png<span class="p">;</span> <span class="k">do</span>
+    <span class="nb">echo</span> <span class="s2">&quot;     OCRing </span><span class="si">${</span><span class="nv">img</span><span class="si">}</span><span class="s2">...&quot;</span>
+    <span class="nv">payload</span><span class="o">=</span><span class="s2">&quot;payload-</span><span class="si">${</span><span class="nv">img</span><span class="p">%.*</span><span class="si">}</span><span class="s2">.json&quot;</span>
+    <span class="nv">response</span><span class="o">=</span><span class="s2">&quot;response-</span><span class="si">${</span><span class="nv">img</span><span class="p">%.*</span><span class="si">}</span><span class="s2">.json&quot;</span>
+    <span class="nb">echo</span> -n <span class="s1">&#39;{&quot;requests&quot;: [ { &quot;features&quot;: [ { &quot;type&quot;: &quot;TEXT_DETECTION&quot; } ], &quot;image&quot;: { &quot;content&quot;: &quot;&#39;</span> &gt; <span class="nv">$payload</span>
+    base64 -w <span class="m">0</span> <span class="nv">$img</span> &gt;&gt; <span class="nv">$payload</span>
+    <span class="nb">echo</span> -n <span class="s1">&#39;&quot; } } ] }&#39;</span> &gt;&gt; <span class="nv">$payload</span>
+    
+    curl -s <span class="s2">&quot;https://vision.clients6.google.com/v1/images:annotate?key=</span><span class="k">$(</span>cat /tmp/cloud-vision.key<span class="k">)</span><span class="s2">&amp;alt=json&quot;</span> <span class="se">\</span>
+         --data-binary @<span class="nv">$payload</span> <span class="se">\</span>
+         -H <span class="s1">&#39;Content-Type: application/json&#39;</span> <span class="se">\</span>
+      &gt; <span class="nv">$response</span>
+  <span class="k">done</span>
+<span class="o">}</span>
+
+date
+ocr <span class="m">5631309</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631309.pdf&#39;</span>
+ocr <span class="m">5631380</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631380.pdf&#39;</span>
+ocr <span class="m">5928875</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/1564/2016/5928875.pdf&#39;</span>
+ocr <span class="m">5768932</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/80/2015/5768932.pdf&#39;</span>
+ocr <span class="m">5962849</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962849.pdf&#39;</span>
+ocr <span class="m">5962903</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962903.pdf&#39;</span>
+ocr <span class="m">5855221</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5855221.pdf&#39;</span>
+ocr <span class="m">5856784</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5856784.pdf&#39;</span>
+ocr <span class="m">5921187</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/2871/2016/5921187.pdf&#39;</span>
+ocr <span class="m">6069360</span> <span class="s1">&#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/2935/2016/6069360.pdf&#39;</span>
+date
 </pre></div>
 
 </div>
@@ -11816,43 +11876,56 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/Users/luiz/.virtualenvs/serenata-toolbox/lib/python3.6/site-packages/IPython/core/interactiveshell.py:2683: DtypeWarning: Columns (5) have mixed types. Specify dtype option on import or set low_memory=False.
-  interactivity=interactivity, compiler=compiler, result=result)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">new_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;2017-05-21-reimbursements.new.xz&#39;</span><span class="p">,</span>
-                           <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;xz&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/Users/luiz/.virtualenvs/serenata-toolbox/lib/python3.6/site-packages/IPython/core/interactiveshell.py:2683: DtypeWarning: Columns (5) have mixed types. Specify dtype option on import or set low_memory=False.
-  interactivity=interactivity, compiler=compiler, result=result)
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Fri Jan  6 13:33:26 UTC 2017
+---&gt; 5631309
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631309.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+     OCRing page-2.png...
+---&gt; 5631380
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/1789/2015/5631380.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+---&gt; 5928875
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/1564/2016/5928875.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+---&gt; 5768932
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/80/2015/5768932.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+     OCRing page-2.png...
+     OCRing page-3.png...
+     OCRing page-4.png...
+     OCRing page-5.png...
+     OCRing page-6.png...
+---&gt; 5962849
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962849.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+---&gt; 5962903
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/3052/2016/5962903.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+---&gt; 5855221
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5855221.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+---&gt; 5856784
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/2238/2015/5856784.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+---&gt; 5921187
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/2871/2016/5921187.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+---&gt; 6069360
+     Downloading PDF from &#39;http://www.camara.gov.br/cota-parlamentar/documentos/publ/2935/2016/6069360.pdf&#39;...
+     Generating PNGs...
+     OCRing page-1.png...
+Fri Jan  6 13:35:50 UTC 2017
 </pre>
 </div>
 </div>
@@ -11866,7 +11939,159 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>First we need to check if both datasets have the same columns, even in they are in the same order:</p>
+<p>As we can see, it takes a while to process just 10 PDFs on a 60Mb connection (~2 minutes), if we ever move on with this we should really look into parallelizing it from day 0 and / or sending receipts in batches as it is supported by the API.</p>
+<h2 id="Document-5631309">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5631309">5631309</a><a class="anchor-link" href="#Document-5631309">&#182;</a></h2><p>A hotel receipt with lots of text in it. There is a lot of stuff on those JSON responses so we just extract the info for the piece that represents the whole text.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5631309/response-page-1.json
+<span class="nb">echo</span> <span class="s1">&#39;--------------&#39;</span><span class="p">;</span> <span class="nb">echo</span>
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5631309/response-page-2.json
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Castro Marques Hoteis LTDA.
+Extrato de Conta
+None
+OLAVO BILAC PINTO
+Empresa PARTICULAR
+Uh
+1001
+Nun, Doc
+Endereco Class, Fiscal
+RUA EAUSTo NUNES vrEIRA, 40 to 801
+BELVEDERE
+chegada
+BELO HORI2ONTENG
+30320-590 BRASIL
+12/23/201
+00 22
+Reserva
+1820028
+Funcionario:ADSILVA.
+Emissao: 18/03/2015 og t 35
+Partida: 14/03/2015 08
+CONTAENCERRADA Hospede: PINTO, OLAVO BLAC
+Num. Doc: 4556169968 Designacao: OLAVO BILAC PINTO
+Data
+origem Documento
+Descripao
+13/0309 07
+OR
+Hospede(s)
+Empresa
+Saldo Usuario
+13/03 11:59
+cons ego 24200M ssRvzCE RESTAURANT
+1310314222
+115, ALEX
+Coon 69019 RBGTAURANTE WRAND
+384.00 ALJ13
+DE MELANCIA.
+3/0316:00
+13/23 15:34
+e00 59025 FRIGOBAR.
+AGUA COM GAS BICLEVE
+310323159
+Coos 62034 RESTADRANTE LUGARO
+A22, AFSRK.
+182,00
+upo ins MELANCIA
+27, 59
+16
+CAFE AXPRESSO
+cno.. 69 39:xpow SERVICE RESTAURANT
+08:02
+90.00
+xxxxxxxxxxxx. DEPO8rso aNTECIPADO
+Resumo do Extrato.
+Hospede: PINTO, OLAVoBn
+Designacao: OLAVO BILAC PINTO
+DEPOSITO ANTECIPA
+Valor Tota
+FRIGOBAR
+RESTAURANTE LUGAN
+783,40
+on
+SERVICE REST
+526,00
+64, 00
+
+--------------
+
+PREFEITURAMUNICIPAL DE POUSO ALEGRE
+Numero da
+NFS-e
+SECRETARIA DE FAZENDA
+NOTA FISCAL ELETRONICA DE SERVICO-NFS e
+1708
+291293991
+3/201
+1703/2015 17.02.04
+POU3O ALEGRE MG
+soc Nome CASTRO MARQUESHOTERELTDA.
+POUSO ALEGRE NG
+ta,623,063/B001-10
+E CEP Av. PREF, TUANY TOLEDO,80
+FATIMA il cap: 37550010.
+ssitvertoeritarquwsplaza.com.br
+353122-2020
+OLAwo BILAC PINTO
+BELOHORUZONTE MG
+455 616.996-87
+R FAUSTO NUNESVEIRA AFT 801 40- BELVEDERE CEP: 30320-590
+OSPEDE: Olavo pinto l checkin 1203/2015 /checkout THRO312015
+9.01 5510801 Hotéis.
+76340
+0.00
+0Nenhum
+2.00
+Sims PK) Nao
+5.2
+78340
+A aute MAridade detta Nota FiscaipoderARrr varificada
+Avisos
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As we can see, it'd be pretty hard to parse the contents with a trivial "string matching algorithm", my guess is that the fact that the receipt is not fully vertical gets the OCR confused</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Document-5631380">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5631380">5631380</a><a class="anchor-link" href="#Document-5631380">&#182;</a></h2><p>There are 3 timestamps on the receipt and OCR extracted 2. The receipt items prices were also more or less extracted properly (4.50 and 4.75)</p>
 
 </div>
 </div>
@@ -11876,10 +12101,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_keys</span> <span class="o">=</span> <span class="n">old_dataset</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="n">new_keys</span> <span class="o">=</span> <span class="n">new_dataset</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">old_keys</span><span class="o">==</span><span class="n">new_keys</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5631380/response-page-1.json
 </pre></div>
 
 </div>
@@ -11890,13 +12113,42 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[ True  True  True  True  True  True  True  True  True  True  True  True
-  True  True  True  True  True  True  True  True  True  True  True  True
-  True  True  True  True  True  True  True]
+<pre>PINENIA VERDE Al INEKIOS LTDA
+tern. Passageiros atroporto inter tacional,S/H
+Setor Sala Eabarque 8. Aeroporto Conflns
+Confins Hinas Gerais
+BliPJ: 08,060,954/0039-12
+8170
+312015
+CUPOM FISCAL
+VL ITEM (R$)
+EN COOL
+4,505
+OTD
+4042 Cafe Expresso i 01r
+4,758
+2 2036 Pao de
+Queijo l 12
+TOTAL R$
+10,00
+0,75
+DINHEIRO
+AFM 4.1,8,4
+UHPOSTOS A PROX, LEI 12,24
+R$ 2,05
+17/D3/2015
+Garcom Viviane
+9:51 AM
+0010
+VR 100/2
+ontes: 3
+SMEDA If ST120
+-IF VERSAI: 01,00.05 ECF: 006
+Z(CC((XK 17/03/2015 09:53:50
+FAE: SN)4100000000001651
+
 </pre>
 </div>
 </div>
@@ -11910,7 +12162,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can also make sure they have the same types for all columns</p>
+<h2 id="Document-5928875">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5928875">5928875</a><a class="anchor-link" href="#Document-5928875">&#182;</a></h2><p>The API is obviously not that magical and it can't parse handwritten stuff</p>
 
 </div>
 </div>
@@ -11920,7 +12172,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">new_dataset</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="n">old_dataset</span><span class="o">.</span><span class="n">dtypes</span>
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5928875/response-page-1.json
 </pre></div>
 
 </div>
@@ -11931,46 +12184,34 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[5]:</div>
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>EUSEPIOPIILARIAERESTAURANTE NerezinhadeORreira
+do Chapéu BA CEP 44850-00t
+Rua Antonio Balbino 387- Casa. Centro Telefax (7413853-22
+CNPI 07.802.205000 1-30 Inge Estadual 06310772 PP O23857
+Nota Fiscal de Venda a Consumidor Série D1 vALIDAATE, 27/092017
+ata da Emi
+Nome
+Ende
+Estado
+Cida
+Unitario Total
+Discriminacao das Mercadorias
+Quant.
+Grarca e Eduva Vitoria Rua Rui Barbos5, na 167 -Munro d Chai
+u BA
+Total R$
+inscricac Estadt
+085.420.506 ME
+ENPI
+It 2.384 0001-23
+30 TJ. 50 x 03 Di 023001 a 024500 AID
+213007720
+Infaz Lue &amp; 2RVED9/2015
 
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>year                          True
-applicant_id                  True
-document_id                   True
-reimbursement_value_total     True
-total_net_value               True
-reimbursement_numbers         True
-congressperson_name           True
-congressperson_id             True
-congressperson_document       True
-term                          True
-state                         True
-party                         True
-term_id                       True
-subquota_number               True
-subquota_description          True
-subquota_group_id             True
-subquota_group_description    True
-supplier                      True
-cnpj_cpf                      True
-document_number               True
-document_type                 True
-issue_date                    True
-document_value                True
-remark_value                  True
-net_values                    True
-month                         True
-installment                   True
-passenger                     True
-leg_of_the_trip               True
-batch_number                  True
-reimbursement_values          True
-dtype: bool</pre>
+</pre>
 </div>
-
 </div>
 
 </div>
@@ -11982,7 +12223,7 @@ dtype: bool</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we can take a slice of the datasets by year and compare their sizes. We also remove the current year, because this ongoing registry seems to have different update pace between versions, so it makes no sense comparing them:</p>
+<h2 id="Document-5768932">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5768932">5768932</a><a class="anchor-link" href="#Document-5768932">&#182;</a></h2><p>A six page reimbursement document, most interesting info is on pages 4 and 5. On page 4, we can see items that make up for the meals expenses:</p>
 
 </div>
 </div>
@@ -11992,13 +12233,8 @@ dtype: bool</pre>
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_dataset</span> <span class="o">=</span> <span class="n">old_dataset</span><span class="p">[</span><span class="n">old_dataset</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2017</span><span class="p">]</span>
-<span class="n">new_dataset</span> <span class="o">=</span> <span class="n">new_dataset</span><span class="p">[</span><span class="n">new_dataset</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2017</span><span class="p">]</span>
-
-<span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">old_dataset</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]):</span>
-    <span class="n">old_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_dataset</span><span class="p">[</span><span class="n">old_dataset</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">year</span><span class="p">])</span>
-    <span class="n">new_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_dataset</span><span class="p">[</span><span class="n">new_dataset</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">year</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;year: </span><span class="si">{}</span><span class="s1"> old: </span><span class="si">{}</span><span class="s1"> new: </span><span class="si">{}</span><span class="s1"> diff: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">old_size</span><span class="p">,</span> <span class="n">new_size</span><span class="p">,</span> <span class="n">new_size</span><span class="o">-</span><span class="n">old_size</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5768932/response-page-4.json
 </pre></div>
 
 </div>
@@ -12009,18 +12245,84 @@ dtype: bool</pre>
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>year: 2009 old: 171942 new: 171942 diff: 0
-year: 2010 old: 204299 new: 204299 diff: 0
-year: 2011 old: 213379 new: 213379 diff: 0
-year: 2012 old: 197019 new: 197019 diff: 0
-year: 2013 old: 194157 new: 194157 diff: 0
-year: 2014 old: 172144 new: 172144 diff: 0
-year: 2015 old: 208729 new: 208729 diff: 0
-year: 2016 old: 200943 new: 200942 diff: -1
+<pre>3 de 4
+http://www.nfe.fazenda.gov.br/portal/consultaImpressao.aspx?tipo...
+Dados dos Produtos e Servicos
+Unidade
+Valor (R$
+Qtd.
+Num. Descricao
+Comercial
+3,00
+0000
+UND
+1 AGUA MINERAL S GAS 500 ML
+3,00
+0000
+UND
+2 AGUA MINERAL, C GAS 500 ML
+0000
+UND
+32,00
+BUFFET DO DIA
+5,00
+UND
+0000
+i 4 i SOPA DO DIA
+Totais
+CMS
+Valor do ICMS
+Base de Calculo ICMS
+Base de Calculo ICMS
+Valor do ICMS
+ST
+Desonerado
+0,00
+0,00
+0,00
+0,00
+Valor ICMS Substituicao Valor Total dos Produtos Valor do Frete
+Valor do Seguro
+0,00
+0,00
+53,00
+0,00
+Valor Total dos
+Outras Despesas
+Valor Total da NFe
+Valor Total do IPI
+Descontos
+Acessorias
+53,00
+0,00
+0,00
+0,00
+Valor Aproximado dos
+Valor da COFINS
+Valor do PIS
+Valor Total do II
+Tributos
+0,00
+0,00
+0,00
+6.98
+Dados do Transporte
+Modalidade do Frete
+9 Sem Frete
+Transportador
+Razao Social Nome
+CNPJ
+RIO PARNAIBA EMPREEND TUR LTDA
+04.024. 831/0001-54
+Municipio
+Inscricao Estadual
+Ender eco Completo
+UF
+20/08/2015 19:09
+Page 4/6
+
 </pre>
 </div>
 </div>
@@ -12034,7 +12336,7 @@ year: 2016 old: 200943 new: 200942 diff: -1
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Oddly enough, there is a single row missing in the new dataset. Let's find out which document is that and also make sure the exact document_ids are present in both datasets:</p>
+<p>And on page 5 we can easily identify the period the person was in the hotel (search for <code>IN</code> and <code>OUT</code>, both followed by a date)</p>
 
 </div>
 </div>
@@ -12044,14 +12346,8 @@ year: 2016 old: 200943 new: 200942 diff: -1
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">new_docs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">new_dataset</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">])</span>
-<span class="n">old_docs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">old_dataset</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">])</span>
-
-<span class="n">old_extra</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">old_docs</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_docs</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extra documents found in old dataset: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">old_extra</span><span class="p">)))</span>
-
-<span class="n">new_extra</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_docs</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">old_docs</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extra documents found in new dataset: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_extra</span><span class="p">)))</span>
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5768932/response-page-5.json
 </pre></div>
 
 </div>
@@ -12062,12 +12358,32 @@ year: 2016 old: 200943 new: 200942 diff: -1
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Extra documents found in old dataset: 1
-Extra documents found in new dataset: 0
+<pre>4 de 4
+http://www.nfe fazenda.gov.br/portal/consultalmpressao.aspx?tipo...
+informacoes Adicionais
+XSLT v3.1.0
+Formato de Impressao DANFE
+DANIFE normal, retrato
+Informacoes Complementares de Interesse do Contribuinte
+Descricao
+NOME: JOSE FRANCISCO PAES LANDIM IN
+08/2015 OUT 2/08/2015 APTO: 14 Valor aproximado de
+Dados de Nota Fiscal Avulsa
+CNPJ
+Matricula do Funcionario
+Reparticao Fiscal do Emitente
+Fone Fax
+Nome do Funcionario
+Numero do Documento Arrecadacao
+UF
+Data de Emissao do Documento Arrecadacao
+Valor Total do Documento Arrecadacao
+Data do Pagamento do Documento Arrecadacao
+20/08/2015 19:09
+Page 5/6
+
 </pre>
 </div>
 </div>
@@ -12081,7 +12397,7 @@ Extra documents found in new dataset: 0
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>So there is really only one inconsistency between datasets. A quick query can show us the culprit:</p>
+<h2 id="Document-5962849">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5962849">5962849</a><a class="anchor-link" href="#Document-5962849">&#182;</a></h2><p>We can parse both timestamps on the receipt</p>
 
 </div>
 </div>
@@ -12091,7 +12407,8 @@ Extra documents found in new dataset: 0
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_dataset</span><span class="p">[</span><span class="n">old_dataset</span><span class="p">[</span><span class="s1">&#39;document_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">old_extra</span><span class="p">)]</span>
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5962849/response-page-1.json
 </pre></div>
 
 </div>
@@ -12102,89 +12419,51 @@ Extra documents found in new dataset: 0
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[8]:</div>
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>DAFERALIHENTOS LTDA
+EPP
+PIU PIU LANCHES
+AV. IROZIMBG MAIA, 2400
+B. VILA ITAPURA
+CEP: 13.023-0001
+TEL
+19) 3255-6546
+CAMPINAS/SP
+IE: 244.496.769.119
+OPJ: 01.095. 461/0001-58
+3170372016 15:40:49
+CUPOM FISCAL
+IT
+001 00000000000120 DESPESAS /REFEICAO
+un K
+124.52 T12,00% A
+124,52
+TOTAL
+R$
+124 52
+CARTAO
+124,52
+Val Aprox Tributos:R$ 39,96(32,09%)
+Fonte:IBPT
+ICMS Recolhido Conforme
+LC 123/2006
+Simples Nacional
+31/03/16 23:15 LJ0001 OP000001 CX001 SR094789
+Mensagem Nao Programada
+Dar umaFramework
+Daruna Framework Mensagem Nao Programada
+DARUMA AUTOMACAO ACH 2
+ECF-IF
+VERSA 01.00.00
+ECF: 004
+Lj:0001
+HHHHHHHHHAFDCHEABD
+31/03/2016 15:41:04
+FAB DRO913BR000000379665
 
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>year</th>
-      <th>applicant_id</th>
-      <th>document_id</th>
-      <th>reimbursement_value_total</th>
-      <th>total_net_value</th>
-      <th>reimbursement_numbers</th>
-      <th>congressperson_name</th>
-      <th>congressperson_id</th>
-      <th>congressperson_document</th>
-      <th>term</th>
-      <th>state</th>
-      <th>party</th>
-      <th>term_id</th>
-      <th>subquota_number</th>
-      <th>subquota_description</th>
-      <th>subquota_group_id</th>
-      <th>subquota_group_description</th>
-      <th>supplier</th>
-      <th>cnpj_cpf</th>
-      <th>document_number</th>
-      <th>document_type</th>
-      <th>issue_date</th>
-      <th>document_value</th>
-      <th>remark_value</th>
-      <th>net_values</th>
-      <th>month</th>
-      <th>installment</th>
-      <th>passenger</th>
-      <th>leg_of_the_trip</th>
-      <th>batch_number</th>
-      <th>reimbursement_values</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1560132</th>
-      <td>2016</td>
-      <td>831</td>
-      <td>6271581</td>
-      <td>NaN</td>
-      <td>3051.3</td>
-      <td>5838</td>
-      <td>RUBENS BUENO</td>
-      <td>73466.0</td>
-      <td>460.0</td>
-      <td>2015.0</td>
-      <td>PR</td>
-      <td>PPS</td>
-      <td>55.0</td>
-      <td>137</td>
-      <td>Participation in course, talk or similar event</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>INTERNATIONAL FOUNDATION FOR ELECTORAL SYSTEMS</td>
-      <td>NaN</td>
-      <td>NS</td>
-      <td>2</td>
-      <td>2016-11-06T00:00:00</td>
-      <td>3051.3</td>
-      <td>0.0</td>
-      <td>3051.3</td>
-      <td>11</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1380250</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
+</pre>
 </div>
-</div>
-
 </div>
 
 </div>
@@ -12196,7 +12475,393 @@ Extra documents found in new dataset: 0
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Checking the CSV file for year 2016 in the 2.0 version of the data, this document_id 6271581 is really missing, so it's not a parse problem on our side. An email was sent to Camara's Open Data team so we can understand what is happening.</p>
+<h2 id="Document-5962903">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5962903">5962903</a><a class="anchor-link" href="#Document-5962903">&#182;</a></h2><p>Can nicely parse receipt items, prices and timestamp</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5962903/response-page-1.json
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Churrascaria Sorriso
+Sorriso
+CHURRASCARIA SORRISO LTDA EPP
+R: Dr Miguel Penteado Nu 953
+Campinas SP
+(19)32425676
+CNPJ: 58.543.539!0001-77 HE: 244313752113
+EXTRATO N
+002419
+DATA: 31/03/2016 13:39:32
+CUPOM ISCAL ELETRO NICO SAT
+VI, IT R$
+001 Coca ks
+1 x 4,40 1,87
+40
+002 Picanha Tro 1 x 89,90
+19,96
+89,90
+2 x 3,50 1,55
+003 Cafe
+7,00
+3,60
+004 Agua Gas Prat 1 x 3,60 1,53
+005 Salada Croca 1 x 9,50
+6,55
+29.50
+Total Bruto de Itens: R$ 134,40
+Acrecimos sobre Subtotal R$ 13,44
+TOTAL: R$ 147,84
+R$ 147,84
+Visa dit
+Obrigad
+volte sempre
+valor
+aproximado dos tributos dest
+cupom
+(conforme lei Red 12.7 41/2012
+R$ 31,46
+R$ 6,71 Federal R$ 24,75 Estadual Fonte: IBP
+SAT 000157053
+3516 0358 5435 3900 0177 5900 0157 0530 0241 9947 2085
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Document-5855221">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5855221">5855221</a><a class="anchor-link" href="#Document-5855221">&#182;</a></h2><p>Here we have both the card receipt and the invoice, the quality of the PDF / images sucks and the API can't do magic</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5855221/response-page-1.json
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CUM ICA LHUS SP
+NP :32.905. 11 (110-77
+C00: 323016
+85
+TE FISCA
+COHER.IVPNTE CRE
+OU DEBIT)
+3230 5
+GR SA, A
+/NASA-n
+2.30
+116-77
+50, 92
+CUO 323015
+ion
+40
+CIJE UM FI SCAL.
+0101975
+600
+ITAL.
+Cartao Credit
+03.20
+it 3prix 2723a6
+RI: 3,3 Federal E! 0,00 Estadual
+GEN-A 00
+THAYNA AUGUST
+S12 4
+St&#39;FG
+4:39:17V
+0912101(
+0877
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Document-5856784">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5856784">5856784</a><a class="anchor-link" href="#Document-5856784">&#182;</a></h2><p>Here we have both the card receipt and the invoice but this time the API can get some timestamps and a bit of the receipt items</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5856784/response-page-1.json
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>RESTAURANTE RECANTO DO DJALMA LTDA.
+RECANTO DO DJALMA
+ROI UNORTE A
+INDIANDPOLIS S/N ZONA RURAL ANORTEI
+p:872
+Tel:
+IE: 904.3 836-42
+TNPJ: 08.510 550/0001-25
+MANFE NFC-e Documento Auxiliar
+No
+Nati
+UErmite aproveitamento de crédito de ICMS
+UN X 18 00 18 UU
+UN X S.50 3.50
+411 REFR SHVEPPES TONICA
+21 50
+VALOR TOTAL R$
+Valor Pago
+ORHA DE PAGAMENTO
+infor dos Tributos Totais Incidentes
+Lei Federal 12,741/2012)
+Nuiero 000177
+Serie 001 Enissao 12/11/2015 14:01:56
+Via Consumidor
+Consulte pela Chave de Acesso e
+http://www.fazenda.pr.gov.br/
+HAVE DE ACESSO
+15 5105 5000 0125 6500 1000 0001 110 0000. 1775..
+CONSUMIDOR
+CPF: 030.988. 719-46
+JOSE CARLOS SILVA
+AN. GOVERNADOR PARIGOT DE A 2965 20
+VII UNUARAHA PR
+Consulta via leitor de QR C
+Protocolo de Autorizacao
+006602
+12/11/2015 14:07:49
+Gerence Sistenas
+uuu, ence sistem
+Con. br
+Cielo
+IA tLIENTE POS
+1/15 14:11
+21,5g
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Document-5921187">Document <a href="https://jarbas.datasciencebr.com/#/document_id/5921187">5921187</a><a class="anchor-link" href="#Document-5921187">&#182;</a></h2><p>OCR doesn't make any sense, probably because the receipt is not fully vertical as well</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/5921187/response-page-1.json
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>JK RESEN
+ROD DE DE COM IE: BR050 POSTOJK
+DE PETROLE
+KM 013. CAT
+sNTREvo IM: 10.090. LOTEAMENTo 972-8
+80
+JK
+OLIDA
+CNPJ/CPF consumidor:
+2 400 CUPOM 3 183 POLPA FISCAL
+4 195 CAPUCCINO NESTLE 1UN
+50ONL. 13
+11
+5 111 PALITO 1UN 006 7895 007:7895 144603216 MENTOS STICK DUO BLACK ICE TOTAL 144293844 MENTOS STICK R$
+T1 01107,00x 03T MACA -32
+T3 VERDE -3843
+oc
+03T17,002
+ro.
+Cat
+0418021618 vo
+1815
+Ap
+27,00
+onte
+BEMATECH FAB MP-4000 TH FI ECF-IF
+BE031110 12/02/2016 18: 18,56V
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Document-6069360">Document <a href="https://jarbas.datasciencebr.com/#/document_id/6069360">6069360</a><a class="anchor-link" href="#Document-6069360">&#182;</a></h2><p>All messed up, even found some weird foreign characters, but it found the timestamp</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash
+jq -r <span class="s1">&#39;.responses[].textAnnotations[0].description&#39;</span> /tmp/reimbursements/6069360/response-page-1.json
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>ENTERNAI IONAL MI Al tiMPANY AL INESfaCAU S,h,
+AEROPORED INTERNACIONAL
+AERSPORFB - SAO PAULO -SP
+CEP: 84626-811
+CHPJ: 17,314, 329/8005-53
+醷7Dé iii alt彰 箱 2f.-CCV溺64g5.........
+.... cioi asa555
+304,f3
+CMPJ/CPF consuainsr: 095,023,023-81
+CUP0M FISCAL
+ITEM CdoISS DESCRICAG
+QiB。W.YLUN3TORS) ST
+VE ITEM(8$)
+ritata i fl
+2 1183 Sucs de Isaater Fi
+16.50
+3 8885 Csuver tras,Palean22 tos/ 011
+13.90
+4 3058 Buffet Csapleto 1 011
+84,88
+5424SOf.Exs Saprese . Lapsaid I
+SBBIOFAL RS
+...... ......190
+ACRESCINB
+13,3%
+TOTAL R$
+143,77
+VISA
+143,77
+01103.20;
+TOS APROX
+Garcon: Sebastiao
+08/08/2016
+Caixa,SANDRA DE SORRES PIRES
+MESA 28/1
+1:56 PM
+CJientes: 多
+6(26Xs4ye?s??W1p61
+SMEDA IF ST288
+-IFXERSA:201, 88.85 ECF: 118 LJ: 36
+RSPSLP 08/08/2016 13:45:27
+FAB: SK031200000000034217
+L su SLCDJさ85? L57
+,no
+ylL
+CS $
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1><p>Even though not everything will be able to be parsed, more than half can get their timestamps extracted which is a nice data point to have around.</p>
+<p>Some ideas for future work:</p>
+<ul>
+<li>Figure out if we can detect that the receipts have been rotated and try to use some image processing to fix it.</li>
+<li>Come up with some pre analysis of the image to detect "bluriness" so we can potentially discard OCR processing when a new receipt comes in that is not good.</li>
+<li>Another nice pre analysis would be to determine if a receipt is handwritten or not so we can flag them and filter them out on other analysis.</li>
+</ul>
+<p><strong>NOTE</strong> Everyone that registers for the Google Cloud engine gets US$300 to spend on the first 60 days so we can probably do a lot of tweaking on our code for free before we "Get it right"</p>
 
 </div>
 </div>
@@ -12204,8 +12869,4 @@ Extra documents found in new dataset: 0
     </div>
   </div>
 </body>
-
- 
-
-
 </html>
