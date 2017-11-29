@@ -172,7 +172,11 @@ class Donation:
                 'committees': self._data_by_pattern('**/ReceitasComites*')
             }
 
-        paths = (os.path.join(self.directory, filename) for filename in files)
+        paths = (
+            os.path.join(self.directory, filename)
+            for filename in files
+            if filename
+        )
         return {
             key: self._read_csv(path, chunksize=10000)
             for key, path in zip(KEYS, paths)
