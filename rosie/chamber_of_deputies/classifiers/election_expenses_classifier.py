@@ -1,6 +1,8 @@
 from sklearn.base import TransformerMixin
 
 
+ELECTION_LEGAL_ENTITY = '409-0 - CANDIDATO A CARGO POLITICO ELETIVO'
+
 class ElectionExpensesClassifier(TransformerMixin):
     """
     Election Expenses classifier.
@@ -14,11 +16,11 @@ class ElectionExpensesClassifier(TransformerMixin):
         Brazilian Federal Revenue category of companies, preceded by its code.
     """
 
-    def fit(self, X):
-        return self
+    def fit(self, dataframe):
+        pass
 
-    def transform(self, X=None):
-        return self
+    def transform(self, dataframe=None):
+        pass
 
-    def predict(self, X):
-        return X['legal_entity'] == '409-0 - CANDIDATO A CARGO POLITICO ELETIVO'
+    def predict(self, dataframe):
+        return dataframe['legal_entity'] == ELECTION_LEGAL_ENTITY

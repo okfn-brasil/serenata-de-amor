@@ -59,6 +59,7 @@ class TestMonthlySubquotaLimitClassifier(TestCase):
         self.subject.fit_transform(self.dataset)
         self.prediction = self.subject.predict(self.dataset)
 
+
     def test_predictions(self):
         for index, row in self.test_result_dataset.iterrows():
             self.assertEqual(
