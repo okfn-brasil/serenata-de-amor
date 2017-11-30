@@ -18,7 +18,6 @@ services:
       - proxy/certs:/etc/nginx/certs
       - proxy/vhost:/etc/nginx/vhost.d
       - proxy/public:/usr/share/nginx/html
-      - ./proxy/nginx.tmpl:/app/nginx.tmpl
 
   proxy-certs:
     image: jrcs/letsencrypt-nginx-proxy-companion
