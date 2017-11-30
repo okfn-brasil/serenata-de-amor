@@ -72,10 +72,10 @@ services:
     volumes:
       - assets:/code/staticfiles
     environment:
-      VIRTUAL_HOST: jarbas.serenatadeamor.org
-      LETSENCRYPT_HOST: jarbas.serenatadeamor.org
-      LETSENCRYPT_EMAIL: jarbas@serenatadeamor.org
-      HTTPS_METHOD: redirect
+      LETSENCRYPT_HOST: ${VIRTUAL_HOST_WEB}
+      VIRTUAL_HOST: ${VIRTUAL_HOST_WEB}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL-op.serenatadeamor@gmail.com}
+      HTTPS_METHOD: ${HTTPS_METHOD-redirect}
       VIRTUAL_PROTO: http
 
 volumes:
