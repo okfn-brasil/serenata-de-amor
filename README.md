@@ -5,6 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/datasciencebr/rosie/badge.svg?branch=master)](https://coveralls.io/github/datasciencebr/rosie?branch=master)
 [![Updates](https://pyup.io/repos/github/datasciencebr/rosie/shield.svg)](https://pyup.io/repos/github/datasciencebr/rosie/)
 [![donate](https://img.shields.io/badge/donate-apoia.se-EB4A3B.svg)](https://apoia.se/serenata)
+[![Follow](https://img.shields.io/twitter/follow/RosieDaSerenata.svg?style=social&label=Follow)](https://twitter.com/RosieDaSerenata)
 
 A Python application reading receipts from the [Quota for Exercising Parliamentary Activity](https://github.com/datasciencebr/serenata-de-amor/blob/master/CONTRIBUTING.md#more-about-the-quota-for-exercising-parliamentary-activity-ceap) (aka CEAP) from the Brazilian Chamber of Deputies and outputs, for each of the receipts, a _probability of corruption_ and a list of reasons why it was considered this way.
 
