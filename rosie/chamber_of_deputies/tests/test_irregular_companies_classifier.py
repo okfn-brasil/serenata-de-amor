@@ -8,6 +8,8 @@ from rosie.chamber_of_deputies.classifiers.irregular_companies_classifier import
 
 class TestIrregularCompaniesClassifier(TestCase):
 
+    SITUATIONS = [('ABERTA', False), ('BAIXADA', True), ('NULA', True), ('INAPTA', True), ('SUSPENSA', True)]
+
     def setUp(self):
         self.subject = IrregularCompaniesClassifier()
 
@@ -24,47 +26,23 @@ class TestIrregularCompaniesClassifier(TestCase):
         return dataset
 
     def test_is_regular_company(self):
-        self.assertEqual(
-            self.subject.predict(self._get_company_dataset({
-                'situation': 'ABERTA'
-            }))[0], False)
+        for situation in self.SITUATIONS:
+            self.assertEqual(
+                self.subject.predict(self._get_company_dataset({
+                    'situation': situation[0]
+                }))[0], situation[1])
 
-    def test_is_irregular_company_BAIXADA(self):
-        self.assertEqual(
-            self.subject.predict(self._get_company_dataset({
-                'situation': 'BAIXADA'
-            }))[0], True)
+    STATUS = [
+        (datetime.date(2013, 1, 30), datetime.date(2013, 1, 1), False),
+        (datetime.date(2013, 1, 1), datetime.date(2013, 1, 30), True)
+    ]
 
-    def test_is_irregular_company_NULA(self):
-        self.assertEqual(
-            self.subject.predict(self._get_company_dataset({
-                'situation': 'NULA'
-            }))[0], True)
+    def test_if_company_is_suspended(self):
+        for status in self.STATUS:
+            self.assertEqual(
+                self.subject.predict(self._get_company_dataset({
+                    'situation': 'SUSPENSA',
+                    'situation_date': status[0],
+                    'issue_date': status[1],
+                }))[0], status[2])
 
-    def test_is_irregular_company_INAPTA(self):
-        self.assertEqual(
-            self.subject.predict(self._get_company_dataset({
-                'situation': 'INAPTA'
-            }))[0], True)
-
-    def test_is_irregular_company_SUSPENSA(self):
-        self.assertEqual(
-            self.subject.predict(self._get_company_dataset({
-                'situation': 'SUSPENSA'
-            }))[0], True)
-
-    def test_is_valid_if_suspended_after_expense(self):
-        self.assertEqual(
-            self.subject.predict(self._get_company_dataset({
-                'situation': 'SUSPENSA',
-                'situation_date': datetime.date(2013, 1, 30),
-                'issue_date': datetime.date(2013, 1, 1),
-            }))[0], False)
-
-    def test_is_irregular_if_suspended_before_expense(self):
-        self.assertEqual(
-            self.subject.predict(self._get_company_dataset({
-                'situation': 'SUSPENSA',
-                'situation_date': datetime.date(2013, 1, 1),
-                'issue_date': datetime.date(2013, 1, 30),
-            }))[0], True)
