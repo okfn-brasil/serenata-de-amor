@@ -1,6 +1,6 @@
 version: '3'
 services:
-    proxy:
+  proxy:
     image: jwilder/nginx-proxy
     container_name: proxy
     ports:
@@ -15,9 +15,9 @@ services:
         condition: on-failure
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - proxy/certs:/etc/nginx/certs
-      - proxy/vhost:/etc/nginx/vhost.d
-      - proxy/public:/usr/share/nginx/html
+      - proxy-certs:/etc/nginx/certs
+      - proxy-vhost:/etc/nginx/vhost.d
+      - proxy-public:/usr/share/nginx/html
 
   proxy-certs:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -25,9 +25,9 @@ services:
       - backend
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - proxy/certs:/etc/nginx/certs:rw
-      - proxy/vhost:/etc/nginx/vhost.d
-      - proxy/public:/usr/share/nginx/html
+      - proxy-certs:/etc/nginx/certs:rw
+      - proxy-vhost:/etc/nginx/vhost.d
+      - proxy-public:/usr/share/nginx/html
     environment:
       NGINX_PROXY_CONTAINER: proxy
 
@@ -80,8 +80,9 @@ services:
 
 volumes:
   assets:
-  proxy:
+  proxy-certs:
+  proxy-vhost:
+  proxy-public:
 
 networks:
   backend:
-    driver: bridge
