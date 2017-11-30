@@ -1,4 +1,4 @@
-from rosie.core.classifiers.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
+from rosie.core.classifiers import InvalidCnpjCpfClassifier
 
 CLASSIFIERS = {
     'invalid_cnpj_cpf': InvalidCnpjCpfClassifier,
