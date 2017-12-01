@@ -18,7 +18,6 @@ services:
       - proxy-certs:/etc/nginx/certs
       - proxy-vhost:/etc/nginx/vhost.d
       - proxy-public:/usr/share/nginx/html
-
   proxy-certs:
     image: jrcs/letsencrypt-nginx-proxy-companion
     networks:
@@ -30,7 +29,6 @@ services:
       - proxy-public:/usr/share/nginx/html
     environment:
       NGINX_PROXY_CONTAINER: proxy
-
   django:
     env_file:
       - .env
@@ -74,8 +72,8 @@ services:
     environment:
       LETSENCRYPT_HOST: ${VIRTUAL_HOST_WEB}
       VIRTUAL_HOST: ${VIRTUAL_HOST_WEB}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL-op.serenatadeamor@gmail.com}
-      HTTPS_METHOD: ${HTTPS_METHOD-redirect}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-op.serenatadeamor@gmail.com}
+      HTTPS_METHOD: ${HTTPS_METHOD:-redirect}
       VIRTUAL_PROTO: http
 
 volumes:
