@@ -229,5 +229,8 @@ def fetch_data_from(year):
 if __name__ == '__main__':
     by_year = tuple(fetch_data_from(year) for year in YEARS)
     for key in KEYS:
-        data = pd.concat([d.get(key) for d in by_year if d.get(key)])
+        data = pd.concat([
+            dataframes.get(key) for dataframes in by_year
+            if isinstance(dataframes.get(key), pd.DataFrame)
+        ])
         save(key, data)
