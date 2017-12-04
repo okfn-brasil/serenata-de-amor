@@ -1,5 +1,5 @@
 git+https://github.com/cuducos/django-simple-history.git@cuducos-missing-translations-in-pt-br#egg=django-simple-history
-Django==1.11.7
+Django==2.0
 brazilnum==0.8.8
 celery==4.1.0
 dj-database-url==0.4.2
