@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from IPython.display import display
 
 
 # In[2]:
@@ -53,22 +54,28 @@ reimbursements[reimbursements["congressperson_document"].isnull()]["congresspers
 # In[5]:
 
 
-reimbursements["year_month"] = reimbursements["year"].astype(str) + "/" + reimbursements["month"].astype(str)
+reimbursements["year_month"] = reimbursements["month"].apply('{0:02d}'.format)
 
 
 # In[6]:
 
 
-reimbursements.sort_values(by=["year_month","state"], ascending=[False,True], inplace=True)
+reimbursements["year_month"] = reimbursements["year"].astype(str) + "/" + reimbursements["year_month"]
 
 
 # In[7]:
 
 
-states = reimbursements[reimbursements["state"].notna()]["state"].unique()
+reimbursements.sort_values(by=["year_month","state"], ascending=[False,True], inplace=True)
 
 
 # In[8]:
+
+
+states = reimbursements[reimbursements["state"].notna()]["state"].unique()
+
+
+# In[9]:
 
 
 year_months = reimbursements[reimbursements["year_month"].notna()]["year_month"].unique()
@@ -79,7 +86,7 @@ year_months = reimbursements[reimbursements["year_month"].notna()]["year_month"]
 # 
 # Obs.: chart commentaries provided might not remain valid depending on filters chosen. 
 
-# In[9]:
+# In[10]:
 
 
 # Filters only most recent years (from 2015)
@@ -88,7 +95,7 @@ year_months = reimbursements[reimbursements["year_month"].notna()]["year_month"]
 
 # ### Defining ploting functions
 
-# In[10]:
+# In[11]:
 
 
 #This function plots values grouped by states sharing the same x axis.
@@ -102,7 +109,7 @@ def plot_data_same_axis(data, size, aspect, x_column, y_column, x_label, y_label
     plt.show()
 
 
-# In[11]:
+# In[12]:
 
 
 #This function plots independents charts with values grouped by states. The charts do not share the axis or sizes.
@@ -119,42 +126,60 @@ def plot_data_diff_axis(data, x_column, y_column, x_label, y_label):
         plt.show()
 
 
+# In[13]:
+
+
+#Display the avg by month for each state as table
+def print_as_table(data, states):
+    selection = data.unstack(level=["year_month"]).reset_index()
+    for state in states:
+        print(state)
+        with pd.option_context('display.max_columns', None):
+            display(selection[selection.state == state]) 
+
+
 # ## 1. Monthly average per congressperson
 # Monthly average per congressperson (grouped per state, as values varies across states)
 
-# In[12]:
+# In[14]:
 
 
 states
 
 
-# In[13]:
+# In[15]:
 
 
 monthly_avg_by_month = reimbursements.groupby(['state', 'congressperson_name', 'year_month']).agg({'total_net_value': 'mean'})
 
 
-# In[14]:
+# In[16]:
+
+
+print_as_table(monthly_avg_by_month, states)
+
+
+# ### Ploting data
+
+# In[17]:
 
 
 monthly_avg = monthly_avg_by_month.groupby(['state', 'congressperson_name']).agg({'total_net_value': 'mean'})
 
 
-# ### Ploting data
-
-# In[15]:
+# In[18]:
 
 
 data = pd.DataFrame(monthly_avg.to_records()).sort_values(['state','total_net_value'])
 
 
-# In[16]:
+# In[19]:
 
 
-plot_data_diff_axis(data,'total_net_value', 'congressperson_name', 'Monthly Avg (R$)', 'Congress Person')
+#plot_data_diff_axis(data,'total_net_value', 'congressperson_name', 'Monthly Avg (R$)', 'Congress Person')
 
 
-# In[17]:
+# In[20]:
 
 
 #plot_data_same_axis(data, 30, 1, 'total_net_value', 'congressperson_name', 'Monthly Avg (R$)', 'Congress Person')
@@ -167,7 +192,7 @@ plot_data_diff_axis(data,'total_net_value', 'congressperson_name', 'Monthly Avg 
 # ### Computing estimated CEAP values for years in between 2009 and 2017 using CAGR
 # thanks to luipillmann for the notebook **2017-05-01-luipillmann-intro-to-reimbursements.ipynb**!
 
-# In[18]:
+# In[21]:
 
 
 # Source 2017-05-01-luipillmann-intro-to-reimbursements.ipynb. Thanks!
@@ -206,13 +231,13 @@ for i in range(2018-ini_year):
 ceap_values.head(2)
 
 
-# In[19]:
+# In[22]:
 
 
 monthly_sum = reimbursements.groupby(['state', 'congressperson_name', 'year_month']).agg({'total_net_value': 'sum'})
 
 
-# In[20]:
+# In[23]:
 
 
 def calc_ratio(state, name, year_month, total_net_value):
@@ -222,65 +247,77 @@ def calc_ratio(state, name, year_month, total_net_value):
     return ratio
 
 
-# In[21]:
+# In[24]:
 
 
 monthly_sum_with_ratio = pd.DataFrame(monthly_sum.to_records())
 monthly_sum_with_ratio['ratio'] = monthly_sum_with_ratio.apply(lambda x: calc_ratio(*x), axis=1)
 
 
-# In[22]:
+# In[25]:
+
+
+print_as_table(monthly_sum_with_ratio.groupby(['state', 'congressperson_name', 'year_month']).agg({'ratio': 'sum'}), states)
+
+
+# ### Ploting the data
+
+# In[26]:
 
 
 monthly_avg = monthly_sum_with_ratio.groupby(['state', 'congressperson_name']).agg({'ratio': 'mean'})
 
 
-# ### Ploting the data
-
-# In[23]:
+# In[27]:
 
 
 data = pd.DataFrame(monthly_avg.to_records()).sort_values(['state','ratio'])
 
 
-# In[24]:
+# In[28]:
 
 
 #plot_data_diff_axis(data,'ratio', 'congressperson_name', 'Monthly Ratio Avg (R$)', 'Congress Person')
 
 
-# In[25]:
+# In[29]:
 
 
-plot_data_same_axis(data, 30, 1, 'ratio', 'congressperson_name', 'Monthly Ratio Avg (R$)', 'Congress Person')
+#plot_data_same_axis(data, 30, 1, 'ratio', 'congressperson_name', 'Monthly Ratio Avg (R$)', 'Congress Person')
 
 
 # ---
 # ## 3. Monthly average per subquota
 # Monthly average per subquota (grouped per state, as values varies across states)
 
-# In[26]:
+# In[30]:
 
 
 monthly_avg_by_month = reimbursements.groupby(['state', 'subquota_description', 'year_month']).agg({'total_net_value': 'mean'})
 
 
-# In[27]:
+# In[31]:
+
+
+print_as_table(monthly_avg_by_month, states)
+
+
+# ### Ploting the data
+
+# In[32]:
 
 
 monthly_avg = monthly_avg_by_month.groupby(['state', 'subquota_description']).agg({'total_net_value': 'mean'})
 
 
-# ### Ploting the data
-
-# In[28]:
+# In[33]:
 
 
 data = pd.DataFrame(monthly_avg.to_records()).sort_values(['state','total_net_value'])
 
 
-# In[29]:
+# In[34]:
 
 
-plot_data_same_axis(data, 4, 2, 'total_net_value', 'subquota_description', 'Monthly Avg (R$)', 'Subquota Description')
+#plot_data_same_axis(data, 4, 2, 'total_net_value', 'subquota_description', 'Monthly Avg (R$)', 'Subquota Description')
 
