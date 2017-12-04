@@ -18,6 +18,7 @@ services:
       - proxy-certs:/etc/nginx/certs
       - proxy-vhost:/etc/nginx/vhost.d
       - proxy-public:/usr/share/nginx/html
+
   proxy-certs:
     image: jrcs/letsencrypt-nginx-proxy-companion
     networks:
@@ -29,9 +30,12 @@ services:
       - proxy-public:/usr/share/nginx/html
     environment:
       NGINX_PROXY_CONTAINER: proxy
+
   django:
     env_file:
       - .env
+    networks:
+      - backend
     environment:
        - DEBUG=False
     depends_on:
