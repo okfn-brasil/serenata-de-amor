@@ -38,7 +38,8 @@ services:
     networks:
       - backend
     environment:
-       - DEBUG=False
+      DEBUG: "False"
+      ALLOWED_HOSTS: ${VIRTUAL_HOST_WEB}
     depends_on:
       - memcached
     expose:
