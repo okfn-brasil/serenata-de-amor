@@ -1,5 +1,6 @@
 version: '3'
 services:
+
   proxy:
     image: jwilder/nginx-proxy
     container_name: proxy
@@ -33,13 +34,13 @@ services:
 
   django:
     env_file:
-      - .env
+      - .env.prod
     networks:
       - backend
     environment:
        - DEBUG=False
     depends_on:
-       - memcached
+      - memcached
     expose:
       - "8000"
     volumes:
