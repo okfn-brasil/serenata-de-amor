@@ -177,6 +177,12 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 To get this credentials follow [`python-twitter`
 instructions](https://python-twitter.readthedocs.io/en/latest/getting_started.html#getting-your-application-tokens).
 
+##### For the production environment
+
+* `VIRTUAL_HOST_WEB` (_str_) host used for the HTTPS certificate (for testing production settings locally you might need to add this host name to your `/etc/hosts`)
+* `LETSENCRYPT_EMAIL` (_str_) Email used to create the HTTPS certificate at Let's Encrypt
+* `HTTPS_METHOD` (_str_) if set to `noredirect` does **not** redirect from HTTP to HTTPS (default: `redirect`)
+
 ### Using Docker
 
 There are two combinations in terms of With [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)
@@ -195,6 +201,8 @@ There are two combinations in terms of With [Docker](https://docs.docker.com/eng
   * manually restarting server on change
 
 That said instructions here keep it simple and runs with the development set up. To swicth always add `-f docker-compose.yml -f docker-compose.prod.yml` after `docker-compose`.
+
+When using tghe production settings remember to double check the [appropriate environment varables](#for-the-production-environment) and to create a `.env.prod` (separate from `.env`) to hold production only values.
 
 #### Build and start services
 
