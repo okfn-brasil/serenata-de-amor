@@ -54,3 +54,9 @@ applicant_id,subquota_number,issue_date,year,month,net_value,expected_prediction
 6,120,2014-02-01,2014,02,1000,False,test_predict_false_when_exactly_on_the_limit
 7,120,2014-03-01,2014,03,9999,False,test_predict_true_when_over_the_limit
 7,120,2014-03-01,2014,03,100,True,test_predict_true_when_over_the_limit
+5,122,2013-12-01,2013,12,2400,False,test_predict_false_when_under_the_limit
+5,122,2013-12-01,2013,12,99,False,test_predict_false_when_under_the_limit
+6,122,2014-02-01,2014,02,2400,False,test_predict_false_when_exactly_on_the_limit
+6,122,2014-02-01,2014,02,100,False,test_predict_false_when_exactly_on_the_limit
+7,122,2014-03-01,2014,03,2500,False,test_predict_true_when_over_the_limit
+7,122,2014-03-01,2014,03,10,True,test_predict_true_when_over_the_limit
