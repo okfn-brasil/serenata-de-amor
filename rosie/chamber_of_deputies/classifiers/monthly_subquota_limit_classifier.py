@@ -45,14 +45,14 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
                 # Automotive vehicle renting or charter (From 12/2013 to 03/2015)
                 'data': self._X.query('(subquota_number == "120") & '
                                       '(reimbursement_month >= datetime(2013, 12, 1)) & '
-                                      '(reimbursement_month <= datetime(2015, 3, 31))'),
+                                      '(reimbursement_month <= datetime(2015, 3, 1))'),
                 'monthly_limit': 1000000,
             },
             {
                 # Automotive vehicle renting or charter (From 04/2015 to 04/2017)
                 'data': self._X.query('(subquota_number == "120") & '
                                       '(reimbursement_month >= datetime(2015, 4, 1)) & '
-                                      '(reimbursement_month <= datetime(2017, 4, 31))'),
+                                      '(reimbursement_month <= datetime(2017, 4, 1))'),
                 'monthly_limit': 1090000,
             },
             {
@@ -65,7 +65,7 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
                 # Taxi, toll and parking (From 12/2013 to 03/2015)
                 'data': self._X.query('(subquota_number == "122") & '
                                       '(reimbursement_month >= datetime(2013, 12, 1)) & '
-                                      '(reimbursement_month <= datetime(2015, 3, 31))'),
+                                      '(reimbursement_month <= datetime(2015, 3, 1))'),
                 'monthly_limit': 250000,
             },
             {
@@ -78,14 +78,14 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
                 # Fuels and lubricants (From 07/2009 to 03/2015)
                 'data': self._X.query('(subquota_number == "3") & '
                                       '(reimbursement_month >= datetime(2009, 7, 1)) & '
-                                      '(reimbursement_month <= datetime(2015, 3, 31))'),
+                                      '(reimbursement_month <= datetime(2015, 3, 1))'),
                 'monthly_limit': 450000,
             },
             {
                 # Fuels and lubricants (From 04/2015 to 08/2015)
                 'data': self._X.query('(subquota_number == "3") & '
                                       '(reimbursement_month >= datetime(2015, 4, 1)) & '
-                                      '(reimbursement_month <= datetime(2015, 8, 31))'),
+                                      '(reimbursement_month <= datetime(2015, 8, 1))'),
                 'monthly_limit': 490000,
             },
             {
@@ -98,14 +98,14 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
                 # Security service provided by specialized company (From 07/2009 to 4/2014)
                 'data': self._X.query('(subquota_number == "8") & '
                                       '(reimbursement_month >= datetime(2009, 7, 1)) & '
-                                      '(reimbursement_month <= datetime(2014, 4, 30))'),
+                                      '(reimbursement_month <= datetime(2014, 4, 1))'),
                 'monthly_limit': 450000,
             },
             {
                 # Security service provided by specialized company (From 05/2014 to 3/2015)
                 'data': self._X.query('(subquota_number == "8") & '
                                       '(reimbursement_month >= datetime(2014, 5, 1)) & '
-                                      '(reimbursement_month <= datetime(2015, 3, 31))'),
+                                      '(reimbursement_month <= datetime(2015, 3, 1))'),
                 'monthly_limit': 800000,
             },
             {
