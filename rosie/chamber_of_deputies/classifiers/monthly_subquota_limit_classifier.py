@@ -42,40 +42,40 @@ class MonthlySubquotaLimitClassifier(TransformerMixin):
     def transform(self, X=None):
         self.limits = [
             {
-                # Automotive vehicle renting or charter (From 04/2015 to 06/2017)
+                # Automotive vehicle renting or charter (From 04/2015 to 04/2017)
                 'data': self._X.query('(subquota_number == "120") & '
                                       '(reimbursement_month >= datetime(2015, 4, 1)) & '
-                                      '(reimbursement_month <= datetime(2017, 6, 1))'),
+                                      '(reimbursement_month <= datetime(2017, 4, 1))'),
                 'monthly_limit': 1090000,
             },
             {
-                # Automotive vehicle renting or charter (From 07/2017)
+                # Automotive vehicle renting or charter (From 05/2017)
                 'data': self._X.query('(subquota_number == "120") & '
-                                      '(reimbursement_month >= datetime(2017, 7, 1))'),
+                                      '(reimbursement_month >= datetime(2017, 5, 1))'),
                 'monthly_limit': 1271300,
             },
             {
-                # Taxi, toll and parking
+                # Taxi, toll and parking (From 04/2015)
                 'data': self._X.query('(subquota_number == "122") & '
                                       '(reimbursement_month >= datetime(2015, 4, 1))'),
                 'monthly_limit': 270000,
             },
             {
-                # Fuels and lubricants
+                # Fuels and lubricants (From 09/2015)
                 'data': self._X.query('(subquota_number == "3") & '
-                                      '(reimbursement_month >= datetime(2015, 10, 1))'),
+                                      '(reimbursement_month >= datetime(2015, 9, 1))'),
                 'monthly_limit': 600000,
             },
             {
-                # Security service provided by specialized company
+                # Security service provided by specialized company (From 04/2015)
                 'data': self._X.query('(subquota_number == "8") & '
                                       '(reimbursement_month >= datetime(2015, 4, 1))'),
                 'monthly_limit': 870000,
             },
             {
-                # Participation in course, talk or similar event
+                # Participation in course, talk or similar event (From 10/2015)
                 'data': self._X.query('(subquota_number == "137") & '
-                                      '(reimbursement_month >= datetime(2015, 11, 1))'),
+                                      '(reimbursement_month >= datetime(2015, 10, 1))'),
                 'monthly_limit': 769716,
             },
         ]
