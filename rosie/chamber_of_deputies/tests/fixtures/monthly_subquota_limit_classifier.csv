@@ -72,3 +72,15 @@ applicant_id,subquota_number,issue_date,year,month,net_value,expected_prediction
 6,3,2015-05-01,2015,05,180,False,test_predict_false_when_exactly_on_the_limit
 7,3,2015-06-01,2015,06,4899,False,test_predict_true_when_over_the_limit
 7,3,2015-06-01,2015,06,2,True,test_predict_true_when_over_the_limit
+5,8,2009-07-01,2009,07,4498,False,test_predict_false_when_under_the_limit
+5,8,2009-07-01,2009,07,1,False,test_predict_false_when_under_the_limit
+6,8,2009-08-01,2009,08,4499,False,test_predict_false_when_exactly_on_the_limit
+6,8,2009-08-01,2009,08,1,False,test_predict_false_when_exactly_on_the_limit
+7,8,2009-09-01,2009,09,4500,False,test_predict_true_when_over_the_limit
+7,8,2009-09-01,2009,09,0.01,True,test_predict_true_when_over_the_limit
+5,8,2014-05-01,2014,05,7700,False,test_predict_false_when_under_the_limit
+5,8,2014-05-01,2014,05,200,False,test_predict_false_when_under_the_limit
+6,8,2014-06-01,2014,06,7999,False,test_predict_false_when_exactly_on_the_limit
+6,8,2014-06-01,2014,06,1,False,test_predict_false_when_exactly_on_the_limit
+7,8,2014-07-01,2014,07,7800,False,test_predict_true_when_over_the_limit
+7,8,2014-07-01,2014,07,200.01,True,test_predict_true_when_over_the_limit
