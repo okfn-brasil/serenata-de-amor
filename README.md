@@ -255,8 +255,10 @@ Not sure? Test it!
 
 ```console
 $ docker-compose run --rm django check
-$ docker-compose run --rm django test
+$ docker-compose run --rm django test --parallel
 ```
+
+If you use Windows do not use the `--parallel` argument ([it is not compatible](https://docs.djangoproject.com/en/1.11/ref/django-admin/#cmdoption-test-parallel)).
 
 ### Local install
 
@@ -332,6 +334,8 @@ Not sure? Test it!
 $ python manage.py check
 $ python manage.py test
 ```
+
+If you use Windows do not use the `--parallel` argument ([it is not compatible](https://docs.djangoproject.com/en/1.11/ref/django-admin/#cmdoption-test-parallel)).
 
 #### Ready!
 
