@@ -13,15 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls import include, url
 
-from jarbas.frontend.views import home
-
 
 urlpatterns = [
-    url(r'^$', home, name='home'),
+    url(r'^$', lambda _: redirect(settings.HOMES_REDIRECTS_TO), name='home'),
     url(r'^dashboard/', include('jarbas.dashboard.urls')),
+    url(r'^layers/', include('jarbas.layers.urls', namespace='layers')),
     url(r'^api/', include('jarbas.core.urls', namespace='core')),
     url(
         r'^api/chamber_of_deputies/',

@@ -28,7 +28,7 @@ class Command(BaseCommand):
         target = path.join(
             settings.BASE_DIR,
             'jarbas',
-            'frontend',
+            'layers',
             'static',
             'ceap-datasets.html'
         )

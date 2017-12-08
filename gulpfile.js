@@ -5,11 +5,11 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 
 gulp.task('elm', function () {
-  return gulp.src('./jarbas/frontend/elm/Main.elm')
+  return gulp.src('./jarbas/layers/elm/Main.elm')
     .pipe(elm({warn: true}))
     .on('error', onError)
     .pipe(uglify())
-    .pipe(rename('./jarbas/frontend/static/app.js'))
+    .pipe(rename('./jarbas/layers/static/app.js'))
     .pipe(gulp.dest('.'));
 });
 
