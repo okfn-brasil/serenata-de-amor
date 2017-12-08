@@ -1,13 +1,47 @@
 version: '3'
 services:
 
+  proxy:
+    image: jwilder/nginx-proxy
+    container_name: proxy
+    ports:
+      - "443:443"
+      - "80:80"
+    networks:
+      - backend
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - proxy-certs:/etc/nginx/certs
+      - proxy-vhost:/etc/nginx/vhost.d
+      - proxy-public:/usr/share/nginx/html
+
+  proxy-certs:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    networks:
+      - backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - proxy-certs:/etc/nginx/certs:rw
+      - proxy-vhost:/etc/nginx/vhost.d
+      - proxy-public:/usr/share/nginx/html
+    environment:
+      NGINX_PROXY_CONTAINER: proxy
+
   django:
     env_file:
-      - .env
+      - .env.prod
+    networks:
+      - backend
     environment:
-       - DEBUG=False
+      DEBUG: "False"
+      ALLOWED_HOSTS: ${VIRTUAL_HOST_WEB}
     depends_on:
-       - memcached
+      - memcached
     expose:
       - "8000"
     volumes:
@@ -35,12 +69,24 @@ services:
 
   nginx:
     image: datasciencebr/jarbas-server
+    networks:
+      - backend
     depends_on:
       - django
-    ports:
-      - "80:80"
     volumes:
       - assets:/code/staticfiles
+    environment:
+      LETSENCRYPT_HOST: ${VIRTUAL_HOST_WEB}
+      VIRTUAL_HOST: ${VIRTUAL_HOST_WEB}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-op.serenatadeamor@gmail.com}
+      HTTPS_METHOD: ${HTTPS_METHOD:-redirect}
+      VIRTUAL_PROTO: http
 
 volumes:
   assets:
+  proxy-certs:
+  proxy-vhost:
+  proxy-public:
+
+networks:
+  backend:
