@@ -302,7 +302,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     supplier_info.allow_tags = True
 
     def jarbas(self, obj):
-        base_url = 'https://jarbas.serenatadeamor.org/#/documentId/{}/'
+        base_url = '/layers/#/documentId/{}/'
         url = base_url.format(obj.document_id)
         image_src = '/static/favicon/favicon-16x16.png'
         image = '<img alt="Ver no Jarbas" src="{}">'.format(image_src)
