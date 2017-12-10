@@ -10,7 +10,7 @@ ipython-cypher==0.2.4
 ipython==6.2.1
 jgraph==0.2.1
 networkx==2.0
-nltk==3.2.1
+nltk==3.2.5
 pandas>=0.18.1
 py2neo==3.1.2
 pycpfcnpj==1.0.2
