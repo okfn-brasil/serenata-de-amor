@@ -47,7 +47,7 @@ class TestIrregularCompaniesClassifier(TestCase):
             expected = situation in self.SUSPICIOUS_SITUATIONS
             result, *_ = self.subject.predict(company)
             with self.subTest():
-                self.assertEqual(result, expected)
+                self.assertEqual(result, expected, msg=company)
 
     def test_if_company_is_suspended(self):
         for status in self.STATUS:
@@ -58,4 +58,4 @@ class TestIrregularCompaniesClassifier(TestCase):
             )
             result, *_ = self.subject.predict(company)
             with self.subTest():
-                self.assertEqual(result, status.expected)
+                self.assertEqual(result, status.expected, msg=company)
