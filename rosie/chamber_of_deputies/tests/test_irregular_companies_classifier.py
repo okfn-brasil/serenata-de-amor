@@ -16,7 +16,7 @@ class TestIrregularCompaniesClassifier(TestCase):
     SUSPICIOUS_SITUATIONS = (
         'BAIXADA',
         'NULA',
-        'INAPTA'
+        'INAPTA',
         'SUSPENSA',
     )
 
