@@ -16,6 +16,6 @@ py2neo==3.1.2
 pycpfcnpj==1.0.2
 scikit-learn==0.18.1
 seaborn==0.7.1
-serenata-toolbox
+serenata-toolbox==12.4.2
 tinys3==0.1.11
 tqdm==4.11.2
