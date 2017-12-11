@@ -215,16 +215,16 @@ $ docker-compose up -d
 Creating the database and applying migrations:
 
 ```
-$ docker-compose run --rm django migrate
+$ docker-compose run --rm django python manage.py migrate
 ```
 
 Seeding it with sample data:
 
 ```console
-$ docker-compose run --rm django reimbursements /mnt/data/reimbursements_sample.xz
-$ docker-compose run --rm django companies /mnt/data/companies_sample.xz
-$ docker-compose run --rm django suspicions /mnt/data/suspicions_sample.xz
-$ docker-compose run --rm django tweets
+$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.xz
+$ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
+$ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
+$ docker-compose run --rm django python manage.py tweets
 ```
 
 If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/datasciencebr/rosie).
@@ -235,7 +235,7 @@ To add a fresh new `reimbursements.xz` or `suspicions.xz` brewed by [Rosie](http
 For text search in the dashboard:
 
 ```console
-$ docker-compose run --rm django searchvector
+$ docker-compose run --rm django python manage.py searchvector
 ```
 
 #### Acessing Jabas
@@ -244,7 +244,7 @@ You can access it at [`localhost:8000`](http://localhost:8000/) in development m
 
 
 ```console
-$ docker-compose run --rm django reimbursements path/to/my/fresh_new_reimbursements.xz
+$ docker-compose run --rm django python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
 ```
 
 To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
@@ -254,8 +254,8 @@ To change any of the default environment variables defined in the `docker-compos
 Not sure? Test it!
 
 ```console
-$ docker-compose run --rm django check
-$ docker-compose run --rm django test
+$ docker-compose run --rm django python manage.py check
+$ docker-compose run --rm django python manage.py test
 ```
 
 ### Local install

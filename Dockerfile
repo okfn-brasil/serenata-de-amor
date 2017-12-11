@@ -32,5 +32,4 @@ RUN set -ex && \
 
 HEALTHCHECK --interval=1m --timeout=2m CMD goss -g /goss/goss.yaml validate
 EXPOSE 8000
-ENTRYPOINT ["python", "manage.py"]
-CMD ["runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
