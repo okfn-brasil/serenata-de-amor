@@ -46,8 +46,7 @@ services:
       - "8000"
     volumes:
       - assets:/code/staticfiles
-    entrypoint: ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8000", "--workers", "4"]
-    command: []
+    command: ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8000", "--workers", "4"]
 
   tasks:
     env_file:
@@ -63,6 +62,7 @@ services:
   postgres:
     expose:
       - "5432"
+    command: ['-c', 'random_page_cost=1']
 
   memcached:
     image: memcached:1.5.1-alpine
