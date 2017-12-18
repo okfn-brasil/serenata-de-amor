@@ -63,6 +63,7 @@ services:
   postgres:
     expose:
       - "5432"
+    command: ['-c', 'random_page_cost=1']
 
   memcached:
     image: memcached:1.5.1-alpine
