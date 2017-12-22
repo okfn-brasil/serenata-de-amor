@@ -8,6 +8,13 @@ RUN apt-get update \
         unzip \
         libxml2-dev \
         libxslt-dev \
+        libmagickwand-dev \
+        ghostscript \
+        libgtk2.0-dev\
+        libffi-dev \
+        libjpeg-turbo-progs \
+        cmake \
+        imagemagick\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
