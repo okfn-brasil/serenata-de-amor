@@ -20,7 +20,7 @@ class TestDownloadedStatic(TestCase):
         file_path = path.join(
             settings.BASE_DIR,
             'jarbas',
-            'frontend',
+            'layers',
             'static',
             'ceap-datasets.html'
         )

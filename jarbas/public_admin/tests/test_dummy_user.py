@@ -13,7 +13,7 @@ class TestDummyUser(TestCase):
         self.assertFalse(self.user.has_module_perms('core'))
         self.assertFalse(self.user.has_module_perms('api'))
         self.assertFalse(self.user.has_module_perms('dashboard'))
-        self.assertFalse(self.user.has_module_perms('frontend'))
+        self.assertFalse(self.user.has_module_perms('layers'))
 
     def test_has_perm(self):
         self.assertTrue(self.user.has_perm('chamber_of_deputies.change_reimbursement'))

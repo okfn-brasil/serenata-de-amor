@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'jarbas.core.app.CoreConfig',
     'jarbas.chamber_of_deputies.app.ChamberOfDeputiesConfig',
-    'jarbas.frontend',
+    'jarbas.layers',
     'jarbas.dashboard',
     'django.contrib.admin',
     'django_extensions',
@@ -193,3 +193,7 @@ CACHES = {
 # Queue
 
 CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='amqp://guest:guest@localhost//')
+
+# Set home
+
+HOMES_REDIRECTS_TO = '/dashboard/chamber_of_deputies/reimbursement/'

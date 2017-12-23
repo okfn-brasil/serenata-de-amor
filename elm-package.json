@@ -4,8 +4,8 @@
     "repository": "https://github.com/datasciencebr/jarbas.git",
     "license": "BSD3",
     "source-directories": [
-        "./jarbas/frontend/elm",
-        "./jarbas/frontend/tests"
+        "./jarbas/layers/elm",
+        "./jarbas/layers/tests"
     ],
     "exposed-modules": [],
     "dependencies": {

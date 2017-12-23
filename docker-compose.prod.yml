@@ -57,7 +57,7 @@ services:
   elm:
     command: ["npm", "run", "assets"]
     volumes:
-      - assets:/code/jarbas/frontend/static
+      - assets:/code/jarbas/layers/static
 
   postgres:
     expose:
