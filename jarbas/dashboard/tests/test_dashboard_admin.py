@@ -108,7 +108,7 @@ class TestCustomWidgets(TestCase):
 
     def test_receipt_url_widget(self):
         widget = ReceiptUrlWidget()
-        url = 'https://jarbas.serenatadeamor.org'
+        url = 'https://jarbas.serenata.ai'
         rendered = widget.render('Name', url)
         self.assertIn('href="{}"'.format(url), rendered)
         self.assertIn('>{}</a>'.format(url), rendered)

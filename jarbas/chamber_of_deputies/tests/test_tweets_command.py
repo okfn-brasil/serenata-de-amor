@@ -93,16 +93,16 @@ class TestMethods(TestCommand):
 
     def test_get_document_id(self):
         valid = (
-            'http://jarbas.serenatadeamor.org/#/documentId/666',
-            'http://jarbas.serenatadeamor.org/#/documentId/666/',
-            'http://jarbas.serenatadeamor.org/#/documentId/666/something/else',
-            'http://jarbas.serenatadeamor.org/#/something/else/documentId/666'
+            'http://jarbas.serenata.ai/#/documentId/666',
+            'http://jarbas.serenata.ai/#/documentId/666/',
+            'http://jarbas.serenata.ai/#/documentId/666/something/else',
+            'http://jarbas.serenata.ai/#/something/else/documentId/666'
         )
         invalid = (
-            'http://jarbas.serenatadeamor.org/#/document/666',
-            'http://jarbas.serenatadeamor.org/#/documentid/666/',
-            'http://jarbas.serenatadeamor.org/#/year/2015/',
-            'http://jarbas.serenatadeamor.org/#/'
+            'http://jarbas.serenata.ai/#/document/666',
+            'http://jarbas.serenata.ai/#/documentid/666/',
+            'http://jarbas.serenata.ai/#/year/2015/',
+            'http://jarbas.serenata.ai/#/'
         )
         self.assertTrue(all((Command.get_document_id(u) for u in valid)))
         self.assertFalse(any((Command.get_document_id(u) for u in invalid)))
