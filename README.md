@@ -199,6 +199,7 @@ There are two combinations in terms of With [Docker](https://docs.docker.com/eng
   * manually generate JS after edits on Elm files
   * manually run `collectstatic` command is static changes
   * manually restarting server on change
+  * requires `VIRTUAL_HOST_WEB` envvar, e.g. `VIRTUAL_HOST_WEB=jarbas.serenata.ai docker-compose -f docker-compose.yml -f docker-compose.prod.yml …`
 
 That said instructions here keep it simple and runs with the development set up. To swicth always add `-f docker-compose.yml -f docker-compose.prod.yml` after `docker-compose`.
 
