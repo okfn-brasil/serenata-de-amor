@@ -1,4 +1,4 @@
-FROM node:8.4.0
+FROM node:8.4.0-slim
 
 # npm5 issue with updating itself: https://github.com/npm/npm/issues/18278
 # RUN npm install -g npm@latest
