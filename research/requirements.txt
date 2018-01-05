@@ -17,5 +17,4 @@ pycpfcnpj==1.3
 scikit-learn==0.19.1
 seaborn==0.8.1
 serenata-toolbox # pyup: ignore
-tinys3==0.1.12
 tqdm==4.19.5
