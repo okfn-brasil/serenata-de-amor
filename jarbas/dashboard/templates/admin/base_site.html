@@ -4,7 +4,10 @@
 
 {% block title %}{{ title|rename_title }} | {{ site_title|default:_('Jarbas Dashboard') }}{% endblock %}
 
-{% block extrahead %}<link rel="stylesheet" type="text/css" href="{% static "dashboard.css" %}" />{% endblock %}
+{% block extrahead %}
+<script src="{% static 'dashboard.js' %}"> async></script>
+<link rel="stylesheet" type="text/css" href="{% static 'dashboard.css' %}" />
+{% endblock %}
 
 {% block blockbots %}<meta name="robots" content="INDEX, FOLLOW" />{% endblock %}
 
