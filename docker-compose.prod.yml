@@ -51,8 +51,14 @@ services:
   tasks:
     env_file:
       - .env
+    networks:
+      - backend
     environment:
        - DEBUG=False
+
+  queue:
+    networks:
+      - backend
 
   elm:
     command: ["npm", "run", "assets"]
@@ -62,10 +68,14 @@ services:
   postgres:
     expose:
       - "5432"
+    networks:
+      - backend
     command: ['-c', 'random_page_cost=1']
 
   memcached:
     image: memcached:1.5.1-alpine
+    networks:
+      - backend
 
   nginx:
     image: datasciencebr/jarbas-server
