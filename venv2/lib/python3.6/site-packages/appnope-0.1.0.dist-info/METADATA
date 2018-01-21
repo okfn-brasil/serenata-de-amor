@@ -1,0 +1,22 @@
+Metadata-Version: 2.0
+Name: appnope
+Version: 0.1.0
+Summary: Disable App Nap on OS X 10.9
+Home-page: http://github.com/minrk/appnope
+Author: Min Ragan-Kelley
+Author-email: benjaminrk@gmail.com
+License: BSD
+Download-URL: http://github.com/minrk/appnope/releases
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: Python :: 3.3
+
+UNKNOWN
+
+

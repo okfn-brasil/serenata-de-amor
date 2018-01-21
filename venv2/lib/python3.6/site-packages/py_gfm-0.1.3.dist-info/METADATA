@@ -1,0 +1,28 @@
+Metadata-Version: 2.0
+Name: py-gfm
+Version: 0.1.3
+Summary: An implementation of Github-Flavored Markdown written as an extension to the Python Markdown library.
+Home-page: https://github.com/zopieux/py-gfm
+Author: Dart Team, Alexandre Macabies
+Author-email: misc@dartlang.org
+License: UNKNOWN
+Download-URL: https://codeload.github.com/Zopieux/py-gfm/tar.gz/0.1.3
+Platform: UNKNOWN
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Text Processing :: Markup
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Requires-Dist: markdown
+Requires-Dist: setuptools
+
+UNKNOWN
+
+

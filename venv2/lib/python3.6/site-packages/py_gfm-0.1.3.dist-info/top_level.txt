@@ -1,0 +1,3 @@
+gfm
+mdx_gfm
+mdx_partial_gfm

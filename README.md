@@ -90,7 +90,7 @@ Lists all reimbursements of expenses from the same day as `document_id`.
 
 ### Subquota
 
-Subqoutas are categories of expenses that can be reimbursed by congresspeople.
+Subquotas are categories of expenses that can be reimbursed by congresspeople.
 
 #### Listing subquotas
 
@@ -104,7 +104,7 @@ Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /
 
 ### Applicant
 
-An applicant is the person (congressperson or theleadership of aparty or government) who claimed the reimbursemement.
+An applicant is the person (congressperson or the leadership of a party or government) who claimed the reimbursemement.
 
 #### List applicants
 
@@ -114,7 +114,7 @@ Lists all names of applicants together with their IDs.
 
 ##### Filtering
 
-Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/chamber_of_deputies/applicant/?q=lideranca` list all applicant that have `lideranca` in their names.
+Accepts a case-insensitive `LIKE` filter as the `q` URL parameter (e.g. `GET /api/chamber_of_deputies/applicant/?q=lideranca` list all applicant that have `lideranca` in their names.
 
 ### Company
 

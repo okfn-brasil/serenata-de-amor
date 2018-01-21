@@ -1,0 +1,7 @@
+setuptools
+
+[:python_version == "2.7"]
+ipython >= 5.0.0, < 6.0.0
+
+[:python_version >= "3.3"]
+ipython >= 5.0.0

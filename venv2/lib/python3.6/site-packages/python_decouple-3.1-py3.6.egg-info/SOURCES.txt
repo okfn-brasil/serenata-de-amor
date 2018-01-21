@@ -1,0 +1,9 @@
+README.rst
+decouple.py
+setup.cfg
+setup.py
+python_decouple.egg-info/PKG-INFO
+python_decouple.egg-info/SOURCES.txt
+python_decouple.egg-info/dependency_links.txt
+python_decouple.egg-info/not-zip-safe
+python_decouple.egg-info/top_level.txt

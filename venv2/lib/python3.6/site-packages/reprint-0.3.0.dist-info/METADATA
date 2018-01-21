@@ -1,0 +1,16 @@
+Metadata-Version: 2.0
+Name: reprint
+Version: 0.3.0
+Summary: A simple module for Python2/3 to print and refresh multi line output contents in terminal
+Home-page: https://github.com/Yinzo/reprint
+Author: Yinzo
+Author-email: oop995+pypi@gmail.com
+License: Apache-2.0
+Keywords: multi line print value binding refresh
+Platform: UNKNOWN
+Requires-Dist: backports.shutil-get-terminal-size
+Requires-Dist: six
+
+UNKNOWN
+
+

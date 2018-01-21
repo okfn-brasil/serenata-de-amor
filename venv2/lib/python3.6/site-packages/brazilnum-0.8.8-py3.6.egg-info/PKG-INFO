@@ -1,0 +1,23 @@
+Metadata-Version: 1.1
+Name: brazilnum
+Version: 0.8.8
+Summary: Validate Brazilian CNPJ, CEI, CPF, PIS/PASEP, CEP, and municipal numbers
+Home-page: https://github.com/poliquin/brazilnum
+Author: Chris Poliquin
+Author-email: cpoliquin@hbs.edu
+License: UNKNOWN
+Description: Validate and Parse Brazilian Identification Numbers
+        ---------------------------------------------------
+        
+        Python functions for working with CNPJ, CEI, CPF, PIS/PASEP, CEP, and municipal
+        (município) codes, which identify firms, people, and places in Brazil.
+        
+Keywords: brazil,brasil,cnpj,cei,cpf,pis,pasep,cep
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Utilities

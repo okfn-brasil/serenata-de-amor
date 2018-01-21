@@ -1,0 +1,35 @@
+Metadata-Version: 2.0
+Name: django-extensions
+Version: 2.0.0
+Summary: Extensions for Django
+Home-page: http://github.com/django-extensions/django-extensions
+Author: Bas van Oostveen
+Author-email: v.oostveen@gmail.com
+License: MIT License
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 1.8
+Classifier: Framework :: Django :: 1.11
+Classifier: Framework :: Django :: 2.0
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Utilities
+Requires-Dist: six (>=1.2)
+Requires-Dist: typing
+
+django-extensions bundles several useful
+additions for Django projects. See the project page for more information:
+  http://github.com/django-extensions/django-extensions
+
