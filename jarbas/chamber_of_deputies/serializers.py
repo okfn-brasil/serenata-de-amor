@@ -130,6 +130,7 @@ def to_float(number):
 
 
 def format_cnpj(cnpj):
+    cnpj = str(cnpj)
     return '{}.{}.{}/{}-{}'.format(
         cnpj[0:2],
         cnpj[2:5],
