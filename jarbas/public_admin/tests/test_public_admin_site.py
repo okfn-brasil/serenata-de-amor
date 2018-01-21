@@ -1,11 +1,9 @@
 from unittest.mock import MagicMock, patch
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
-from jarbas.public_admin.sites import DummyUser, PublicAdminSite, public_admin
+from jarbas.public_admin.sites import PublicAdminSite, public_admin
 
 User = get_user_model()
 
@@ -22,8 +20,8 @@ class TestPublicAdminSite(TestCase):
 
     def test_valid_url(self):
         valid, invalid = MagicMock(), MagicMock()
-        valid.regex.pattern = '/whatever/'
-        invalid.regex.pattern = '/whatever/add/'
+        valid.pattern.regex.pattern = '/whatever/'
+        invalid.pattern.regex.pattern = '/whatever/add/'
         self.assertTrue(self.site.valid_url(valid))
         self.assertFalse(self.site.valid_url(invalid))
 

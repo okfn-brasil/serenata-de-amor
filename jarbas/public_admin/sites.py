@@ -7,7 +7,6 @@ from django.views.decorators.csrf import csrf_protect
 
 
 class DummyUser(AnonymousUser):
-
     def has_module_perms(self, app_label):
         return app_label == 'chamber_of_deputies'
 
@@ -35,7 +34,8 @@ class PublicAdminSite(AdminSite):
             'add',
             'delete',
         )
-        return all(label not in url.regex.pattern for label in forbidden)
+        return all(
+            label not in url.pattern.regex.pattern for label in forbidden)
 
     @property
     def urls(self):
