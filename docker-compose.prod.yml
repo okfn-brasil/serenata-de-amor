@@ -65,13 +65,6 @@ services:
     volumes:
       - assets:/code/jarbas/layers/static
 
-  postgres:
-    expose:
-      - "5432"
-    networks:
-      - backend
-    command: ['-c', 'random_page_cost=1']
-
   memcached:
     image: memcached:1.5.1-alpine
     networks:

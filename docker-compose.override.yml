@@ -5,6 +5,7 @@ services:
     volumes:
       - .:/code
     environment:
+      - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
       - SECRET_KEY=my_dear_secret
       - DEBUG=True
     ports:
@@ -14,6 +15,7 @@ services:
     volumes:
       - .:/code
     environment:
+      - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
       - SECRET_KEY=my_dear_secret
       - DEBUG=True
 
@@ -22,5 +24,12 @@ services:
       - ./jarbas:/code/jarbas
 
   postgres:
+    image: postgres:9.6.5-alpine
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=jarbas
+      - POSTGRES_DB=jarbas
+    volumes:
+      - ./db:/var/lib/postgresql
     ports:
       - "5432:5432"

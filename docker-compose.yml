@@ -4,14 +4,12 @@ services:
   django:
     image: datasciencebr/jarbas-backend
     environment:
-       - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
       - ALLOWED_HOSTS=localhost,127.0.0.1
       - AMAZON_S3_BUCKET=serenata-de-amor-data
       - AMAZON_S3_REGION=s3-sa-east-1
       - AMAZON_S3_CEAPTRANSLATION_DATE=2016-08-08
       - CELERY_BROKER_URL=amqp://guest:guest@queue/
     depends_on:
-       - postgres
       - elm
       - tasks
     volumes:
@@ -20,10 +18,8 @@ services:
   tasks:
     image: datasciencebr/jarbas-backend
     environment:
-       - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
       - CELERY_BROKER_URL=amqp://guest:guest@queue/
     depends_on:
-       - postgres
       - queue
     entrypoint: ["/bin/sh", "-c"]
     command: ["celery worker --app jarbas"]
@@ -31,14 +27,6 @@ services:
   elm:
     image: datasciencebr/jarbas-frontend
 
-  postgres:
-    image: postgres:9.6.5-alpine
-    environment:
-      - POSTGRES_PASSWORD=mysecretpassword
-      - POSTGRES_USER=jarbas
-      - POSTGRES_DB=jarbas
-    volumes:
-      - ./db:/var/lib/postgresql
 
   queue:
     image: rabbitmq:3.6.11-alpine
