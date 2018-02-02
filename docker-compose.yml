@@ -5,28 +5,28 @@ services:
     image: datasciencebr/jarbas-backend
     environment:
        - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
-       - ALLOWED_HOSTS=localhost,127.0.0.1
-       - AMAZON_S3_BUCKET=serenata-de-amor-data
-       - AMAZON_S3_REGION=s3-sa-east-1
-       - AMAZON_S3_CEAPTRANSLATION_DATE=2016-08-08
-       - CELERY_BROKER_URL=amqp://guest:guest@queue/
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - AMAZON_S3_BUCKET=serenata-de-amor-data
+      - AMAZON_S3_REGION=s3-sa-east-1
+      - AMAZON_S3_CEAPTRANSLATION_DATE=2016-08-08
+      - CELERY_BROKER_URL=amqp://guest:guest@queue/
     depends_on:
-       - elm
-       - tasks
        - postgres
+      - elm
+      - tasks
     volumes:
-       - "./contrib/data:/mnt/data"
+      - "./contrib/data:/mnt/data"
 
   tasks:
     image: datasciencebr/jarbas-backend
     environment:
        - DATABASE_URL=postgres://jarbas:mysecretpassword@postgres/jarbas
-       - CELERY_BROKER_URL=amqp://guest:guest@queue/
+      - CELERY_BROKER_URL=amqp://guest:guest@queue/
     depends_on:
        - postgres
-       - queue
-    entrypoint: ['/bin/sh', '-c']
-    command: ['celery worker --app jarbas']
+      - queue
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["celery worker --app jarbas"]
 
   elm:
     image: datasciencebr/jarbas-frontend

@@ -54,7 +54,7 @@ services:
     networks:
       - backend
     environment:
-       - DEBUG=False
+      - DEBUG=False
 
   queue:
     networks:

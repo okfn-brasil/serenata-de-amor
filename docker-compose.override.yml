@@ -3,23 +3,23 @@ services:
 
   django:
     volumes:
-       - .:/code
+      - .:/code
     environment:
-       - SECRET_KEY=my_dear_secret
-       - DEBUG=True
+      - SECRET_KEY=my_dear_secret
+      - DEBUG=True
     ports:
       - "8000:8000"
 
   tasks:
     volumes:
-       - .:/code
+      - .:/code
     environment:
-       - SECRET_KEY=my_dear_secret
-       - DEBUG=True
+      - SECRET_KEY=my_dear_secret
+      - DEBUG=True
 
   elm:
     volumes:
-       - ./jarbas:/code/jarbas
+      - ./jarbas:/code/jarbas
 
   postgres:
     ports:
