@@ -11,7 +11,7 @@ To allow people to visualize and make sense of data Rosie generates, we have cre
 
 ## Before contributing
 
-**[Visit our official website](https://serenatadeamor.org/)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
+**[Visit our official website](https://serenatadeamor.org/en)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
 
 ## Support Serenata de Amor
 
