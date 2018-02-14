@@ -11,7 +11,7 @@ To allow people to visualize and make sense of data Rosie generates, we have cre
 
 ## Before contributing
 
-**[Visit our official website](http://serenatadeamor.org/)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
+**[Visit our official website](https://serenatadeamor.org/)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
 
 ## Support Serenata de Amor
 
@@ -19,8 +19,8 @@ In 2016, precisely on the September 7th, our [first crowdfunding](https://catars
 
 At that time, we developed Rosie and made our first joint complaint, with 629 cases reported to the Chamber. Without recurrence, however, we can not continue the work. That is why we have created a space for people who want to contribute frequently, even with minor values, to our project. However we want to go further — if you wanna make us go further:
 
-* Participate in our [recurring crowdfunding campaign on Apoia.se](http://apoia.se/serenata)
-* Donate via Bitcoin:[`1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b`](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20Serenata%20de%20Amor%20Operation)
+* Participate in our [recurring crowdfunding campaign on APOIA.se](http://apoia.se/serenata)
+* * Donate via Bitcoin: [1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b](https://blockchain.info/address/1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b)
 
 ## License
 
