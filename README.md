@@ -2,28 +2,25 @@
 
 ![Operação Serenata de Amor](logo.png)
 
-The Serenata de Amor Operation arose from a combination of needs, from many people, of many nationalities:
+Serenata de Amor is an open project using data science for social accountability of public expenses. We use technology just like large organizations such as Google, Facebook and Netflix in order to track government spendings and to make open data accessible for everyone.
 
-- seeing **Machine Learning** being **better applied** to improve population's lives;
-- learning **whom to vote**;
-- **doing something about the corruption** problem present in the whole world.
+Serenata has created Rosie: an artificial intelligence who analyzes Brazilian congresspeople expenses while they are in office. Rosie can find suspicious spendings and engage citizens in the discussion about these findings.
 
-We are building an intelligence capable of analyzing public spending and saying, with reliability, the possibility of each receipt being unlawful. This information will be used beyond the code, in the world outside of GitHub. Everything is open source from the beginning, allowing others to fork the project when their ideas diverge from the Serenata de Amor Operation.
+To allow people to visualize and make sense of data Rosie generates, we have created Jarbas. In this website users can browse congresspeople expenses and get details about each one of the suspicions. It is the starting point to validate a suspicion.
 
-Our current milestone is to create the means for this kind of automation with the Quota for Exercising Parliamentary Activity (CEAP), from the Brazilian Chamber of Deputies. This job includes the development of APIs, data cleaning and analyses, conception and validation of scientific hypothesis, confirmation of illicit acts via investigation and reports - to the population and to legal authorities.
-
-To achieve this goal, unprecedented, we invite everyone to train the intelligence, collect information, cross databases, validate hypothesis and apply Machine Learning with models competing against each other and getting combined in ensembles with higher precision than any previous option.
 
 ## Before contributing
 
-**[Visit our official website](http://serenata.datasciencebr.com/)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
+**[Visit our official website](https://serenatadeamor.org/en)** and remember to read **[the contribution guide](/CONTRIBUTING.md)** if you plan to help on the software side.
 
 ## Support Serenata de Amor
 
-We [were crowdfunded](https://catarse.me/serenata) to operate for the first two months. We're really glad for this support. However we want to go further — if you wanna make us go further:
+In 2016, precisely on the September 7th, our [first crowdfunding](https://catarse.me/serenata) campaign was launched and we raised approximately R$ 80,000 – 30% more than our initial target. That allowed us to afford the dedicated team for the first 90 days.
 
-* Participate in our [recurring crowdfunding campaign on Apoia.se](http://apoia.se/serenata)
-* Donate via Bitcoin:[`1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b`](bitcoin:1Gg9CVZNYmzMTAjGfMg62w3b6MM7D1UAUV?amount=0.01&message=Supporting%20Serenata%20de%20Amor%20Operation)
+At that time, we developed Rosie and made our first joint complaint, with 629 cases reported to the Chamber. Without recurrence, however, we can not continue the work. That is why we have created a space for people who want to contribute frequently, even with minor values, to our project. However we want to go further — if you wanna make us go further:
+
+* Participate in our [recurring crowdfunding campaign on APOIA.se](http://apoia.se/serenata)
+* Donate via Bitcoin: [1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b](https://blockchain.info/address/1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b)
 
 ## License
 
