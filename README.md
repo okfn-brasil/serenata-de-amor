@@ -2,7 +2,7 @@
 
 ![Operação Serenata de Amor](logo.png)
 
-TSerenata de Amor is an open project using data science for social accountability of public expenses. We use technology just like large organizations such as Google, Facebook and Netflix in order to track government spendings and to make open data accessible for everyone.
+Serenata de Amor is an open project using data science for social accountability of public expenses. We use technology just like large organizations such as Google, Facebook and Netflix in order to track government spendings and to make open data accessible for everyone.
 
 Serenata has created Rosie: an artificial intelligence who analyzes Brazilian congresspeople expenses while they are in office. Rosie can find suspicious spendings and engage citizens in the discussion about these findings.
 
