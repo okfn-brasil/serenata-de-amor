@@ -20,7 +20,7 @@ In 2016, precisely on the September 7th, our [first crowdfunding](https://catars
 At that time, we developed Rosie and made our first joint complaint, with 629 cases reported to the Chamber. Without recurrence, however, we can not continue the work. That is why we have created a space for people who want to contribute frequently, even with minor values, to our project. However we want to go further — if you wanna make us go further:
 
 * Participate in our [recurring crowdfunding campaign on APOIA.se](http://apoia.se/serenata)
-* * Donate via Bitcoin: [1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b](https://blockchain.info/address/1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b)
+* Donate via Bitcoin: [1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b](https://blockchain.info/address/1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b)
 
 ## License
 
