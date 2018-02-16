@@ -1,11 +1,11 @@
 import re
 
-from simple_history.admin import SimpleHistoryAdmin
+from django.contrib.admin import ModelAdmin
 
 from jarbas.public_admin.sites import public_admin
 
 
-class PublicAdminModelAdmin(SimpleHistoryAdmin):
+class PublicAdminModelAdmin(ModelAdmin):
 
     def has_add_permission(self, request):
         return False

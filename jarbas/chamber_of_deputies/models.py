@@ -4,7 +4,6 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from requests import head
 
-from simple_history.models import HistoricalRecords
 from jarbas.chamber_of_deputies.querysets import ReimbursementQuerySet
 
 
@@ -82,8 +81,6 @@ class Reimbursement(models.Model):
     receipt_text = models.TextField('Texto do Recibo', blank=True, null=True)
 
     search_vector = SearchVectorField(null=True)
-
-    history = HistoricalRecords()
 
     objects = models.Manager.from_queryset(ReimbursementQuerySet)()
 
