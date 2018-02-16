@@ -31,7 +31,6 @@ class Receipt:
 class Reimbursement(models.Model):
     document_id = models.IntegerField('Número do Reembolso', db_index=True, unique=True)
     last_update = models.DateTimeField('Atualizado no Jarbas em', db_index=True, auto_now=True)
-    available_in_latest_dataset = models.BooleanField('Disponível na Câmara dos Deputados', default=True)
 
     year = models.IntegerField('Ano', db_index=True)
     applicant_id = models.IntegerField('Identificador do Solicitante', db_index=True)

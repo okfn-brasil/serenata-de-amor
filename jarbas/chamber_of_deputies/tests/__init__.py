@@ -100,7 +100,6 @@ def get_sample_reimbursement_api_response(obj):
         suspicions=obj.suspicions,
         receipt_text=obj.receipt_text,
         last_update=last_update_naive.strftime('%Y-%m-%dT%H:%M:%S-03:00'),
-        available_in_latest_dataset=obj.available_in_latest_dataset,
         receipt=dict(fetched=obj.receipt_fetched, url=obj.receipt_url),
         search_vector=None
     )
