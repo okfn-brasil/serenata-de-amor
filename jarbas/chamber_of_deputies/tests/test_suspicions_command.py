@@ -184,6 +184,7 @@ class TestFileLoader(TestCommand):
         self.assertEqual(expected, list(self.command.suspicions()))
         self.assertEqual(42, serialize.call_count)
 
+
 class TestAddArguments(TestCase):
 
     def test_add_arguments(self):

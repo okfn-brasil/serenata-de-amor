@@ -243,11 +243,6 @@ $ docker-compose run --rm django python manage.py searchvector
 
 You can access it at [`localhost:8000`](http://localhost:8000/) in development mode or [`localhost`](http://localhost:80/) in production mode.
 
-
-```console
-$ docker-compose run --rm django python manage.py reimbursements path/to/my/fresh_new_reimbursements.xz
-```
-
 To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
 
 #### Docker Ready?
