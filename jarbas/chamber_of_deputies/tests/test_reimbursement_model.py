@@ -33,10 +33,6 @@ class TestCreate(TestReimbursement):
         reimbursement.save()
         self.assertGreater(reimbursement.last_update, created_at)
 
-    def test_default_available_in_latest_dataset(self):
-        reimbursement = Reimbursement.objects.create(**self.data)
-        self.assertTrue(reimbursement.available_in_latest_dataset)
-
     def test_optional_fields(self):
         optional = (
             'total_reimbursement_value',
@@ -132,24 +128,6 @@ class TestManager(TestReimbursement):
         Reimbursement.objects.create(**data)
 
         self.assertEqual(1, Reimbursement.objects.has_receipt_url(False).count())
-
-    def test_in_latest_dataset(self):
-        data = self.data.copy()
-        data['document_id'] = 42 * 2
-        data['available_in_latest_dataset'] = False
-        Reimbursement.objects.create(**data)
-        Reimbursement.objects.create(**self.data)
-        deleted = Reimbursement.objects.in_latest_dataset(False)
-        self.assertEqual(1, deleted.count())
-
-    def test_not_in_latest_dataset(self):
-        data = self.data.copy()
-        data['document_id'] = 42 * 2
-        data['available_in_latest_dataset'] = False
-        Reimbursement.objects.create(**data)
-        Reimbursement.objects.create(**self.data)
-        existing = Reimbursement.objects.in_latest_dataset(True)
-        self.assertEqual(1, existing.count())
 
     def test_was_ordered(self):
         self.assertFalse(Reimbursement.objects.was_ordered())

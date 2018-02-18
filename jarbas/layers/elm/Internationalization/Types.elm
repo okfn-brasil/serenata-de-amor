@@ -67,7 +67,6 @@ type TranslationId
     | FieldSuspicions
     | FieldEmpty
     | ReimbursementSource
-    | ReimbursementDeletedSource
     | ReimbursementChamberOfDeputies
     | ReceiptFetch
     | ReceiptAvailable
@@ -104,7 +103,6 @@ type TranslationId
     | ResultTitleSingular
     | ResultTitlePlural
     | ReimbursementTitle
-    | ReimbursementDeletedTitle
     | Search
     | NewSearch
     | Loading

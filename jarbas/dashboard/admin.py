@@ -265,8 +265,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
         'subquota_translated',
         'supplier_info',
         'value',
-        'suspicious',
-        # 'still_available',
+        'suspicious'
     )
 
     search_fields = ('search_vector',)
@@ -274,7 +273,6 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     list_filter = (
         SuspiciousListFilter,
         HasReceiptFilter,
-        # 'available_in_latest_dataset',
         'state',
         'year',
         MonthListFilter,
@@ -345,12 +343,6 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
 
     value.short_description = 'valor'
     value.admin_order_field = 'total_net_value'
-
-    def still_available(self, obj):
-        return obj.available_in_latest_dataset
-
-    still_available.short_description = 'disponível na Câmara'
-    still_available.boolean = True
 
     def short_document_id(self, obj):
         return obj.document_id
