@@ -22,7 +22,7 @@ services:
     depends_on:
       - queue
     entrypoint: ["/bin/sh", "-c"]
-    command: ["celery worker --app jarbas"]
+    command: ["celery", "worker", "--app", "jarbas"]
 
   elm:
     image: datasciencebr/jarbas-frontend
