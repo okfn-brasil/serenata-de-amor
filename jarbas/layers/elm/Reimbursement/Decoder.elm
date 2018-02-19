@@ -99,7 +99,6 @@ singleDecoder lang apiKey =
             |> hardcoded { supplier | googleStreetViewApiKey = apiKey }
             |> hardcoded RelatedTable.model
             |> hardcoded RelatedTable.model
-            |> required "available_in_latest_dataset" bool
 
 
 updateReimbursementLanguage : Language -> Reimbursement -> Reimbursement

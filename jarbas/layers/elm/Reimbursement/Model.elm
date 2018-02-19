@@ -50,7 +50,6 @@ type alias Reimbursement =
     , supplierInfo : Company.Model
     , sameDay : RelatedTable.Model
     , sameSubquota : RelatedTable.Model
-    , inLatestDataset : Bool
     }
 
 

@@ -180,9 +180,6 @@ translate lang trans =
                 ReimbursementSource ->
                     ReimbursementCommon.reimbursementSource
 
-                ReimbursementDeletedSource ->
-                    ReimbursementCommon.reimbursementDeletedSource
-
                 ReimbursementChamberOfDeputies ->
                     ReimbursementCommon.reimbursementChamberOfDeputies
 
@@ -281,9 +278,6 @@ translate lang trans =
 
                 ReimbursementTitle ->
                     ReimbursementCommon.reimbursementTitle
-
-                ReimbursementDeletedTitle ->
-                    ReimbursementCommon.reimbursementDeletedTitle
 
                 ResultTitleSingular ->
                     ReimbursementCommon.resultTitleSingular

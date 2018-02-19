@@ -4,7 +4,6 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from requests import head
 
-from simple_history.models import HistoricalRecords
 from jarbas.chamber_of_deputies.querysets import ReimbursementQuerySet
 
 
@@ -32,7 +31,6 @@ class Receipt:
 class Reimbursement(models.Model):
     document_id = models.IntegerField('Número do Reembolso', db_index=True, unique=True)
     last_update = models.DateTimeField('Atualizado no Jarbas em', db_index=True, auto_now=True)
-    available_in_latest_dataset = models.BooleanField('Disponível na Câmara dos Deputados', default=True)
 
     year = models.IntegerField('Ano', db_index=True)
     applicant_id = models.IntegerField('Identificador do Solicitante', db_index=True)
@@ -82,8 +80,6 @@ class Reimbursement(models.Model):
     receipt_text = models.TextField('Texto do Recibo', blank=True, null=True)
 
     search_vector = SearchVectorField(null=True)
-
-    history = HistoricalRecords()
 
     objects = models.Manager.from_queryset(ReimbursementQuerySet)()
 
