@@ -2,7 +2,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/datasciencebr/jarbas.git"
+    "url": "git://github.com/okfn-brasil/jarbas.git"
   },
   "scripts": {
     "postinstall": "elm-package install --yes",
