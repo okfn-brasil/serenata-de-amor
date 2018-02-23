@@ -147,6 +147,11 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 * `CACHE_LOCATION` (_str_) [Cache location](https://docs.djangoproject.com/en/1.10/ref/settings/#location) (e.g. `localhost:11211`)
 * `SECURE_PROXY_SSL_HEADER` _(str)_ [Django secure proxy SSL header](https://docs.djangoproject.com/en/1.10/ref/settings/#secure-proxy-ssl-header) (e.g. `HTTP_X_FORWARDED_PROTO,https` transforms in tuple `('HTTP_X_FORWARDED_PROTO', 'https')`)
 
+##### NewRelic settings
+
+* `NEW_RELIC_APP_NAME` (_str_) [The name of the application you wish to report data against in the New Relic UI. If not defined, this defaults to `Python Application`](https://docs.newrelic.com/docs/agents/python-agent/configuration/python-agent-configuration#app_name)  (e.g. `Jarbas`)
+* `NEW_RELIC_ENVIRONMENT` (_str_) [The name of a specific deployment environment] (https://docs.newrelic.com/docs/agents/python-agent/configuration/python-agent-configuration#config-file-deployment-environments) (e.g. `Production`)
+* `NEW_RELIC_LICENSE_KEY` (_str_) [Specifies the license key of your New Relic account. This key associates your app's metrics with your New Relic account.] (https://docs.newrelic.com/docs/agents/python-agent/configuration/python-agent-configuration#license_key) 
 
 ##### Database
 
