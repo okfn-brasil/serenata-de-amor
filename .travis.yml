@@ -6,10 +6,10 @@ python:
   - 3.5
 
 addons:
-    postgresql: "9.6"
+  postgresql: "9.6"
 
 services:
-    - postgresql
+  - postgresql
 
 env:
   - DATABASE_URL="postgres://postgres@localhost/jarbas"
@@ -26,7 +26,7 @@ before_script:
   - python manage.py collectstatic --no-input
 
 script:
-  - coverage run manage.py test --parallel
+  - coverage run manage.py test
 
 after_success:
   - coveralls
