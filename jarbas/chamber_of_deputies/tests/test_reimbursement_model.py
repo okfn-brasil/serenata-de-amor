@@ -110,7 +110,7 @@ class TestManager(TestReimbursement):
         # let's create a reimbursement with some receipt_url (self.data has none)
         data = self.data.copy()
         data['document_id'] = 42 * 2
-        data['receipt_url'] = 'http://serenatadeamor.org/'
+        data['receipt_url'] = 'http://serenata.ai/'
 
         # now let's save two reimbursements: one with and another one without receipt_url
         Reimbursement.objects.create(**data)

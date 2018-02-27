@@ -81,7 +81,7 @@ services:
     environment:
       LETSENCRYPT_HOST: ${VIRTUAL_HOST_WEB}
       VIRTUAL_HOST: ${VIRTUAL_HOST_WEB}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-op.serenatadeamor@gmail.com}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-contato@serenata.ai}
       HTTPS_METHOD: ${HTTPS_METHOD:-redirect}
       VIRTUAL_PROTO: http
 
