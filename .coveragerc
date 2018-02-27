@@ -1,0 +1,9 @@
+  [run]
+  source = jarbas
+  omit =
+      jarbas/chamber_of_deputies/tests/*.py
+      jarbas/chamber_of_deputies/migrations/*.py
+      jarbas/core/migrations/*.py
+      jarbas/core/tests/*.py
+      jarbas/frontend/tests/*.py
+      jarbas/wsgi.py

@@ -1,0 +1,32 @@
+sudo: false
+dist: trusty
+
+language: python
+python:
+  - 3.5
+
+addons:
+    postgresql: "9.6"
+
+services:
+    - postgresql
+
+env:
+  - DATABASE_URL="postgres://postgres@localhost/jarbas"
+
+before_install:
+  - python -m pip install -U pip
+
+install:
+  - psql -U postgres -c 'create database "jarbas";'
+  - python -m pip install -r requirements-dev.txt coveralls
+
+before_script:
+  - python manage.py migrate
+  - python manage.py collectstatic --no-input
+
+script:
+  - coverage run manage.py test --parallel
+
+after_success:
+  - coveralls

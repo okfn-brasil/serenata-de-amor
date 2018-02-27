@@ -1,0 +1,21 @@
+#content-main .changelink,
+#content-main .submit-row,
+#content-main p,
+#historicalreimbursement_form p,
+#recent-actions-module {
+  display: none
+}
+
+#content-main p {
+  display: block
+}
+
+td.field-value {
+  white-space: nowrap
+}
+
+.required label,
+label.required {
+  color: #666;
+  font-weight: normal
+}

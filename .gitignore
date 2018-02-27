@@ -1,0 +1,25 @@
+# development environment
+.coverage
+.env
+.env.prod
+.floo
+*.sqlite3
+htmlcov/
+npm-debug.log
+db/
+
+# cache, compiled & downloaded files
+*.pyc
+.webassets-cache/
+__pycache__/
+app.css
+app.js
+ceap-datasets.html
+elm-stuff/
+jarbas/frontend/tests/Doc/
+jarbas/frontend/tests/elm-package.json
+node_modules/
+staticfiles/
+
+# vim stuff
+*.swp

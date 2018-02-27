@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% load dashboard %}
+{% load static %}
+
+{% block title %}{{ title|rename_title }} | {{ site_title|default:_('Jarbas Dashboard') }}{% endblock %}
+
+{% block extrahead %}
+<script src="{% static 'dashboard.js' %}" async></script>
+<link rel="stylesheet" type="text/css" href="{% static 'dashboard.css' %}" />
+{% endblock %}
+
+{% block blockbots %}<meta name="robots" content="INDEX, FOLLOW" />{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Jarbas Dashboard') }}</a></h1>
+{% endblock %}
+
+{% block usertools %}{% endblock %}
+{% block content_title %}{% if title %}<h1>{{ title|rename_title }}</h1>{% endif %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
