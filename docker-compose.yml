@@ -11,12 +11,12 @@ services:
       - ./research/develop:/home/jovyan/work/develop
       - ./research/src:/home/jovyan/work/src
       - ./research/test:/home/jovyan/work/test
-  # neo4j:
-  #   image: neo4j:3.1.1
-  #   ports:
-  #     - 7474:7474
-  #     - 7687:7687
-  #   volumes:
-  #     - ./research/data/neo4j/data:/data
-  #   environment:
-  #     - NEO4J_AUTH=none
+  neo4j:
+    image: neo4j:3.1.1
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - ./research/data/neo4j/data:/data
+    environment:
+      - NEO4J_AUTH=none
