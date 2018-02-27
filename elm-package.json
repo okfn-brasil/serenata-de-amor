@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "Jarbas",
-    "repository": "https://github.com/datasciencebr/jarbas.git",
+    "repository": "https://github.com/okfn-brasil/jarbas.git",
     "license": "BSD3",
     "source-directories": [
         "./jarbas/layers/elm",
