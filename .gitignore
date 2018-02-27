@@ -1,9 +1,0 @@
-*.pyc
-.ipynb_checkpoints
-.python-version
-__pycache__/
-config.ini
-/research/data
-.idea/
-serenata-de-amor.iml
-**.DS_Store
