@@ -28,6 +28,13 @@ services:
   elm:
     image: datasciencebr/jarbas-frontend
 
-
   queue:
     image: rabbitmq:3.6.11-alpine
+
+  research:
+    build:
+      context: research
+    ports:
+      - 8888:8888
+    volumes:
+      - ./research/src:/home/jovyan/work/src
