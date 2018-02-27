@@ -34,7 +34,5 @@ services:
   research:
     build:
       context: research
-    ports:
-      - 8888:8888
     volumes:
-      - ./research/src:/home/jovyan/work/src
+      - ./research:/mnt/code
