@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+import pip
+from shutil import copyfile
+
+
+copyfile('config.ini.example', 'config.ini')
+
+pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
