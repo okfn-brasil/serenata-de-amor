@@ -4,6 +4,6 @@ import pip
 from shutil import copyfile
 
 
-copyfile('config.ini.example', 'config.ini')
+copyfile('rosie/config.ini.example', 'rosie/config.ini')
 
-pip.main(['install', '--upgrade', '-r', 'requirements.txt'])
+pip.main(['install', '--upgrade', '-r', 'rosie/requirements.txt'])

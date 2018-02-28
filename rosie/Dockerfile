@@ -24,5 +24,3 @@ RUN apk add --no-cache python3 libstdc++ lapack && \
     rm /usr/include/xlocale.h && \
     rm -r /root/.cache && \
     apk del --purge .build-dependencies
-
-ENTRYPOINT ["python", "rosie.py"]

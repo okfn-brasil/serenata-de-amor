@@ -4,4 +4,4 @@ numpy==1.13.3
 # scipy must come before scikit-learn in order to build the wheel in docker image
 scipy==1.0.0
 scikit-learn==0.19.1
-serenata-toolbox # pyup: ignore
+serenata-toolbox==12.4.4 # pyup: ignore

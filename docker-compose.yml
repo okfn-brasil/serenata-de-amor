@@ -1,6 +1,12 @@
 version: '3'
 services:
 
+  rosie:
+    build:
+      context: rosie
+    volumes:
+      - /tmp/serenata-data:/tmp/serenata-data
+
   django:
     image: datasciencebr/jarbas-backend
     environment:
