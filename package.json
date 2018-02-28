@@ -1,0 +1,21 @@
+{
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/okfn-brasil/jarbas.git"
+  },
+  "scripts": {
+    "postinstall": "elm-package install --yes",
+    "assets": "gulp elm",
+    "watch": "gulp watch"
+  },
+  "dependencies": {
+    "elm": "^0.18",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^1.2.2",
+    "gulp-elm": "^0.7.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0",
+    "gulp-watch": "^4.3.11"
+  }
+}

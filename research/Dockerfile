@@ -1,4 +1,4 @@
-FROM jupyter/datascience-notebook:8f56e3c47fec
+FROM continuumio/miniconda3:4.3.27p0
 MAINTAINER Serenata de Amor "datasciencebr@gmail.com"
 
 USER root
@@ -11,16 +11,12 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN sudo -u jovyan mkdir /home/jovyan/.jupyter
+WORKDIR /mnt/code
 
-USER jovyan
-
-COPY ./research/requirements.txt ./requirements.txt
-COPY ./config.ini ./config.ini
+COPY ./requirements.txt ./requirements.txt
+COPY ./config.ini.example ./config.ini
 COPY ./setup ./setup
 
 RUN conda update setuptools
 RUN pip install -r requirements.txt
 RUN ./setup
-
-COPY ./research/jupyter_notebook_config.py /home/jovyan/.jupyter/jupyter_notebook_config.py

@@ -1,0 +1,34 @@
+engines:
+  pep8:
+    enabled: true
+
+  csslint:
+    enabled: true
+
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - javascript:
+        - python:
+
+  eslint:
+    enabled: true
+
+  fixme:
+    enabled: true
+
+  markdownlint:
+    enabled: true
+
+ratings:
+  paths:
+    - "**.css"
+    - "**.js"
+    - "**.md"
+    - "**.py"
+    - "**.sh"
+
+exclude_paths:
+  - "**/migrations/"
+  - "**/tests/*.py"

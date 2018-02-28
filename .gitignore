@@ -1,9 +1,25 @@
+# development environment
+.coverage
+.env
+.env.prod
+.floo
+*.sqlite3
+htmlcov/
+npm-debug.log
+db/
+
+# cache, compiled & downloaded files
 *.pyc
-.ipynb_checkpoints
-.python-version
+.webassets-cache/
 __pycache__/
-config.ini
-/research/data
-.idea/
-serenata-de-amor.iml
-**.DS_Store
+app.css
+app.js
+ceap-datasets.html
+elm-stuff/
+jarbas/frontend/tests/Doc/
+jarbas/frontend/tests/elm-package.json
+node_modules/
+staticfiles/
+
+# vim stuff
+*.swp

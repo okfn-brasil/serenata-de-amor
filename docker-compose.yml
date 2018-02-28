@@ -1,22 +1,38 @@
-version: "3"
+version: '3'
 services:
+
+  django:
+    image: datasciencebr/jarbas-backend
+    environment:
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - AMAZON_S3_BUCKET=serenata-de-amor-data
+      - AMAZON_S3_REGION=s3-sa-east-1
+      - AMAZON_S3_CEAPTRANSLATION_DATE=2016-08-08
+      - CELERY_BROKER_URL=amqp://guest:guest@queue/
+      - NEW_RELIC_APP_NAME=Jarbas (Django); Jarbas (Combined)
+    depends_on:
+      - elm
+      - tasks
+    volumes:
+      - "./contrib/data:/mnt/data"
+
+  tasks:
+    image: datasciencebr/jarbas-backend
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@queue/
+      - NEW_RELIC_APP_NAME=Jarbas (Celery); Jarbas (Combined)
+    depends_on:
+      - queue
+    command: ["newrelic-admin", "run-program", "celery", "worker", "--app", "jarbas"]
+
+  elm:
+    image: datasciencebr/jarbas-frontend
+
+  queue:
+    image: rabbitmq:3.6.11-alpine
+
   research:
     build:
-      context: ./
-      dockerfile: research/Dockerfile
-    ports:
-      - 8888:8888
+      context: research
     volumes:
-      - ./research/deliver:/home/jovyan/work/deliver
-      - ./research/develop:/home/jovyan/work/develop
-      - ./research/src:/home/jovyan/work/src
-      - ./research/test:/home/jovyan/work/test
-  neo4j:
-    image: neo4j:3.1.1
-    ports:
-      - 7474:7474
-      - 7687:7687
-    volumes:
-      - ./research/data/neo4j/data:/data
-    environment:
-      - NEO4J_AUTH=none
+      - ./research:/mnt/code
