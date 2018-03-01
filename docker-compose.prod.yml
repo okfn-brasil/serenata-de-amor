@@ -85,6 +85,15 @@ services:
       HTTPS_METHOD: ${HTTPS_METHOD:-redirect}
       VIRTUAL_PROTO: http
 
+  logspout:
+    image: gliderlabs/logspout:v3.2.4
+    restart: always
+    env_file:
+      - .env
+    command: ${LOGGING_URL}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
 volumes:
   assets:
   proxy-certs:
