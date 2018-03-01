@@ -1,0 +1,5 @@
+[Amazon]
+Bucket: serenata-de-amor-data
+AccessKey: YOUR_ACCESS_KEY
+Region: sa-east-1
+SecretKey: YOUR_SECRET_KEY

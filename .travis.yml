@@ -2,8 +2,8 @@ sudo: false
 dist: trusty
 
 language: python
-python:
-  - 3.5
+python: 3.6
+cache: pip
 
 addons:
   postgresql: "9.6"
@@ -14,12 +14,11 @@ services:
 env:
   - DATABASE_URL="postgres://postgres@localhost/jarbas"
 
-before_install:
-  - python -m pip install -U pip
-
 install:
+  - python -m pip install -U pip
   - psql -U postgres -c 'create database "jarbas";'
   - python -m pip install -r requirements-dev.txt coveralls
+  - ./rosie/setup
 
 before_script:
   - python manage.py migrate
@@ -27,6 +26,7 @@ before_script:
 
 script:
   - coverage run manage.py test
+  - cd rosie && coverage run rosie.py test && python rosie.py run federal_senate
 
 after_success:
   - coveralls
