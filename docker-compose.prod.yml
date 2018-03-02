@@ -84,12 +84,13 @@ services:
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-contato@serenata.ai}
       HTTPS_METHOD: ${HTTPS_METHOD:-redirect}
       VIRTUAL_PROTO: http
+    hostname: nginx
 
   logspout:
     image: gliderlabs/logspout:v3.2.4
     restart: always
     env_file:
-      - .env
+      - contrib/.env
     command: ${LOGGING_URL}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
