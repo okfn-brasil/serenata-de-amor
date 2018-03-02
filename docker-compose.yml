@@ -15,6 +15,7 @@ services:
       - tasks
     volumes:
       - "./contrib/data:/mnt/data"
+    hostname: django
 
   tasks:
     image: datasciencebr/jarbas-backend
@@ -24,15 +25,19 @@ services:
     depends_on:
       - queue
     command: ["newrelic-admin", "run-program", "celery", "worker", "--app", "jarbas"]
+    hostname: tasks
 
   elm:
     image: datasciencebr/jarbas-frontend
+    hostname: elm
 
   queue:
     image: rabbitmq:3.6.11-alpine
+    hostname: queue
 
   research:
     build:
       context: research
     volumes:
       - ./research:/mnt/code
+    hostname: research

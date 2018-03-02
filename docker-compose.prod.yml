@@ -19,6 +19,7 @@ services:
       - proxy-certs:/etc/nginx/certs
       - proxy-vhost:/etc/nginx/vhost.d
       - proxy-public:/usr/share/nginx/html
+    hostname: proxy
 
   proxy-certs:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -31,6 +32,7 @@ services:
       - proxy-public:/usr/share/nginx/html
     environment:
       NGINX_PROXY_CONTAINER: proxy
+    hostname: proxy-certs
 
   django:
     env_file:
@@ -69,6 +71,7 @@ services:
     image: memcached:1.5.1-alpine
     networks:
       - backend
+    hostname: memcached
 
   nginx:
     image: datasciencebr/jarbas-server
