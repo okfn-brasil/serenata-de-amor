@@ -40,5 +40,7 @@ services:
   research:
     build:
       context: research
+    env_file:
+      - .env
     volumes:
       - ./research:/mnt/code
