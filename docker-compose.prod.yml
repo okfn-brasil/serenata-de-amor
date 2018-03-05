@@ -93,7 +93,7 @@ services:
     image: gliderlabs/logspout:v3.2.4
     restart: always
     env_file:
-      - .env
+      - .env.prod
     command: ${LOGGING_URL}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
