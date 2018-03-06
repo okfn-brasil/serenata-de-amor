@@ -1,4 +1,3 @@
-import configparser
 import datetime
 import dateutil.parser
 import email
@@ -17,14 +16,12 @@ def normalize_string(string):
         nfkd_form = unicodedata.normalize('NFKD', string.lower())
         return nfkd_form.encode('ASCII', 'ignore').decode('utf-8')
 
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
+
 EMAIL_ACCOUNT = 'op.serenatadeamor@gmail.com'
-EMAIL_PASSWORD = settings.get('Email', 'Password')
+EMAIL_PASSWORD = config('INBOX_PASSWORD')
 EMAIL_FOLDER = '"{}"'.format(sys.argv[1])
 EMAIL_REGEX = r'op\.serenatadeamor?\+(\w+)@gmail\.com'
 PATH = os.path.join('data/email_inbox', EMAIL_FOLDER[1:-1])
-
 
 
 M = imaplib.IMAP4_SSL('imap.gmail.com')

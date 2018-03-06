@@ -1,11 +1,12 @@
-import configparser
 import datetime
-import numpy as np
 import os.path
-import pandas as pd
 import re
-import requests
+
+from decouple import config
+import numpy as np
+import pandas as pd
 from pandas.io.json import json_normalize
+import requests
 
 DATA_DIR = 'data'
 DATE = datetime.date.today().strftime('%Y-%m-%d')
@@ -129,17 +130,14 @@ def write_fetched_companies(companies):
                      compression='xz',
                      index=False)
 
-# API Keys
-# You can create your own through https://pt.foursquare.com/developers/register
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
-CLIENT_ID = settings.get('Foursquare', 'ClientId')
-CLIENT_SECRET = settings.get('Foursquare', 'ClientSecret')
+
+
 # Foursquare API Version. This is in YYYYMMDD format.
 VERSION = '20161021'
 # Required params to make a request to Foursquare's API
-DEFAULT_PARAMS = {'client_id': CLIENT_ID,
-                  'client_secret': CLIENT_SECRET,
+# You can create your own API keys at https://pt.foursquare.com/developers/register
+DEFAULT_PARAMS = {'client_id': config('FOURSQUARE_CLIENT_ID'),
+                  'client_secret': config('FOURSQUARE_CLIENT_SECRET'),
                   'v': VERSION}
 
 # Dataset paths
@@ -150,13 +148,11 @@ OUTPUT_DATASET = '{}-foursquare-companies.xz'.format(DATE)
 OUTPUT_DATASET_PATH = os.path.join(DATA_DIR, OUTPUT_DATASET)
 
 if __name__ == '__main__':
-    if not (CLIENT_ID and CLIENT_SECRET):
-        raise 'Missing API credentials'
-
     meal_cnpjs = load_cnpjs('Congressperson meal')
     meal_companies = load_companies_dataset(meal_cnpjs)
     fetched_companies = load_foursquare_companies_dataset()
-    remaining_companies = remaining_companies(meal_companies, fetched_companies)
+    remaining_companies = remaining_companies(
+        meal_companies, fetched_companies)
 
     for index, company in remaining_companies.iterrows():
         print('Looking for: %s' % company['trade_name'])

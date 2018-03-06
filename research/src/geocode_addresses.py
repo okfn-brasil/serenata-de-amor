@@ -1,21 +1,22 @@
 from concurrent import futures
-import configparser
-from geopy.geocoders import GoogleV3
-from geopy.exc import GeocoderTimedOut
 import pickle
 import os
 import os.path
-import pandas as pd
 import re
 import shutil
+
+from decouple import config
+from geopy.exc import GeocoderTimedOut
+from geopy.geocoders import GoogleV3
+import pandas as pd
 
 DATASET_PATH = os.path.join('data', 'companies.xz')
 TEMP_PATH = os.path.join('data', 'companies')
 CNPJ_REGEX = r'[./-]'
 
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
-geolocator = GoogleV3(settings.get('Google', 'APIKey'))
+
+geolocator = GoogleV3(config('GOOGLE_API_KEY'))
+
 
 def geocode_companies(companies):
     with futures.ThreadPoolExecutor(max_workers=40) as executor:

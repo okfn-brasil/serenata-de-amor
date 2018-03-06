@@ -3,10 +3,11 @@ import requests
 import re
 import os.path
 import datetime
-import configparser
 from unicodedata import normalize
-import pandas as pd
+
+from decouple import config
 import numpy as np
+import pandas as pd
 from pandas.io.json import json_normalize
 
 
@@ -17,7 +18,7 @@ Get your API access token
 2. Create an app (https://www.yelp.com/developers/v3/manage_app).
 3. Run this command in your terminal to get yout access_token:
   curl -X POST -F 'client_id=YOUR_CLIENT_ID' -F 'client_secret=YOUT_CLIENT_SECRET' https://api.yelp.com/oauth2/token
-4. Get your 'access_token' from the response and add to the config.ini file.
+4. Get your 'access_token' from the response and add it as an environment variable.
 """
 
 
@@ -89,7 +90,8 @@ def write_fetched_companies(companies):
 
 def fetch_yelp_info(**params):
     url = 'https://api.yelp.com/v3/businesses/search'
-    headers = {"Authorization": "Bearer {}".format(ACCESS_TOKEN)}
+    authorization = "Bearer {}".format(config('YELP_ACCESS_TOKEN'))
+    headers = {"Authorization": authorization}
     response = requests.get(url, headers=headers, params=params)
     return parse_fetch_info(response)
 
@@ -104,10 +106,6 @@ DATA_DIR = 'data'
 REIMBURSEMENTS_DATASET_PATH = find_newest_file('reimbursements')
 COMPANIES_DATASET_PATH = find_newest_file('companies')
 YELP_DATASET_PATH = os.path.join('data', 'yelp-companies.xz')
-
-settings = configparser.RawConfigParser()
-settings.read('config.ini')
-ACCESS_TOKEN = settings.get('Yelp', 'AccessToken')
 
 
 if __name__ == '__main__':
