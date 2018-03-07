@@ -91,6 +91,7 @@ class SexPlacesNearBy:
         :param company: (dict) Company with name, cnpj, latitude and longitude
         :param key: (str) Google Places API key
         """
+        global config  # config is define in the installation process
         self.url = GooglePlacesURL(key or config('GOOGLE_API_KEY'))
 
         self.company = company
@@ -242,6 +243,7 @@ class SexPlacesNearBy:
         :param place: dictionary with id key.
         :return: dictionary updated with name, address and phone.
         """
+        global url  # url is define in the installation process
         place_id = place.get('id')
         if not place_id:
             return place
