@@ -1,5 +1,5 @@
 aiofiles==0.3.2
-aiohttp==2.3.7
+aiohttp==3.0.7
 beautifulsoup4==4.6.0
 geopy==1.11.0
 grequests==0.3.0
@@ -9,4 +9,4 @@ pandas==0.22.0
 python-decouple==3.1
 requests==2.18.4
 serenata-toolbox # pyup: ignore
-tqdm==4.19.5
+tqdm==4.19.7
