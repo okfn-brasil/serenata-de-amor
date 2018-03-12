@@ -9,7 +9,7 @@ django-debug-toolbar==1.9.1
 django-extensions==2.0.5
 django-test-without-migrations==0.6
 djangorestframework==3.7.7
-freezegun==0.3.9
+freezegun==0.3.10
 gunicorn==19.7.1
 newrelic==2.106.1.88
 psycopg2==2.7.4
