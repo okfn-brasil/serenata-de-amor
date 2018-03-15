@@ -17,8 +17,8 @@ parser.add_argument('--all', dest='all', action='store_true',
 
 args = parser.parse_args()
 
-if not os.path.exists('config.ini'):
-    copyfile('config.ini.example', 'config.ini')
+if not os.path.exists('.env'):
+    copyfile('contrib/.env.sample', '.env')
 
 requirements = os.path.join(RESEARCH_DIR, 'requirements.txt')  # local install
 if not os.path.exists(requirements):

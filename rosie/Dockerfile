@@ -6,7 +6,7 @@ COPY requirements.txt ./
 COPY setup ./
 COPY rosie.py ./
 COPY rosie ./rosie
-COPY config.ini.example ./
+COPY .env.sample ./
 
 RUN apk add --no-cache python3 libstdc++ lapack && \
     python3 -m ensurepip && \

@@ -14,7 +14,7 @@ RUN apt-get update \
 WORKDIR /mnt/code
 
 COPY ./requirements.txt ./requirements.txt
-COPY ./config.ini.example ./config.ini
+COPY ./contrib/.env.sample ./.env
 COPY ./setup ./setup
 
 RUN conda update setuptools
