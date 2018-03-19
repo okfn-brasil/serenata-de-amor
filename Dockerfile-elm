@@ -17,4 +17,4 @@ RUN ./node_modules/.bin/elm-package install --yes
 
 COPY ./jarbas /code/jarbas
 
-CMD ["npm", "run", "watch"]
+CMD ["npm", "run", "assets"]

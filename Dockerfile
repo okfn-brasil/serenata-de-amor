@@ -1,6 +1,10 @@
 FROM python:3.5.4-alpine
-ENV PYTHONUNBUFFERED=1 \
-    GOSS_VERSION=${GOSS_VERSION:-v0.3.5}
+
+ENV AMAZON_BUCKET=serenata-de-amor-data \
+    AMAZON_REGION=sa-east-1 \
+    GOSS_VERSION=${GOSS_VERSION:-v0.3.5} \
+    PYTHONUNBUFFERED=1 \
+    SECRET_KEY=${SECRET_KEY:-my-secret}
 
 COPY ./requirements.txt /code/requirements.txt
 COPY ./requirements-dev.txt /code/requirements-dev.txt
@@ -10,7 +14,6 @@ COPY goss.yaml /goss/goss.yaml
 
 WORKDIR /code
 
-# set timezone
 RUN set -ex && \
     apk add --no-cache --virtual=.goss-dependencies curl ca-certificates && \
     curl -L https://github.com/aelsabbahy/goss/releases/download/"$GOSS_VERSION"/goss-linux-amd64 -o /usr/local/bin/goss && \

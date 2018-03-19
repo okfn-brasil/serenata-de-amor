@@ -164,8 +164,8 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 ##### Amazon S3 settings
 
-* `AMAZON_S3_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
-* `AMAZON_S3_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
+* `AMAZON_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
+* `AMAZON_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
 * `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
 
 ##### Google settings
@@ -191,25 +191,8 @@ instructions](https://python-twitter.readthedocs.io/en/latest/getting_started.ht
 
 ### Using Docker
 
-There are two combinations in terms of With [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)
+You must first install [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)
  environments.
-
-* **Develoment**: simply running `docker-compose …` will trigger `docker-compose.yml` and `docker-compose.override.yml` with optimun configuration for developing such as:
-  * automatic serving static files through Django
-  * restarting the Django on Python files changes
-  * rebuilding JS from Elm files on save
-  * skipping server cache
-* **Production**: passing a specific configurarion as `docker-compose -f docker-compose.yml -f docker-compose.prod.yml …` will launch a more robust environment with production in mind, among others:
-  * `nginx` in front of Django
-  * server-side cache with memcached
-  * manually generate JS after edits on Elm files
-  * manually run `collectstatic` command is static changes
-  * manually restarting server on change
-  * requires `VIRTUAL_HOST_WEB` envvar, e.g. `VIRTUAL_HOST_WEB=jarbas.serenata.ai docker-compose -f docker-compose.yml -f docker-compose.prod.yml …`
-
-That said instructions here keep it simple and runs with the development set up. To swicth always add `-f docker-compose.yml -f docker-compose.prod.yml` after `docker-compose`.
-
-When using tghe production settings remember to double check the [appropriate environment varables](#for-the-production-environment) and to create a `.env.prod` (separate from `.env`) to hold production only values.
 
 #### Build and start services
 
