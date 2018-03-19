@@ -52,10 +52,10 @@ INSTALLED_APPS = [
     'debug_toolbar',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -66,6 +66,11 @@ MIDDLEWARE = [
     'django.middleware.cache.FetchFromCacheMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+staticfiles_storage = config('STATICFILES_STORAGE', default=None) or None
+if staticfiles_storage:
+    STATICFILES_STORAGE = staticfiles_storage
+    MIDDLEWARE.insert(2, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 ROOT_URLCONF = 'jarbas.urls'
 
@@ -196,7 +201,3 @@ CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='amqp://guest:guest@loca
 # Set home
 
 HOMES_REDIRECTS_TO = '/dashboard/chamber_of_deputies/reimbursement/'
-
-staticfiles_storage = config('STATICFILES_STORAGE', default=None) or None
-if staticfiles_storage:
-    STATICFILES_STORAGE = staticfiles_storage
