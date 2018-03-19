@@ -1,4 +1,4 @@
-FROM python:3.5.4-alpine
+FROM python:3.6.4-alpine3.7
 
 ENV AMAZON_BUCKET=serenata-de-amor-data \
     AMAZON_REGION=sa-east-1 \

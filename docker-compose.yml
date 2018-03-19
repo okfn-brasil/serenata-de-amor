@@ -41,7 +41,7 @@ services:
     hostname: elm
 
   queue:
-    image: rabbitmq:3.6.11-alpine
+    image: rabbitmq:3.7.3-alpine
     hostname: queue
 
   postgres:

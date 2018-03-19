@@ -1,5 +1,4 @@
-FROM continuumio/miniconda3:4.3.27p0
-MAINTAINER Serenata de Amor "datasciencebr@gmail.com"
+FROM continuumio/miniconda3:4.4.10
 
 USER root
 ARG AMAZON_BUCKET=serenata-de-amor-data
