@@ -8,5 +8,5 @@ numpy==1.14.1
 pandas==0.22.0
 python-decouple==3.1
 requests==2.18.4
-serenata-toolbox # pyup: ignore
+serenata-toolbox<13
 tqdm==4.19.5
