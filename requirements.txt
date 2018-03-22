@@ -20,3 +20,4 @@ python-twitter==3.4
 reprint==0.3.0 # pyup: ignore
 requests==2.18.4
 rows==0.3.1
+whitenoise==3.3.1

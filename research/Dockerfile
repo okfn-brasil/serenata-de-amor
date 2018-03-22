@@ -1,7 +1,8 @@
-FROM continuumio/miniconda3:4.3.27p0
-MAINTAINER Serenata de Amor "datasciencebr@gmail.com"
+FROM continuumio/miniconda3:4.4.10
 
 USER root
+ARG AMAZON_BUCKET=serenata-de-amor-data
+ARG AMAZON_REGION=sa-east-1
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -14,9 +15,7 @@ RUN apt-get update \
 WORKDIR /mnt/code
 
 COPY ./requirements.txt ./requirements.txt
-COPY ./config.ini.example ./config.ini
 COPY ./setup ./setup
 
-RUN conda update setuptools
 RUN pip install -r requirements.txt
 RUN ./setup

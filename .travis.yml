@@ -12,13 +12,17 @@ services:
   - postgresql
 
 env:
-  - DATABASE_URL="postgres://postgres@localhost/jarbas"
+  global:
+    - AMAZON_BUCKET=serenata-de-amor-data
+    - AMAZON_REGION=sa-east-1
+    - DATABASE_URL=postgres://postgres@localhost/jarbas
 
 install:
+  - cp contrib/.env.sample .env
   - python -m pip install -U pip
   - psql -U postgres -c 'create database "jarbas";'
   - python -m pip install -r requirements-dev.txt coveralls
-  - ./rosie/setup
+  - python -m pip install -r rosie/requirements.txt
 
 before_script:
   - python manage.py migrate
@@ -26,7 +30,10 @@ before_script:
 
 script:
   - coverage run manage.py test
-  - cd rosie && coverage run rosie.py test && python rosie.py run federal_senate
+  - cd rosie
+  - coverage run rosie.py test
+  - python rosie.py run federal_senate
+  - cd ..
 
 after_success:
   - coveralls
