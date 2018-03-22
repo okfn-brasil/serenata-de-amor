@@ -20,8 +20,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         origin = 'https://{}.amazonaws.com/{}/{}-ceap-datasets.md'.format(
-            settings.AMAZON_S3_REGION,
-            settings.AMAZON_S3_BUCKET,
+            settings.AMAZON_REGION,
+            settings.AMAZON_BUCKET,
             settings.AMAZON_S3_CEAPTRANSLATION_DATE
         )
 

@@ -84,7 +84,6 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
-1. Create your `.env` file from the example: `$ cp contrib/.env.sample .env`
 1. Build the tags with `$ docker-compose build`
 1. Start the environment (it might take a while, hurry not): `$ docker-compose up -d`.
 

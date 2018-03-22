@@ -1,12 +1,11 @@
 FROM alpine:3.6
 
-LABEL maintainer="https://github.com/datasciencebr/rosie"
+ARG AMAZON_BUCKET=serenata-de-amor-data
+ARG AMAZON_REGION=sa-east-1
 
 COPY requirements.txt ./
-COPY setup ./
 COPY rosie.py ./
 COPY rosie ./rosie
-COPY .env.sample ./
 
 RUN apk add --no-cache python3 libstdc++ lapack && \
     python3 -m ensurepip && \
@@ -19,7 +18,7 @@ RUN apk add --no-cache python3 libstdc++ lapack && \
         python3-dev ca-certificates  libxslt-dev libxml2-dev && \
     ln -s locale.h /usr/include/xlocale.h && \
     ln -s /usr/bin/python3 /usr/bin/python && \
-    ./setup && \
+    pip install -r requirements.txt && \
     find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
     rm /usr/include/xlocale.h && \
     rm -r /root/.cache && \
