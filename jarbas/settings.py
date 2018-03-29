@@ -67,10 +67,8 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-staticfiles_storage = config('STATICFILES_STORAGE', default=None) or None
-if staticfiles_storage:
-    STATICFILES_STORAGE = staticfiles_storage
-    MIDDLEWARE.insert(2, 'whitenoise.middleware.WhiteNoiseMiddleware')
+if not DEBUG:
+	MIDDLEWARE.insert(2, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 ROOT_URLCONF = 'jarbas.urls'
 
