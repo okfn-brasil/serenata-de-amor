@@ -1,12 +1,12 @@
 aiofiles==0.3.2
-aiohttp==2.3.7
+aiohttp==3.1.0
 beautifulsoup4==4.6.0
-geopy==1.11.0
+geopy==1.12.0
 grequests==0.3.0
 humanize==0.5.1
-numpy==1.14.1
+numpy==1.14.2
 pandas==0.22.0
 python-decouple==3.1
 requests==2.18.4
 serenata-toolbox<13
-tqdm==4.19.5
+tqdm==4.19.8

@@ -1,7 +1,7 @@
 brutils==1.0.1
 geopy>=1.11.0
-numpy==1.13.3
+numpy==1.14.2
 # scipy must come before scikit-learn in order to build the wheel in docker image
-scipy==1.0.0
+scipy==1.0.1
 scikit-learn==0.19.1
 serenata-toolbox<13
