@@ -1,5 +1,5 @@
 aiofiles==0.3.2
-aiohttp==3.1.0
+aiohttp==3.1.1
 beautifulsoup4==4.6.0
 geopy==1.12.0
 grequests==0.3.0
@@ -8,5 +8,5 @@ numpy==1.14.2
 pandas==0.22.0
 python-decouple==3.1
 requests==2.18.4
-serenata-toolbox<13
-tqdm==4.19.8
+serenata-toolbox==15.0.0
+tqdm==4.19.9
