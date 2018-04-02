@@ -11,4 +11,4 @@ RUN npm install
 
 COPY ./jarbas /code/jarbas
 
-CMD ["npm", "run", "watch"]
+CMD ["npm", "run", "assets"]

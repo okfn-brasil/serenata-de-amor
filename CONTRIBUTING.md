@@ -84,7 +84,6 @@ $ source /usr/local/var/pyenv/versions/anaconda3-4.1.1/bin/activate serenata_de_
 
 You can user [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) to have a working environment:
 
-1. Create your `config.ini` file from the example: `$ cp config.ini.example config.ini`
 1. Build the tags with `$ docker-compose build`
 1. Start the environment (it might take a while, hurry not): `$ docker-compose up -d`.
 
@@ -160,11 +159,11 @@ fetch_latest_backup('data/')
 
 ##### Suppliers information (CNPJ)
 1. `research/src/fetch_cnpj_info.py` iterates over the CEAP datasets looking for supplier unique documents (CNPJ) and creates a local dataset with each supplier info, after that, cleans up and translates the dataset.
-1. `research/src/geocode_addresses.py` iterates over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `config.ini`).
+1. `research/src/geocode_addresses.py` iterates over the supplier info dataset and add geolocation data to it (it uses the Google Maps API set in `.env`).
 1. `research/src/fetch_sex_places.py` fetches the closest sex related place (cat houses, night clubs, massage parlours etc.) to each company (use `--help` for further instructions).
 
 ##### Miscellaneous
-1. `research/src/backup_data.py` uploads files from `research/data/` to an Amazon S3 bucket set on `config.ini` .
+1. `research/src/backup_data.py` uploads files from `research/data/` to an Amazon S3 bucket set on `.env` .
 
 ##### Politician's relatives
 1. `research/src/get_family_names.py` gets the names of the parents of congresspeople from the congress website and saves them to `research/data/YYYY-MM-DD-congressperson_relatives.xz` (and it may save some data to `research/data/YYYY-MM-DD-congressperson_relatives_raw.xz` in case it fails to parse the names)

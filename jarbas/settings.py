@@ -23,10 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='my-secret')
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 INTERNAL_IPS = ('127.0.0.1',)
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -65,6 +66,9 @@ MIDDLEWARE = [
     'django.middleware.cache.FetchFromCacheMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+if not DEBUG:
+	MIDDLEWARE.insert(2, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 ROOT_URLCONF = 'jarbas.urls'
 
@@ -139,8 +143,8 @@ CORE_STATIC_DIR = os.path.join(BASE_DIR, 'jarbas', 'core', 'static')
 
 # Amazon S3 datasets
 
-AMAZON_S3_BUCKET = config('AMAZON_S3_BUCKET', default='serenata-de-amor-data')
-AMAZON_S3_REGION = config('AMAZON_S3_REGIN', default='s3-sa-east-1')
+AMAZON_BUCKET = config('AMAZON_BUCKET')
+AMAZON_REGION = config('AMAZON_REGION')
 AMAZON_S3_CEAPTRANSLATION_DATE = config('AMAZON_S3_CEAPTRANSLATION_DATE', default='2016-08-08')
 
 # Django REST Framework
