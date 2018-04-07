@@ -1,3 +1,0 @@
-[console_scripts]
-markdown_py = markdown.__main__:run
-
