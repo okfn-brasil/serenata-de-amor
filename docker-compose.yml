@@ -6,6 +6,7 @@ services:
       context: rosie
     volumes:
       - /tmp/serenata-data:/tmp/serenata-data
+      - ./rosie:/code
 
   django:
     image: serenata/django
