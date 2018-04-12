@@ -45,8 +45,6 @@ For example, if you want to run `chamber_of_deputies` module, you should run thi
 $ python rosie.py run chamber_of_deputies
 ```
 
-The toolbox expects to find Amazon credentials in a `.env` file. If You get an error of missing `.env` you can just copy the `.env.sample` to a `.env` and everything will run smoothly (don't bother about `AMAZON_ACCESS_KEY` and `AMAZON_SECRET_KEY` unless you're planning to upload files to S3).
-
 A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
 
 Also a target directory (where files are saved) can de passed — for example:

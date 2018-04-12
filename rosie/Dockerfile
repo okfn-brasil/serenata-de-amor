@@ -1,7 +1,8 @@
 FROM conda/miniconda3
 
 ARG AMAZON_BUCKET=serenata-de-amor-data
-ARG AMAZON_REGION=sa-east-1
+ARG AMAZON_ENDPOINT=https://nyc3.digitaloceanspaces.com
+ARG AMAZON_REGION=nyc3
 
 COPY requirements.txt ./
 COPY rosie.py ./

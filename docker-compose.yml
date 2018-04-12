@@ -62,6 +62,7 @@ services:
       context: research
       args:
         - AMAZON_BUCKET
+        - AMAZON_ENDPOINT
         - AMAZON_REGION
     env_file:
       - .env

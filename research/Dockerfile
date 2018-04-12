@@ -2,7 +2,8 @@ FROM conda/miniconda3
 
 USER root
 ARG AMAZON_BUCKET=serenata-de-amor-data
-ARG AMAZON_REGION=sa-east-1
+ARG AMAZON_ENDPOINT=https://nyc3.digitaloceanspaces.com
+ARG AMAZON_REGION=nyc3
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
