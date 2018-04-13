@@ -61,12 +61,7 @@ services:
   research:
     build:
       context: research
-      args:
-        - AMAZON_BUCKET
-        - AMAZON_ENDPOINT
-        - AMAZON_REGION
-    env_file:
-      - .env
     volumes:
       - ./research:/mnt/code
     hostname: research
+    command: ["jupyter", "notebook"]
