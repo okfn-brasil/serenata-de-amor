@@ -4,6 +4,4 @@ import pip
 from shutil import copyfile
 
 
-copyfile('rosie/.env.sample', 'rosie/.env')
-
 pip.main(['install', '--upgrade', '-r', 'rosie/requirements.txt'])

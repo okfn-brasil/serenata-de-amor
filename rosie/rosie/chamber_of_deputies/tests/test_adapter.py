@@ -1,57 +1,84 @@
-import os
 import shutil
-from shutil import copy2
+from pathlib import Path
 from tempfile import mkdtemp
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 import pandas as pd
+from freezegun import freeze_time
 
-from rosie.chamber_of_deputies.adapter import COLUMNS as ADAPTER_COLUMNS
-from rosie.chamber_of_deputies.adapter import Adapter as subject_class
+from rosie.chamber_of_deputies.adapter import Adapter
+
+
+FIXTURES = Path() / 'rosie' / 'chamber_of_deputies' / 'tests' / 'fixtures'
 
 
 class TestAdapter(TestCase):
 
-    def setUp(self):
-        self.temp_path = mkdtemp()
-        self.fixtures_path = os.path.join('rosie', 'chamber_of_deputies', 'tests', 'fixtures')
-        copies = (
-            ('companies.xz', subject_class.COMPANIES_DATASET),
-            ('reimbursements.xz', 'reimbursements.xz')
+    @classmethod
+    def setUpClass(cls):
+        cls.temp_path = mkdtemp()
+        to_copy = (
+            'companies.xz',
+            'reimbursements-2009.csv',
+            'reimbursements-2010.csv',
+            'reimbursements-2011.csv',
+            'reimbursements-2012.csv',
+            'reimbursements-2016.csv'
         )
-        for source, target in copies:
-            copy2(os.path.join(self.fixtures_path, source), os.path.join(self.temp_path, target))
-        self.subject = subject_class(self.temp_path)
+        for source in to_copy:
+            target = source
+            if source == 'companies.xz':
+                target = Adapter.COMPANIES_DATASET
+            shutil.copy2(FIXTURES / source, Path(cls.temp_path) / target)
 
-    def tearDown(self):
-        shutil.rmtree(self.temp_path)
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.temp_path)
 
-    @patch('rosie.chamber_of_deputies.adapter.Dataset')
+    def setUp(self):
+        with patch.object(Adapter, 'update_datasets'):
+            adapter = Adapter(self.temp_path)
+            adapter.log.disabled = True
+            self.dataset = adapter.dataset
+
+
+    def test_load_all_years(self):
+        self.assertEqual(6, len(self.dataset))
+
+    def test_merge(self):
+        self.assertEqual(1, self.dataset['legal_entity'].isnull().sum())
+
+    def test_rename_columns(self):
+        for column in Adapter.RENAME_COLUMNS.values():
+            with self.subTest():
+                self.assertIn(column, self.dataset.columns)
+
+    def test_document_type_categories(self):
+        categories = ('bill_of_sale', 'simple_receipt', 'expense_made_abroad')
+        expected = set(categories)
+        types = set(self.dataset['document_type'].cat.categories.tolist())
+        self.assertEqual(expected, types)
+
+    def test_meal_category(self):
+        meals = self.dataset[self.dataset.category == 'Meal']
+        self.assertEqual(1, len(meals))
+
+    def test_is_party_expense_category(self):
+        party_expenses = self.dataset[self.dataset.is_party_expense == True]
+        self.assertEqual(1, len(party_expenses))
+
+    @freeze_time('2010-11-12')
     @patch('rosie.chamber_of_deputies.adapter.fetch')
-    def test_get_performs_a_left_merge_between_reimbursements_and_companies(self, fetch, chamber_of_deputies):
-        self.assertEqual(6, len(self.subject.dataset))
-        self.assertEqual(1, self.subject.dataset['legal_entity'].isnull().sum())
+    @patch('rosie.chamber_of_deputies.adapter.Reimbursements')
+    def test_update(self, reimbursements, fetch):
+        adapter = Adapter(self.temp_path)
+        adapter.dataset  # triggers update methods
 
-    @patch('rosie.chamber_of_deputies.adapter.Dataset')
-    @patch('rosie.chamber_of_deputies.adapter.fetch')
-    def test_prepare_dataset(self, fetch, chamber_of_deputies):
-        """
-        * Rename columns.
-        * Make `document_type` a category column.
-        * Rename values for `category`.
-        * Create `is_party_expense` column.
-        """
-        dataset = self.subject.dataset
-        self.assertTrue(set(ADAPTER_COLUMNS.keys()).issubset(set(dataset.columns)))
-        document_types = ['bill_of_sale', 'simple_receipt', 'expense_made_abroad']
-        self.assertEqual(document_types,
-                         dataset['document_type'].cat.categories.tolist())
-        fixture = pd.read_csv(os.path.join(self.fixtures_path, 'reimbursements.xz'))
-        meal_rows = fixture \
-            .query('subquota_description == "Congressperson meal"').index
-        self.assertEqual(['Meal'],
-                         dataset.loc[meal_rows, 'category'].unique().tolist())
-        party_expense_rows = fixture[fixture['congressperson_id'].isnull()].index
-        self.assertEqual([True],
-                         dataset.loc[party_expense_rows, 'is_party_expense'].unique().tolist())
+        reimbursements.assert_has_calls((
+            call(2009, self.temp_path),
+            call()(),
+            call(2010, self.temp_path),
+            call()()
+        ))
+        fetch.assert_called_once_with(Adapter.COMPANIES_DATASET, self.temp_path)
