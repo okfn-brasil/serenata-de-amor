@@ -6,6 +6,7 @@ services:
       context: rosie
     volumes:
       - /tmp/serenata-data:/tmp/serenata-data
+      - ./rosie:/code
 
   django:
     image: serenata/django
@@ -60,11 +61,7 @@ services:
   research:
     build:
       context: research
-      args:
-        - AMAZON_BUCKET
-        - AMAZON_REGION
-    env_file:
-      - .env
     volumes:
       - ./research:/mnt/code
     hostname: research
+    command: ["jupyter", "notebook"]
