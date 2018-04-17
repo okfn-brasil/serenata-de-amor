@@ -64,4 +64,3 @@ services:
     volumes:
       - ./research:/mnt/code
     hostname: research
-    command: ["jupyter", "notebook"]
