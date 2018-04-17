@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 
 from jarbas.chamber_of_deputies.views import (
     ReimbursementListView,
@@ -10,27 +10,29 @@ from jarbas.chamber_of_deputies.views import (
 )
 
 
+app_name = 'chamber_of_deputies'
+
 urlpatterns = [
-    url(
-        r'^reimbursement/$',
+    path(
+        'reimbursement/',
         ReimbursementListView.as_view(),
         name='reimbursement-list'
     ),
-    url(
-        r'^reimbursement/(?P<document_id>\d+)/$',
+    path(
+        'reimbursement/<int:document_id>/',
         ReimbursementDetailView.as_view(),
         name='reimbursement-detail'
     ),
-    url(
-        r'^reimbursement/(?P<document_id>\d+)/receipt/$',
+    path(
+        'reimbursement/<int:document_id>/receipt/',
         ReceiptDetailView.as_view(),
         name='reimbursement-receipt'
     ),
-    url(
-        r'^reimbursement/(?P<document_id>\d+)/same_day/$',
+    path(
+        'reimbursement/<int:document_id>/same_day/',
         SameDayReimbursementListView.as_view(),
         name='reimbursement-same-day'
     ),
-    url(r'^applicant/$', ApplicantListView.as_view(), name='applicant-list'),
-    url(r'^subquota/$', SubquotaListView.as_view(), name='subquota-list')
+    path('applicant/', ApplicantListView.as_view(), name='applicant-list'),
+    path('subquota/', SubquotaListView.as_view(), name='subquota-list')
 ]

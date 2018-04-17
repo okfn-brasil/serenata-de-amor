@@ -18,8 +18,8 @@ class PublicAdminModelAdmin(ModelAdmin):
 
     @staticmethod
     def rename_change_url(url):
-        if 'change' in url.regex.pattern:
-            new_re = url.regex.pattern.replace('change', 'details')
+        if 'change' in url.pattern.regex.pattern:
+            new_re = url.pattern.regex.pattern.replace('change', 'details')
             url.regex = re.compile(new_re, re.UNICODE)
         return url
 

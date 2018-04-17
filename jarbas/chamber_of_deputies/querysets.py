@@ -10,8 +10,8 @@ class ReimbursementQuerySet(models.QuerySet):
     def same_day_as(self, document_id):
         pk = dict(document_id=document_id)
         return self.exclude(**pk).filter(
-            issue_date=self.filter(**pk).values('issue_date'),
-            applicant_id=self.filter(**pk).values('applicant_id')
+            issue_date__in=self.filter(**pk).values('issue_date'),
+            applicant_id__in=self.filter(**pk).values('applicant_id')
         )
 
     def order_by_probability(self):

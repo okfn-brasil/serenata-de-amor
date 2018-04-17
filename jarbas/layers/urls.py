@@ -1,8 +1,10 @@
-from django.conf.urls import url
+from django.urls import path
 
 from jarbas.layers.views import home
 
 
+app_name = 'layers'
+
 urlpatterns = [
-    url(r'^$', home, name='home')
+    path('', home, name='home')
 ]
