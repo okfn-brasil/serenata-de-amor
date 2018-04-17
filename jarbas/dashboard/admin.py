@@ -6,6 +6,7 @@ from django.contrib.admin import SimpleListFilter
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import F
 from django.forms.widgets import Widget
+from django.utils.safestring import mark_safe
 
 from jarbas.chamber_of_deputies.models import Reimbursement
 from jarbas.public_admin.admin import PublicAdminModelAdmin
@@ -294,37 +295,33 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
             return obj.cnpj_cpf
 
     def supplier_info(self, obj):
-        return '{}<br>{}'.format(obj.supplier, self._format_document(obj))
+        return mark_safe('{}<br>{}'.format(obj.supplier, self._format_document(obj)))
 
     supplier_info.short_description = 'Fornecedor'
-    supplier_info.allow_tags = True
 
     def jarbas(self, obj):
         base_url = '/layers/#/documentId/{}/'
         url = base_url.format(obj.document_id)
         image_src = '/static/favicon/favicon-16x16.png'
         image = '<img alt="Ver no Jarbas" src="{}">'.format(image_src)
-        return '<a href="{}">{}</a>'.format(url, image)
+        return mark_safe('<a href="{}">{}</a>'.format(url, image))
 
     jarbas.short_description = ''
-    jarbas.allow_tags = True
 
     def rosies_tweet(self, obj):
         try:
-            return '<a href="{}">🤖</a>'.format(obj.tweet.get_url())
+            return mark_safe('<a href="{}">🤖</a>'.format(obj.tweet.get_url()))
         except Reimbursement.tweet.RelatedObjectDoesNotExist:
             return ''
 
     rosies_tweet.short_description = ''
-    rosies_tweet.allow_tags = True
 
     def receipt_link(self, obj):
         if not obj.receipt_url:
             return ''
-        return '<a target="_blank" href="{}">📃</a>'.format(obj.receipt_url)
+        return mark_safe('<a target="_blank" href="{}">📃</a>'.format(obj.receipt_url))
 
     receipt_link.short_description = ''
-    receipt_link.allow_tags = True
 
     def suspicious(self, obj):
         return obj.suspicions is not None
