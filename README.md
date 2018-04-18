@@ -1,332 +1,84 @@
-# Jarbas — a tool for [Serenata de Amor](http://github.com/okfn-brasil/serenata-de-amor)
-
-[![Build Status](https://travis-ci.org/okfn-brasil/jarbas.svg?branch=master)](https://travis-ci.org/okfn-brasil/jarbas)
-[![Code Climate](https://codeclimate.com/github/okfn-brasil/jarbas/badges/gpa.svg)](https://codeclimate.com/github/okfn-brasil/jarbas)
-[![Coverage Status](https://coveralls.io/repos/github/okfn-brasil/jarbas/badge.svg?branch=master)](https://coveralls.io/github/okfn-brasil/jarbas?branch=master)
-[![Updates](https://pyup.io/repos/github/okfn-brasil/jarbas/shield.svg)](https://pyup.io/repos/github/okfn-brasil/jarbas/)
 [![donate](https://img.shields.io/badge/donate-apoia.se-EB4A3B.svg)](https://apoia.se/serenata)
 
-[Jarbas](http://jarbas.serenata.ai/) is part of [Serenata de Amor](http://github.com/okfn-brasil/serenata-de-amor) — we fight corruption with data science.
+# [![Operação Serenata de Amor](docs/logo.png)](https://serenata.ai/en)
 
-Jarbas is in charge of making data from [CEAP](https://github.com/okfn-brasil/serenata-de-amor/blob/master/CONTRIBUTING.md#more-about-the-quota-for-exercising-parliamentary-activity-ceap) more accessible. In the near future Jarbas will show what [Rosie](https://github.com/okfn-brasil/rosie) thinks of each reimbursement made for our congresspeople.
+1. [**Non-tech** crash course into Operação Serenata de Amor](#non-tech-crash-course-into-operação-serenata-de-amor)
+2. [**Tech** crash course into Operação Serenata de Amor](#non-tech-crash-course-into-operação-serenata-de-amor)
+3. [Contributing with code and tech skills](#contributing-with-code-and-tech-skills)
+4. [Supporting](#supporting)
+5. [Acknowledgments](#acknowledgments)
 
-## Table of Contents
+## Non-tech crash course into Operação Serenata de Amor
 
-1. [JSON API endpoints](#json-api-endpoints)
-    1. [Reimbursement](#reimbursement)
-    1. [Subquota](#subquota)
-    1. [Applicant](#applicant)
-    1. [Company](#company)
-    1. [Tapioca Jarbas](#tapioca-jarbas)
-1. [Installing](#installing)
-    1. [Settings](#settings)
-    1. [Using Docker](#using-docker)
-    1. [Local install](#local-install)
+### What
 
-## JSON API endpoints
+Serenata de Amor is an open project using artificial intelligence for social control of public administration.
 
-### Reimbursement
+### Who
 
-Each `Reimbursement` object is a reimbursement claimed by a congressperson and identified publicly by its `document_id`.
+We are a group of people who believes in _power to the people_ motto. We are also part of the _Data Science for Civic Innovation Programme_ from [Open Knowledge Brasil](http://br.okfn.org).
 
-#### Retrieving a specific reimbursement
+Among founders and long-term members, we can list a group of eight people – plus numerous contributors from the open source and open knowledge communities:  [Tatiana Balachova](https://tatianasb.ru), [Felipe Cabral](https://twitter.com/felipebcabral), [Eduardo Cuducos](https://cuducos.me),  [Irio Musskopf](https://iriomk.com), [Bruno Pazzim](http://brunopazzim.com/), [Ana Schwendler](http://anaschwendler.com/), [Jessica Temporal](http://jtemporal.com/) and [Pedro Vilanova](https://twitter.com/pedrovilanova).
 
-##### `GET /api/chamber_of_deputies/reimbursement/<document_id>/`
+### How
 
-Details from a specific reimbursement. If `receipt_url` wasn't fetched yet, the server **won't** try to fetch it automatically.
+We use technology just like large organizations such as Google, Facebook and Netflix in order to track government spendings and to make open data accessible for everyone. We started looking into data from the Chamber of Deputies (Brazilian lower house) but we expanded to the Federal Senate (Brazilian upper house) and to municipalities.
 
-##### `GET /api/chamber_of_deputies/reimbursement/<document_id>/receipt/`
+### When
 
-URL of the digitalized version of the receipt of this specific reimbursement.
+Irio had the main ideas for the project in early 2016. For a few moths he was experimenting and gathering people around the project. September, 2016 marks the launching of [our first crowd funding](https://catarse.me/serenata). Since then we have been creating open source technological products and tools, as well as high quality content on civic tech on our [Facebook](https://fb.com/operacaoserenatadeamor) and [Medium](https://medium.com/serenata).
 
-If `receipt_url` wasn't fetched yet, the server **will** try to fetch it automatically.
+### Where
 
-If you append the parameter `force` (i.e. `GET /api/chamber_of_deputies/reimbursement/<document_id>/receipt/?force=1`) the server will re-fetch the receipt URL.
+We have no non-virtual headquarter, but we work remotely everyday. Most our ideas are crafted to work in any country that offers open data, but our main implementations focus in Brazil.
 
-Not all receipts are available, so this URL can be `null`.
+### Why
 
-#### Listing reimbursements
+Empowering citizens with data is quite important nowadays: people talk about _smart cities_, _surveillance_ and _privacy_. We prefer to focus on _smart citizens_, _accountability_ and _open knowledge_.
 
-##### `GET /api/chamber_of_deputies/reimbursement/`
+## Tech crash course into Operação Serenata de Amor
 
-Lists all reimbursements.
+### What
 
-##### Filtering
+Serenata de Amor develops open source tools to make it easy for people use open data. The focus is to gather relevant insights, share them in an accessible interface in order invite citizens to dialogue with politicians, state and government about public spendings.
 
-All these endpoints accepts any combination of the following parameters:
+### Who
 
-* `applicant_id`
-* `cnpj_cpf`
-* `document_id`
-* `issue_date_start` (inclusive)
-* `issue_date_end` (exclusive)
-* `month`
-* `subquota_id`
-* `suspicions` (_boolean_, `1` parses to `True`, `0` to `False`)
-* `has_receipt` (_boolean_, `1` parses to `True`, `0` to `False`)
-* `year`
-* `order_by`: `issue_date` (default) or `probability` (both descending)
-* `in_latest_dataset` (_boolean_, `1` parses to `True`, `0` to `False`)
+Serenata's main role is played by [Rosie](rosie/README.md): she is an artificial intelligence who analyzes Brazilian congresspeople expenses while they are in office. Rosie can find suspicious spendings and engage citizens in the discussion about these findings. [She's on Twitter](https://twitter.com/RosieDaSerenata).
 
+To allow people to visualize and make sense of data Rosie generates, we have created [Jarbas](jarbas/README.md). In this website users can browse congresspeople expenses and get details about each one of the suspicions. It is the starting point to validate a suspicion.
 
-For example:
+### How
 
-```
-GET /api/chamber_of_deputies/reimbursement/?year=2016&cnpj_cpf=11111111111111&subquota_id=42&order_by=probability
-```
+We have three main repositories [on GitHub](https://github.com/okfn-brasil). This is the _main repo_ and hosts [Rosie](rosie/README.md), [Jarbas](jarbas/README.md) and more experimental code in the `research/` directory.
 
-This request will list:
+In addition we the [Whistleblower](https://github.com/okfn-brasil/whistleblower) – the tool that gives Rosie the power to tweet – and the [toolbox](https://gtihub.com/okfn-brasil/serenata-toolbox) - a `pip` installable package to follow the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle alongside our repos and modules.
 
-* all 2016 reimbursements
-* made in the supplier with the CNPJ 11.111.111/1111-11
-* made according to the subquota with the ID 42
-* sorted by the highest probability
+### When
 
-Also you can pass more than one value per field (e.g. `document_id=111111,222222`).
+In spite of all these players acting together, the core part of the job is ran manually from times to times. The only part that is always online is Jarbas – freely serving a wide range of information about public expenditure 24/7.
 
-##### `GET /api/chamber_of_deputies/reimbursement/<document_id>/same_day/`
+Roughly once a month we manually run Rosie and update Jarbas. A few times per year we upload versioned datasets accessible via the toolbox – but we encourage you to use the toolbox to generate fresh datasets whenever you need.
 
-Lists all reimbursements of expenses from the same day as `document_id`.
+### Where
 
-### Subquota
+Jarbas is running in [Digital Ocean](https://digitalocean.com) droplets, and deployed using the [Docker Cloud](https://cloud.docker.com/) architecture.
 
-Subquotas are categories of expenses that can be reimbursed by congresspeople.
+### Why
 
-#### Listing subquotas
+The answer to most technical _why_ questions is because that was what we have got at hand in the past, and that enable us to deliver fast. We acknowledge that this is not the best stack ever, but so far that is what brought us here.
 
-##### `GET /api/chamber_of_deputies/subquota/`
+## Contributing with code and tech skills
 
-Lists all subquotas names and IDs.
+Make sure you have read the _Tech crash course_ in this page. Next checkout our [contributing guide](CONTRIBUTING.md).
 
-##### Filtering
+## Supporting
 
-Accepts a case-insensitve `LIKE` filter in as the `q` URL parameter (e.g. `GET /api/chamber_of_deputies/subquota/?q=meal` list all applicant that have `meal` in their names.
+* Join our [recurring crowd funding campaign on Apoia.se](http://apoia.se/serenata)
+* Donate via Bitcoin to [`1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b`](https://blockchain.info/address/1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b)
+* Follow, share and interact with us [on Facebook](https://fb.com/operacaoserenatadeamor)
+* Follow, retweet and join [Rosie on Twitter](https://twitter.com/RosieDaSerenata) to interact with your favourite congresspeople
 
-### Applicant
+## Acknowledgments
 
-An applicant is the person (congressperson or the leadership of a party or government) who claimed the reimbursemement.
-
-#### List applicants
-
-##### `GET /api/chamber_of_deputies/applicant/`
-
-Lists all names of applicants together with their IDs.
-
-##### Filtering
-
-Accepts a case-insensitive `LIKE` filter as the `q` URL parameter (e.g. `GET /api/chamber_of_deputies/applicant/?q=lideranca` list all applicant that have `lideranca` in their names.
-
-### Company
-
-A company is a Brazilian company in which congressperson have made expenses and claimed for reimbursement.
-
-#### Retrieving a specific company
-
-##### `GET /api/company/<cnpj>/`
-
-This endpoit gets the info we have for a specific company. The endpoint expects a `cnpj` (i.e. the CNPJ of a `Company` object, digits only). It returns `404` if the company is not found.
-
-### Tapioca Jarbas
-
-There is also a [tapioca-wrapper](https://github.com/vintasoftware/tapioca-wrapper) for the API. The [tapioca-jarbas](https://github.com/daneoshiga/tapioca-jarbas/) can be installed with `pip install tapioca-jarbas` and can be used to access the API in any Python script.
-
-## Installing
-
-### Settings
-
-Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust your settings. These are the main variables:
-
-##### Django settings
-
-* `DEBUG` (_bool_) enable or disable [Django debug mode](https://docs.djangoproject.com/en/1.10/ref/settings/#debug)
-* `GOSS_VERSION` (_str_) [Version for Goss tester in Docker](https://goss.rocks)
-* `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
-* `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
-* `USE_X_FORWARDED_HOST` (_bool_) [Whether to use the `X-Forwarded-Host` header](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-USE_X_FORWARDED_HOST)
-* `CACHE_BACKEND` (_str_) [Cache backend](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-CACHES-BACKEND) (e.g. `django.core.cache.backends.memcached.MemcachedCache`)
-* `CACHE_LOCATION` (_str_) [Cache location](https://docs.djangoproject.com/en/1.10/ref/settings/#location) (e.g. `localhost:11211`)
-* `SECURE_PROXY_SSL_HEADER` _(str)_ [Django secure proxy SSL header](https://docs.djangoproject.com/en/1.10/ref/settings/#secure-proxy-ssl-header) (e.g. `HTTP_X_FORWARDED_PROTO,https` transforms in tuple `('HTTP_X_FORWARDED_PROTO', 'https')`)
-
-##### NewRelic settings
-
-* `NEW_RELIC_APP_NAME` (_str_) [The name of the application you wish to report data against in the New Relic UI. If not defined, this defaults to `Python Application`](https://docs.newrelic.com/docs/agents/python-agent/configuration/python-agent-configuration#app_name)  (e.g. `Jarbas`)
-* `NEW_RELIC_ENVIRONMENT` (_str_) [The name of a specific deployment environment](https://docs.newrelic.com/docs/agents/python-agent/configuration/python-agent-configuration#config-file-deployment-environments) (e.g. `Production`)
-* `NEW_RELIC_LICENSE_KEY` (_str_) [Specifies the license key of your New Relic account. This key associates your app's metrics with your New Relic account.](https://docs.newrelic.com/docs/agents/python-agent/configuration/python-agent-configuration#license_key)
-* `NEW_RELIC_DEVELOPER_MODE` (_str_) (e.g. true or false)
-
-##### Database
-
-* `DATABASE_URL` (_string_) [Database URL](https://github.com/kennethreitz/dj-database-url#url-schema), must be [PostgreSQL](https://www.postgresql.org) since Jarbas uses [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#jsonfield).
-
-##### Message Broker
-
-* `CELERY_BROKER_URL` (_string_) [Celery](http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html) compatible message broker URL (e.g. `amqp://guest:guest@localhost//`)
-
-##### Amazon S3 settings
-
-* `AMAZON_BUCKET` (_str_) Name of the Amazon S3 bucket to look for datasets (e.g. `serenata-de-amor-data`)
-* `AMAZON_REGION` (_str_) Region of the Amazon S3 (e.g. `s3-sa-east-1`)
-* `AMAZON_S3_CEAPTRANSLATION_DATE` (_str_) File name prefix for dataset guide (e.g. `2016-08-08` for `2016-08-08-ceap-datasets.md`)
-
-##### Google settings
-
-* `GOOGLE_ANALYTICS` (_str_) Google Analytics tracking code (e.g. `UA-123456-7`)
-* `GOOGLE_STREET_VIEW_API_KEY` (_str_) Google Street View Image API key
-
-##### Twitter settings
-
-* `TWITTER_CONSUMER_KEY` (_str_) Twitter API key
-* `TWITTER_CONSUMER_SECRET` (_str_) Twitter API secret
-* `TWITTER_ACCESS_TOKEN` (_str_) Twitter access token
-* `TWITTER_ACCESS_SECRET` (_str_) Twitter access token secret
-
-To get this credentials follow [`python-twitter`
-instructions](https://python-twitter.readthedocs.io/en/latest/getting_started.html#getting-your-application-tokens).
-
-##### For the production environment
-
-* `VIRTUAL_HOST_WEB` (_str_) host used for the HTTPS certificate (for testing production settings locally you might need to add this host name to your `/etc/hosts`)
-* `LETSENCRYPT_EMAIL` (_str_) Email used to create the HTTPS certificate at Let's Encrypt
-* `HTTPS_METHOD` (_str_) if set to `noredirect` does **not** redirect from HTTP to HTTPS (default: `redirect`)
-
-### Using Docker
-
-You must first install [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)
- environments.
-
-#### Build and start services
-
-```console
-$ docker-compose up -d
-```
-
-#### Create and seed the database with sample data
-
-Creating the database and applying migrations:
-
-```
-$ docker-compose run --rm django python manage.py migrate
-```
-
-Seeding it with sample data:
-
-```console
-$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.xz
-$ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
-$ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
-$ docker-compose run --rm django python manage.py tweets
-```
-
-If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/okfn-brasil/rosie).
-To add a fresh new `reimbursements.xz` or `suspicions.xz` brewed by [Rosie](https://github.com/okfn-brasil/rosie), or a `companies.xz` you've got from the [toolbox](https://github.com/okfn-brasil/serenata-toolbox), you just need copy these files to `contrib/data` and refer to them inside the container from the path `/mnt/data/`.
-
-#### Creating search vector
-
-For text search in the dashboard:
-
-```console
-$ docker-compose run --rm django python manage.py searchvector
-```
-
-#### Acessing Jabas
-
-You can access it at [`localhost:8000`](http://localhost:8000/) in development mode or [`localhost`](http://localhost:80/) in production mode.
-
-To change any of the default environment variables defined in the `docker-compose.yml` just export it in a local environment variable, so when you run Jarbas it will get them.
-
-#### Docker Ready?
-
-Not sure? Test it!
-
-```console
-$ docker-compose run --rm django python manage.py check
-$ docker-compose run --rm django python manage.py test
-```
-
-### Local install
-
-#### Requirements
-
-Jarbas requires [Python 3.5](http://python.org), [Node.js 8](https://nodejs.org/en/), [RabbitMQ 3.6](https://www.rabbitmq.com), and [PostgreSQL 9.6](https://www.postgresql.org). Once you have `pip` and `npm` available install the dependencies:
-
-```console
-$ npm install
-$ ./node_modules/.bin/elm-package install --yes  # this might not be necessary https://github.com/npm/npm/issues/17316
-$ python -m pip install -r requirements-dev.txt
-```
-
-##### Python's `lzma` module
-
-In some Linux distros `lzma` is not installed by default. You can check whether you have it or not with `$ python -m lzma`. In Debian based systems you can fix that with `$ apt-get install liblzma-dev` or in macOS with `$ brew install xz` — but you might have to re-compile your Python.
-
-#### Setup your environment variables
-
-Basically this means copying `contrib/.env.sample` as `.env` in the project's root folder — but there is [an entire section on that](#settings).
-
-#### Migrations
-
-Once you're done with requirements, dependencies and settings, create the basic database structure:
-
-```console
-$ python manage.py migrate
-```
-
-#### Load data
-
-To load data you need RabbitMQ running and a Celery worker:
-
-```
-$ celery worker --app jarbas
-```
-
-Now you can load the data from our datasets and get some other data as static files:
-
-```
-$ python manage.py reimbursements <path to reimbursements.xz>
-$ python manage.py suspicions <path to suspicions.xz file>
-$ python manage.py companies <path to companies.xz>
-$ python manage.py tweets
-$ python manage.py ceapdatasets
-```
-
-There are sample files to seed yout database inside `contrib/data/`. You can get full datasets running [Rosie](https://github.com/okfn-brasil/rosie) or directly with the [toolbox](https://github.com/okfn-brasil/serenata-toolbox).
-
-#### Creating search vector
-
-For text search in the dashboard:
-
-```console
-$ python manage.py searchvector
-```
-
-#### Generate static files
-
-We generate assets through NodeJS, so run it before Django collecting static files:
-
-```console
-$ npm run assets
-$ python manage.py collectstatic
-
-```
-
-#### Ready?
-
-Not sure? Test it!
-
-```
-$ python manage.py check
-$ python manage.py test
-```
-
-#### Ready!
-
-Run the server with `$ python manage.py runserver` and load [localhost:8000](http://localhost:8000) in your favorite browser.
-
-#### Using Django Admin
-
-
-If you would like to access the Django Admin for an alternative view of the reimbursements, you can access it at [`localhost:8000/admin/`](http://localhost:8000/admin/) creating an user with:
-
-```console
-$ python manage.py createsuperuser
-```
+[![Open Knowledge Brasil](docs/okbr.png)](https://br.okfn.org) [![Digital Ocean](docs/digitalocean.png)](https://digitalocean.com)
