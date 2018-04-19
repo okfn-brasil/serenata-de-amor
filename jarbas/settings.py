@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import re
+import socket
 
 from decouple import Csv, config
 from dj_database_url import parse
@@ -191,6 +193,12 @@ CACHES = {
     }
 }
 
+
+# Django Debug Toolbar
+# Set internal IP dinamycally
+
+INTERNAL_IP = socket.gethostbyname(socket.gethostname())
+INTERNAL_IPS = (re.sub(r'\d$', '1', INTERNAL_IP),)
 
 # Queue
 
