@@ -3,7 +3,7 @@
 # [![Operação Serenata de Amor](docs/logo.png)](https://serenata.ai/en)
 
 1. [**Non-tech** crash course into Operação Serenata de Amor](#non-tech-crash-course-into-operação-serenata-de-amor)
-2. [**Tech** crash course into Operação Serenata de Amor](#non-tech-crash-course-into-operação-serenata-de-amor)
+2. [**Tech** crash course into Operação Serenata de Amor](#tech-crash-course-into-operação-serenata-de-amor)
 3. [Contributing with code and tech skills](#contributing-with-code-and-tech-skills)
 4. [Supporting](#supporting)
 5. [Acknowledgments](#acknowledgments)
