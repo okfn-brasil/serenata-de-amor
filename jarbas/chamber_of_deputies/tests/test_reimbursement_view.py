@@ -113,12 +113,15 @@ class TestRetrieveApi(TestCase):
     def test_contents_with_tweet(self):
         status = random_tweet_status()
         mixer.blend(Tweet, reimbursement=self.reimbursement, status=status)
-        expected = self.sample_response
+        expected = self.sample_response.copy()
         expected['rosies_tweet'] = self.reimbursement.tweet.get_url()
-        url = resolve_url('chamber_of_deputies:reimbursement-detail',
-                          document_id=self.reimbursement.document_id)
+        url = resolve_url(
+            'chamber_of_deputies:reimbursement-detail',
+            document_id=self.reimbursement.document_id
+        )
         resp = self.client.get(url)
         contents = loads(resp.content.decode('utf-8'))
+        self.assertTrue(contents['rosies_tweet'].endswith(str(status)), f'{status} not found')
         self.assertEqual(expected, contents)
 
     def test_contents_with_receipt_text(self):
