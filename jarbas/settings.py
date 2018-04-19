@@ -70,7 +70,7 @@ MIDDLEWARE = [
 ]
 
 if not DEBUG:
-	MIDDLEWARE.insert(2, 'whitenoise.middleware.WhiteNoiseMiddleware')
+    MIDDLEWARE.insert(2, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 ROOT_URLCONF = 'jarbas.urls'
 
