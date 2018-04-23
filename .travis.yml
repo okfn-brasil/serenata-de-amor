@@ -16,6 +16,7 @@ env:
     - AMAZON_BUCKET=serenata-de-amor-data
     - AMAZON_REGION=sa-east-1
     - DATABASE_URL=postgres://postgres@localhost/jarbas
+    - CACHE_BACKEND=django.core.cache.backends.dummy.DummyCache
 
 install:
   - cp contrib/.env.sample .env
