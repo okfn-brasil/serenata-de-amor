@@ -14,7 +14,7 @@ A Python application reading receipts from the [Quota for Exercising Parliamenta
 ### With Docker
 
 ```console
-$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie run <module_name>
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie python rosie.py run <module_name>
 ```
 
 Then check your `/tmp/serenata-data/` directory in you host machine for `irregularities.xz`.
@@ -22,7 +22,7 @@ Then check your `/tmp/serenata-data/` directory in you host machine for `irregul
 For testing
 
 ```console
-$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie test
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie python rosie.py test
 ```
 
 ### Without Docker
