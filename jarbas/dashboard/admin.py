@@ -283,6 +283,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
 
     fields = tuple(f.name for f in ALL_FIELDS)
     readonly_fields = tuple(READONLY_FIELDS)
+    list_select_related = ('tweet',)
 
     def _format_document(self, obj):
         if obj.cnpj_cpf:
