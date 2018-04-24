@@ -17,7 +17,7 @@ A Python application reading receipts from the [Quota for Exercising Parliamenta
 $ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie python rosie.py run <module_name>
 ```
 
-Then check your `/tmp/serenata-data/` directory in you host machine for `irregularities.xz`.
+Then check your `/tmp/serenata-data/` directory in you host machine for `suspicions.xz`.
 
 For testing
 
@@ -45,7 +45,7 @@ For example, if you want to run `chamber_of_deputies` module, you should run thi
 $ python rosie.py run chamber_of_deputies
 ```
 
-A `/tmp/serenata-data/irregularities.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
+A `/tmp/serenata-data/suspicions.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
 
 Also a target directory (where files are saved) can de passed — for example:
 
