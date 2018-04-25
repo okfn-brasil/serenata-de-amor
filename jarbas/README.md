@@ -1,11 +1,5 @@
 # Jarbas — a tool for [Serenata de Amor](http://github.com/okfn-brasil/serenata-de-amor)
 
-[![Build Status](https://travis-ci.org/okfn-brasil/jarbas.svg?branch=master)](https://travis-ci.org/okfn-brasil/jarbas)
-[![Code Climate](https://codeclimate.com/github/okfn-brasil/jarbas/badges/gpa.svg)](https://codeclimate.com/github/okfn-brasil/jarbas)
-[![Coverage Status](https://coveralls.io/repos/github/okfn-brasil/jarbas/badge.svg?branch=master)](https://coveralls.io/github/okfn-brasil/jarbas?branch=master)
-[![Updates](https://pyup.io/repos/github/okfn-brasil/jarbas/shield.svg)](https://pyup.io/repos/github/okfn-brasil/jarbas/)
-[![donate](https://img.shields.io/badge/donate-apoia.se-EB4A3B.svg)](https://apoia.se/serenata)
-
 [Jarbas](http://jarbas.serenata.ai/) is part of [Serenata de Amor](http://github.com/okfn-brasil/serenata-de-amor) — we fight corruption with data science.
 
 Jarbas is in charge of making data from [CEAP](https://github.com/okfn-brasil/serenata-de-amor/blob/master/CONTRIBUTING.md#more-about-the-quota-for-exercising-parliamentary-activity-ceap) more accessible. In the near future Jarbas will show what [Rosie](https://github.com/okfn-brasil/rosie) thinks of each reimbursement made for our congresspeople.

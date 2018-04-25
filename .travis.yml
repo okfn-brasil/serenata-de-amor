@@ -17,12 +17,15 @@ env:
     - AMAZON_REGION=sa-east-1
     - DATABASE_URL=postgres://postgres@localhost/jarbas
     - CACHE_BACKEND=django.core.cache.backends.dummy.DummyCache
+    - CC_TEST_REPORTER_ID=351fd43955e403ad2d8ef0c653d4238d1afafdf55396622d3631d3dc1e06d635
 
 install:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
   - cp contrib/.env.sample .env
-  - python -m pip install -U pip
+  - python -m pip install -U pip coverage
   - psql -U postgres -c 'create database "jarbas";'
-  - python -m pip install -r requirements-dev.txt coveralls
+  - python -m pip install -r requirements-dev.txt
   - python -m pip install -r rosie/requirements.txt
 
 before_script:
@@ -30,11 +33,11 @@ before_script:
   - python manage.py collectstatic --no-input
 
 script:
-  - coverage run manage.py test
+  - coverage run -a manage.py test
   - cd rosie
-  - coverage run rosie.py test
-  - python rosie.py run federal_senate
+  - coverage run -a rosie.py test
+  - coverage run -a rosie.py run federal_senate
   - cd ..
 
 after_success:
-  - coveralls
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
