@@ -74,8 +74,7 @@ drawer model =
     , Layout.navigation [] <|
         List.map
             drawerLinks
-            [ ( "/static/ceap-datasets.html", translate model.lang AboutDatasets )
-            , ( "http://github.com/okfn-brasil/jarbas", translate model.lang AboutJarbas )
+            [ ( "http://github.com/okfn-brasil/serenata-de-amor", translate model.lang AboutJarbas )
             , ( "https://serenata.ai", translate model.lang AboutSerenata )
             ]
     ]
