@@ -83,6 +83,39 @@ class TestListApi(TestCase):
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(4, len(content['results']))
 
+    def test_content_with_month_filter(self):
+        get_reimbursement(quantity=2, month=2)
+        get_reimbursement(month=3)
+        search_data = (
+            ('month', 2),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(2, len(content['results']))
+
+    def test_content_with_applicant_id_filter(self):
+        get_reimbursement(quantity=2, applicant_id=221)
+        get_reimbursement(applicant_id=345)
+        search_data = (
+            ('applicant_id', 221),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(2, len(content['results']))
+
+    def test_content_with_year_filter(self):
+        get_reimbursement(quantity=3, year=2018)
+        get_reimbursement(year=2017)
+        search_data = (
+            ('year', 2018),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(3, len(content['results']))
+
     def _count_results(self, url):
         resp = self.client.get(url)
         content = loads(resp.content.decode('utf-8'))
