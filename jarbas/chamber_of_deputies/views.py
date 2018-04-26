@@ -18,6 +18,36 @@ class ReimbursementListView(ListAPIView):
 
     def get(self, request):
 
+        self._build_filters()
+
+        self._build_vector_filters()
+
+        self._build_order_by()
+
+        return super().get(request)
+
+    def _bool_param(self, param):
+        if param not in self.request.query_params:
+            return None
+
+        value = self.request.query_params[param]
+        if value.lower() in ('1', 'true'):
+            return True
+
+        return False
+
+    def _build_order_by(self):
+        """ Change ordering if needed """
+
+        order_by = self.request.query_params.get('order_by')
+        if order_by == 'probability':
+            self.queryset = self.queryset.order_by_probability()
+
+    def _build_filters(self):
+        """ 
+            Builder and aplly all filters on QuerySet
+        """
+
         # get filtering parameters from query string
         params = (
             'applicant_id',
@@ -31,13 +61,6 @@ class ReimbursementListView(ListAPIView):
         )
         values = map(self.request.query_params.get, params)
         filters = {k: v for k, v in zip(params, values) if v}
-
-        # get vector parameters from query string
-        vector_params = (
-            'congressperson_name',
-        )
-        vector_values = map(self.request.query_params.get, vector_params)
-        vector_filters = {k: v for k, v in zip(vector_params, vector_values) if v}
 
         # filter suspicions
         suspicions = self._bool_param('suspicions')
@@ -54,36 +77,25 @@ class ReimbursementListView(ListAPIView):
         if in_latest is not None:
             self.queryset = self.queryset.in_latest_dataset(in_latest)
 
-        # filter search_vector
-        for vector in vector_filters:
-            self.queryset = self.queryset.annotate(search=SearchVector(vector)).filter(search=vector_filters[vector])
-
         # filter queryset
         if filters:
             self.queryset = self.queryset.tuple_filter(**filters)
 
-        # change ordering if needed
-        order_by = self.request.query_params.get('order_by')
-        if order_by == 'probability':
-            self.queryset = self.queryset.order_by_probability()
+    def _build_vector_filters(self):
+        """ 
+            Builder and aplly all vector filters on QuerySet 
+        """
 
-        return super().get(request)
+        # get vector parameters from query string
+        vector_params = (
+            'congressperson_name',
+        )
+        vector_values = map(self.request.query_params.get, vector_params)
+        vector_filters = {k: v for k, v in zip(vector_params, vector_values) if v}
 
-    def _bool_param(self, param):
-        if param not in self.request.query_params:
-            return None
-
-        value = self.request.query_params[param]
-        if value.lower() in ('1', 'true'):
-            return True
-
-        return False
-
-    def _search_vector(self, param):
-        if param not in self.request.query_params:
-            return None
-
-        return self.request.query_params[param]
+        # filter search_vector
+        for vector in vector_filters:
+            self.queryset = self.queryset.annotate(search=SearchVector(vector)).filter(search=vector_filters[vector])
 
 
 class ReimbursementDetailView(RetrieveAPIView):
