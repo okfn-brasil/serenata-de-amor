@@ -52,7 +52,7 @@ To allow people to visualize and make sense of data Rosie generates, we have cre
 
 We have three main repositories [on GitHub](https://github.com/okfn-brasil). This is the _main repo_ and hosts [Rosie](rosie/README.md), [Jarbas](jarbas/README.md) and more experimental code in the `research/` directory.
 
-In addition we the [Whistleblower](https://github.com/okfn-brasil/whistleblower) – the tool that gives Rosie the power to tweet – and the [toolbox](https://gtihub.com/okfn-brasil/serenata-toolbox) - a `pip` installable package to follow the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle alongside our repos and modules.
+In addition we have the [Whistleblower](https://github.com/okfn-brasil/whistleblower) – the tool that gives Rosie the power to tweet – and the [toolbox](https://gtihub.com/okfn-brasil/serenata-toolbox) - a `pip` installable package to follow the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle alongside our repos and modules.
 
 ### When
 
