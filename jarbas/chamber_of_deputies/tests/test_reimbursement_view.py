@@ -121,7 +121,7 @@ class TestListApi(TestCase):
         get_reimbursement(congressperson_name='SILVA TESTA NOME', applicant_id=23)
         get_reimbursement(congressperson_name='BELTRANO CHAVES', applicant_id=23)
         search_data = (
-            ('congressperson_name__contains', 'SILVA'),
+            ('congressperson_name', 'SILVA'),
         )
         url = '{}?{}'.format(self.url, urlencode(search_data))
 

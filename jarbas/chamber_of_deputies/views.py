@@ -7,6 +7,9 @@ from jarbas.chamber_of_deputies.serializers import (ReimbursementSerializer,
                                                     ApplicantSerializer,
                                                     SubquotaSerializer)
 
+from django.contrib.postgres.search import SearchQuery
+from django.contrib.postgres.search import SearchVector
+
 
 class ReimbursementListView(ListAPIView):
 
@@ -24,11 +27,17 @@ class ReimbursementListView(ListAPIView):
             'issue_date_start',
             'month',
             'subquota_id',
-            'year',
-            'congressperson_name__contains'
+            'year'
         )
         values = map(self.request.query_params.get, params)
         filters = {k: v for k, v in zip(params, values) if v}
+
+        # get vector parameters from query string
+        vector_params = (
+            'congressperson_name',
+        )
+        vector_values = map(self.request.query_params.get, vector_params)
+        vector_filters = {k: v for k, v in zip(vector_params, vector_values) if v}
 
         # filter suspicions
         suspicions = self._bool_param('suspicions')
@@ -44,6 +53,10 @@ class ReimbursementListView(ListAPIView):
         in_latest = self._bool_param('in_latest_dataset')
         if in_latest is not None:
             self.queryset = self.queryset.in_latest_dataset(in_latest)
+
+        # filter search_vector
+        for vector in vector_filters:
+            self.queryset = self.queryset.annotate(search=SearchVector(vector)).filter(search=vector_filters[vector])
 
         # filter queryset
         if filters:
@@ -65,6 +78,12 @@ class ReimbursementListView(ListAPIView):
             return True
 
         return False
+
+    def _search_vector(self, param):
+        if param not in self.request.query_params:
+            return None
+
+        return self.request.query_params[param]
 
 
 class ReimbursementDetailView(RetrieveAPIView):
