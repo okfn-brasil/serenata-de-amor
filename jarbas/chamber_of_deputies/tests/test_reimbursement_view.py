@@ -116,6 +116,19 @@ class TestListApi(TestCase):
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(3, len(content['results']))
 
+    def test_content_with_congressperson_name_filter(self):
+        get_reimbursement(congressperson_name='FULANO SILVA BELTRANO', applicant_id=221)
+        get_reimbursement(congressperson_name='SILVA TESTA NOME', applicant_id=23)
+        get_reimbursement(congressperson_name='BELTRANO CHAVES', applicant_id=23)
+        search_data = (
+            ('congressperson_name__contains', 'SILVA'),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(2, len(content['results']))
+
     def _count_results(self, url):
         resp = self.client.get(url)
         content = loads(resp.content.decode('utf-8'))
