@@ -7,9 +7,6 @@ from jarbas.chamber_of_deputies.serializers import (ReimbursementSerializer,
                                                     ApplicantSerializer,
                                                     SubquotaSerializer)
 
-from django.contrib.postgres.search import SearchQuery
-from django.contrib.postgres.search import SearchVector
-
 
 class ReimbursementListView(ListAPIView):
 
@@ -17,36 +14,6 @@ class ReimbursementListView(ListAPIView):
     serializer_class = ReimbursementSerializer
 
     def get(self, request):
-
-        self._build_filters()
-
-        self._build_vector_filters()
-
-        self._build_order_by()
-
-        return super().get(request)
-
-    def _bool_param(self, param):
-        if param not in self.request.query_params:
-            return None
-
-        value = self.request.query_params[param]
-        if value.lower() in ('1', 'true'):
-            return True
-
-        return False
-
-    def _build_order_by(self):
-        """ Change ordering if needed """
-
-        order_by = self.request.query_params.get('order_by')
-        if order_by == 'probability':
-            self.queryset = self.queryset.order_by_probability()
-
-    def _build_filters(self):
-        """ 
-            Builder and aplly all filters on QuerySet
-        """
 
         # get filtering parameters from query string
         params = (
@@ -77,25 +44,37 @@ class ReimbursementListView(ListAPIView):
         if in_latest is not None:
             self.queryset = self.queryset.in_latest_dataset(in_latest)
 
+        # filter search_vector
+        vector_param = self._vector_param()
+        if vector_param:
+            self.queryset = self.queryset.search_vector(vector_param)
+
         # filter queryset
         if filters:
             self.queryset = self.queryset.tuple_filter(**filters)
 
-    def _build_vector_filters(self):
-        """ 
-            Builder and aplly all vector filters on QuerySet 
-        """
+        # change ordering if needed
+        order_by = self.request.query_params.get('order_by')
+        if order_by == 'probability':
+            self.queryset = self.queryset.order_by_probability()
 
-        # get vector parameters from query string
-        vector_params = (
-            'congressperson_name',
-        )
-        vector_values = map(self.request.query_params.get, vector_params)
-        vector_filters = {k: v for k, v in zip(vector_params, vector_values) if v}
+        return super().get(request)
 
-        # filter search_vector
-        for vector in vector_filters:
-            self.queryset = self.queryset.annotate(search=SearchVector(vector)).filter(search=vector_filters[vector])
+    def _bool_param(self, param):
+        if param not in self.request.query_params:
+            return None
+
+        value = self.request.query_params[param]
+        if value.lower() in ('1', 'true'):
+            return True
+
+        return False
+
+    def _vector_param(self):
+        if 'search' in self.request.query_params:
+            return self.request.query_params['search']
+
+        return None
 
 
 class ReimbursementDetailView(RetrieveAPIView):

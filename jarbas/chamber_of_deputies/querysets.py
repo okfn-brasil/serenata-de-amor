@@ -4,6 +4,8 @@ from functools import reduce
 from django.db import models
 from django.db.models import Q
 
+from django.contrib.postgres.search import SearchQuery
+
 
 class ReimbursementQuerySet(models.QuerySet):
 
@@ -48,6 +50,10 @@ class ReimbursementQuerySet(models.QuerySet):
 
     def was_ordered(self):
         return bool(self.query.order_by)
+
+    def search_vector(self, search_term):
+        query = SearchQuery(search_term, config='portuguese')
+        return self.filter(search_vector=query)
 
 
 def _str_to_tuple(filters):

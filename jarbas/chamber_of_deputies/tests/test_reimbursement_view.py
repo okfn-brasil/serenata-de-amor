@@ -1,8 +1,13 @@
+import sys
+
 from json import loads
 from unittest.mock import patch
 from urllib.parse import urlencode
 
+from django.core.management import call_command
 from django.shortcuts import resolve_url
+from django.utils.six import StringIO
+
 from django.test import TestCase
 from freezegun import freeze_time
 from mixer.backend.django import mixer
@@ -20,6 +25,13 @@ def get_reimbursement(**kwargs):
     if quantity == 1:
         return mixer.blend(Reimbursement, search_vector=None, **kwargs)
     return mixer.cycle(quantity).blend(Reimbursement, search_vector=None, **kwargs)
+
+
+def create_search_vector():
+    # Running the command silently
+    out = StringIO()
+    sys.stdout = out
+    call_command('searchvector', stdout=out)
 
 
 class TestListApi(TestCase):
@@ -116,12 +128,31 @@ class TestListApi(TestCase):
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(3, len(content['results']))
 
-    def test_content_with_congressperson_name_filter(self):
+    def test_content_with_search_vector_one_field_filter(self):
         get_reimbursement(congressperson_name='FULANO SILVA BELTRANO', applicant_id=221)
         get_reimbursement(congressperson_name='SILVA TESTA NOME', applicant_id=23)
         get_reimbursement(congressperson_name='BELTRANO CHAVES', applicant_id=23)
+
+        create_search_vector()
+
         search_data = (
-            ('congressperson_name', 'SILVA'),
+            ('search', 'Silva'),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(2, len(content['results']))
+
+    def test_content_with_search_vector_multi_fields_filter(self):
+        get_reimbursement(congressperson_name='FULANO SILVA BELTRANO', applicant_id=221)
+        get_reimbursement(supplier='PRESTADORA SILVA', applicant_id=23)
+        get_reimbursement(congressperson_name='BELTRANO CHAVES', applicant_id=23)
+
+        create_search_vector()
+
+        search_data = (
+            ('search', 'Silva'),
         )
         url = '{}?{}'.format(self.url, urlencode(search_data))
 
