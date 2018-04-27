@@ -45,7 +45,7 @@ class ReimbursementListView(ListAPIView):
             self.queryset = self.queryset.in_latest_dataset(in_latest)
 
         # filter search_vector
-        vector_param = self._vector_param()
+        vector_param = self.request.query_params.get('search')
         if vector_param:
             self.queryset = self.queryset.search_vector(vector_param)
 
@@ -69,12 +69,6 @@ class ReimbursementListView(ListAPIView):
             return True
 
         return False
-
-    def _vector_param(self):
-        if 'search' in self.request.query_params:
-            return self.request.query_params['search']
-
-        return None
 
 
 class ReimbursementDetailView(RetrieveAPIView):

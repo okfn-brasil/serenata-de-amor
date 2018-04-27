@@ -79,7 +79,6 @@ All these endpoints accepts any combination of the following parameters:
   * `subquota_description`
   * `subquota_group_description`
 
-
 For example:
 
 ```
@@ -94,8 +93,6 @@ This request will list:
 * sorted by the highest probability
 
 Also you can pass more than one value per field (e.g. `document_id=111111,222222`).
-
-Search field
 
 ##### `GET /api/chamber_of_deputies/reimbursement/<document_id>/same_day/`
 

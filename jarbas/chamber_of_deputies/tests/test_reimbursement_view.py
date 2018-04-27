@@ -1,5 +1,4 @@
 import sys
-
 from json import loads
 from unittest.mock import patch
 from urllib.parse import urlencode
@@ -7,7 +6,6 @@ from urllib.parse import urlencode
 from django.core.management import call_command
 from django.shortcuts import resolve_url
 from django.utils.six import StringIO
-
 from django.test import TestCase
 from freezegun import freeze_time
 from mixer.backend.django import mixer
@@ -28,7 +26,7 @@ def get_reimbursement(**kwargs):
 
 
 def create_search_vector():
-    # Running the command silently
+    """ Running the command silently """
     out = StringIO()
     sys.stdout = out
     call_command('searchvector', stdout=out)
