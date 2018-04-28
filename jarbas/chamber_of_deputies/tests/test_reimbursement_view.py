@@ -25,13 +25,6 @@ def get_reimbursement(**kwargs):
     return mixer.cycle(quantity).blend(Reimbursement, search_vector=None, **kwargs)
 
 
-def create_search_vector():
-    """ Running the command silently """
-    out = StringIO()
-    sys.stdout = out
-    call_command('searchvector', stdout=out)
-
-
 class TestListApi(TestCase):
 
     def setUp(self):
@@ -130,8 +123,7 @@ class TestListApi(TestCase):
         get_reimbursement(congressperson_name='FULANO SILVA BELTRANO', applicant_id=221)
         get_reimbursement(congressperson_name='SILVA TESTA NOME', applicant_id=23)
         get_reimbursement(congressperson_name='BELTRANO CHAVES', applicant_id=23)
-
-        create_search_vector()
+        call_command('searchvector', silent=True)
 
         search_data = (
             ('search', 'Silva'),
@@ -146,8 +138,7 @@ class TestListApi(TestCase):
         get_reimbursement(congressperson_name='FULANO SILVA BELTRANO', applicant_id=221)
         get_reimbursement(supplier='PRESTADORA SILVA', applicant_id=23)
         get_reimbursement(congressperson_name='BELTRANO CHAVES', applicant_id=23)
-
-        create_search_vector()
+        call_command('searchvector', silent=True)
 
         search_data = (
             ('search', 'Silva'),
