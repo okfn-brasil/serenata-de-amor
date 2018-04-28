@@ -1,9 +1,11 @@
 import logging
 import os
+import re
 from datetime import date
+from functools import partial
 from pathlib import Path
-from re import match
 
+import dask.dataframe as dd
 import numpy as np
 import pandas as pd
 
@@ -15,7 +17,6 @@ class Adapter:
 
     STARTING_YEAR = 2009
     COMPANIES_DATASET = '2016-09-03-companies.xz'
-    REIMBURSEMENTS_PATTERN = r'reimbursements-\d{4}\.csv'
     RENAME_COLUMNS = {
         'subquota_description': 'category',
         'total_net_value': 'net_value',
@@ -25,13 +26,29 @@ class Adapter:
     DTYPE = {
         'applicant_id': np.str,
         'cnpj_cpf': np.str,
+        'congressperson_document': np.str,
         'congressperson_id': np.str,
-        'subquota_number': np.str
+        'leg_of_the_trip': np.str,
+        'party': np.str,
+        'passenger': np.str,
+        'remark_value': np.float,
+        'remark_value': np.str,
+        'subquota_group_description': np.str,
+        'subquota_number': np.str,
+        'term': np.str,
+        'term_id': np.str,
+        'total_value': np.float
     }
 
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, path, years=None):
         self.log = logging.getLogger(__name__)
+        self.path = path
+
+        if not years:
+            next_year = date.today().year + 1
+            years = range(self.STARTING_YEAR, next_year)
+
+        self.years = tuple(reversed(years))
 
     @property
     def dataset(self):
@@ -43,28 +60,23 @@ class Adapter:
             right_on='cnpj'
         )
         self.prepare_dataset(df)
-        return df
+        return df.compute()
 
     @property
     def companies(self):
         self.log.info('Loading companies')
         path = Path(self.path) / self.COMPANIES_DATASET
-        df = pd.read_csv(path, dtype={'cnpj': np.str}, low_memory=False)
-        df['cnpj'] = df['cnpj'].str.replace(r'\D', '')
-        return df
+        converters = {'cnpj': partial(re.sub, r'\D', '')}
+        return dd.read_csv(path, encoding='utf-8', converters=converters)
 
     @property
     def reimbursements(self):
-        df = pd.DataFrame()
-        paths = (
-            str(path) for path in Path(self.path).glob('*.csv')
-            if match(self.REIMBURSEMENTS_PATTERN, path.name)
-        )
-
-        for path in paths:
+        df = None
+        for year in self.years:
+            path = str(Path(self.path) / f'reimbursements-{year}.csv')
             self.log.info(f'Loading reimbursements from {path}')
-            year_df = pd.read_csv(path, dtype=self.DTYPE, low_memory=False)
-            df = df.append(year_df)
+            year_df = dd.read_csv(path, dtype=self.DTYPE, encoding='utf-8')
+            df = year_df if df is None else df.append(year_df)
 
         return df
 
@@ -77,12 +89,8 @@ class Adapter:
         os.makedirs(self.path, exist_ok=True)
         fetch(self.COMPANIES_DATASET, self.path)
 
-    def update_reimbursements(self, years=None):
-        if not years:
-            next_year = date.today().year + 1
-            years = range(self.STARTING_YEAR, next_year)
-
-        for year in years:
+    def update_reimbursements(self):
+        for year in self.years:
             self.log.info(f'Updating reimbursements from {year}')
             Reimbursements(year, self.path)()
 

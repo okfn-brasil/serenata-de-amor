@@ -1,4 +1,5 @@
 brutils==1.0.1
+dask[dataframe]==0.17.2
 freezegun==0.3.10
 geopy>=1.11.0
 ipdb==0.11
