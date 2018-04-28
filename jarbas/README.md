@@ -67,7 +67,17 @@ All these endpoints accepts any combination of the following parameters:
 * `year`
 * `order_by`: `issue_date` (default) or `probability` (both descending)
 * `in_latest_dataset` (_boolean_, `1` parses to `True`, `0` to `False`)
-
+* `search` (Search the value in any of the fields below)
+  * `congressperson_name`
+  * `supplier`
+  * `cnpj_cpf`
+  * `party`
+  * `state`
+  * `receipt_text`
+  * `passenger`
+  * `leg_of_the_trip`
+  * `subquota_description`
+  * `subquota_group_description`
 
 For example:
 

@@ -44,6 +44,11 @@ class ReimbursementListView(ListAPIView):
         if in_latest is not None:
             self.queryset = self.queryset.in_latest_dataset(in_latest)
 
+        # filter search_vector
+        vector_param = self.request.query_params.get('search')
+        if vector_param:
+            self.queryset = self.queryset.search_vector(vector_param)
+
         # filter queryset
         if filters:
             self.queryset = self.queryset.tuple_filter(**filters)

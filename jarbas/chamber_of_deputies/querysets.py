@@ -3,6 +3,9 @@ from functools import reduce
 
 from django.db import models
 from django.db.models import Q
+from django.db.models import F
+from django.contrib.postgres.search import SearchQuery
+from django.contrib.postgres.search import SearchRank
 
 
 class ReimbursementQuerySet(models.QuerySet):
@@ -48,6 +51,16 @@ class ReimbursementQuerySet(models.QuerySet):
 
     def was_ordered(self):
         return bool(self.query.order_by)
+
+    def search_vector(self, search_term):
+        query = SearchQuery(search_term, config='portuguese')
+        rank = SearchRank(F('search_vector'), query)
+        self = self.annotate(rank=rank).filter(search_vector=query)
+
+        if not self.was_ordered():
+            self.order_by('-rank')
+
+        return self
 
 
 def _str_to_tuple(filters):
