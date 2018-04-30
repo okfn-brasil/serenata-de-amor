@@ -4,9 +4,9 @@ beautifulsoup4==4.6.0
 geopy==1.13.0
 grequests==0.3.0
 humanize==0.5.1
-numpy==1.14.2
+numpy==1.14.3
 pandas==0.22.0
 python-decouple==3.1
 requests==2.18.4
 serenata-toolbox  # pyup: ignore
-tqdm==4.22.0
+tqdm==4.23.1

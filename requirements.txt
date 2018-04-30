@@ -10,7 +10,7 @@ django-extensions==2.0.7
 django-test-without-migrations==0.6
 djangorestframework==3.8.2
 freezegun==0.3.10
-gunicorn==19.7.1
+gunicorn==19.8.0
 newrelic==3.2.0.91
 psycopg2==2.7.4
 py-gfm==0.1.3
