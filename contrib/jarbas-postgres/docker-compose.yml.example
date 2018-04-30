@@ -1,0 +1,13 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:10.3-alpine
+    environment:
+      - POSTGRES_PASSWORD=
+      - POSTGRES_USER=
+      - POSTGRES_DB=
+    volumes:
+      - ./db:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    command: ['-c', 'random_page_cost=1', '-c', 'shared_preload_libraries=pg_stat_statements', '-c', 'pg_stat_statements.track=all']
