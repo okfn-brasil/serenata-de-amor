@@ -20,8 +20,6 @@ env:
     - CC_TEST_REPORTER_ID=351fd43955e403ad2d8ef0c653d4238d1afafdf55396622d3631d3dc1e06d635
 
 install:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
   - cp contrib/.env.sample .env
   - python -m pip install -U pip coverage
   - psql -U postgres -c 'create database "jarbas";'
@@ -29,6 +27,9 @@ install:
   - python -m pip install -r rosie/requirements.txt
 
 before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
   - python manage.py migrate
   - python manage.py collectstatic --no-input
 
@@ -40,4 +41,5 @@ script:
   - cd ..
 
 after_success:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - coverage xml
+  - ./cc-test-reporter after-build --coverage-input-type coverage.py --exit-code $TRAVIS_TEST_RESULT
