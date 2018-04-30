@@ -2,7 +2,7 @@ brutils==1.0.1
 freezegun==0.3.10
 geopy>=1.11.0
 ipdb==0.11
-numpy==1.14.2
+numpy==1.14.3
 # scipy must come before scikit-learn in order to build the wheel in docker image
 scipy==1.0.1
 scikit-learn==0.19.1
