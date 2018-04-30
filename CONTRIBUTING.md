@@ -24,7 +24,7 @@ Then `.env` file you just copied contains [environment variables for Jarbas](jar
 Example to run only Rosie:
 
 ```console
-$ docker-compose run --rm -v /tmp/serenata-data:/tmp rosie run chamber_of_deputies
+$ docker-compose run --rm rosie python rosie.py run chamber_of_deputies
 ```
 
 [Check Rosie's `README.md` for more details](rosie/README.md).
