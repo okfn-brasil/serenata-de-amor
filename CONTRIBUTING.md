@@ -31,10 +31,21 @@ $ docker-compose run --rm rosie python rosie.py run chamber_of_deputies
 
 ### Running Jarbas
 
-Example to run only Jarbas:
+This is an example to run only Jarbas. First run migrations and provision:
 
 ```console
-$ docker-compose up jarbas
+$ docker-compose run --rm django python manage.py migrate
+$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.xz
+$ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
+$ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
+$ docker-compose run --rm django python manage.py searchvector
+$ docker-compose run --rm django python manage.py tweets
+```
+
+The spin up the web server:
+
+```console
+$ docker-compose up django
 ```
 
 Then browse from [`0.0.0.0:8000`](http://0.0.0.0:8000). [Check Jarbas's `README.md` for more details](jarbas/README.md).
