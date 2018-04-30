@@ -27,9 +27,6 @@ translate lang trans =
                 AboutSerenata ->
                     Common.aboutSerenata
 
-                AboutDatasets ->
-                    Common.aboutDatasets
-
                 SearchFieldsetReimbursement ->
                     ReimbursementSearch.fieldsetReimbursement
 

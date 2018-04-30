@@ -16,7 +16,6 @@ type TranslationId
     = About
     | AboutJarbas
     | AboutSerenata
-    | AboutDatasets
     | SearchFieldsetReimbursement
     | SearchFieldsetCongressperson
     | FieldsetSummary

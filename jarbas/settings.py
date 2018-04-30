@@ -143,12 +143,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 CORE_STATIC_DIR = os.path.join(BASE_DIR, 'jarbas', 'core', 'static')
 
-# Amazon S3 datasets
-
-AMAZON_BUCKET = config('AMAZON_BUCKET')
-AMAZON_REGION = config('AMAZON_REGION')
-AMAZON_S3_CEAPTRANSLATION_DATE = config('AMAZON_S3_CEAPTRANSLATION_DATE', default='2016-08-08')
-
 # Django REST Framework
 
 REST_FRAMEWORK = {

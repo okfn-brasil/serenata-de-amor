@@ -17,13 +17,6 @@ aboutJarbas =
         "Sobre o Jarbas"
 
 
-aboutDatasets : TranslationSet
-aboutDatasets =
-    TranslationSet
-        "About the dataset"
-        "Sobre a base de dados"
-
-
 aboutSerenata : TranslationSet
 aboutSerenata =
     TranslationSet
