@@ -9,4 +9,4 @@ pandas==0.22.0
 python-decouple==3.1
 requests==2.18.4
 serenata-toolbox  # pyup: ignore
-tqdm==4.23.1
+tqdm==4.23.2
