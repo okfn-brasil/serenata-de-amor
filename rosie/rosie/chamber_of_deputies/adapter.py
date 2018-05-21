@@ -48,8 +48,6 @@ class Adapter:
             next_year = date.today().year + 1
             years = range(self.STARTING_YEAR, next_year)
 
-        self.years = tuple(reversed(years))
-
     @property
     def dataset(self):
         self.update_datasets()
