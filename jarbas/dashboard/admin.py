@@ -1,10 +1,12 @@
 import json
+from hashlib import md5
 
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.admin import SimpleListFilter
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.core.cache import cache
+from django.core.paginator import Paginator
 from django.db.models import F
 from django.forms.widgets import Widget
 from django.utils.safestring import mark_safe
@@ -17,6 +19,23 @@ from jarbas.public_admin.sites import public_admin
 ALL_FIELDS = sorted(Reimbursement._meta.fields, key=lambda f: f.verbose_name)
 CUSTOM_WIDGETS = ('receipt_url', 'subquota_description', 'suspicions')
 READONLY_FIELDS = (f.name for f in ALL_FIELDS if f.name not in CUSTOM_WIDGETS)
+
+
+class CachedCountPaginator(Paginator):
+    """Cached the paginator count (for performance)"""
+
+    @property
+    def count(self):
+        query = self.object_list.query.__str__()
+        hashed = md5(query.encode('utf-8')).hexdigest()
+        key = f'dashboard_count_{hashed}'
+        count = cache.get(key)
+
+        if count is None:
+            count = super(CachedCountPaginator, self).count
+            cache.set(key, count, 60 * 60 * 6)
+
+        return count
 
 
 class ReceiptUrlWidget(Widget):
@@ -280,6 +299,7 @@ class CachedListFilter(SimpleListFilter):
         kwarg = {self.parameter_name: value}
         return queryset.filter(**kwarg)
 
+
 class StateListFilter(CachedListFilter):
 
     title = 'estado'
@@ -326,7 +346,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     fields = tuple(f.name for f in ALL_FIELDS)
     readonly_fields = tuple(READONLY_FIELDS)
     list_select_related = ('tweet',)
-    show_full_result_count = False
+    paginator = CachedCountPaginator
 
     def _format_document(self, obj):
         if obj.cnpj_cpf:
