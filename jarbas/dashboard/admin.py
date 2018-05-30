@@ -4,6 +4,7 @@ from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.admin import SimpleListFilter
 from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.core.cache import cache
 from django.db.models import F
 from django.forms.widgets import Widget
 from django.utils.safestring import mark_safe
@@ -254,6 +255,47 @@ class SubquotaListFilter(SimpleListFilter, Subquotas):
         return queryset.filter(subquota_description=self.en_us(subquota))
 
 
+class CachedListFilter(SimpleListFilter):
+
+    timeout = 60 * 60 * 6  # 6h
+
+    def lookups(self, request, model_admin):
+        cached = cache.get(self.cache_key)
+        if cached:
+            return cached
+
+        queryset = Reimbursement.objects.distinct(self.parameter_name) \
+            .order_by(self.parameter_name) \
+            .values_list(self.parameter_name, self.parameter_name)
+
+        value = tuple(state for state in queryset if all(state))
+        cache.set(self.cache_key, value, self.timeout)
+        return value
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if not value:
+            return queryset
+
+        kwarg = {self.parameter_name: value}
+        return queryset.filter(**kwarg)
+
+class StateListFilter(CachedListFilter):
+
+    title = 'estado'
+    parameter_name = 'state'
+    default_value = None
+    cache_key = 'dashboard_state_list_filter_lookups'
+
+
+class YearListFilter(CachedListFilter):
+
+    title = 'ano'
+    parameter_name = 'year'
+    default_value = None
+    cache_key = 'dashboard_year_list_filter_lookups'
+
+
 class ReimbursementModelAdmin(PublicAdminModelAdmin):
 
     list_display = (
@@ -274,8 +316,8 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     list_filter = (
         SuspiciousListFilter,
         HasReceiptFilter,
-        'state',
-        'year',
+        StateListFilter,
+        YearListFilter,
         MonthListFilter,
         DocumentTypeListFilter,
         SubquotaListFilter,
@@ -284,6 +326,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     fields = tuple(f.name for f in ALL_FIELDS)
     readonly_fields = tuple(READONLY_FIELDS)
     list_select_related = ('tweet',)
+    show_full_result_count = False
 
     def _format_document(self, obj):
         if obj.cnpj_cpf:
