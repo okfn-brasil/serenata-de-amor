@@ -359,7 +359,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
             return obj.cnpj_cpf
 
     def supplier_info(self, obj):
-        return mark_safe('{}<br>{}'.format(obj.supplier, self._format_document(obj)))
+        return mark_safe(f'{obj.suplier}<br>{self._format_document(obj)}')
 
     supplier_info.short_description = 'Fornecedor'
 
@@ -383,7 +383,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     def receipt_link(self, obj):
         if not obj.receipt_url:
             return ''
-        return mark_safe('<a target="_blank" href="{}">📃</a>'.format(obj.receipt_url))
+        return mark_safe(f'<a target="_blank" href="{obj.receipt_url}">📃</a>')
 
     receipt_link.short_description = ''
 
