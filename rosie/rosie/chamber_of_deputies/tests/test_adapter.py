@@ -82,3 +82,11 @@ class TestAdapter(TestCase):
             call()()
         ))
         fetch.assert_called_once_with(Adapter.COMPANIES_DATASET, self.temp_path)
+
+    @freeze_time('2010-11-12')
+    @patch('rosie.chamber_of_deputies.adapter.fetch')
+    @patch('rosie.chamber_of_deputies.adapter.Reimbursements')
+    def test_coerce_situation_date(self, reimbursements, fetch):
+        adapter = Adapter(self.temp_path)
+        df = adapter.dataset
+        self.assertTrue(any(dt.month == 9 and dt.day == 6 for dt in df['situation_date']))
