@@ -86,8 +86,8 @@ class TestAdapter(TestCase):
 
     @patch('rosie.chamber_of_deputies.adapter.fetch')
     @patch('rosie.chamber_of_deputies.adapter.Reimbursements')
-    def test_coerce_situation_date(self, reimbursements, fetch):
+    def test_coerce_dates(self, reimbursements, fetch):
         adapter = Adapter(self.temp_path)
         df = adapter.dataset
-        self.assertIn(date(2011,9,6), [ts.date() for ts in df.situation_date])
-
+        self.assertIn(date(2011, 9, 6), [ts.date() for ts in df.situation_date])
+        self.assertIn(date(2009, 6, 1), [ts.date() for ts in df.issue_date])
