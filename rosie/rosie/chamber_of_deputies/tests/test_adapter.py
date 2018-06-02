@@ -83,7 +83,6 @@ class TestAdapter(TestCase):
         ))
         fetch.assert_called_once_with(Adapter.COMPANIES_DATASET, self.temp_path)
 
-    @freeze_time('2010-11-12')
     @patch('rosie.chamber_of_deputies.adapter.fetch')
     @patch('rosie.chamber_of_deputies.adapter.Reimbursements')
     def test_coerce_situation_date(self, reimbursements, fetch):
