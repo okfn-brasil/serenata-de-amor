@@ -8,6 +8,7 @@ import pandas as pd
 from freezegun import freeze_time
 
 from rosie.chamber_of_deputies.adapter import Adapter
+from datetime import date
 
 
 FIXTURES = Path() / 'rosie' / 'chamber_of_deputies' / 'tests' / 'fixtures'
@@ -88,4 +89,5 @@ class TestAdapter(TestCase):
     def test_coerce_situation_date(self, reimbursements, fetch):
         adapter = Adapter(self.temp_path)
         df = adapter.dataset
-        self.assertTrue(any(dt.month == 9 and dt.day == 6 for dt in df['situation_date']))
+        self.assertIn(date(2011,9,6), [ts.date() for ts in df.situation_date])
+
