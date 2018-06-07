@@ -1,4 +1,5 @@
 import shutil
+from datetime import date
 from pathlib import Path
 from tempfile import mkdtemp
 from unittest import TestCase
@@ -8,7 +9,6 @@ import pandas as pd
 from freezegun import freeze_time
 
 from rosie.chamber_of_deputies.adapter import Adapter
-from datetime import date
 
 
 FIXTURES = Path() / 'rosie' / 'chamber_of_deputies' / 'tests' / 'fixtures'
