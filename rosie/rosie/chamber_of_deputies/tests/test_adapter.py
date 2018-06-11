@@ -1,4 +1,5 @@
 import shutil
+from datetime import date
 from pathlib import Path
 from tempfile import mkdtemp
 from unittest import TestCase
@@ -82,3 +83,11 @@ class TestAdapter(TestCase):
             call()()
         ))
         fetch.assert_called_once_with(Adapter.COMPANIES_DATASET, self.temp_path)
+
+    @patch('rosie.chamber_of_deputies.adapter.fetch')
+    @patch('rosie.chamber_of_deputies.adapter.Reimbursements')
+    def test_coerce_dates(self, reimbursements, fetch):
+        adapter = Adapter(self.temp_path)
+        df = adapter.dataset
+        self.assertIn(date(2011, 9, 6), [ts.date() for ts in df.situation_date])
+        self.assertIn(date(2009, 6, 1), [ts.date() for ts in df.issue_date])
