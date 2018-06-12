@@ -4,13 +4,9 @@ from unittest.mock import MagicMock, patch
 from django.test import TestCase
 
 from jarbas.chamber_of_deputies.models import Reimbursement
-from jarbas.dashboard.admin import (
-    ReceiptUrlWidget,
-    ReimbursementModelAdmin,
-    SubquotaWidget,
-    SubquotaListFilter,
-    SuspiciousWidget,
-)
+from jarbas.dashboard.admin import ReimbursementModelAdmin
+from jarbas.dashboard.admin.list_filters import SubquotaListFilter
+from jarbas.dashboard.admin.widgets import ReceiptUrlWidget, SubquotaWidget, SuspiciousWidget
 
 
 Request = namedtuple('Request', ('method',))
