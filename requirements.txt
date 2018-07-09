@@ -15,7 +15,7 @@ newrelic==3.2.2.94
 psycopg2==2.7.5
 python-decouple==3.1
 python-memcached==1.59
-python-twitter==3.4.1
+python-twitter==3.4.2
 reprint==0.3.0 # pyup: ignore
 requests==2.18.4
 rows==0.3.1
