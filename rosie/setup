@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import pip.
+import pip
 from shutil import copyfile
 
 
