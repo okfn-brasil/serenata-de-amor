@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import pip
-# from shutil import copyfile
 
 pip_major_version = int(pip.__version__.split('.')[0])
 
