@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 import pip
-from shutil import copyfile
 
+pip_major_version = int(pip.__version__.split('.')[0])
 
-pip.main(['install', '--upgrade', '-r', 'rosie/requirements.txt'])
+if pip_major_version >= 10:
+    pip._internal.main(
+        ['install', '--upgrade', '-r', 'rosie/requirements.txt'])
+else:
+    pip.main(['install', '--upgrade', '-r', 'rosie/requirements.txt'])
