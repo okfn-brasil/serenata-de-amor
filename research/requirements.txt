@@ -1,6 +1,6 @@
 aiofiles==0.3.2
 aiohttp==3.3.2
-beautifulsoup4==4.6.0
+beautifulsoup4==4.6.1
 geopy==1.14.0
 grequests==0.3.0
 humanize==0.5.1
