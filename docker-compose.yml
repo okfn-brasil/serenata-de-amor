@@ -2,8 +2,7 @@ version: '3'
 services:
 
   rosie:
-    build:
-      context: rosie
+    image: serenata/rosie
     volumes:
       - /tmp/serenata-data:/tmp/serenata-data
       - ./rosie:/code
