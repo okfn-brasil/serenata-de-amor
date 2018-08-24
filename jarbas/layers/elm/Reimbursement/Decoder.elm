@@ -64,10 +64,9 @@ singleDecoder lang apiKey =
             |> required "year" int
             |> required "document_id" int
             |> required "applicant_id" int
-            |> required "total_reimbursement_value" (nullable float)
+            |> required "total_value" (nullable float)
             |> required "total_net_value" float
-            |> required "all_reimbursement_numbers" (list int)
-            |> required "all_net_values" (list float)
+            |> required "all_numbers" (list int)
             |> required "congressperson_id" (nullable int)
             |> required "congressperson_name" (nullable string)
             |> required "congressperson_document" (nullable int)
@@ -75,7 +74,7 @@ singleDecoder lang apiKey =
             |> required "party" (nullable string)
             |> required "term_id" (nullable int)
             |> required "term" int
-            |> required "subquota_id" int
+            |> required "subquota_number" int
             |> required "subquota_description" string
             |> required "subquota_group_id" (nullable int)
             |> required "subquota_group_description" (nullable string)
@@ -89,7 +88,6 @@ singleDecoder lang apiKey =
             |> required "remark_value" (nullable float)
             |> required "installment" (nullable int)
             |> required "batch_number" (nullable int)
-            |> required "all_reimbursement_values" (nullable <| list float)
             |> required "passenger" (nullable string)
             |> required "leg_of_the_trip" (nullable string)
             |> required "probability" (nullable float)

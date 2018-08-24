@@ -13,10 +13,9 @@ type Label
     = Year
     | DocumentId
     | ApplicantId
-    | TotalReimbursementValue
+    | TotalValue
     | TotalNetValue
-    | ReimbursementNumbers
-    | NetValues
+    | Numbers
     | CongresspersonId
     | Congressperson
     | CongresspersonName
@@ -25,7 +24,7 @@ type Label
     | Party
     | TermId
     | Term
-    | SubquotaId
+    | SubquotaNumber
     | SubquotaDescription
     | SubquotaGroupId
     | SubquotaGroupDescription
@@ -42,7 +41,6 @@ type Label
     | RemarkValue
     | Installment
     | BatchNumber
-    | ReimbursementValues
     | Passenger
     | LegOfTheTrip
     | Probability
@@ -58,14 +56,14 @@ searchableLabels =
     , ( IssueDateEnd, "issueDateEnd" )
     , ( IssueDateStart, "issueDateStart" )
     , ( Month, "month" )
-    , ( SubquotaId, "subquotaId" )
+    , ( SubquotaNumber, "subquotaNumber" )
     , ( Year, "year" )
     ]
 
 
 allLabels : List Label
 allLabels =
-    [ Year, DocumentId, ApplicantId, TotalReimbursementValue, TotalNetValue, ReimbursementNumbers, NetValues, CongresspersonId, CongresspersonName, CongresspersonDocument, State, Party, TermId, Term, SubquotaId, SubquotaDescription, SubquotaGroupId, SubquotaGroupDescription, Company, CnpjCpf, DocumentType, DocumentNumber, DocumentValue, IssueDate, IssueDateStart, IssueDateEnd, Month, RemarkValue, Installment, BatchNumber, ReimbursementValues, Passenger, LegOfTheTrip, Probability, Suspicions ]
+    [ Year, DocumentId, ApplicantId, TotalValue, TotalNetValue, Numbers, CongresspersonId, CongresspersonName, CongresspersonDocument, State, Party, TermId, Term, SubquotaNumber, SubquotaDescription, SubquotaGroupId, SubquotaGroupDescription, Company, CnpjCpf, DocumentType, DocumentNumber, DocumentValue, IssueDate, IssueDateStart, IssueDateEnd, Month, RemarkValue, Installment, BatchNumber, Passenger, LegOfTheTrip, Probability, Suspicions ]
 
 
 labelToUrl : Label -> String
@@ -89,7 +87,7 @@ sets =
           , [ ApplicantId
             , Year
             , Month
-            , SubquotaId
+            , SubquotaNumber
             , CnpjCpf
             , IssueDateStart
             , IssueDateEnd
@@ -126,7 +124,7 @@ isNumeric label =
         Month ->
             True
 
-        SubquotaId ->
+        SubquotaNumber ->
             True
 
         Year ->
@@ -192,17 +190,14 @@ getLabelTranslation language (Field label _) =
                 ApplicantId ->
                     FieldApplicantId
 
-                TotalReimbursementValue ->
-                    FieldTotalReimbursementValue
+                TotalValue ->
+                    FieldTotalValue
 
                 TotalNetValue ->
                     FieldTotalNetValue
 
-                ReimbursementNumbers ->
-                    FieldReimbursementNumbers
-
-                NetValues ->
-                    FieldNetValues
+                Numbers ->
+                    FieldNumbers
 
                 CongresspersonId ->
                     FieldCongresspersonId
@@ -228,8 +223,8 @@ getLabelTranslation language (Field label _) =
                 Term ->
                     FieldTerm
 
-                SubquotaId ->
-                    FieldSubquotaId
+                SubquotaNumber ->
+                    FieldSubquotaNumber
 
                 SubquotaDescription ->
                     FieldSubquotaDescription
@@ -278,9 +273,6 @@ getLabelTranslation language (Field label _) =
 
                 BatchNumber ->
                     FieldBatchNumber
-
-                ReimbursementValues ->
-                    FieldReimbursementValues
 
                 Passenger ->
                     FieldPassenger

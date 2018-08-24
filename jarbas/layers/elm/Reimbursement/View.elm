@@ -169,7 +169,7 @@ sourceUrl reimbursement =
         [ ( "nuDeputadoId", toString reimbursement.applicantId )
         , ( "numMes", toString reimbursement.month )
         , ( "numAno", toString reimbursement.year )
-        , ( "despesa", toString reimbursement.subquotaId )
+        , ( "despesa", toString reimbursement.subquotaNumber )
         , ( "cnpjFornecedor", Maybe.withDefault "" reimbursement.cnpjCpf )
         , ( "idDocumento", Maybe.withDefault "" reimbursement.documentNumber )
         ]
@@ -354,7 +354,7 @@ viewSummaryBlock lang reimbursement =
             String.concat
                 [ reimbursement.subquotaDescription
                 , " ("
-                , toString reimbursement.subquotaId
+                , toString reimbursement.subquotaNumber
                 , ")"
                 ]
 
@@ -368,7 +368,7 @@ viewSummaryBlock lang reimbursement =
             , Field DocumentValue <| formatPrice lang reimbursement.documentValue
             , Field RemarkValue <| maybeFormatPrice lang reimbursement.remarkValue
             , Field TotalNetValue <| formatPrice lang reimbursement.totalNetValue
-            , Field TotalReimbursementValue <| maybeFormatPrice lang reimbursement.totalReimbursementValue
+            , Field TotalValue <| maybeFormatPrice lang reimbursement.totalValue
             , Field Suspicions <| viewSuspicions lang reimbursement.suspicions
             ]
                 |> List.filter (Fields.getValue >> String.isEmpty >> not)
@@ -380,7 +380,7 @@ viewReimbursementDetails : Language -> Reimbursement -> Html Msg
 viewReimbursementDetails lang reimbursement =
     let
         reimbursements =
-            reimbursement.reimbursementNumbers
+            reimbursement.numbers
                 |> List.map toString
                 |> String.join ", "
 
@@ -391,9 +391,7 @@ viewReimbursementDetails lang reimbursement =
         fields =
             [ Field ApplicantId <| toString reimbursement.applicantId
             , Field DocumentId <| toString reimbursement.documentId
-            , Field NetValues <| formatPrices lang reimbursement.netValues
-            , Field ReimbursementValues <| maybeFormatPrices lang reimbursement.reimbursementValues
-            , Field ReimbursementNumbers <| reimbursements
+            , Field Numbers <| reimbursements
             , Field Fields.DocumentType <| documentType
             , Field DocumentNumber <| Maybe.withDefault "" reimbursement.documentNumber
             , Field Installment <| viewMaybeIntButZero reimbursement.installment

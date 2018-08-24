@@ -10,7 +10,7 @@ type alias ReimbursementSummary =
     , city : Maybe String
     , documentId : Int
     , subquotaDescription : String
-    , subquotaId : Int
+    , subquotaNumber : Int
     , supplier : String
     , totalNetValue : Float
     , year : Int

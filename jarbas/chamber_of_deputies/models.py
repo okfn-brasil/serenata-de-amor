@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
@@ -35,10 +35,9 @@ class Reimbursement(models.Model):
     year = models.IntegerField('Ano', db_index=True)
     applicant_id = models.IntegerField('Identificador do Solicitante', db_index=True)
 
-    total_reimbursement_value = models.DecimalField('Valor da Restituição', max_digits=10, decimal_places=3, blank=True, null=True)
+    total_value = models.DecimalField('Valor da Restituição', max_digits=10, decimal_places=3, blank=True, null=True)
     total_net_value = models.DecimalField('Valor Líquido', max_digits=10, decimal_places=3)
-    reimbursement_numbers = models.CharField('Números dos Ressarcimentos', max_length=140)
-    net_values = models.CharField('Valores Líquidos dos Ressarcimentos', max_length=140)
+    numbers = ArrayField(models.CharField('Números dos Ressarcimentos', max_length=128), default=list)
 
     congressperson_id = models.IntegerField('Identificador Único do Parlamentar', blank=True, null=True)
     congressperson_name = models.CharField('Nome do Parlamentar', max_length=140, db_index=True, blank=True, null=True)
@@ -50,7 +49,7 @@ class Reimbursement(models.Model):
     term_id = models.IntegerField('Código da Legislatura', blank=True, null=True)
     term = models.IntegerField('Número da Legislatura', blank=True, null=True)
 
-    subquota_id = models.IntegerField('Número da Subcota', db_index=True)
+    subquota_number = models.IntegerField('Número da Subcota', db_index=True)
     subquota_description = models.CharField('Descrição da Subcota', max_length=140, db_index=True)
     subquota_group_id = models.IntegerField('Número da Especificação da Subcota', blank=True, null=True)
     subquota_group_description = models.CharField('Descrição da Especificação da Subcota', max_length=140, blank=True, null=True)
@@ -67,7 +66,6 @@ class Reimbursement(models.Model):
     remark_value = models.DecimalField('Valor da Glosa', max_digits=10, decimal_places=3, blank=True, null=True)
     installment = models.IntegerField('Número da Parcela', blank=True, null=True)
     batch_number = models.IntegerField('Número do Lote')
-    reimbursement_values = models.CharField('Valores dos Ressarcimentos', max_length=140, blank=True, null=True)
 
     passenger = models.CharField('Passageiro', max_length=140, blank=True, null=True)
     leg_of_the_trip = models.CharField('Trecho', max_length=140, blank=True, null=True)
@@ -109,16 +107,8 @@ class Reimbursement(models.Model):
         return self.receipt_url
 
     @property
-    def all_net_values(self):
-        return self.as_list(self.net_values, float)
-
-    @property
-    def all_reimbursement_values(self):
-        return self.as_list(self.reimbursement_values, float)
-
-    @property
-    def all_reimbursement_numbers(self):
-        return self.as_list(self.reimbursement_numbers, int)
+    def all_numbers(self):
+        return [int(num) for num in self.numbers]
 
     @staticmethod
     def as_list(content, cast=None):

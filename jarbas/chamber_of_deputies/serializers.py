@@ -6,25 +6,17 @@ from jarbas.core.models import Company
 
 class ReimbursementSerializer(serializers.ModelSerializer):
 
-    all_net_values = serializers.SerializerMethodField()
-    all_reimbursement_numbers = serializers.SerializerMethodField()
-    all_reimbursement_values = serializers.SerializerMethodField()
+    all_numbers = serializers.SerializerMethodField()
     document_value = serializers.SerializerMethodField()
     probability = serializers.SerializerMethodField()
     receipt = serializers.SerializerMethodField()
     rosies_tweet = serializers.SerializerMethodField()
     remark_value = serializers.SerializerMethodField()
     total_net_value = serializers.SerializerMethodField()
-    total_reimbursement_value = serializers.SerializerMethodField()
+    total_value = serializers.SerializerMethodField()
 
-    def get_all_net_values(self, obj):
-        return obj.all_net_values
-
-    def get_all_reimbursement_numbers(self, obj):
-        return obj.all_reimbursement_numbers
-
-    def get_all_reimbursement_values(self, obj):
-        return obj.all_reimbursement_values
+    def get_all_numbers(self, obj):
+        return obj.all_numbers
 
     def get_document_value(self, obj):
         return to_float(obj.document_value)
@@ -47,18 +39,16 @@ class ReimbursementSerializer(serializers.ModelSerializer):
     def get_total_net_value(self, obj):
         return to_float(obj.total_net_value)
 
-    def get_total_reimbursement_value(self, obj):
-        return to_float(obj.total_reimbursement_value)
+    def get_total_value(self, obj):
+        return to_float(obj.total_value)
 
     class Meta:
         model = Reimbursement
         exclude = (
             'id',
-            'net_values',
             'receipt_fetched',
             'receipt_url',
-            'reimbursement_numbers',
-            'reimbursement_values'
+            'numbers',
         )
 
 
@@ -88,7 +78,7 @@ class SameDayReimbursementSerializer(serializers.ModelSerializer):
             'applicant_id',
             'city',
             'document_id',
-            'subquota_id',
+            'subquota_number',
             'subquota_description',
             'supplier',
             'total_net_value',
@@ -119,7 +109,7 @@ class SubquotaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reimbursement
-        fields = ('subquota_id', 'subquota_description')
+        fields = ('subquota_number', 'subquota_description')
 
 
 def to_float(number):

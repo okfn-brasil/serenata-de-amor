@@ -66,17 +66,14 @@ translate lang trans =
                 FieldApplicantId ->
                     ReimbursementField.applicantId
 
-                FieldTotalReimbursementValue ->
-                    ReimbursementField.totalReimbursementValue
+                FieldTotalValue ->
+                    ReimbursementField.totalValue
 
                 FieldTotalNetValue ->
                     ReimbursementField.totalNetValue
 
-                FieldReimbursementNumbers ->
-                    ReimbursementField.reimbursementNumbers
-
-                FieldNetValues ->
-                    ReimbursementField.netValues
+                FieldNumbers ->
+                    ReimbursementField.numbers
 
                 FieldCongresspersonId ->
                     ReimbursementField.congresspersonId
@@ -102,8 +99,8 @@ translate lang trans =
                 FieldTerm ->
                     ReimbursementField.term
 
-                FieldSubquotaId ->
-                    ReimbursementField.subquotaId
+                FieldSubquotaNumber ->
+                    ReimbursementField.subquotaNumber
 
                 FieldSubquotaDescription ->
                     ReimbursementField.subquotaDescription
@@ -155,9 +152,6 @@ translate lang trans =
 
                 FieldBatchNumber ->
                     ReimbursementField.batchNumber
-
-                FieldReimbursementValues ->
-                    ReimbursementField.reimbursementValues
 
                 FieldPassenger ->
                     ReimbursementField.passenger

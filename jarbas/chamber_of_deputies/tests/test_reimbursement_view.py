@@ -17,9 +17,7 @@ from jarbas.chamber_of_deputies.tests import random_tweet_status
 
 def get_reimbursement(**kwargs):
     quantity = kwargs.pop('quantity', 1)
-    kwargs['net_values'] = '1.99,2.99'
-    kwargs['reimbursement_values'] = '200.00,500.00'
-    kwargs['reimbursement_numbers'] = '2,3'
+    kwargs['numbers'] = ['2', '3']
     if quantity == 1:
         return mixer.blend(Reimbursement, search_vector=None, **kwargs)
     return mixer.cycle(quantity).blend(Reimbursement, search_vector=None, **kwargs)
@@ -56,12 +54,12 @@ class TestListApi(TestCase):
     def test_content_with_cnpj_cpf_filter(self):
         search_data = (
             ('cnpj_cpf', '12345678901'),
-            ('subquota_id', '22'),
+            ('subquota_number', '22'),
             ('order_by', 'probability'),
             ('suspicions', '1'),
         )
         url = '{}?{}'.format(self.url, urlencode(search_data))
-        target_result = get_reimbursement(cnpj_cpf='12345678901', subquota_id=22, suspicions=1)
+        target_result = get_reimbursement(cnpj_cpf='12345678901', subquota_number=22, suspicions=1)
         resp = self.client.get(url)
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(1, len(content['results']))

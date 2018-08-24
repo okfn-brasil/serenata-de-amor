@@ -55,7 +55,7 @@ All these endpoints accepts any combination of the following parameters:
 * `issue_date_start` (inclusive)
 * `issue_date_end` (exclusive)
 * `month`
-* `subquota_id`
+* `subquota_number`
 * `suspicions` (_boolean_, `1` parses to `True`, `0` to `False`)
 * `has_receipt` (_boolean_, `1` parses to `True`, `0` to `False`)
 * `year`
@@ -76,7 +76,7 @@ All these endpoints accepts any combination of the following parameters:
 For example:
 
 ```
-GET /api/chamber_of_deputies/reimbursement/?year=2016&cnpj_cpf=11111111111111&subquota_id=42&order_by=probability
+GET /api/chamber_of_deputies/reimbursement/?year=2016&cnpj_cpf=11111111111111&subquota_number=42&order_by=probability
 ```
 
 This request will list:

@@ -21,11 +21,6 @@ class TestCreate(TestReimbursement):
         Reimbursement.objects.create(**self.data)
         self.assertEqual(1, Reimbursement.objects.count())
 
-    def test_unique_document_id(self):
-        Reimbursement.objects.create(**self.data)
-        with self.assertRaises(IntegrityError):
-            Reimbursement.objects.create(**self.data)
-
     def test_last_update(self):
         reimbursement = Reimbursement.objects.create(**self.data)
         created_at = reimbursement.last_update
@@ -35,7 +30,7 @@ class TestCreate(TestReimbursement):
 
     def test_optional_fields(self):
         optional = (
-            'total_reimbursement_value',
+            'total_value',
             'congressperson_id',
             'congressperson_name',
             'congressperson_document',
@@ -44,7 +39,6 @@ class TestCreate(TestReimbursement):
             'cnpj_cpf',
             'remark_value',
             'installment',
-            'reimbursement_values',
             'passenger',
             'leg_of_the_trip',
             'probability',
@@ -141,28 +135,12 @@ class TestCustomMethods(TestReimbursement):
         self.assertEqual(['1', '2'], Reimbursement.as_list('1,2'))
         self.assertEqual([1, 2], Reimbursement.as_list('1,2', int))
 
-    def test_all_reimbursemenet_values(self):
-        Reimbursement.objects.create(**self.data)
-        reimbursement = Reimbursement.objects.first()
-        self.assertEqual(
-            [12.13, 14.15],
-            list(reimbursement.all_reimbursement_values)
-        )
-
     def test_all_numbers(self):
         Reimbursement.objects.create(**self.data)
         reimbursement = Reimbursement.objects.first()
         self.assertEqual(
             [10, 11],
-            list(reimbursement.all_reimbursement_numbers)
-        )
-
-    def test_all_net_values(self):
-        Reimbursement.objects.create(**self.data)
-        reimbursement = Reimbursement.objects.first()
-        self.assertEqual(
-            [1.99, 2.99],
-            list(reimbursement.all_net_values)
+            list(reimbursement.all_numbers)
         )
 
     def test_repr(self):

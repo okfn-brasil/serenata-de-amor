@@ -114,7 +114,7 @@ class DocumentTypeListFilter(JarbasListFilter):
 class SubquotaListFilter(SimpleListFilter, Subquotas):
 
     title = 'subcota'
-    parameter_name = 'subquota_id'
+    parameter_name = 'subquota_number'
     default_value = None
 
     def lookups(self, request, model_admin):

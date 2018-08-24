@@ -1,4 +1,3 @@
-import lzma
 from csv import DictReader
 
 from jarbas.core.management.commands import LoadCommand
@@ -28,7 +27,7 @@ class Command(LoadCommand):
     @property
     def reimbursements(self):
         """Returns a Generator with a Reimbursement instance for each row."""
-        with lzma.open(self.path, 'rt') as file_handler:
+        with open(self.path, 'rt') as file_handler:
             yield from (serialize(row) for row in DictReader(file_handler))
 
     def create_batches(self):

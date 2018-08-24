@@ -24,8 +24,8 @@ applicantId =
         "Identificador do Solicitante"
 
 
-totalReimbursementValue : TranslationSet
-totalReimbursementValue =
+totalValue : TranslationSet
+totalValue =
     TranslationSet
         "Total reimbursement value"
         "Valor total dos reembolsos"
@@ -38,18 +38,11 @@ totalNetValue =
         "Valor líquido total"
 
 
-reimbursementNumbers : TranslationSet
-reimbursementNumbers =
+numbers : TranslationSet
+numbers =
     TranslationSet
         "Reimbursement number"
         "Número dos reembolsos"
-
-
-netValues : TranslationSet
-netValues =
-    TranslationSet
-        "Net values"
-        "Valores líquidos"
 
 
 congresspersonId : TranslationSet
@@ -108,8 +101,8 @@ term =
         "Número da legislatura"
 
 
-subquotaId : TranslationSet
-subquotaId =
+subquotaNumber : TranslationSet
+subquotaNumber =
     TranslationSet
         "Subquota number"
         "Número da Subcota"
@@ -225,13 +218,6 @@ batchNumber =
     TranslationSet
         "Batch number"
         "Número do lote"
-
-
-reimbursementValues : TranslationSet
-reimbursementValues =
-    TranslationSet
-        "Reimbursement values"
-        "Valor dos reembolsos"
 
 
 passenger : TranslationSet
