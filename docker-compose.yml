@@ -1,62 +1,45 @@
-version: '3'
+version: "3"
 services:
-
-  rosie:
-    image: serenata/rosie
-    volumes:
-      - /tmp/serenata-data:/tmp/serenata-data
-      - ./rosie:/code
-
-  django:
-    image: serenata/django
-    depends_on:
-      - elm
-      - postgres
-      - tasks
-      - cache
-    environment:
-      - NEW_RELIC_APP_NAME=Jarbas (Django); Jarbas (Combined)
-    env_file:
-      - .env
-    hostname: django
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/code
-      - ./contrib/data:/mnt/data
-
-  tasks:
-    image: serenata/django
-    environment:
-      - NEW_RELIC_APP_NAME=Jarbas (Celery); Jarbas (Combined)
-    env_file:
-      - .env
-    depends_on:
-      - queue
-    command: ["newrelic-admin", "run-program", "celery", "worker", "--app", "jarbas"]
-    volumes:
-      - .:/code
-    hostname: tasks
-
-  elm:
-    command: ["npm", "run", "watch"]
-    image: serenata/elm
-    volumes:
-      - ./jarbas:/code/jarbas
-    hostname: elm
-
-  queue:
-    image: rabbitmq:3.7.3-alpine
-    hostname: queue
-
-  postgres:
-    image: postgres:10.3-alpine
-    env_file:
-      - .env
-    volumes:
-      - ./db:/var/lib/postgresql
-    ports:
-      - "5432:5432"
 
   cache:
     image: memcached:1.5.8-alpine
+    restart: always
+
+  elm:
+    hostname: elm
+    image: serenata/elm
+    restart: on-failure
+
+  django:
+    command: ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8000", "--workers", $WEB_WORKERS, "--log-level", $LOG_LEVEL, "--timeout", $WEB_TIMEOUT]
+    depends_on:
+      - cache
+      - elm
+      - tasks
+    env_file:
+      - .env
+    environment:
+      - NEW_RELIC_APP_NAME=Jarbas (Django); Jarbas (Combined)
+    hostname: django
+    image: serenata/django
+    restart: always
+
+  queue:
+    hostname: queue
+    image: rabbitmq:3.7.3-alpine
+    restart: on-failure
+
+  rosie:
+    image: serenata/rosie
+
+  tasks:
+    command: ["newrelic-admin", "run-program", "celery", "worker", "--app", "jarbas"]
+    depends_on:
+      - queue
+    env_file:
+      - .env
+    environment:
+      - NEW_RELIC_APP_NAME=Jarbas (Celery); Jarbas (Combined)
+    hostname: tasks
+    image: serenata/django
+    restart: always

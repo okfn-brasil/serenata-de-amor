@@ -30,7 +30,7 @@ urlpatterns = [
              namespace='chamber_of_deputies'))
 ]
 
-if settings.DEBUG:
+if settings.LOG_LEVEL == 'debug':
     import debug_toolbar
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
