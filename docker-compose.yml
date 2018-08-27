@@ -58,12 +58,5 @@ services:
     ports:
       - "5432:5432"
 
-  research:
-    build:
-      context: research
-    volumes:
-      - ./research:/mnt/code
-    hostname: research
-
   cache:
     image: memcached:1.5.8-alpine
