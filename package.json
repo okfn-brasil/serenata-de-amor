@@ -12,10 +12,10 @@
   "dependencies": {
     "elm": "^0.18",
     "gulp": "^3.9.1",
-    "gulp-cli": "^1.2.2",
+    "gulp-cli": "^2.0.1",
     "gulp-elm": "^0.7.2",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^3.0.0",
-    "gulp-watch": "^4.3.11"
+    "gulp-watch": "^5.0.1"
   }
 }
