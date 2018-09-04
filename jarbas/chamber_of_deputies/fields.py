@@ -34,6 +34,7 @@ class DateAsStringField(fields.DateField):
         value = value.replace('T', ' ')  # normalize date/time separator
         return super(DateAsStringField, cls).deserialize(value)
 
+
 class ArrayField(fields.JSONField):
     TYPE = (list,)
 
