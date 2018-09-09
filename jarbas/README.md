@@ -212,7 +212,7 @@ $ docker-compose run --rm django python manage.py migrate
 Seeding it with sample data:
 
 ```console
-$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.xz
+$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.csv
 $ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
 $ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
 $ docker-compose run --rm django python manage.py tweets

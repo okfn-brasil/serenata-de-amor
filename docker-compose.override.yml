@@ -10,7 +10,8 @@ services:
     restart: "no"
     volumes:
       - .:/code
-      - /tmp/serenata-data:/mnt/data
+      - ./contrib/data:/mnt/data
+      - /tmp/serenata-data:/mnt/rosie-output
 
   elm:
     command: ["npm", "run", "watch"]
