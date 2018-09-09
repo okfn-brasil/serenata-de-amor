@@ -29,6 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 ENVIRONMENT = config('ENVIRONMENT', default='development')
 LOG_LEVEL = config('LOG_LEVEL', default='debug')
+DEBUG = ENVIRONMENT != 'production'
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 INTERNAL_IPS = ('127.0.0.1',)
