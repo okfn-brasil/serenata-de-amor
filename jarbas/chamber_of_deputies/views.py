@@ -23,7 +23,7 @@ class ReimbursementListView(ListAPIView):
             'issue_date_end',
             'issue_date_start',
             'month',
-            'subquota_id',
+            'subquota_number',
             'year'
         )
         values = map(self.request.query_params.get, params)
@@ -115,5 +115,5 @@ class SubquotaListView(ListAPIView):
 
     def get_queryset(self):
         query = self.request.query_params.get('q')
-        args = ('subquota_id', 'subquota_description', query)
+        args = ('subquota_number', 'subquota_description', query)
         return Reimbursement.objects.list_distinct(*args)

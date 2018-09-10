@@ -1,8 +1,6 @@
 from itertools import chain
 
-from rows.fields import FloatField
-
-from jarbas.chamber_of_deputies.fields import DateAsStringField, IntegerField
+from jarbas.chamber_of_deputies.fields import ArrayField, DateAsStringField, FloatField, IntegerField
 from jarbas.chamber_of_deputies.models import Reimbursement
 
 
@@ -24,7 +22,6 @@ INTEGERS = (
 
 FLOATS = (
     'document_value',
-    'reimbursement_value_total',
     'remark_value',
     'total_net_value'
 )
@@ -32,13 +29,9 @@ FLOATS = (
 TYPES = tuple(chain(
     ((field, IntegerField) for field in INTEGERS),
     ((field, FloatField) for field in FLOATS),
-    (('issue_date', DateAsStringField),)
+    (('issue_date', DateAsStringField),),
+    (('numbers', ArrayField),),
 ))
-
-RENAME = (
-    ('subquota_number', 'subquota_id'),
-    ('reimbursement_value_total', 'total_reimbursement_value'),
-)
 
 
 def serialize(row):
@@ -49,8 +42,5 @@ def serialize(row):
     for key, type_ in TYPES:
         value = row.get(key)
         row[key] = type_.deserialize(value)
-
-    for old, new in RENAME:
-        row[new] = row.pop(old)
 
     return Reimbursement(**row)

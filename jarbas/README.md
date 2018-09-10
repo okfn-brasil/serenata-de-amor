@@ -55,7 +55,7 @@ All these endpoints accepts any combination of the following parameters:
 * `issue_date_start` (inclusive)
 * `issue_date_end` (exclusive)
 * `month`
-* `subquota_id`
+* `subquota_number`
 * `suspicions` (_boolean_, `1` parses to `True`, `0` to `False`)
 * `has_receipt` (_boolean_, `1` parses to `True`, `0` to `False`)
 * `year`
@@ -76,7 +76,7 @@ All these endpoints accepts any combination of the following parameters:
 For example:
 
 ```
-GET /api/chamber_of_deputies/reimbursement/?year=2016&cnpj_cpf=11111111111111&subquota_id=42&order_by=probability
+GET /api/chamber_of_deputies/reimbursement/?year=2016&cnpj_cpf=11111111111111&subquota_number=42&order_by=probability
 ```
 
 This request will list:
@@ -142,7 +142,10 @@ Copy `contrib/.env.sample` as `.env` in the project's root folder and adjust you
 
 ##### Django settings
 
-* `DEBUG` (_bool_) enable or disable [Django debug mode](https://docs.djangoproject.com/en/1.10/ref/settings/#debug)
+* `ENVIRONMENT` (_str_) Environment in which the application is running. (e.g. production or development)
+* `LOG_LEVEL` (_str_) [The granularity of error log outputs](http://docs.gunicorn.org/en/stable/settings.html#loglevel)
+* `WEB_TIMEOUT` (_int_) [Workers silent for more than this many seconds are killed and restarted](http://docs.gunicorn.org/en/stable/settings.html#timeout)
+* `WEB_WORKERS` (_int_) [The number of worker processes for handling requests](http://docs.gunicorn.org/en/stable/settings.html#workers)
 * `GOSS_VERSION` (_str_) [Version for Goss tester in Docker](https://goss.rocks)
 * `SECRET_KEY` (_str_) [Django's secret key](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
 * `ALLOWED_HOSTS` (_str_) [Django's allowed hosts](https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts)
@@ -209,7 +212,7 @@ $ docker-compose run --rm django python manage.py migrate
 Seeding it with sample data:
 
 ```console
-$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.xz
+$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.csv
 $ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
 $ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
 $ docker-compose run --rm django python manage.py tweets

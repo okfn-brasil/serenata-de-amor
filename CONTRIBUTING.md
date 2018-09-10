@@ -35,7 +35,7 @@ This is an example to run only Jarbas. First run migrations and provision:
 
 ```console
 $ docker-compose run --rm django python manage.py migrate
-$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements_sample.xz
+$ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements-2018.csv
 $ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
 $ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
 $ docker-compose run --rm django python manage.py searchvector

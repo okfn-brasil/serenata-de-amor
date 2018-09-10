@@ -27,8 +27,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+ENVIRONMENT = config('ENVIRONMENT', default='development')
+LOG_LEVEL = config('LOG_LEVEL', default='debug')
+DEBUG = ENVIRONMENT != 'production'
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 INTERNAL_IPS = ('127.0.0.1',)
@@ -69,7 +70,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-if not DEBUG:
+if ENVIRONMENT == 'production':
     MIDDLEWARE.insert(2, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 ROOT_URLCONF = 'jarbas.urls'
@@ -142,6 +143,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 CORE_STATIC_DIR = os.path.join(BASE_DIR, 'jarbas', 'core', 'static')
+STATICFILES_STORAGE = config('STATICFILES_STORAGE', default='')
 
 # Django REST Framework
 

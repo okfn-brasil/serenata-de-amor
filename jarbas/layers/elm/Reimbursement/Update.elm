@@ -50,7 +50,7 @@ toSameSubquotaFilter reimbursement =
     SameSubquota.Filter reimbursement.applicantId
         reimbursement.year
         reimbursement.month
-        reimbursement.subquotaId
+        reimbursement.subquotaNumber
 
 
 newSearch : Model -> Model

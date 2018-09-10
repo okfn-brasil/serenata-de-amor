@@ -20,15 +20,15 @@ class TestSubquota(TestCase):
 
     def test_contents(self):
         expected = [
-            dict(subquota_description='Another subquota', subquota_id=42),
-            dict(subquota_description='Subquota description', subquota_id=4)
+            dict(subquota_description='Another subquota', subquota_number=42),
+            dict(subquota_description='Subquota description', subquota_number=4)
         ]
 
         cache.clear()
         secondary_data = sample_reimbursement_data.copy()
         secondary_data['document_id'] = 13
         secondary_data['year'] = 1971
-        secondary_data['subquota_id'] = 42
+        secondary_data['subquota_number'] = 42
         secondary_data['subquota_description'] = 'Another subquota'
         Reimbursement.objects.create(**secondary_data)
         resp = self.client.get(self.url)
@@ -39,13 +39,13 @@ class TestSubquota(TestCase):
 
     def test_contents_with_filter(self):
         expected = [
-            dict(subquota_description='Another subquota', subquota_id=42)
+            dict(subquota_description='Another subquota', subquota_number=42)
         ]
 
         secondary_data = sample_reimbursement_data.copy()
         secondary_data['document_id'] = 13
         secondary_data['year'] = 1971
-        secondary_data['subquota_id'] = 42
+        secondary_data['subquota_number'] = 42
         secondary_data['subquota_description'] = 'Another subquota'
         Reimbursement.objects.create(**secondary_data)
         resp = self.client.get(self.url + '?q=another')
@@ -56,7 +56,7 @@ class TestSubquota(TestCase):
 
     def test_content_non_duplicate_name(self):
         expected = [
-            dict(subquota_description='Subquota description', subquota_id=4)
+            dict(subquota_description='Subquota description', subquota_number=4)
         ]
         secondary_data = sample_reimbursement_data.copy()
         secondary_data['document_id'] = 13

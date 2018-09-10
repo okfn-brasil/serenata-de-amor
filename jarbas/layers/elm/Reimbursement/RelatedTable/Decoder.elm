@@ -12,7 +12,7 @@ reimbursementSummaryDecoder =
         |> optional "city" (nullable string) Nothing
         |> required "document_id" int
         |> required "subquota_description" string
-        |> required "subquota_id" int
+        |> required "subquota_number" int
         |> required "supplier" string
         |> required "total_net_value" float
         |> required "year" int

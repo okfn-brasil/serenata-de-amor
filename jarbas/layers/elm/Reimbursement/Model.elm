@@ -15,10 +15,9 @@ type alias Reimbursement =
     { year : Int
     , documentId : Int
     , applicantId : Int
-    , totalReimbursementValue : Maybe Float
+    , totalValue : Maybe Float
     , totalNetValue : Float
-    , reimbursementNumbers : List Int
-    , netValues : List Float
+    , numbers : List Int
     , congresspersonId : Maybe Int
     , congresspersonName : Maybe String
     , congresspersonDocument : Maybe Int
@@ -26,7 +25,7 @@ type alias Reimbursement =
     , party : Maybe String
     , termId : Maybe Int
     , term : Int
-    , subquotaId : Int
+    , subquotaNumber : Int
     , subquotaDescription : String
     , subquotaGroupId : Maybe Int
     , subquotaGroupDescription : Maybe String
@@ -40,7 +39,6 @@ type alias Reimbursement =
     , remarkValue : Maybe Float
     , installment : Maybe Int
     , batchNumber : Maybe Int
-    , reimbursementValues : Maybe (List Float)
     , passenger : Maybe String
     , legOfTheTrip : Maybe String
     , probability : Maybe Float

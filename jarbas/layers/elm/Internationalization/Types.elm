@@ -29,10 +29,9 @@ type TranslationId
     | FieldYear
     | FieldDocumentId
     | FieldApplicantId
-    | FieldTotalReimbursementValue
+    | FieldTotalValue
     | FieldTotalNetValue
-    | FieldReimbursementNumbers
-    | FieldNetValues
+    | FieldNumbers
     | FieldCongresspersonId
     | FieldCongressperson
     | FieldCongresspersonName
@@ -41,7 +40,7 @@ type TranslationId
     | FieldParty
     | FieldTermId
     | FieldTerm
-    | FieldSubquotaId
+    | FieldSubquotaNumber
     | FieldSubquotaDescription
     | FieldSubquotaGroupId
     | FieldSubquotaGroupDescription
@@ -59,7 +58,6 @@ type TranslationId
     | FieldRemarkValue
     | FieldInstallment
     | FieldBatchNumber
-    | FieldReimbursementValues
     | FieldPassenger
     | FieldLegOfTheTrip
     | FieldProbability

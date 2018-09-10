@@ -24,11 +24,9 @@ class TestCreateOrUpdateTask(TestCase):
             'issue_date': '2014-02-12T00:00:00',
             'leg_of_the_trip': '8',
             'month': '1',
-            'net_values': '1.99,2.99',
             'party': 'Partido',
             'passenger': 'John Doe',
-            'reimbursement_numbers': '10,11',
-            'reimbursement_values': '12.13,14.15',
+            'numbers': '[\'10\', \'11\']',
             'remark_value': '1.23',
             'state': 'UF',
             'subquota_description': 'Subquota description',
@@ -39,7 +37,6 @@ class TestCreateOrUpdateTask(TestCase):
             'term': '1970',
             'term_id': '3',
             'total_net_value': '4.56',
-            'reimbursement_value_total': '',
             'year': '1970'
         }
         self.serialized = Reimbursement(
@@ -57,22 +54,20 @@ class TestCreateOrUpdateTask(TestCase):
             issue_date=date(2014, 2, 12),
             leg_of_the_trip='8',
             month=1,
-            net_values='1.99,2.99',
             party='Partido',
             passenger='John Doe',
-            reimbursement_numbers='10,11',
-            reimbursement_values='12.13,14.15',
+            numbers=['10', '11'],
             remark_value=1.23,
             state='UF',
             subquota_description='Subquota description',
             subquota_group_description='Subquota group desc',
             subquota_group_id=5,
-            subquota_id=4,
+            subquota_number=4,
             supplier='Acme',
             term=1970,
             term_id=3,
             total_net_value=4.56,
-            total_reimbursement_value=None,
+            total_value=None,
             year=1970
         )
 

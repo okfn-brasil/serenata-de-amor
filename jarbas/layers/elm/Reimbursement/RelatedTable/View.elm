@@ -54,7 +54,7 @@ viewReimbursement lang mdl ( index, reimbursement ) =
                 , MouseOver index False |> onMouseLeave
                 , getReimbursementUrl reimbursement |> href
                 , target "_blank"
-                , reimbursement.subquotaId |> toString |> attribute "data-baseSyles"
+                , reimbursement.subquotaNumber |> toString |> attribute "data-baseSyles"
                 , reimbursement.year |> toString |> attribute "data-year"
                 , reimbursement.applicantId |> toString |> attribute "data-applicant"
                 , reimbursement.documentId |> toString |> attribute "data-document"

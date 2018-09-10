@@ -1,0 +1,39 @@
+version: "3"
+services:
+
+  django:
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    restart: "no"
+    volumes:
+      - .:/code
+      - ./contrib/data:/mnt/data
+      - /tmp/serenata-data:/mnt/rosie-output
+
+  elm:
+    command: ["npm", "run", "watch"]
+    restart: "no"
+    volumes:
+      - ./jarbas:/code/jarbas
+
+  postgres:
+    env_file:
+      - .env
+    image: postgres:10.3-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db:/var/lib/postgresql
+
+  rosie:
+    volumes:
+      - /tmp/serenata-data:/tmp/serenata-data
+      - ./rosie:/code
+
+  tasks:
+    restart: "no"
+    volumes:
+      - .:/code
