@@ -1,6 +1,6 @@
 # Rosie, the robot
 
-A Python application reading receipts from the [Quota for Exercising Parliamentary Activity](https://github.com/datasciencebr/serenata-de-amor/blob/master/CONTRIBUTING.md#more-about-the-quota-for-exercising-parliamentary-activity-ceap) (aka CEAP) from the Brazilian Chamber of Deputies and outputs, for each of the receipts, a _probability of corruption_ and a list of reasons why it was considered this way.
+A Python application reading receipts from the [Quota for Exercising Parliamentary Activity](https://github.com/okfn-brasil/serenata-de-amor/blob/master/CONTRIBUTING.md#more-about-the-quota-for-exercising-parliamentary-activity-ceap) (aka CEAP) from the Brazilian Chamber of Deputies and outputs, for each of the receipts, a _probability of corruption_ and a list of reasons why it was considered this way.
 
 ## Running
 
@@ -26,7 +26,7 @@ $ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie p
 $ conda update conda
 $ conda create --name serenata_rosie python=3
 $ source activate serenata_rosie
-$ ./setup
+$ pip install -r requirements.txt
 ```
 
 #### Running

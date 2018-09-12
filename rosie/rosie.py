@@ -1,60 +1,30 @@
-from sys import argv, exit
+#!/usr/bin/env python
+
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
+
+from rosie import chamber_of_deputies, federal_senate
 
 
-def entered_command(argv):
-    if len(argv) >= 2:
-        return argv[1]
-    return None
+def main():
+    parser = ArgumentParser(description='''Artificial Intelligence for social control of public administration''',
+            epilog='''Example: rosie.py chamber-of-deputies''',
+        formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument('module', nargs='?', default='all',
+        help='a module to run, could be chamber-of-deputies or federal-senate')
+    parser.add_argument('--dataset', '-d', nargs='?',
+        help='the source dataset')
+    args = parser.parse_args()
+    if ('chamber-of-deputies' in args.module) or args.module == 'all':
+        if args.dataset:
+            chamber_of_deputies.main(args.dataset)
+        else:
+            chamber_of_deputies.main()
+    if ('federal-senate' in args.module) or args.module == 'all':
+        if args.dataset:
+            federal_senate.main(args.dataset)
+        else:
+            federal_senate.main()
 
 
-def help():
-    message = (
-        'Usage:',
-        '  python rosie.py run chamber_of_deputies [<path to output directory>]',
-        'Testing:',
-        '  python rosie.py test',
-        '  python rosie.py test chamber_of_deputies',
-    )
-    print('\n'.join(message))
-
-
-def run():
-    import rosie
-    import rosie.chamber_of_deputies
-    import rosie.federal_senate
-
-    if len(argv) >= 3:
-        target_module = argv[2]
-    else:
-        print('A module must be provided.')
-        help()
-        exit(1)
-    target_directory = argv[3] if len(argv) >= 4 else '/tmp/serenata-data/'
-    klass = getattr(rosie, target_module)
-    klass.main(target_directory)
-
-
-def test():
-    import os
-
-    import unittest
-
-    loader = unittest.TestLoader()
-
-    if len(argv) >= 3:
-        target_module = argv[2]
-        tests_path = os.path.join('rosie', target_module)
-        tests = loader.discover(tests_path)
-    else:
-        tests = loader.discover('rosie')
-
-    testRunner = unittest.runner.TextTestRunner()
-    result = testRunner.run(tests)
-
-    if not result.wasSuccessful():
-        exit(1)
-
-
-commands = {'run': run, 'test': test}
-command = commands.get(entered_command(argv), help)
-command()
+if __name__ == '__main__':
+    main()
