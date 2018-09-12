@@ -1,21 +1,23 @@
 # Rosie, the robot
 
-A Python application reading receipts from the [Quota for Exercising Parliamentary Activity](https://github.com/datasciencebr/serenata-de-amor/blob/master/CONTRIBUTING.md#more-about-the-quota-for-exercising-parliamentary-activity-ceap) (aka CEAP) from the Brazilian Chamber of Deputies and outputs, for each of the receipts, a _probability of corruption_ and a list of reasons why it was considered this way.
+A Python application reading receipts from the Quota for Exercising Parliamentary Activity from Brazilian's Chamber of Deputies and Federal Senate. Rosie flag suspicious reimbursements and, in that case, offer a list of reasons why it was considered suspicious.
 
 ## Running
 
 ### With Docker
 
+#### Running
+
 ```console
-$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie python rosie.py run <module_name>
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data serenata/rosie python rosie.py run <module-name>
 ```
 
-Then check your `/tmp/serenata-data/` directory in you host machine for `suspicions.xz`.
+`<module-name>` might be either `chamber_of_deputies` or `federal_senate`. After running it, check your `/tmp/serenata-data/` directory in you host machine for `suspicions.xz`. It's a compacted CSV with all the irregularities Rosie was able to find.
 
-For testing
+#### Testing
 
 ```console
-$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie python rosie.py test
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data serenata/rosie python rosie.py test
 ```
 
 ### Without Docker
@@ -26,36 +28,38 @@ There are a few options to setup your environment and download dependencies. The
 
 ```console
 $ conda update conda
-$ conda create --name serenata_rosie python=3
-$ conda activate serenata_rosie
+$ conda create --name serenata python=3
+$ conda activate serenata
 $ pip install -r requirements.txt
 ```
 
 #### Running
 
-To run Rosie, you need to select a module to be called.
-For example, if you want to run `chamber_of_deputies` module, you should run this command:
 
 ```console
-$ python rosie.py run chamber_of_deputies
+$ python rosie.py run <module-name>
 ```
 
-A `/tmp/serenata-data/suspicions.xz` file will be created. It's a compacted CSV with all the irregularities Rosie is able to find.
+`<module-name>` might be either `chamber_of_deputies` or `federal_senate`.
 
-Also a target directory (where files are saved) can de passed — for example:
+A `/tmp/serenata-data/suspicions.xz` file will be created. It's a compacted CSV with all the irregularities Rosie was able to find.
+
+You can choose a custom a target directory:
 
 ```console
-$ python rosie.py run chamber_of_deputies /my/serenata/directory/
+$ python rosie.py run chamber_of_deputies --output /my/serenata/directory/
 ```
 
-#### Test suite
+#### Testing
 
 You can either run all tests with:
+
 ```console
 $ python rosie.py test
 ```
 
 Or test each submodule a time by passing a name:
+
 ```console
 $ python rosie.py test core
 $ python rosie.py test chamber_of_deputies
