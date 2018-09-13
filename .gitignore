@@ -4,7 +4,6 @@
 .floo
 *.sqlite3
 db/
-docker-compose.prod.yml
 htmlcov/
 npm-debug.log
 
