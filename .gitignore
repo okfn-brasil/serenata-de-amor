@@ -11,8 +11,6 @@ npm-debug.log
 *.pyc
 .webassets-cache/
 __pycache__/
-app.css
-app.js
 ceap-datasets.html
 elm-stuff/
 jarbas/frontend/tests/Doc/
