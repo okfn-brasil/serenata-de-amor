@@ -55,7 +55,7 @@ class Reimbursement(models.Model):
     state = models.CharField('UF', max_length=2, db_index=True, blank=True, null=True)
 
     term_id = models.IntegerField('Código da Legislatura', blank=True, null=True)
-    term = models.IntegerField('Número da Legislatura', blank=True, null=True)
+    term = models.IntegerField('Número da Legislatura', blank=True, null=True, db_index=True)
 
     subquota_number = models.IntegerField('Número da Subcota', db_index=True)
     subquota_description = models.CharField('Descrição da Subcota', max_length=140, db_index=True)
@@ -135,7 +135,7 @@ class Reimbursement(models.Model):
 
 class Tweet(models.Model):
 
-    reimbursement = models.OneToOneField(Reimbursement, on_delete=models.CASCADE)
+    reimbursement = models.OneToOneField(Reimbursement, on_delete=models.CASCADE, db_index=True)
     status = models.DecimalField('Tweet ID', db_index=True, max_digits=25, decimal_places=0)
 
     def get_url(self):
