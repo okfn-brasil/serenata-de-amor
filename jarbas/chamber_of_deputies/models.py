@@ -116,7 +116,7 @@ class Reimbursement(models.Model):
 
     @property
     def all_numbers(self):
-        return [int(num) for num in self.numbers]
+        return [int(num) for num in self.numbers if num is not None]
 
     @staticmethod
     def as_list(content, cast=None):
