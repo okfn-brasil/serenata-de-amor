@@ -10,7 +10,7 @@ class Command(LoadCommand):
     BATCH_SIZE = 4096
 
     def add_arguments(self, parser):
-        super().add_arguments(parser, add_drop_all=False)
+        super().add_arguments(parser)
         parser.add_argument(
             '--batch-size', '-b', dest='batch_size', type=int,
             default=self.BATCH_SIZE,
@@ -21,7 +21,10 @@ class Command(LoadCommand):
         self.path = options['dataset']
         self.batch_size = options.get('batch_size', self.BATCH_SIZE)
         self.batch, self.count = [], 0
-        self.drop_all(Reimbursement)
+
+        if options.get('drop', False):
+            self.drop_all(Reimbursement)
+
         self.create_batches()
 
     @property

@@ -62,6 +62,22 @@ class ReimbursementQuerySet(models.QuerySet):
 
         return self
 
+    def last_term(self):
+        return self.exclude(term=None) \
+            .distinct('term') \
+            .order_by('-term') \
+            .values_list('term', flat=True) \
+            .first()
+
+    def next_tweet(self, congressperson_ids_with_twitter):
+        kwargs = {
+            'term': self.last_term(),
+            'suspicions__meal_price_outlier': True,
+            'tweet': None,
+            'congressperson_id__in': congressperson_ids_with_twitter
+        }
+        return self.filter(**kwargs).order_by('issue_date').first()
+
 
 def _str_to_tuple(filters):
     """
