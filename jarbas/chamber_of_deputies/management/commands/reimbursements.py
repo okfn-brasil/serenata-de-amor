@@ -31,7 +31,10 @@ class Command(LoadCommand):
     def reimbursements(self):
         """Returns a Generator with a Reimbursement instance for each row."""
         with open(self.path, 'rt') as file_handler:
-            yield from (serialize(row) for row in DictReader(file_handler))
+            for row in DictReader(file_handler):
+                obj = serialize(row)
+                if obj:
+                    yield obj
 
     def create_batches(self):
         for count, reimbursement in enumerate(self.reimbursements, 1):

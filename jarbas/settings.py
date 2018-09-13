@@ -142,8 +142,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-CORE_STATIC_DIR = os.path.join(BASE_DIR, 'jarbas', 'core', 'static')
-STATICFILES_STORAGE = config('STATICFILES_STORAGE', default='')
+STATICFILES_STORAGE = config('STATICFILES_STORAGE', default='whitenoise.storage.CompressedManifestStaticFilesStorage')
 
 # Django REST Framework
 
