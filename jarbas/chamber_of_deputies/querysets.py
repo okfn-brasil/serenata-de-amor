@@ -1,4 +1,5 @@
 import re
+from datetime import date
 from functools import reduce
 
 from django.db import models
@@ -70,8 +71,10 @@ class ReimbursementQuerySet(models.QuerySet):
             .first()
 
     def next_tweet(self, congressperson_ids_with_twitter):
+        last_term = self.last_term()
         kwargs = {
-            'term': self.last_term(),
+            'issue_date__gte': date(last_term, 1, 1),
+            'term': last_term,
             'suspicions__meal_price_outlier': True,
             'tweet': None,
             'congressperson_id__in': congressperson_ids_with_twitter
