@@ -14,6 +14,10 @@ class SocialMedia(models.Model):
     secondary_twitter_profile = models.CharField(max_length=255, blank=True, default='')
     facebook_page = models.CharField(max_length=255, blank=True, default='')
 
+    @property
+    def twitter(self):
+        return self.twitter_profile or self.secondary_twitter_profile
+
 
 class Receipt:
 

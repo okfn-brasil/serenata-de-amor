@@ -1,25 +1,26 @@
 from django.core.management.base import BaseCommand
 
-from jarbas.chamber_of_deputies.twitter import SocialMedia, Twitter
+from jarbas.chamber_of_deputies.twitter import Twitter
 
 
 class Command(BaseCommand):
-    help = 'Tweet the next suspicion at @RosieDaSerenata'
+    help = 'Tweet the next suspicion at @RosieDaSerenata account'
 
     def add_arguments(self, parser):
-        parser.add_argument('--fake', action='store_true',
-                            help='Do not tweet, just show the tweet text')
+        parser.add_argument(
+            '--fake',
+            action='store_true',
+            help='Do not tweet, just show the tweet message'
+        )
 
     def handle(self, *args, **options):
-        congressperson_ids_with_twitter = SocialMedia.objects. \
-            values_list('congressperson_id', flat=True) \
-            .distinct('congressperson_id') \
-            .order_by('congressperson_id')
+        twitter = Twitter()
+        if not twitter.reimbursement:
+            print('No suspicion to tweet')
+            return None
 
-        twitter = Twitter(congressperson_ids_with_twitter)
-        if twitter.reimbursement:
-            if options.get('fake'):
-                print(twitter.message)
-                return None
+        if options.get('fake'):
+            print(twitter.message)
+            return None
 
-            twitter.publish()
+        twitter.publish()

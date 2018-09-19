@@ -1,5 +1,4 @@
 import re
-from datetime import date
 from functools import reduce
 
 from django.db import models
@@ -62,24 +61,6 @@ class ReimbursementQuerySet(models.QuerySet):
             self.order_by('-rank')
 
         return self
-
-    def last_term(self):
-        return self.exclude(term=None) \
-            .distinct('term') \
-            .order_by('-term') \
-            .values_list('term', flat=True) \
-            .first()
-
-    def next_tweet(self, congressperson_ids_with_twitter):
-        last_term = self.last_term()
-        kwargs = {
-            'issue_date__gte': date(last_term, 1, 1),
-            'term': last_term,
-            'suspicions__meal_price_outlier': True,
-            'tweet': None,
-            'congressperson_id__in': congressperson_ids_with_twitter
-        }
-        return self.filter(**kwargs).order_by('issue_date').first()
 
 
 def _str_to_tuple(filters):
