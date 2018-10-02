@@ -1,4 +1,3 @@
-import sys
 from json import loads
 from unittest.mock import patch
 from urllib.parse import urlencode
