@@ -86,6 +86,7 @@ def _str_to_tuple(filters):
 def _rename_key(key):
     mapping = dict(
         issue_date_start='issue_date__gte',
-        issue_date_end='issue_date__lt'
+        issue_date_end='issue_date__lt',
+        state='state__iexact'
     )
     return mapping.get(key, key)

@@ -95,6 +95,17 @@ class TestListApi(TestCase):
         content = loads(resp.content.decode('utf-8'))
         self.assertEqual(2, len(content['results']))
 
+    def test_content_with_state_filter(self):
+        get_reimbursement(quantity=2, state="SP")
+        get_reimbursement(state="PR")
+        search_data = (
+            ('state', "SP"),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(2, len(content['results']))
+
     def test_content_with_applicant_id_filter(self):
         get_reimbursement(quantity=2, applicant_id=221)
         get_reimbursement(applicant_id=345)
