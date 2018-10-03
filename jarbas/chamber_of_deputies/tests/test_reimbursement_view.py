@@ -1,4 +1,3 @@
-import sys
 from json import loads
 from unittest.mock import patch
 from urllib.parse import urlencode
@@ -89,6 +88,17 @@ class TestListApi(TestCase):
         get_reimbursement(month=3)
         search_data = (
             ('month', 2),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(2, len(content['results']))
+
+    def test_content_with_state_filter(self):
+        get_reimbursement(quantity=2, state="SP")
+        get_reimbursement(state="PR")
+        search_data = (
+            ('state', "SP"),
         )
         url = '{}?{}'.format(self.url, urlencode(search_data))
         resp = self.client.get(url)
