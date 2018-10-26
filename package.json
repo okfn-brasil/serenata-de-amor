@@ -16,6 +16,8 @@
     "gulp-elm": "^0.7.2",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^3.0.0",
-    "gulp-watch": "^5.0.1"
+    "gulp-watch": "^5.0.1",
+    "cryptiles": ">=4.1.2",
+    "hoek": ">=4.2.1"
   }
 }
