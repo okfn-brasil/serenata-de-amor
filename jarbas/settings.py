@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'jarbas.core.app.CoreConfig',
     'jarbas.chamber_of_deputies.app.ChamberOfDeputiesConfig',
+    'jarbas.federal_senate.app.FederalSenateConfig',
     'jarbas.layers',
     'jarbas.dashboard',
     'django.contrib.admin',
