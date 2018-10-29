@@ -19,5 +19,5 @@ python-twitter==3.4.2
 reprint==0.5.1 # pyup: ignore
 requests==2.20.0
 rows==0.3.1
-tqdm==4.25.0
+tqdm==4.28.1
 whitenoise==4.1
