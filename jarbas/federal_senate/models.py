@@ -18,7 +18,9 @@ class Reimbursement(models.Model):
     supplier = models.CharField('Fornecedor', max_length=256)
     cnpj_cpf = models.CharField('CNPJ ou CPF', max_length=14, db_index=True, blank=True, null=True)
 
-    reimbursement_value = models.DecimalField('Valor do Reembolso', max_digits=10, decimal_places=3, blank=True, null=True)
+    reimbursement_value = models.DecimalField(
+        'Valor do Reembolso', max_digits=10, decimal_places=3, blank=True, null=True
+    )
 
     probability = models.DecimalField('Probabilidade', max_digits=6, decimal_places=5, blank=True, null=True)
     suspicions = JSONField('Suspeitas', blank=True, null=True)
