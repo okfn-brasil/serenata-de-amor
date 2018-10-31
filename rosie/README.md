@@ -22,11 +22,13 @@ $ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie p
 
 #### Setup
 
+There are a few options to setup your environment and download dependencies. The simplest way is [installing Anaconda](https://docs.anaconda.com/anaconda/install/) then run:
+
 ```console
 $ conda update conda
 $ conda create --name serenata_rosie python=3
-$ source activate serenata_rosie
-$ ./setup
+$ conda activate serenata_rosie
+$ pip install -r requirements.txt
 ```
 
 #### Running
