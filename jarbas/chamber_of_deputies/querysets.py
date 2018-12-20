@@ -33,9 +33,7 @@ class ReimbursementQuerySet(models.QuerySet):
         return self.distinct()
 
     def suspicions(self, boolean):
-        if not boolean:
-            return self.filter(suspicions=None)
-        return self.exclude(suspicions=None)
+        return self.filter(suspicions__isnull=not boolean)
 
     def has_receipt_url(self, boolean):
         if not boolean:
