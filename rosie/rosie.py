@@ -1,60 +1,64 @@
-from sys import argv, exit
+"""
+Hi, I am Rosie from Operação Serenata de Amor! 🤖
+
+I'm a proof-of-concept for the usage of artificial intelligence for social
+control of public administration.
+
+Usage:
+  rosie.py run (chamber_of_deputies|federal_senate) [--output=<directory>]
+  rosie.py test [chamber_of_deputies|federal_senate|core]
+
+Options:
+  --help                Show this screen
+  --output=<directory>  Output directory [default: /tmp/serenata-data]
+"""
+import os
+import unittest
+
+from docopt import docopt
+
+import rosie
+import rosie.chamber_of_deputies
+import rosie.federal_senate
 
 
-def entered_command(argv):
-    if len(argv) >= 2:
-        return argv[1]
-    return None
+def get_module(arguments):
+    modules = ('chamber_of_deputies', 'federal_senate', 'core')
+    for module in modules:
+        if arguments[module]:
+            return module
 
 
-def help():
-    message = (
-        'Usage:',
-        '  python rosie.py run chamber_of_deputies [<path to output directory>]',
-        'Testing:',
-        '  python rosie.py test',
-        '  python rosie.py test chamber_of_deputies',
-    )
-    print('\n'.join(message))
+def run(module, directory):
+    module = getattr(rosie, module)
+    module.main(directory)
 
 
-def run():
-    import rosie
-    import rosie.chamber_of_deputies
-    import rosie.federal_senate
-
-    if len(argv) >= 3:
-        target_module = argv[2]
-    else:
-        print('A module must be provided.')
-        help()
-        exit(1)
-    target_directory = argv[3] if len(argv) >= 4 else '/tmp/serenata-data/'
-    klass = getattr(rosie, target_module)
-    klass.main(target_directory)
-
-
-def test():
-    import os
-
-    import unittest
-
+def test(module=None):
     loader = unittest.TestLoader()
+    tests_path = 'rosie'
 
-    if len(argv) >= 3:
-        target_module = argv[2]
-        tests_path = os.path.join('rosie', target_module)
-        tests = loader.discover(tests_path)
-    else:
-        tests = loader.discover('rosie')
+    if module:
+        tests_path = os.path.join(tests_path, module)
 
+    tests = loader.discover(tests_path)
     testRunner = unittest.runner.TextTestRunner()
     result = testRunner.run(tests)
-
     if not result.wasSuccessful():
         exit(1)
 
 
-commands = {'run': run, 'test': test}
-command = commands.get(entered_command(argv), help)
-command()
+def main():
+    arguments = docopt(__doc__)
+    module = get_module(arguments)
+
+    if arguments['test']:
+        test(module)
+
+    if arguments['run']:
+        module = module if module != 'core' else None
+        run(module, arguments['--output'])
+
+
+if __name__ == '__main__':
+    main()
