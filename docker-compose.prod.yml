@@ -1,0 +1,45 @@
+version: "3"
+services:
+
+  django:
+    volumes:
+      - assets:/code/staticfiles
+
+  elm:
+    volumes:
+      - assets:/code/jarbas/layers/static
+
+  logging:
+    command: ["syslog+tls://logs2.papertrailapp.com:54868"]
+    image: gliderlabs/logspout
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  nginx-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    volumes:
+      - /var/run/certs:/etc/nginx/certs:rw
+      - /var/run/conf.d:/etc/nginx/conf.d
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/html:/usr/share/nginx/html
+      - /var/run/vhost.d:/etc/nginx/vhost.d
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - /var/run/certs:/etc/nginx/certs:rw
+      - /var/run/conf.d:/etc/nginx/conf.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /var/run/html:/usr/share/nginx/html
+      - /var/run/vhost.d:/etc/nginx/vhost.d
+
+volumes:
+  assets:

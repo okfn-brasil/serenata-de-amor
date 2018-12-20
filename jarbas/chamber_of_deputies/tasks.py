@@ -43,4 +43,5 @@ def serialize(row):
         value = row.get(key)
         row[key] = type_.deserialize(value)
 
-    return Reimbursement(**row)
+    if row['issue_date']:
+        return Reimbursement(**row)

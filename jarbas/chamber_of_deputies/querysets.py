@@ -33,9 +33,7 @@ class ReimbursementQuerySet(models.QuerySet):
         return self.distinct()
 
     def suspicions(self, boolean):
-        if not boolean:
-            return self.filter(suspicions=None)
-        return self.exclude(suspicions=None)
+        return self.filter(suspicions__isnull=not boolean)
 
     def has_receipt_url(self, boolean):
         if not boolean:
@@ -86,6 +84,7 @@ def _str_to_tuple(filters):
 def _rename_key(key):
     mapping = dict(
         issue_date_start='issue_date__gte',
-        issue_date_end='issue_date__lt'
+        issue_date_end='issue_date__lt',
+        state='state__iexact'
     )
     return mapping.get(key, key)

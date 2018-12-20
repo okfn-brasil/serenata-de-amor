@@ -7,7 +7,7 @@ A Python application reading receipts from the [Quota for Exercising Parliamenta
 ### With Docker
 
 ```console
-$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie python rosie.py run <module_name>
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data serenata/rosie python rosie.py run <module_name>
 ```
 
 Then check your `/tmp/serenata-data/` directory in you host machine for `suspicions.xz`.
@@ -15,17 +15,19 @@ Then check your `/tmp/serenata-data/` directory in you host machine for `suspici
 For testing
 
 ```console
-$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data datasciencebr/rosie python rosie.py test
+$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data serenata/rosie python rosie.py test
 ```
 
 ### Without Docker
 
 #### Setup
 
+There are a few options to setup your environment and download dependencies. The simplest way is [installing Anaconda](https://docs.anaconda.com/anaconda/install/) then run:
+
 ```console
 $ conda update conda
 $ conda create --name serenata_rosie python=3
-$ source activate serenata_rosie
+$ conda activate serenata_rosie
 $ pip install -r requirements.txt
 ```
 

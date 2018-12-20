@@ -4,6 +4,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 
 from bulk_update.helper import bulk_update
+from django.core.exceptions import ObjectDoesNotExist
 
 from jarbas.core.management.commands import LoadCommand
 from jarbas.chamber_of_deputies.models import Reimbursement
@@ -83,9 +84,12 @@ class Command(LoadCommand):
 
     def schedule_update(self, content):
         document_id = content.get('document_id')
+        if not document_id:
+            return None
+
         try:
             reimbursement = Reimbursement.objects.get(document_id=document_id)
-        except Reimbursement.DoesNotExist:
+        except (ObjectDoesNotExist, Reimbursement.MultipleObjectsReturned):
             pass
         else:
             reimbursement.suspicions = content.get('suspicions')

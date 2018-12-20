@@ -24,7 +24,8 @@ class ReimbursementListView(ListAPIView):
             'issue_date_start',
             'month',
             'subquota_number',
-            'year'
+            'year',
+            'state'
         )
         values = map(self.request.query_params.get, params)
         filters = {k: v for k, v in zip(params, values) if v}

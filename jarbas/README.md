@@ -59,6 +59,7 @@ All these endpoints accepts any combination of the following parameters:
 * `suspicions` (_boolean_, `1` parses to `True`, `0` to `False`)
 * `has_receipt` (_boolean_, `1` parses to `True`, `0` to `False`)
 * `year`
+* `state`
 * `order_by`: `issue_date` (default) or `probability` (both descending)
 * `in_latest_dataset` (_boolean_, `1` parses to `True`, `0` to `False`)
 * `search` (Search the value in any of the fields below)

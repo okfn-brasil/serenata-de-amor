@@ -41,7 +41,6 @@ class TestConventionMethods(TestCommand):
         self.assertEqual('reimbursements.xz', self.command.path)
         self.assertEqual(4096, self.command.batch_size)
         create.assert_called_once_with()
-        drop_all.assert_called_once_with(Reimbursement)
 
     @patch('jarbas.chamber_of_deputies.management.commands.reimbursements.Command.create_batches')
     @patch('jarbas.chamber_of_deputies.management.commands.reimbursements.Command.drop_all')
@@ -50,7 +49,6 @@ class TestConventionMethods(TestCommand):
         self.assertEqual('foobar.xz', self.command.path)
         self.assertEqual(2, self.command.batch_size)
         create.assert_called_once_with()
-        drop_all.assert_called_once_with(Reimbursement)
 
 
 class TestAddArguments(TestCase):
@@ -58,7 +56,7 @@ class TestAddArguments(TestCase):
     def test_add_arguments(self):
         parser = Mock()
         Command().add_arguments(parser)
-        self.assertEqual(2, parser.add_argument.call_count)
+        self.assertEqual(3, parser.add_argument.call_count)
 
 
 class TestFileLoader(TestCommand):
