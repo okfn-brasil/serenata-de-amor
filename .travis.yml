@@ -38,7 +38,6 @@ script:
   - cd rosie
   - coverage run -a rosie.py test
   - coverage run -a rosie.py run federal_senate
-  - cd ..
 
 after_success:
   - coverage xml
