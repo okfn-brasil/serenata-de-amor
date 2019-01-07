@@ -65,7 +65,7 @@ class SuspiciousListFilter(JarbasListFilter):
 
 class HasReimbursementNumberFilter(JarbasListFilter):
 
-    title = 'ter número do reembolso'
+    title = 'pagamento direto ao fornecedor'
     parameter_name = 'has_document_id'
     options = (
         ('yes', 'Sim'),
