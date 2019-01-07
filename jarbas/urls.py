@@ -14,9 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls import include
+from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import path
 
 urlpatterns = [
@@ -27,7 +28,8 @@ urlpatterns = [
     path('api/chamber_of_deputies/',
          include(
              'jarbas.chamber_of_deputies.urls',
-             namespace='chamber_of_deputies'))
+             namespace='chamber_of_deputies')),
+    path('healthcheck/', lambda _: HttpResponse(), name='healthcheck'),
 ]
 
 if settings.LOG_LEVEL == 'debug':
