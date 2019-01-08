@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import include
-from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import path
+
+from jarbas.core.views import healthcheck
+
 
 urlpatterns = [
     path('', lambda _: redirect(settings.HOMES_REDIRECTS_TO), name='home'),
@@ -29,7 +31,7 @@ urlpatterns = [
          include(
              'jarbas.chamber_of_deputies.urls',
              namespace='chamber_of_deputies')),
-    path('healthcheck/', lambda _: HttpResponse(), name='healthcheck'),
+    path('healthcheck/', healthcheck, name='healthcheck'),
 ]
 
 if settings.LOG_LEVEL == 'debug':
