@@ -37,6 +37,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     list_filter = (
         list_filters.SuspiciousListFilter,
         list_filters.HasReceiptFilter,
+        list_filters.HasReimbursementNumberFilter,
         list_filters.StateListFilter,
         list_filters.YearListFilter,
         list_filters.MonthListFilter,

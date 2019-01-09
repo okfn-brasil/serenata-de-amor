@@ -63,6 +63,23 @@ class SuspiciousListFilter(JarbasListFilter):
         return filter_option.get(self.value(), queryset)
 
 
+class HasReimbursementNumberFilter(JarbasListFilter):
+
+    title = 'pagamento direto ao fornecedor'
+    parameter_name = 'has_document_id'
+    options = (
+        ('yes', 'Sim'),
+        ('no', 'Não'),
+    )
+
+    def queryset(self, request, queryset):
+        filter_option = {
+            'yes': queryset.exclude(document_id=0),
+            'no': queryset.filter(document_id=0)
+        }
+        return filter_option.get(self.value(), queryset)
+
+
 class HasReceiptFilter(JarbasListFilter):
 
     title = 'nota fiscal digitalizada'
