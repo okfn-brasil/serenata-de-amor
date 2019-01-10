@@ -13,9 +13,9 @@ COPY jarbas /code/jarbas
 WORKDIR /code
 
 RUN set -ex && \
-    apk update && apk add --no-cache tzdata libpq && \
+    apk update && apk add --no-cache curl tzdata libpq && \
     cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
-    echo "America/Sao_Paulo" >  /etc/timezone && \
+    echo "America/Sao_Paulo" > /etc/timezone && \
     apk update && apk add --no-cache \
       --virtual=.build-dependencies \
       gcc \
