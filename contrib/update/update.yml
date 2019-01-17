@@ -41,6 +41,11 @@
       apt:
         name: git
 
+    - name: clone serenata-de-amor repository
+      git:
+        repo: 'https://github.com/okfn-brasil/serenata-de-amor.git'
+        dest: /opt/serenata-de-amor/
+
 - name: destroy instance
   hosts: 127.0.0.1
 
