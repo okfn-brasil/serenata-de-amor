@@ -19,5 +19,6 @@ RUN apk update && \
     apk del .build-dependencies
 
 ADD ansible.cfg ansible.cfg
+ADD cleanup.py cleanup.py
 ADD update.yml update.yml
 CMD ["ansible-playbook", "update.yml"]
