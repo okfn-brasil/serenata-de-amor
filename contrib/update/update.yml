@@ -1,9 +1,16 @@
 ---
 - hosts: 127.0.0.1
-  gather_facts: yes
 
   pre_tasks:
-    - name: up new droplet
+    - name: create new ssh keys
+      digital_ocean:
+        state: present
+        command: ssh
+        name: serenata-update
+        ssh_pub_key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+      register: ssh_public_key
+
+    - name: create new droplet
       digital_ocean:
         state: active
         command: droplet
@@ -12,10 +19,20 @@
         region_id: nyc1
         size_id: s-6vcpu-16gb
         unique_name: yes
+        ssh_key_ids:
+          - "{{ ssh_public_key.ssh_key.id | int }}"
       register: tmp
+
+    - name: wait for ssh
+      local_action: wait_for host={{ tmp.droplet.ip_address }} port=22 delay=60 timeout=320 state=started
 
   post_tasks:
     - name: destroy droplet
       digital_ocean:
         state: deleted
         id: "{{ tmp.droplet.id | int }}"
+    - name: destroy ssh keys
+      digital_ocean:
+        state: absent
+        command: ssh
+        name: serenata-update
