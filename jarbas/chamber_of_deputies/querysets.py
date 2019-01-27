@@ -60,6 +60,10 @@ class ReimbursementQuerySet(models.QuerySet):
 
         return self
 
+    def cnpj_cpf(self, value):
+        cleaned_value = ''.join(e for e in value if e.isalnum())
+        return self.filter(Q(cnpj_cpf=value) | Q(cnpj_cpf=cleaned_value))
+
 
 def _str_to_tuple(filters):
     """

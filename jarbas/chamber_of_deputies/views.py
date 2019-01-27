@@ -30,6 +30,12 @@ class ReimbursementListView(ListAPIView):
         values = map(self.request.query_params.get, params)
         filters = {k: v for k, v in zip(params, values) if v}
 
+
+        # filter cpf or cnpj without dot and dash
+        hasCfpCnpj = self._bool_param('cnpj_cpf')
+        if hasCfpCnpj is not None:
+            self.queryset = self.queryset.cnpj_cpf(request.query_params.get('cnpj_cpf'))
+
         # filter suspicions
         suspicions = self._bool_param('suspicions')
         if suspicions is not None:

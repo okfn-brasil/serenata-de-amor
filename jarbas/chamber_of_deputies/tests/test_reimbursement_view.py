@@ -64,6 +64,34 @@ class TestListApi(TestCase):
         self.assertEqual(1, len(content['results']))
         self.assertEqual(target_result.cnpj_cpf, content['results'][0]['cnpj_cpf'])
 
+    def test_content_with_cnpj_cpf_filter_dot_dash(self):
+        search_data = (
+            ('cnpj_cpf', '12345678901'),
+            ('subquota_number', '22'),
+            ('order_by', 'probability'),
+            ('suspicions', '1'),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+        target_result = get_reimbursement(cnpj_cpf='123.456.789-01', subquota_number=22, suspicions=1)
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(1, len(content['results']))
+        self.assertEqual(target_result.cnpj_cpf, content['results'][0]['cnpj_cpf'])
+
+    def test_content_with_cnpj_cpf_filter_dash(self):
+        search_data = (
+            ('cnpj_cpf', '12345678901'),
+            ('subquota_number', '22'),
+            ('order_by', 'probability'),
+            ('suspicions', '1'),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+        target_result = get_reimbursement(cnpj_cpf='123456789-01', subquota_number=22, suspicions=1)
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(1, len(content['results']))
+        self.assertEqual(target_result.cnpj_cpf, content['results'][0]['cnpj_cpf'])
+
     def test_content_with_date_filters(self):
         get_reimbursement(issue_date='1970-01-01')
         get_reimbursement(issue_date='1970-01-01')
