@@ -1,3 +1,5 @@
+import re
+
 from rest_framework import serializers
 
 from jarbas.chamber_of_deputies.models import Reimbursement
@@ -128,3 +130,9 @@ def format_cnpj(cnpj):
         cnpj[8:12],
         cnpj[12:14]
     )
+
+
+def clean_cnpj_cpf(value):
+    for document in re.findall(r"[\d.-]{14}|[\d./-]{18}", value):
+        value = value.replace(document, re.sub(r"\D", "", document))
+    return value

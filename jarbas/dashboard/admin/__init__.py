@@ -5,6 +5,7 @@ from django.db.models import F
 from django.utils.safestring import mark_safe
 
 from jarbas.chamber_of_deputies.models import Reimbursement
+from jarbas.chamber_of_deputies.serializers import clean_cnpj_cpf
 from jarbas.dashboard.admin import list_filters, widgets
 from jarbas.dashboard.admin.paginators import CachedCountPaginator
 from jarbas.dashboard.admin.subquotas import Subquotas
@@ -136,6 +137,8 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
             .get_search_results(request, queryset, None)
 
         if search_term:
+            # if a cnpj/cpf strip characters other than digits
+            search_term = clean_cnpj_cpf(search_term)
             query = SearchQuery(search_term, config='portuguese')
             rank = SearchRank(F('search_vector'), query)
             queryset = queryset.annotate(rank=rank).filter(search_vector=query)
