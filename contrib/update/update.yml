@@ -15,7 +15,7 @@
       digital_ocean:
         state: active
         command: droplet
-        image_id: docker-18-04
+        image_id: ubuntu-18-04-x64
         name: serenata-update
         region_id: nyc1
         size_id: s-6vcpu-16gb
@@ -37,14 +37,36 @@
     ansible_python_interpreter: /usr/bin/python3
 
   tasks:
-    - name: install git
+    - name: update packages
       apt:
-        name: git
+        update_cache: yes
+        upgrade: yes
+        autoremove: yes
+
+    - name: install git and pip
+      apt:
+        name: git,python3-pip
 
     - name: clone serenata-de-amor repository
       git:
         repo: 'https://github.com/okfn-brasil/serenata-de-amor.git'
         dest: /opt/serenata-de-amor/
+
+    - name: install rosie python packages
+      pip:
+        requirements: /opt/serenata-de-amor/rosie/requirements.txt
+
+- name: run rosie
+  hosts: droplet
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+    - name: run rosie for the chamber of deputies
+      shell: python3 rosie.py run chamber_of_deputies
+      args:
+        chdir: /opt/serenata-de-amor/rosie/
 
 - name: destroy instance
   hosts: 127.0.0.1

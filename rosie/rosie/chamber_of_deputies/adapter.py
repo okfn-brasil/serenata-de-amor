@@ -43,6 +43,7 @@ class Adapter:
             right_on='cnpj'
         )
         self.prepare_dataset(df)
+        self.log.info('Dataset ready! Rosie starts her analysis now :)')
         return df
 
     @property
