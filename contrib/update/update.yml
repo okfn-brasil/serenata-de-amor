@@ -56,6 +56,21 @@
       pip:
         requirements: /opt/serenata-de-amor/rosie/requirements.txt
 
+    - name: install jarbas python packages
+      pip:
+        requirements: /opt/serenata-de-amor/requirements.txt
+
+    - name: create .env
+      copy:
+        remote_src: yes
+        src: /opt/serenata-de-amor/contrib/.env.sample
+        dest: /opt/serenata-de-amor/.env
+
+    - name: set the database credentials
+      shell: "echo $DATABASE_URL"
+      environment:
+        DATABASE_URL: "{{ lookup('env', 'DATABASE_URL') }}"
+
 - name: run rosie
   hosts: droplet
   gather_facts: no
