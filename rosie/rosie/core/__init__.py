@@ -1,3 +1,4 @@
+import logging
 import os.path
 
 import numpy as np
@@ -26,6 +27,7 @@ class Core:
     """
 
     def __init__(self, settings, adapter):
+        self.log = logging.getLogger(__name__)
         self.settings = settings
         self.dataset = adapter.dataset
         self.data_path = adapter.path
@@ -35,9 +37,13 @@ class Core:
             self.suspicions = self.dataset.copy()
 
     def __call__(self):
+        total = len(self.settings.CLASSIFIERS)
+        running = 1
         for name, classifier in self.settings.CLASSIFIERS.items():
+            self.log.info(f'Running classifier {running} of {total}: {name}')
             model = self.load_trained_model(classifier)
             self.predict(model, name)
+            running += 1
 
         output = os.path.join(self.data_path, 'suspicions.xz')
         kwargs = dict(compression='xz', encoding='utf-8', index=False)

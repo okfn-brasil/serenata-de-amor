@@ -114,5 +114,5 @@ class Adapter:
 
     def coerce_dates(self, df):
         for field, fmt in (('issue_date', '%Y-%m-%d'), ('situation_date', '%d/%m/%Y')):
-            self.log.info(f'Coercing `{field}` fields to date data type')
+            self.log.info(f'Coercing {field} column to date data type')
             df[field] = pd.to_datetime(df[field], format=fmt, errors='coerce')
