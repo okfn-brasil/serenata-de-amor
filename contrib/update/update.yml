@@ -18,7 +18,7 @@
         image_id: ubuntu-18-04-x64
         name: serenata-update
         region_id: nyc1
-        size_id: s-6vcpu-16gb
+        size_id: s-8vcpu-32gb
         unique_name: yes
         ssh_key_ids:
           - "{{ ssh_public_key.ssh_key.id | int }}"
