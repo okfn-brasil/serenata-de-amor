@@ -83,6 +83,18 @@
       args:
         chdir: /opt/serenata-de-amor/rosie/
 
+- name: run jarbas
+  hosts: droplet
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+    - name: run jarbas to update data from the chamber of deputies
+      shell: python3 manage.py update /tmp/serenata-data
+      args:
+        chdir: /opt/serenata-de-amor/
+
 - name: destroy instance
   hosts: 127.0.0.1
 
