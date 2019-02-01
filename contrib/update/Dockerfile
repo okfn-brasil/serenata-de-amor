@@ -2,7 +2,7 @@ FROM python:3.7.2-alpine
 
 WORKDIR /serenata-update
 
-ADD requirements.txt requirements.txt
+COPY requirements.txt requirements.txt
 
 RUN apk update && \
     apk add openssh-keygen openssl-dev && \
@@ -18,7 +18,7 @@ RUN apk update && \
     pip install -r requirements.txt && \
     apk del .build-dependencies
 
-ADD ansible.cfg ansible.cfg
-ADD cleanup.py cleanup.py
-ADD update.yml update.yml
+COPY ansible.cfg ansible.cfg
+COPY cleanup.py cleanup.py
+COPY update.yml update.yml
 CMD ["ansible-playbook", "update.yml"]
