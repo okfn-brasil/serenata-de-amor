@@ -7,8 +7,7 @@
       digital_ocean:
         state: present
         command: ssh
-        name: serenata-update
-        ssh_pub_key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+        name: "{{ lookup('env', 'DO_SSH_KEY_NAME') }}"
       register: ssh_public_key
 
     - name: create new droplet
@@ -103,8 +102,3 @@
       digital_ocean:
         state: deleted
         id: "{{ tmp.droplet.id | int }}"
-    - name: destroy ssh keys
-      digital_ocean:
-        state: absent
-        command: ssh
-        name: serenata-update

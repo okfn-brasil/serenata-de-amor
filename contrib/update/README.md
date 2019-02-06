@@ -2,16 +2,41 @@
 
 This directory contains files to automatically run Rosie and update Jarbas.
 
-To run it set the DigitalOcean API token in `.env` and then:
+## Requirements
+
+* [Python](https://python.org) 2 available (see [Warning](#warning))
+* [Pipenv](https://pipenv.readthedocs.io/)
+
+Then install the required Python packages:
 
 ```console
-$ docker build -t serenata-update .
-$ docker run -it --rm --env-file .env serenata-update
+$ pipenv install
+```
+
+## Settings
+
+Copy `.env.sample` as `.env` and set the following variables:
+
+| Name | Description |
+|:-----|:------------|
+| DO_API_TOKEN | DigitalOcean' API token |
+| DO_SSH_KEY_NAME | Name of a SSH key registered at DigitalOcean |
+| DATABASE_URL| Credentials for Jarba's production database |
+
+## Running
+
+To run Rosie and automatically update Jarbas:
+
+```console
+pipenv run ansible-playbook update.yml
+```
+
+```console
 ```
 
 ## Warning
 
-It is based on Python 2 since:
+This module is based on Python 2 since:
 
 * The `dopy` Python package Ansible depends on is
   [only available in Python 2](https://github.com/Wiredcraft/dopy/issues/61)
