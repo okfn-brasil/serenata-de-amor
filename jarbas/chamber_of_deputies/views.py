@@ -5,7 +5,7 @@ from jarbas.chamber_of_deputies.serializers import (ReimbursementSerializer,
                                                     ReceiptSerializer,
                                                     SameDayReimbursementSerializer,
                                                     ApplicantSerializer,
-                                                    SubquotaSerializer)
+                                                    SubquotaSerializer, clean_cnpj_cpf)
 
 
 class ReimbursementListView(ListAPIView):
@@ -29,6 +29,9 @@ class ReimbursementListView(ListAPIView):
         )
         values = map(self.request.query_params.get, params)
         filters = {k: v for k, v in zip(params, values) if v}
+
+        if filters.get('cnpj_cpf'):
+            filters['cnpj_cpf'] = clean_cnpj_cpf(filters['cnpj_cpf'])
 
         # filter suspicions
         suspicions = self._bool_param('suspicions')

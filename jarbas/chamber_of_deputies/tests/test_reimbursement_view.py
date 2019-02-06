@@ -4,7 +4,6 @@ from urllib.parse import urlencode
 
 from django.core.management import call_command
 from django.shortcuts import resolve_url
-from django.utils.six import StringIO
 from django.test import TestCase
 from freezegun import freeze_time
 from mixer.backend.django import mixer
@@ -53,6 +52,34 @@ class TestListApi(TestCase):
     def test_content_with_cnpj_cpf_filter(self):
         search_data = (
             ('cnpj_cpf', '12345678901'),
+            ('subquota_number', '22'),
+            ('order_by', 'probability'),
+            ('suspicions', '1'),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+        target_result = get_reimbursement(cnpj_cpf='12345678901', subquota_number=22, suspicions=1)
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(1, len(content['results']))
+        self.assertEqual(target_result.cnpj_cpf, content['results'][0]['cnpj_cpf'])
+
+    def test_content_with_masked_cnpj(self):
+        search_data = (
+            ('cnpj_cpf', '07.575.651/0001-59'),
+            ('subquota_number', '22'),
+            ('order_by', 'probability'),
+            ('suspicions', '1'),
+        )
+        url = '{}?{}'.format(self.url, urlencode(search_data))
+        target_result = get_reimbursement(cnpj_cpf='07575651000159', subquota_number=22, suspicions=1)
+        resp = self.client.get(url)
+        content = loads(resp.content.decode('utf-8'))
+        self.assertEqual(1, len(content['results']))
+        self.assertEqual(target_result.cnpj_cpf, content['results'][0]['cnpj_cpf'])
+
+    def test_content_with_masked_cpf(self):
+        search_data = (
+            ('cnpj_cpf', '123.456.789-01'),
             ('subquota_number', '22'),
             ('order_by', 'probability'),
             ('suspicions', '1'),
