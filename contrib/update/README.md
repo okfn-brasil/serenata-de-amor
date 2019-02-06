@@ -31,7 +31,10 @@ To run Rosie and automatically update Jarbas:
 pipenv run ansible-playbook update.yml
 ```
 
+To make sure the ephemeral DigitalOcean droplet was destroyed:
+
 ```console
+pipenv run ansible-playbook cleanup.yml
 ```
 
 ## Warning
