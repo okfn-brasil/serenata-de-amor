@@ -15,22 +15,22 @@ def get_id(objects):
 def destroy_droplet(manager):
     droplet = get_id(manager.all_active_droplets())
     if not droplet:
-        print(f"Droplet {NAME} not found.")
+        print "Droplet {} not found.".format(NAME)
         return
 
     output = manager.destroy_droplet(droplet)
-    print(f"Droplet {NAME} ({droplet}) deleted.")
+    print "Droplet {} ({}) deleted.".format(NAME, droplet)
     return output
 
 
 def destroy_ssh_key(manager):
     ssh_key = get_id(manager.all_ssh_keys())
     if not ssh_key:
-        print(f"SSH key {NAME} not found.")
+        print "SSH key {} not found.".format()
         return
 
     output = manager.destroy_ssh_key(ssh_key)
-    print(f"SSH key {NAME} ({ssh_key}) deleted.")
+    print "SSH key {} ({}) deleted.".format(NAME, ssh_key)
     return output
 
 
