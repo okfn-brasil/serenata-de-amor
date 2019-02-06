@@ -1,5 +1,5 @@
 - name: destroy instance
-  hosts: 127.0.0.1
+  hosts: localhost
 
   tasks:
     - name: destroy droplet
