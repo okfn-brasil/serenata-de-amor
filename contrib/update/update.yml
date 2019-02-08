@@ -34,6 +34,7 @@
   gather_facts: no
   vars:
     ansible_python_interpreter: /usr/bin/python3
+    ansible_user: root
 
   tasks:
     - name: update packages
@@ -75,6 +76,7 @@
   gather_facts: no
   vars:
     ansible_python_interpreter: /usr/bin/python3
+    ansible_user: root
 
   tasks:
     - name: run rosie for the chamber of deputies
@@ -87,6 +89,7 @@
   gather_facts: no
   vars:
     ansible_python_interpreter: /usr/bin/python3
+    ansible_user: root
 
   tasks:
     - name: run jarbas to update data from the chamber of deputies
