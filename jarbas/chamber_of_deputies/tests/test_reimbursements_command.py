@@ -100,7 +100,7 @@ class TestFileLoader(TestCommand):
             term=2015,
             term_id=55,
             total_net_value=195.47,
-            total_value='0',
+            total_value=0.0,
             year=2018,
         )
         for field_object in Reimbursement._meta.fields:

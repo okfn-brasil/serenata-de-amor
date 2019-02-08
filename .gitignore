@@ -22,3 +22,6 @@ staticfiles/
 
 # vim stuff
 *.swp
+
+# ansible stuff
+contrib/update/update.retry

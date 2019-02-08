@@ -1,0 +1,107 @@
+---
+- name: create new instance
+  hosts: localhost
+
+  tasks:
+    - name: create new ssh keys
+      digital_ocean:
+        state: present
+        command: ssh
+        name: "{{ lookup('env', 'DO_SSH_KEY_NAME') }}"
+      register: ssh_public_key
+
+    - name: create new droplet
+      digital_ocean:
+        state: active
+        command: droplet
+        image_id: ubuntu-18-04-x64
+        name: serenata-update
+        region_id: nyc1
+        size_id: s-8vcpu-32gb
+        unique_name: yes
+        ssh_key_ids:
+          - "{{ ssh_public_key.ssh_key.id | int }}"
+      register: tmp
+
+    - name: add new droplet to host group
+      local_action: add_host hostname={{ tmp.droplet.ip_address }} groupname=droplet
+
+    - name: wait for ssh
+      local_action: wait_for host={{ tmp.droplet.ip_address }} port=22 delay=60 timeout=320 state=started
+
+- name: setup new instance
+  hosts: droplet
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: root
+
+  tasks:
+    - name: update packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+        autoremove: yes
+
+    - name: install git and pip
+      apt:
+        name: git,python3-pip
+
+    - name: clone serenata-de-amor repository
+      git:
+        repo: 'https://github.com/okfn-brasil/serenata-de-amor.git'
+        dest: /opt/serenata-de-amor/
+
+    - name: install rosie python packages
+      pip:
+        requirements: /opt/serenata-de-amor/rosie/requirements.txt
+
+    - name: install jarbas python packages
+      pip:
+        requirements: /opt/serenata-de-amor/requirements.txt
+
+    - name: create .env
+      copy:
+        remote_src: yes
+        src: /opt/serenata-de-amor/contrib/.env.sample
+        dest: /opt/serenata-de-amor/.env
+
+    - name: set the database credentials
+      shell: "echo $DATABASE_URL"
+      environment:
+        DATABASE_URL: "{{ lookup('env', 'DATABASE_URL') }}"
+
+- name: run rosie
+  hosts: droplet
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: root
+
+  tasks:
+    - name: run rosie for the chamber of deputies
+      shell: python3 rosie.py run chamber_of_deputies
+      args:
+        chdir: /opt/serenata-de-amor/rosie/
+
+- name: run jarbas
+  hosts: droplet
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: root
+
+  tasks:
+    - name: run jarbas to update data from the chamber of deputies
+      shell: python3 manage.py update /tmp/serenata-data
+      args:
+        chdir: /opt/serenata-de-amor/
+
+- name: destroy instance
+  hosts: 127.0.0.1
+
+  tasks:
+    - name: destroy droplet
+      digital_ocean:
+        state: deleted
+        id: "{{ tmp.droplet.id | int }}"

@@ -67,7 +67,7 @@ class TestCreateOrUpdateTask(TestCase):
             term=1970,
             term_id=3,
             total_net_value=4.56,
-            total_value=None,
+            total_value=0.0,
             year=1970
         )
 

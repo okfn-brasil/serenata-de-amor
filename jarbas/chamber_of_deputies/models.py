@@ -55,7 +55,7 @@ class Reimbursement(models.Model):
     congressperson_name = models.CharField('Nome do Parlamentar', max_length=140, db_index=True, blank=True, null=True)
     congressperson_document = models.IntegerField('Número da Carteira Parlamentar', blank=True, null=True)
 
-    party = models.CharField('Partido', max_length=7, blank=True, null=True)
+    party = models.CharField('Partido', max_length=14, blank=True, null=True)
     state = models.CharField('UF', max_length=2, db_index=True, blank=True, null=True)
 
     term_id = models.IntegerField('Código da Legislatura', blank=True, null=True)
