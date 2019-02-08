@@ -67,7 +67,6 @@
         dest: /opt/serenata-de-amor/.env
 
     - name: set the database credentials
-      shell: "echo $DATABASE_URL"
       environment:
         DATABASE_URL: "{{ lookup('env', 'DATABASE_URL') }}"
 
