@@ -1,0 +1,2 @@
+cd /opt/serenata-de-amor
+/usr/local/bin/docker-compose -f docker-compose.yml -f docker-compose.prod.yml run --rm django python manage.py receipts --pause 15 --batch-size 128
