@@ -67,7 +67,7 @@
         dest: /opt/serenata-de-amor/.env
 
     - name: test database credentials
-      shell: python3 manage.py showmigrations
+      shell: python3 manage.py migrate
       args:
         chdir: /opt/serenata-de-amor/
       environment:
