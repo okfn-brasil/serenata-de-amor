@@ -96,6 +96,8 @@
   tasks:
     - name: run jarbas to update data from the chamber of deputies
       shell: python3 manage.py update /tmp/serenata-data
+      async: 10800
+      poll: 15
       args:
         chdir: /opt/serenata-de-amor/
       environment:

@@ -1,8 +1,0 @@
-- name: destroy instance
-  hosts: localhost
-
-  tasks:
-    - name: destroy droplet
-      digital_ocean:
-        state: deleted
-        name: serenata-update
