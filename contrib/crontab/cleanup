@@ -1,2 +1,3 @@
 cd /opt/serenata-de-amor/contrib/update
-pyenv run ansible-playbook cleanup.yml -vv
+pipenv install
+pipenv run python cleanup.py

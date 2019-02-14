@@ -1,2 +1,3 @@
 cd /opt/serenata-de-amor/contrib/update
-pyenv run ansible-playbook update.yml -vv
+pipenv install
+pipenv run ansible-playbook update.yml -vv
