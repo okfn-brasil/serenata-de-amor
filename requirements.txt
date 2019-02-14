@@ -1,4 +1,4 @@
-Django==2.1.5
+Django==2.1.7
 brazilnum==0.8.8
 celery==4.2.1
 dj-database-url==0.5.0
