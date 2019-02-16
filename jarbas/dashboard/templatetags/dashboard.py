@@ -50,9 +50,5 @@ def translate_subquota(value):
 
 @register.filter()
 def translate_period(value):
-    translation = {
-        'day': 'dia',
-        'month': 'mês',
-        'year': 'ano'
-    }
+    translation = {'month': 'mês', 'year': 'ano'}
     return translation.get(value, value)

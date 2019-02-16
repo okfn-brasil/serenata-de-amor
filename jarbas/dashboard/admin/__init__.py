@@ -1,10 +1,10 @@
 from decimal import Decimal
 
-from django.db.models.functions import Trunc
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import Count, DateField, F, Max, Min, Sum
+from django.db.models.functions import Trunc
 from django.utils.safestring import mark_safe
 
 from jarbas.chamber_of_deputies.models import (
@@ -157,12 +157,17 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
 
 class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
     change_list_template = 'dashboard/reimbursement_summary_change_list.html'
-    date_hierarchy = 'issue_date'
+    list_filter = (
+        list_filters.SuspiciousListFilter,
+        list_filters.HasReimbursementNumberFilter,
+        list_filters.StateListFilter,
+        list_filters.YearListFilter,
+        list_filters.MonthListFilter,
+        list_filters.DocumentTypeListFilter,
+    )
 
     def get_next_in_date_hierarchy(self, request):
-        if f'{self.date_hierarchy}__month' in request.GET:
-            return 'day'
-        if f'{self.date_hierarchy}__year' in request.GET:
+        if 'year' in request.GET:
             return 'month'
         return 'year'
 
