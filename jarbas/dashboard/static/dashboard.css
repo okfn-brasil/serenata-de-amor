@@ -20,7 +20,7 @@ label.required {
   font-weight: normal
 }
 
-#changelist-form div.results {
+#changelist-form .results {
   width: calc(calc(100% - 240px) - 1rem); /* 240px is the filter tab width */
 }
 
