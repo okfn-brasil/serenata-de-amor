@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block result_list %}
-<div class=”results”>
+<div class="results">
     <table>
 
     <thead>
@@ -66,7 +66,7 @@
 <p>&nbsp;</p>
 
 {% if summary_over_time|length > 1 %}
-	<div class="resullts">
+	<div class="results">
 		<h2>Reembolsos por período (por {{ period|translate_period }})</h2>
 		<div class="bar-chart">
 			{% for data in summary_over_time %}
