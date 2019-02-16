@@ -1,3 +1,4 @@
+from datetime import datetime
 from django import template
 from django.template.defaultfilters import stringfilter
 
@@ -52,3 +53,14 @@ def translate_subquota(value):
 def translate_period(value):
     translation = {'month': 'mês', 'year': 'ano'}
     return translation.get(value, value)
+
+
+@register.filter()
+def period_as_date(value):
+    """Transforms a string YYYYMM or YYYY in a date object"""
+    value = str(value)
+    for format in ('%Y', '%Y%m'):
+        try:
+            return datetime.strptime(str(value), format).date()
+        except ValueError:
+            pass

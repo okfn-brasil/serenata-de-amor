@@ -5,8 +5,8 @@ from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.core.cache import cache
-from django.db.models import Count, DateField, F, Max, Min, Sum
-from django.db.models.functions import Trunc
+from django.db.models import Count, F, Max, Min, Sum
+from django.db.models.functions import Concat
 from django.utils.safestring import mark_safe
 
 from jarbas.chamber_of_deputies.models import (
@@ -168,7 +168,7 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
         list_filters.DocumentTypeListFilter,
     )
 
-    def get_next_in_date_hierarchy(self, request):
+    def get_period(self, request):
         if 'year' in request.GET:
             return 'month'
         return 'year'
@@ -204,18 +204,25 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
             .order_by('-total_value')
         )
 
-        period = self.get_next_in_date_hierarchy(request)
-        summary_over_time = (
-            queryset
-            .annotate(period=Trunc(
-                'issue_date',
-                period,
-                output_field=DateField()
-            ))
-            .values('period')
-            .annotate(total=Sum('total_net_value'))
-            .order_by('period')
-        )  # TODO filter by year/month
+        period = self.get_period(request)
+        if period == 'year':
+            period_key = 'year'
+            summary_over_time = (
+                queryset
+                .values('year')
+                .annotate(total=Sum('total_net_value'))
+                .order_by('year')
+            )
+        else:
+            period_key = 'period'
+            summary_over_time = (
+                queryset
+                .annotate(period=Concat('year', 'month'))
+                .values('period')
+                .annotate(total=Sum('total_net_value'))
+                .order_by('year', 'month')
+            )
+
         summary_range = summary_over_time.aggregate(
             low=Min('total'),
             high=Max('total')
@@ -229,7 +236,7 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
             'summary_total': dict(queryset.aggregate(**metrics)),
             'summary_over_time': tuple({
                 'label': period,
-                'period': row['period'],
+                'period': row[period_key],
                 'total': row['total'] or 0,
                 'percent': self.bar_chart_height(row, low, high)
             } for row in summary_over_time)

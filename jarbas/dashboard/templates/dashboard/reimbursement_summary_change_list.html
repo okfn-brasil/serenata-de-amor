@@ -66,27 +66,25 @@
 <p>&nbsp;</p>
 
 {% if summary_over_time|length > 1 %}
-	<div class="results">
-		<h2>Reembolsos por período (por {{ period|translate_period }})</h2>
-		<div class="bar-chart">
-			{% for data in summary_over_time %}
-			<div class="bar" style="height:{{ data.percent }}%">
-				<div class="bar-tooltip">
-					{{ data.total|brazilian_reais }}<br>
-					{% if period == 'year' %}
-						{{ data.period|date:"Y"}}
-					{% elif period == 'month' %}
-						{{ data.period|date:"m/Y"}}
-					{% else %}
-						{{ data.period|date:"d/m/Y"}}
-					{% endif %}
-				</div>
-			</div>
-			{% endfor %}
-		</div>
-	</div>
+  <div class="results">
+    <h2>Reembolsos por período (por {{ period|translate_period }})</h2>
+    <div class="bar-chart">
+      {% for data in summary_over_time %}
+      <div class="bar" style="height:{{ data.percent }}%">
+        <div class="bar-tooltip">
+          {{ data.total|brazilian_reais }}<br>
+          {% if period == 'year' %}
+            {{ data.period|period_as_date|date:"Y"}}
+          {% else %}
+            {{ data.period|period_as_date|date:"m/Y"}}
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 
-	</div>
+  </div>
 {% endif %}
 
 {% endblock %}
