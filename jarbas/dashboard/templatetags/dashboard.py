@@ -5,6 +5,7 @@ from django.template.defaultfilters import stringfilter
 from jarbas.dashboard.admin.subquotas import Subquotas
 
 
+BR_NUMBER_TRANSLATION = str.maketrans(',.', '.,')
 register = template.Library()
 
 
@@ -33,15 +34,14 @@ def brazilian_reais(value):
 def brazilian_float(value):
     value = value or 0
     value = f'{value:,.2f}'
-    translation = value.maketrans(',.', '.,')
-    return value.translate(translation)
+    return value.translate(BR_NUMBER_TRANSLATION)
 
 
 @register.filter()
 def brazilian_integer(value):
     value = value or 0
     value = f'{value:,.0f}'
-    return value.replace(',', '.')
+    return value.translate(BR_NUMBER_TRANSLATION)
 
 
 @register.filter()
