@@ -5,7 +5,7 @@ from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.core.cache import cache
-from django.db.models import Count, F, Max, Min, Sum
+from django.db.models import Count, F, Sum
 from django.db.models.functions import Concat
 from django.utils.safestring import mark_safe
 
@@ -174,15 +174,29 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
         return 'year'
 
     @staticmethod
-    def bar_chart_height(row, low, high):
-        total, low, high = row['total'] or 0, low or 0, high or 0
-        if low == high:
-            size = 0
-        else:
-            size = (total - low) / (high - low) * 100
+    def serialize_summary_over_time(row, minimum_percentage='0.05', **kwargs):
+        low = kwargs.get('low') or Decimal('0')
+        high = kwargs.get('high') or Decimal('0')
+        period = kwargs.get('period')
+        period_key = kwargs.get('period_key')
+        minimum_percentage = Decimal(minimum_percentage)
+        total = row['total']
 
-        corrected_size = Decimal('5') + (Decimal('0.95') * size)
-        return corrected_size
+        try:
+            percentage = (total - low) / (high - low)
+        except ZeroDivisionError:
+            percentage = Decimal('0')
+
+        ratio = Decimal('1') - minimum_percentage
+        corrected_percentage = minimum_percentage + (ratio * percentage)
+        bar_height = Decimal('100') * corrected_percentage
+
+        return {
+            'label': period,
+            'period': row[period_key],
+            'total': row['total'] or 0,
+            'percent': bar_height
+        }
 
     def get_cached_context(self, request, queryset):
         url = request.build_absolute_uri()
@@ -223,23 +237,23 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
                 .order_by('year', 'month')
             )
 
-        summary_range = summary_over_time.aggregate(
-            low=Min('total'),
-            high=Max('total')
-        )
-        high = summary_range.get('high', 0)
-        low = summary_range.get('low', 0)
+        summary_over_time = tuple(summary_over_time)
+        totals = tuple(row['total'] for row in summary_over_time)
+        over_time_args = {
+            'period': period,
+            'period_key': period_key,
+            'low': min(totals, default=0),
+            'high': max(totals, default=0)
+        }
 
         context = {
             'period': period,
             'summary': tuple(queryset),
             'summary_total': dict(queryset.aggregate(**metrics)),
-            'summary_over_time': tuple({
-                'label': period,
-                'period': row[period_key],
-                'total': row['total'] or 0,
-                'percent': self.bar_chart_height(row, low, high)
-            } for row in summary_over_time)
+            'summary_over_time': tuple(
+                self.serialize_summary_over_time(row, **over_time_args)
+                for row in summary_over_time
+            )
         }
 
         cache.set(key, context, 60 * 60 * 6)
