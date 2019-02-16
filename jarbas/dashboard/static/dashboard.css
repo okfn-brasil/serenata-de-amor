@@ -19,3 +19,46 @@ label.required {
   color: #666;
   font-weight: normal
 }
+
+.bar-chart {
+  display: flex;
+  justify-content: space-around;
+  height: 160px;
+  padding-top: 60px;
+  overflow: hidden;
+}
+
+.bar-chart .bar {
+  flex: 100%;
+  align-self: flex-end;
+  margin-right: 2px;
+  position: relative;
+  background-color: #79aec8;
+}
+
+.bar-chart .bar:last-child {
+  margin: 0;
+}
+
+.bar-chart .bar:hover {
+  background-color: #417690;
+}
+
+.bar-chart .bar .bar-tooltip {
+  position: relative;
+  z-index: 999;
+}
+
+.bar-chart .bar .bar-tooltip {
+  position: absolute;
+  top: -3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  opacity: 0;
+  font-size: 0.68rem;
+}
+
+.bar-chart .bar:hover .bar-tooltip {
+  opacity: 1;
+}

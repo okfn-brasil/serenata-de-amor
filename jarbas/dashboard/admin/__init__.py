@@ -1,10 +1,16 @@
+from decimal import Decimal
+
+from django.db.models.functions import Trunc
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.postgres.search import SearchQuery, SearchRank
-from django.db.models import F
+from django.db.models import Count, DateField, F, Max, Min, Sum
 from django.utils.safestring import mark_safe
 
-from jarbas.chamber_of_deputies.models import Reimbursement
+from jarbas.chamber_of_deputies.models import (
+    Reimbursement,
+    ReimbursementSummary
+)
 from jarbas.chamber_of_deputies.serializers import clean_cnpj_cpf
 from jarbas.dashboard.admin import list_filters, widgets
 from jarbas.dashboard.admin.paginators import CachedCountPaginator
@@ -149,4 +155,80 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
         return queryset, distinct
 
 
+class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
+    change_list_template = 'dashboard/reimbursement_summary_change_list.html'
+    date_hierarchy = 'issue_date'
+
+    def get_next_in_date_hierarchy(self, request):
+        if f'{self.date_hierarchy}__month' in request.GET:
+            return 'day'
+        if f'{self.date_hierarchy}__year' in request.GET:
+            return 'month'
+        return 'year'
+
+    @staticmethod
+    def bar_chart_height(row, low, high):
+        total, low, high = row['total'] or 0, low or 0, high or 0
+        if low == high:
+            size = 0
+        else:
+            size = (total - low) / (high - low) * 100
+
+        corrected_size = Decimal('5') + (Decimal('0.95') * size)
+        return corrected_size
+
+    def changelist_view(self, request, extra=None):
+        response = super().changelist_view(request, extra_context=extra)
+
+        try:
+            queryset = response.context_data['cl'].queryset
+        except (AttributeError, KeyError):
+            return response
+
+        metrics = {
+            'total_reimbursements': Count('id'),
+            'total_value': Sum('total_net_value'),
+        }
+        queryset = (
+            queryset
+            .values('subquota_description')
+            .annotate(**metrics)
+            .order_by('-total_value')
+        )
+
+        period = self.get_next_in_date_hierarchy(request)
+        summary_over_time = (
+            queryset
+            .annotate(period=Trunc(
+                'issue_date',
+                period,
+                output_field=DateField()
+            ))
+            .values('period')
+            .annotate(total=Sum('total_net_value'))
+            .order_by('period')
+        )
+        summary_range = summary_over_time.aggregate(
+            low=Min('total'),
+            high=Max('total')
+        )
+        high = summary_range.get('high', 0)
+        low = summary_range.get('low', 0)
+
+        context = {
+            'period': period,
+            'summary': tuple(queryset),
+            'summary_total': dict(queryset.aggregate(**metrics)),
+            'summary_over_time': tuple({
+                'label': period,
+                'period': row['period'],
+                'total': row['total'] or 0,
+                'percent': self.bar_chart_height(row, low, high)
+            } for row in summary_over_time)
+        }
+        response.context_data.update(context)
+        return response
+
+
 public_admin.register(Reimbursement, ReimbursementModelAdmin)
+public_admin.register(ReimbursementSummary, ReimbursementSummaryModelAdmin)
