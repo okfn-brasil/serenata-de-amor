@@ -22,18 +22,18 @@ label.required {
 
 .bar-chart {
   display: flex;
-  justify-content: space-around;
   height: 160px;
-  padding-top: 60px;
+  justify-content: space-around;
   overflow: hidden;
+  padding-top: 60px;  /* csslint allow: box-model */
 }
 
 .bar-chart .bar {
-  flex: 100%;
   align-self: flex-end;
+  background-color: #79aec8;
+  flex: 100%;
   margin-right: 2px;
   position: relative;
-  background-color: #79aec8;
 }
 
 .bar-chart .bar:last-child {
@@ -50,13 +50,13 @@ label.required {
 }
 
 .bar-chart .bar .bar-tooltip {
-  position: absolute;
-  top: -3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  opacity: 0;
   font-size: 0.68rem;
+  left: 50%;
+  opacity: 0;
+  position: absolute;
+  text-align: center;
+  top: -3rem;
+  transform: translateX(-50%);
 }
 
 .bar-chart .bar:hover .bar-tooltip {

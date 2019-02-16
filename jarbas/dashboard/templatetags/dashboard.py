@@ -30,7 +30,6 @@ def brazilian_reais(value):
 
 @register.filter()
 def brazilian_float(value):
-    # TODO properly use locales
     value = value or 0
     value = f'{value:,.2f}'
     return value.replace(',', 'x').replace('.', ',').replace('x', '.')
@@ -38,7 +37,6 @@ def brazilian_float(value):
 
 @register.filter()
 def brazilian_integer(value):
-    # TODO properly use locales
     value = value or 0
     value = f'{value:,.0f}'
     return value.replace(',', '.')
