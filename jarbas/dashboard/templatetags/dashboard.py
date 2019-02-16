@@ -32,7 +32,8 @@ def brazilian_reais(value):
 def brazilian_float(value):
     value = value or 0
     value = f'{value:,.2f}'
-    return value.replace(',', 'x').replace('.', ',').replace('x', '.')
+    translation = value.maketrans(',.', '.,')
+    return value.translate(translation)
 
 
 @register.filter()
