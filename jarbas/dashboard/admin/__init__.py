@@ -1,8 +1,10 @@
 from decimal import Decimal
+from hashlib import md5
 
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.core.cache import cache
 from django.db.models import Count, DateField, F, Max, Min, Sum
 from django.db.models.functions import Trunc
 from django.utils.safestring import mark_safe
@@ -182,13 +184,14 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
         corrected_size = Decimal('5') + (Decimal('0.95') * size)
         return corrected_size
 
-    def changelist_view(self, request, extra=None):
-        response = super().changelist_view(request, extra_context=extra)
+    def get_cached_context(self, request, queryset):
+        url = request.build_absolute_uri()
+        hashed = md5(url.encode('utf-8')).hexdigest()
+        key = f'cached_reimbursement_summary_context_{hashed}'
+        context = cache.get(key)
 
-        try:
-            queryset = response.context_data['cl'].queryset
-        except (AttributeError, KeyError):
-            return response
+        if context is not None:
+            return context
 
         metrics = {
             'total_reimbursements': Count('id'),
@@ -212,7 +215,7 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
             .values('period')
             .annotate(total=Sum('total_net_value'))
             .order_by('period')
-        )
+        )  # TODO filter by year/month
         summary_range = summary_over_time.aggregate(
             low=Min('total'),
             high=Max('total')
@@ -231,6 +234,19 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
                 'percent': self.bar_chart_height(row, low, high)
             } for row in summary_over_time)
         }
+
+        cache.set(key, context, 60 * 60 * 6)
+        return context
+
+    def changelist_view(self, request, extra=None):
+        response = super().changelist_view(request, extra_context=extra)
+
+        try:
+            queryset = response.context_data['cl'].queryset
+        except (AttributeError, KeyError):
+            return response
+
+        context = self.get_cached_context(request, queryset)
         response.context_data.update(context)
         return response
 
