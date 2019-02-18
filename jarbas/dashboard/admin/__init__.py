@@ -1,10 +1,18 @@
+from decimal import Decimal, InvalidOperation
+from hashlib import md5
+
 from brazilnum.cnpj import format_cnpj
 from brazilnum.cpf import format_cpf
 from django.contrib.postgres.search import SearchQuery, SearchRank
-from django.db.models import F
+from django.core.cache import cache
+from django.db.models import Count, F, Sum
+from django.db.models.functions import Concat
 from django.utils.safestring import mark_safe
 
-from jarbas.chamber_of_deputies.models import Reimbursement
+from jarbas.chamber_of_deputies.models import (
+    Reimbursement,
+    ReimbursementSummary
+)
 from jarbas.chamber_of_deputies.serializers import clean_cnpj_cpf
 from jarbas.dashboard.admin import list_filters, widgets
 from jarbas.dashboard.admin.paginators import CachedCountPaginator
@@ -149,4 +157,129 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
         return queryset, distinct
 
 
+class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
+    change_list_template = 'dashboard/reimbursement_summary_change_list.html'
+    list_filter = (
+        list_filters.SuspiciousListFilter,
+        list_filters.HasReimbursementNumberFilter,
+        list_filters.StateListFilter,
+        list_filters.YearListFilter,
+        list_filters.MonthListFilter,
+        list_filters.DocumentTypeListFilter,
+    )
+
+    def get_chart_grouping(self, request):
+        """Depending on the year selected on the sidebar filters, returns the
+        grouping criteria for the bottom bar chart:
+        * if user is seeing a page with no year filter, the chart shows
+        reimbursements grouped by year
+        * if the user is seeing a page filtered by a specific year, the chart
+        shows reimbursements grouped by month
+        """
+        if 'year' in request.GET:
+            return 'month'
+        return 'year'
+
+    @staticmethod
+    def serialize_summary_over_time(row, minimum_percentage='0.05', **kwargs):
+        low = kwargs.get('low') or Decimal('0')
+        high = kwargs.get('high') or Decimal('0')
+        chart_grouping = kwargs.get('chart_grouping')
+        chart_grouping_key = kwargs.get('chart_grouping_key')
+        minimum_percentage = Decimal(minimum_percentage)
+        total = row['total']
+
+        try:
+            percentage = (total - low) / (high - low)
+        except InvalidOperation:
+            percentage = Decimal('0')
+
+        ratio = Decimal('1') - minimum_percentage
+        corrected_percentage = minimum_percentage + (ratio * percentage)
+        bar_height = Decimal('100') * corrected_percentage
+
+        return {
+            'label': chart_grouping,
+            'chart_grouping': row[chart_grouping_key],
+            'total': row['total'] or 0,
+            'percent': bar_height
+        }
+
+    def get_cached_context(self, request, queryset):
+        url = request.build_absolute_uri()
+        hashed = md5(url.encode('utf-8')).hexdigest()
+        key = f'cached_reimbursement_summary_context_{hashed}'
+        context = cache.get(key)
+
+        if context is not None:
+            return context
+
+        metrics = {
+            'total_reimbursements': Count('id'),
+            'total_value': Sum('total_net_value'),
+        }
+        queryset = (
+            queryset
+            .values('subquota_description')
+            .annotate(**metrics)
+            .order_by('-total_value')
+        )
+
+        chart_grouping = self.get_chart_grouping(request)
+        if chart_grouping == 'year':
+            chart_grouping_key = 'year'
+            summary_over_time = (
+                queryset
+                .values('year')
+                .annotate(total=Sum('total_net_value'))
+                .order_by('year')
+            )
+        else:
+            chart_grouping_key = 'chart_grouping'
+            summary_over_time = (
+                queryset
+                .annotate(chart_grouping=Concat('year', 'month'))
+                .values('chart_grouping')
+                .annotate(total=Sum('total_net_value'))
+                .order_by('year', 'month')
+            )
+
+        summary_over_time = tuple(summary_over_time)
+        totals = tuple(row['total'] for row in summary_over_time)
+        over_time_args = {
+            'chart_grouping': chart_grouping,
+            'chart_grouping_key': chart_grouping_key,
+            'low': min(totals, default=0),
+            'high': max(totals, default=0)
+        }
+
+        context = {
+            'year': request.GET.get('year'),
+            'month': request.GET.get('month'),
+            'chart_grouping': chart_grouping,
+            'summary': tuple(queryset),
+            'summary_total': dict(queryset.aggregate(**metrics)),
+            'summary_over_time': tuple(
+                self.serialize_summary_over_time(row, **over_time_args)
+                for row in summary_over_time
+            )
+        }
+
+        cache.set(key, context, 60 * 60 * 6)
+        return context
+
+    def changelist_view(self, request, extra=None):
+        response = super().changelist_view(request, extra_context=extra)
+
+        try:
+            queryset = response.context_data['cl'].queryset
+        except (AttributeError, KeyError):
+            return response
+
+        context = self.get_cached_context(request, queryset)
+        response.context_data.update(context)
+        return response
+
+
 public_admin.register(Reimbursement, ReimbursementModelAdmin)
+public_admin.register(ReimbursementSummary, ReimbursementSummaryModelAdmin)

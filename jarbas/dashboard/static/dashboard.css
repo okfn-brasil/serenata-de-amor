@@ -19,3 +19,50 @@ label.required {
   color: #666;
   font-weight: normal
 }
+
+#changelist-form .results {
+  width: calc(calc(100% - 240px) - 1rem); /* 240px is the filter tab width */
+}
+
+.bar-chart {
+  display: flex;
+  height: 160px;
+  justify-content: space-around;
+  overflow: hidden;
+  padding-top: 60px;  /* csslint allow: box-model */
+}
+
+.bar-chart .bar {
+  align-self: flex-end;
+  background-color: #79aec8;
+  flex: 100%;
+  margin-right: 2px;
+  position: relative;
+}
+
+.bar-chart .bar:last-child {
+  margin: 0;
+}
+
+.bar-chart .bar:hover {
+  background-color: #417690;
+}
+
+.bar-chart .bar .bar-tooltip {
+  position: relative;
+  z-index: 999;
+}
+
+.bar-chart .bar .bar-tooltip {
+  font-size: 0.68rem;
+  left: 50%;
+  opacity: 0;
+  position: absolute;
+  text-align: center;
+  top: -3rem;
+  transform: translateX(-50%);
+}
+
+.bar-chart .bar:hover .bar-tooltip {
+  opacity: 1;
+}

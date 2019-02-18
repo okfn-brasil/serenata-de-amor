@@ -1,0 +1,98 @@
+{% extends "admin/change_list.html" %}
+{% load dashboard %}
+
+{% block content_title %}
+    <h1>
+      Resumo dos reembolsos da CEAP
+      {% if year or month %}-{% endif %}
+      {% if month %}{{ month }}{% endif %}
+      {% if year and month %}/{% endif %}
+      {% if year %}{{ year }}{% endif %}
+    </h1>
+{% endblock %}
+
+{% block result_list %}
+<div class="results">
+    <table>
+
+    <thead>
+      <tr>
+        <th>
+          <div class=”text”>
+            <a href=”#”>Categoria (sub-cota)</a>
+          </div>
+        </th>
+        <th>
+          <div class=”text”>
+            <a href=”#”>Número de reembolsos</a>
+          </div>
+        </th>
+        <th>
+          <div class=”text”>
+            <a href=”#”>Valor total</a>
+          </div>
+        </th>
+        <th>
+          <div class=”text”>
+            <a href=”#”>
+              <strong>% do total</strong>
+            </a>
+          </div>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for row in summary %}
+      <tr class=”{% cycle 'row1' 'row2' %}”>
+        <td>{{ row.subquota_description|translate_subquota }}</td>
+        <td>{{ row.total_reimbursements|brazilian_integer }}</td>
+        <td>{{ row.total_value|brazilian_reais }}</td>
+        <td>
+          <strong>
+            {{ row.total_value|default:0|percentof:summary_total.total_value }}
+          </strong>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+    <tfoot>
+      <tr style=”font-weight:bold; border-top:2px solid #DDDDDD;”>
+        <td> Total </td>
+        <td>{{ summary_total.total_reimbursements|brazilian_integer }}</td>
+        <td>{{ summary_total.total_value|brazilian_reais }}</td>
+        <td>100%</td>
+      </tr>
+    </tfoot>
+
+  </table>
+</div>
+
+<p>&nbsp;</p>
+
+{% if summary_over_time|length > 1 %}
+  <div class="results">
+    <h2>Reembolsos por período (por {{ chart_grouping|translate_chart_grouping }})</h2>
+    <div class="bar-chart">
+      {% for data in summary_over_time %}
+      <div class="bar" style="height:{{ data.percent }}%">
+        <div class="bar-tooltip">
+          {{ data.total|brazilian_reais }}<br>
+          {% if chart_grouping == 'year' %}
+            {{ data.chart_grouping|chart_grouping_as_date|date:"Y"}}
+          {% else %}
+            {{ data.chart_grouping|chart_grouping_as_date|date:"m/Y"}}
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  </div>
+{% endif %}
+
+{% endblock %}
+
+{% block pagination %}{% endblock %}

@@ -137,6 +137,14 @@ class Reimbursement(models.Model):
         return 'Documento nº {}'.format(self.document_id)
 
 
+class ReimbursementSummary(Reimbursement):
+
+    class Meta:
+        proxy = True
+        verbose_name = 'resumo do reembolso'
+        verbose_name_plural = 'resumo dos reembolsos'
+
+
 class Tweet(models.Model):
 
     reimbursement = models.OneToOneField(Reimbursement, on_delete=models.CASCADE, db_index=True)
