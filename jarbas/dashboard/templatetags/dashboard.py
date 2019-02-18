@@ -50,13 +50,13 @@ def translate_subquota(value):
 
 
 @register.filter()
-def translate_period(value):
+def translate_chart_grouping(value):
     translation = {'month': 'mês', 'year': 'ano'}
     return translation.get(value, value)
 
 
 @register.filter()
-def period_as_date(value):
+def chart_grouping_as_date(value):
     """Transforms a string YYYYMM or YYYY in a date object"""
     value = str(value)
     for format in ('%Y', '%Y%m'):

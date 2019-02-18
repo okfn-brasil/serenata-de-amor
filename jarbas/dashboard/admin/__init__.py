@@ -168,7 +168,14 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
         list_filters.DocumentTypeListFilter,
     )
 
-    def get_period(self, request):
+    def get_chart_grouping(self, request):
+        """Depending on the year selected on the sidebar filters, returns the
+        grouping criteria for the bottom bar chart:
+        * if user is seeing a page with no year filter, the chart shows
+        reimbursements grouped by year
+        * if the user is seeing a page filtered by a specific year, the chart
+        shows reimbursements grouped by month
+        """
         if 'year' in request.GET:
             return 'month'
         return 'year'
@@ -177,8 +184,8 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
     def serialize_summary_over_time(row, minimum_percentage='0.05', **kwargs):
         low = kwargs.get('low') or Decimal('0')
         high = kwargs.get('high') or Decimal('0')
-        period = kwargs.get('period')
-        period_key = kwargs.get('period_key')
+        chart_grouping = kwargs.get('chart_grouping')
+        chart_grouping_key = kwargs.get('chart_grouping_key')
         minimum_percentage = Decimal(minimum_percentage)
         total = row['total']
 
@@ -192,8 +199,8 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
         bar_height = Decimal('100') * corrected_percentage
 
         return {
-            'label': period,
-            'period': row[period_key],
+            'label': chart_grouping,
+            'chart_grouping': row[chart_grouping_key],
             'total': row['total'] or 0,
             'percent': bar_height
         }
@@ -218,9 +225,9 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
             .order_by('-total_value')
         )
 
-        period = self.get_period(request)
-        if period == 'year':
-            period_key = 'year'
+        chart_grouping = self.get_chart_grouping(request)
+        if chart_grouping == 'year':
+            chart_grouping_key = 'year'
             summary_over_time = (
                 queryset
                 .values('year')
@@ -228,11 +235,11 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
                 .order_by('year')
             )
         else:
-            period_key = 'period'
+            chart_grouping_key = 'chart_grouping'
             summary_over_time = (
                 queryset
-                .annotate(period=Concat('year', 'month'))
-                .values('period')
+                .annotate(chart_grouping=Concat('year', 'month'))
+                .values('chart_grouping')
                 .annotate(total=Sum('total_net_value'))
                 .order_by('year', 'month')
             )
@@ -240,14 +247,14 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
         summary_over_time = tuple(summary_over_time)
         totals = tuple(row['total'] for row in summary_over_time)
         over_time_args = {
-            'period': period,
-            'period_key': period_key,
+            'chart_grouping': chart_grouping,
+            'chart_grouping_key': chart_grouping_key,
             'low': min(totals, default=0),
             'high': max(totals, default=0)
         }
 
         context = {
-            'period': period,
+            'chart_grouping': chart_grouping,
             'summary': tuple(queryset),
             'summary_total': dict(queryset.aggregate(**metrics)),
             'summary_over_time': tuple(

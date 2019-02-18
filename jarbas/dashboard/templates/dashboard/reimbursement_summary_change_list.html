@@ -67,16 +67,16 @@
 
 {% if summary_over_time|length > 1 %}
   <div class="results">
-    <h2>Reembolsos por período (por {{ period|translate_period }})</h2>
+    <h2>Reembolsos por período (por {{ chart_grouping|translate_chart_grouping }})</h2>
     <div class="bar-chart">
       {% for data in summary_over_time %}
       <div class="bar" style="height:{{ data.percent }}%">
         <div class="bar-tooltip">
           {{ data.total|brazilian_reais }}<br>
-          {% if period == 'year' %}
-            {{ data.period|period_as_date|date:"Y"}}
+          {% if chart_grouping == 'year' %}
+            {{ data.chart_grouping|chart_grouping_as_date|date:"Y"}}
           {% else %}
-            {{ data.period|period_as_date|date:"m/Y"}}
+            {{ data.chart_grouping|chart_grouping_as_date|date:"m/Y"}}
           {% endif %}
         </div>
       </div>
