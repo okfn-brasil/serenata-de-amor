@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from hashlib import md5
 
 from brazilnum.cnpj import format_cnpj
@@ -191,7 +191,7 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
 
         try:
             percentage = (total - low) / (high - low)
-        except ZeroDivisionError:
+        except InvalidOperation:
             percentage = Decimal('0')
 
         ratio = Decimal('1') - minimum_percentage
