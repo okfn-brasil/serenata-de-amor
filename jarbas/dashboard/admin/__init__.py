@@ -254,6 +254,8 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
         }
 
         context = {
+            'year': request.GET.get('year'),
+            'month': request.GET.get('month'),
             'chart_grouping': chart_grouping,
             'summary': tuple(queryset),
             'summary_total': dict(queryset.aggregate(**metrics)),
