@@ -73,7 +73,7 @@ singleDecoder lang apiKey =
             |> required "state" (nullable string)
             |> required "party" (nullable string)
             |> required "term_id" (nullable int)
-            |> required "term" int
+            |> required "term" (nullable int)
             |> required "subquota_number" int
             |> required "subquota_description" string
             |> required "subquota_group_id" (nullable int)
