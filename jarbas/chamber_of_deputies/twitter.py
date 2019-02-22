@@ -16,7 +16,7 @@ class Twitter:
     TEXT = (
         '🚨Gasto suspeito de Dep. {} ({}). '
         'Você pode me ajudar a verificar? '
-        '{} #SerenataDeAmor na @CamaraDeputados'
+        '{} #SerenataDeAmor'
     )
 
     def __init__(self, mention=False):
