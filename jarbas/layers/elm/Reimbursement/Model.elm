@@ -24,7 +24,7 @@ type alias Reimbursement =
     , state : Maybe String
     , party : Maybe String
     , termId : Maybe Int
-    , term : Int
+    , term : Maybe Int
     , subquotaNumber : Int
     , subquotaDescription : String
     , subquotaGroupId : Maybe Int

@@ -408,7 +408,7 @@ viewCongressPersonDetails lang reimbursement =
         fields =
             [ Field CongresspersonId <| viewMaybeIntButZero reimbursement.congresspersonId
             , Field CongresspersonDocument <| viewMaybeIntButZero reimbursement.congresspersonDocument
-            , Field Term <| toString reimbursement.term
+            , Field Term <| viewMaybeIntButZero reimbursement.term
             , Field TermId <| viewMaybeIntButZero reimbursement.termId
             ]
                 |> List.filter (Fields.getValue >> String.isEmpty >> not)
