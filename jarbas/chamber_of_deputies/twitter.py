@@ -14,18 +14,19 @@ class Twitter:
 
     LINK = 'https://jarbas.serenata.ai/layers/#/documentId/{}'
     TEXT = (
-        '🚨Gasto suspeito de Dep. @{} ({}). '
+        '🚨Gasto suspeito de Dep. {} ({}). '
         'Você pode me ajudar a verificar? '
         '{} #SerenataDeAmor na @CamaraDeputados'
     )
 
-    def __init__(self):
+    def __init__(self, mention=False):
         self.api = twitter.Api(
             settings.TWITTER_CONSUMER_KEY,
             settings.TWITTER_CONSUMER_SECRET,
             settings.TWITTER_ACCESS_TOKEN,
             settings.TWITTER_ACCESS_SECRET
         )
+        self.mention = mention
         self._message, self._reimbursement = '', None
 
     @property
@@ -37,21 +38,24 @@ class Twitter:
             .values_list('term', flat=True) \
             .first()
 
-        congressperson_ids_with_twitter = Subquery(
-            SocialMedia.objects.exclude(twitter_profile='')
-            .distinct('congressperson_id')
-            .values_list('congressperson_id', flat=True)
-        )
-
         kwargs = {
             'issue_date__year__gte': last_term,
-            'term': last_term,
+            # 'term': last_term,  # Removed until this issue is fixed:
+            # https:// github.com/labhackercd/dados-abertos/issues/215
             'suspicions__meal_price_outlier': True,
             'tweet': None,
-            'congressperson_id__in': congressperson_ids_with_twitter
         }
 
-        return Reimbursement.objects.filter(**kwargs)
+        if self.mention:
+            kwargs['congressperson_id__in'] = Subquery(
+                SocialMedia.objects.exclude(twitter_profile='')
+                .distinct('congressperson_id')
+                .values_list('congressperson_id', flat=True)
+            )
+
+        return Reimbursement.objects \
+            .filter(**kwargs) \
+            .exclude(congressperson_id=None)
 
     @property
     def reimbursement(self):
@@ -70,21 +74,19 @@ class Twitter:
         if self._message:
             return self._message
 
-        try:
+        congressperson = self.reimbursement.congressperson_name
+        if self.mention:
             social_media = SocialMedia.objects \
                 .exclude(twitter_profile='', secondary_twitter_profile='') \
                 .get(congressperson_id=self.reimbursement.congressperson_id)
-        except (SocialMedia.DoesNotExist, SocialMedia.MultipleObjectsReturned):
-            msg = 'No social account found for congressperson_id {}'
-            print(msg.format(self.reimbursement.congressperson_id))
-            return None
+            congressperson = f'@{social_media.twitter}'
 
         self._message = self.TEXT.format(
-            social_media.twitter,
+            congressperson,
             self.reimbursement.state,
             self.LINK.format(self.reimbursement.document_id)
         )
-        return self.message
+        return self._message
 
     def publish(self):
         """Post the update to Twitter's timeline."""
