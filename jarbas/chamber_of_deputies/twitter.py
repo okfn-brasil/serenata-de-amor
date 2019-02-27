@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from random import choice
 
 import twitter
@@ -31,17 +32,8 @@ class Twitter:
 
     @property
     def queryset(self):
-        last_term = Reimbursement.objects \
-            .exclude(term=None) \
-            .distinct('term') \
-            .order_by('-term') \
-            .values_list('term', flat=True) \
-            .first()
-
         kwargs = {
-            'issue_date__year__gte': last_term,
-            # 'term': last_term,  # Removed until this issue is fixed:
-            # https:// github.com/labhackercd/dados-abertos/issues/215
+            'issue_date__gte': datetime.now() - timedelta(days=356 * 2),
             'suspicions__meal_price_outlier': True,
             'tweet': None,
         }
@@ -53,9 +45,17 @@ class Twitter:
                 .values_list('congressperson_id', flat=True)
             )
 
-        return Reimbursement.objects \
+        queryset = Reimbursement.objects \
             .filter(**kwargs) \
-            .exclude(congressperson_id=None)
+            .exclude(congressperson_id=None) \
+            .order_by('-issue_date')
+
+        count = queryset.count()
+        if not count:
+            return queryset
+
+        top_quartile = count // 4 or 1
+        return queryset[:top_quartile]
 
     @property
     def reimbursement(self):
