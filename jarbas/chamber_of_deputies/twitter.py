@@ -33,7 +33,7 @@ class Twitter:
     @property
     def queryset(self):
         kwargs = {
-            'issue_date__gte': datetime.now() - timedelta(days=356 * 2),
+            'issue_date__gte': datetime.now() - timedelta(days=365 * 2),
             'suspicions__meal_price_outlier': True,
             'tweet': None,
         }
