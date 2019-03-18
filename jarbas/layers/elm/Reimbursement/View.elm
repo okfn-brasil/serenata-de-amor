@@ -295,8 +295,7 @@ viewCongresspersonPs : Language -> Reimbursement -> Html Msg
 viewCongresspersonPs lang reimbursement =
     let
         congresspersonUrl =
-            url "http://www.camara.leg.br/Internet/Deputado/dep_Detalhe.asp"
-                [ ( "id", viewMaybeIntButZero reimbursement.congresspersonId ) ]
+            "https://www.camara.leg.br/deputados/" ++ viewMaybeIntButZero reimbursement.congresspersonId
 
         congresspersonLink =
             a [ href congresspersonUrl ]
