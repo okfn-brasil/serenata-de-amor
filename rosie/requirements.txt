@@ -6,5 +6,5 @@ ipdb==0.12
 numpy==1.16.2
 # scipy must come before scikit-learn in order to build the wheel in docker image
 scipy==1.2.1
-scikit-learn==0.20.2
+scikit-learn==0.20.3
 serenata-toolbox  # pyup: ignore
