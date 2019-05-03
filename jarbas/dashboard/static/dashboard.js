@@ -20,7 +20,7 @@ var hash = 'documentId'; // we look only for fragments containing this word
 
 var isLayersUrl = function () {
   if (redirectedPath !== window.location.pathname) return false;
-  return window.location.hash.split('/').indexOf(hash) >= 0;
+  return window.location.hash.split('/').includes(hash);
 };
 
 var redirectToLayers = function () {

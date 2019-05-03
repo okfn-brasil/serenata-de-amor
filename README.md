@@ -21,7 +21,7 @@ Serenata de Amor is an open project using artificial intelligence for social con
 
 We are a group of people who believes in _power to the people_ motto. We are also part of the _Data Science for Civic Innovation Programme_ from [Open Knowledge Brasil](http://br.okfn.org).
 
-Among founders and long-term members, we can list a group of eight people – plus numerous contributors from the open source and open knowledge communities:  [Tatiana Balachova](https://tatianasb.ru), [Felipe Cabral](https://twitter.com/felipebcabral), [Eduardo Cuducos](https://cuducos.me),  [Irio Musskopf](https://iriomk.com), [Bruno Pazzim](http://brunopazzim.com/), [Ana Schwendler](http://anaschwendler.com/), [Jessica Temporal](http://jtemporal.com/) and [Pedro Vilanova](https://twitter.com/pedrovilanova).
+Among founders and long-term members, we can list a group of eight people – plus numerous contributors from the open source and open knowledge communities:  [Tatiana Balachova](https://tatianasb.ru), [Felipe Cabral](https://twitter.com/felipebcabral), [Eduardo Cuducos](https://cuducos.me),  [Irio Musskopf](https://iriomk.com), [Bruno Pazzim](http://brunopazzim.com/), [Ana Schwendler](http://anaschwendler.com/), [Jessica Temporal](http://jtemporal.com/), [Yasodara Córdova](https://twitter.com/yaso) and [Pedro Vilanova](https://twitter.com/pedrovilanova).
 
 ### How
 
