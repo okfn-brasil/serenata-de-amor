@@ -50,14 +50,6 @@ $ docker-compose up django
 
 Then browse from [`0.0.0.0:8000`](http://0.0.0.0:8000). [Check Jarbas's `README.md` for more details](jarbas/README.md).
 
-### Running scripts from the `research` container
-
-Example to run a given script from the `research` container:
-
-```console
-$ docker-compose run --rm -v ./data:/tmp research python src/fetch_cnpj_info.py
-```
-
 ## The basics of contributing
 
 A lot of discussions about ideas take place in the [Issues](https://github.com/okfn-brasil/serenata-de-amor/issues) section. There and interacting in the Telegram group you can catch up with what's going on and also suggest new ideas.
