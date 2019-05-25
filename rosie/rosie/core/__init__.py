@@ -8,9 +8,9 @@ from sklearn.externals import joblib
 class Core:
     """
     This is Rosie's core object: it implements a generic pipeline to collect
-    data, clean and normalize it, analyzies the data and output a dataset with
-    suspicions. It's initialization module takes a settings module and an
-    adapter.
+    data, clean and normalize it. After analyzing the data it outputs a dataset
+    with suspicions information. Its initialization module takes a settings
+    module and an adapter.
 
     The settings module should have three constants:
     * CLASSIFIERS (dict) with pairs of human readable name (snake case) for
@@ -18,7 +18,7 @@ class Core:
     * UNIQUE_IDS (str or iterable) with the column(s) that should be taken as
     unique identifiers if the main dataset of each module.
     * VALUE (str) with the column that should be taken as the total net value
-    of the transaction represented by each row of the datset.
+    of the transaction represented by each row of the dataset.
 
     The adapter should be an object with:
     * A `dataset` property with the main dataset to be analyzed;
