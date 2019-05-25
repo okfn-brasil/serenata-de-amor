@@ -59,7 +59,8 @@ class Adapter:
         df = pd.DataFrame()
         paths = (
             str(path) for path in Path(self.path).glob('*.csv')
-            if match(self.REIMBURSEMENTS_PATTERN, path.name)
+            if match(self.REIMBURSEMENTS_PATTERN, path.name) and
+                    self.match_starting_year(path.name)
         )
 
         for path in paths:
@@ -68,6 +69,10 @@ class Adapter:
             df = df.append(year_df)
 
         return df
+
+    def match_starting_year(self, path_name):
+        file_year = int(path_name.split('-')[1].split('.')[0])
+        return file_year >= self.STARTING_YEAR
 
     def update_datasets(self):
         self.update_companies()
