@@ -11,7 +11,8 @@ from django.utils.safestring import mark_safe
 
 from jarbas.chamber_of_deputies.models import (
     Reimbursement,
-    ReimbursementSummary
+    ReimbursementSummary,
+    SocialMedia,
 )
 from jarbas.chamber_of_deputies.serializers import clean_cnpj_cpf
 from jarbas.dashboard.admin import list_filters, widgets
@@ -31,6 +32,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     list_display = (
         'short_document_id',
         'jarbas',
+        'social_profile',
         'rosies_tweet',
         'receipt_link',
         'congressperson_name',
@@ -82,6 +84,32 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
         return mark_safe('<a href="{}">{}</a>'.format(url, image))
 
     jarbas.short_description = ''
+
+    def social_profile(self, obj):
+        social_media = SocialMedia.objects.filter(congressperson_id=obj.congressperson_id).first()
+        if not social_media:
+            return ''
+
+        tw_link = ''
+        tw_img = '/static/image/twitter-icon.png'
+        if social_media.twitter_profile:
+            tw_link = '<a href="http://twitter.com/{}"><img src="{}" width="16"></a>'.format(
+                social_media.twitter_profile, tw_img
+            )
+        elif social_media.secondary_twitter_profile:
+            tw_link = '<a href="http://twitter.com/{}"><img src="{}" width="16"></a>'.format(
+                social_media.secondary_twitter_profile, tw_img
+            )
+
+        fb_link = ''
+        fb_img = '/static/image/facebook-icon.png'
+        if social_media.facebook_page:
+            fb_link = '<a href="{}"><img src="{}" width="16"></a>'.format(
+                social_media.facebook_page, fb_img)
+
+        return mark_safe(f'{tw_link} {fb_link}')
+
+    social_profile.short_description = 'Social'
 
     def rosies_tweet(self, obj):
         try:
