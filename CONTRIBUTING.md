@@ -14,11 +14,10 @@ Everything is expected to work with:
 
 ```console
 $ cp contrib/.env.sample .env
-$ docker-compose run --rm django python manage.py migrate
 $ docker-compose up
 ```
 
-Now, just access [localhost:8000](localhost:8000)
+**Note:** `docker-compose up` is just a health check to assure all dependencies are succesfully installed and the project is running well. To run properly Jarbas and Rosie there are a few more steps (migrations, for example), which are the steps below.
 
 Then `.env` file you just copied contains [environment variables for Jarbas](jarbas/README.md#settings). Feel free to customize it.
 
@@ -37,6 +36,7 @@ $ docker-compose run --rm rosie python rosie.py run chamber_of_deputies
 This is an example to run only Jarbas. First run migrations and provision:
 
 ```console
+$ docker-compose run --rm django python manage.py migrate
 $ docker-compose run --rm django python manage.py reimbursements /mnt/data/reimbursements-2018.csv
 $ docker-compose run --rm django python manage.py companies /mnt/data/companies_sample.xz
 $ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicions_sample.xz
