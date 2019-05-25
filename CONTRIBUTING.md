@@ -17,7 +17,7 @@ $ cp contrib/.env.sample .env
 $ docker-compose up
 ```
 
-**Note:** `docker-compose up` is just a health check to assure all dependencies are succesfully installed and the project is running well. To run properly Jarbas and Rosie there are a few more steps (migrations, for example), which are the steps below.
+**Note:** `docker-compose up` is just a health check to assure all dependencies are succesfully installed and the project is running well. To run properly Jarbas and Rosie there are a few more steps (migrations, for example), which are the ones below.
 
 Then `.env` file you just copied contains [environment variables for Jarbas](jarbas/README.md#settings). Feel free to customize it.
 
