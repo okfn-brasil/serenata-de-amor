@@ -14,8 +14,11 @@ Everything is expected to work with:
 
 ```console
 $ cp contrib/.env.sample .env
+$ docker-compose run --rm django python manage.py migrate
 $ docker-compose up
 ```
+
+Now, just access [localhost:8000](localhost:8000)
 
 Then `.env` file you just copied contains [environment variables for Jarbas](jarbas/README.md#settings). Feel free to customize it.
 
