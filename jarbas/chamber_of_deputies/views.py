@@ -1,6 +1,7 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from jarbas.chamber_of_deputies.models import Reimbursement
+from jarbas.chamber_of_deputies.paginators import ReimbursementListPagination
 from jarbas.chamber_of_deputies.serializers import (ReimbursementSerializer,
                                                     ReceiptSerializer,
                                                     SameDayReimbursementSerializer,
@@ -12,6 +13,7 @@ class ReimbursementListView(ListAPIView):
 
     queryset = Reimbursement.objects.all()
     serializer_class = ReimbursementSerializer
+    pagination_class = ReimbursementListPagination
 
     def get(self, request):
 
