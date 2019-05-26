@@ -92,20 +92,18 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
 
         tw_link = ''
         tw_img = '/static/image/twitter-icon.png'
-        if social_media.twitter_profile:
+        tw_profile = social_media.twitter_profile or social_media.secondary_twitter_profile
+        if tw_profile:
             tw_link = '<a href="http://twitter.com/{}"><img src="{}" width="16"></a>'.format(
-                social_media.twitter_profile, tw_img
-            )
-        elif social_media.secondary_twitter_profile:
-            tw_link = '<a href="http://twitter.com/{}"><img src="{}" width="16"></a>'.format(
-                social_media.secondary_twitter_profile, tw_img
+                tw_profile, tw_img
             )
 
         fb_link = ''
         fb_img = '/static/image/facebook-icon.png'
         if social_media.facebook_page:
             fb_link = '<a href="{}"><img src="{}" width="16"></a>'.format(
-                social_media.facebook_page, fb_img)
+                social_media.facebook_page, fb_img
+            )
 
         return mark_safe(f'{tw_link} {fb_link}')
 
