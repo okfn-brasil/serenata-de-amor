@@ -32,6 +32,23 @@ services:
   rosie:
     image: serenata/rosie
 
+  prometheus:
+    image: arthursens/serenata-prometheus
+    ports: 
+    - 9090:9090
+    links:
+    - node_exporter:node_exporter
+
+  grafana:
+    image: arthursens/serenata-grafana
+    links:
+    - prometheus:prometheus
+    ports:
+    - 3000:3000
+
+  node_exporter:
+    image: prom/node-exporter
+
   tasks:
     command: ["newrelic-admin", "run-program", "celery", "worker", "--app", "jarbas"]
     depends_on:
