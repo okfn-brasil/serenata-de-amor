@@ -2,7 +2,7 @@
 
 [Jarbas](http://jarbas.serenata.ai/) is part of [Serenata de Amor](http://github.com/okfn-brasil/serenata-de-amor) — we fight corruption with data science.
 
-Jarbas is in charge of making data from [CEAP](https://github.com/okfn-brasil/serenata-de-amor/blob/master/CONTRIBUTING.md#more-about-the-quota-for-exercising-parliamentary-activity-ceap) more accessible. In the near future Jarbas will show what [Rosie](https://github.com/okfn-brasil/rosie) thinks of each reimbursement made for our congresspeople.
+Jarbas is in charge of making data from [CEAP](https://github.com/okfn-brasil/serenata-de-amor/blob/master/CONTRIBUTING.md#more-about-the-quota-for-exercising-parliamentary-activity-ceap) more accessible. In the near future Jarbas will show what [Rosie](https://github.com/okfn-brasil/serenata-de-amor/tree/master/rosie) thinks of each reimbursement made for our congresspeople.
 
 ## Table of Contents
 
@@ -219,8 +219,8 @@ $ docker-compose run --rm django python manage.py suspicions /mnt/data/suspicion
 $ docker-compose run --rm django python manage.py tweets
 ```
 
-If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/okfn-brasil/rosie).
-To add a fresh new `reimbursements.xz` or `suspicions.xz` brewed by [Rosie](https://github.com/okfn-brasil/rosie), or a `companies.xz` you've got from the [toolbox](https://github.com/okfn-brasil/serenata-toolbox), you just need copy these files to `contrib/data` and refer to them inside the container from the path `/mnt/data/`.
+If you're interesting in having a database full of data you can get the datasets running [Rosie](https://github.com/okfn-brasil/serenata-de-amor/tree/master/rosie).
+To add a fresh new `reimbursements.xz` or `suspicions.xz` brewed by [Rosie](https://github.com/okfn-brasil/serenata-de-amor/tree/master/rosie), or a `companies.xz` you've got from the [toolbox](https://github.com/okfn-brasil/serenata-toolbox), you just need copy these files to `contrib/data` and refer to them inside the container from the path `/mnt/data/`.
 
 #### Creating search vector
 
@@ -290,7 +290,7 @@ $ python manage.py companies <path to companies.xz>
 $ python manage.py tweets
 ```
 
-There are sample files to seed yout database inside `contrib/data/`. You can get full datasets running [Rosie](https://github.com/okfn-brasil/rosie) or directly with the [toolbox](https://github.com/okfn-brasil/serenata-toolbox).
+There are sample files to seed yout database inside `contrib/data/`. You can get full datasets running [Rosie](https://github.com/okfn-brasil/serenata-de-amor/tree/master/rosie) or directly with the [toolbox](https://github.com/okfn-brasil/serenata-toolbox).
 
 #### Creating search vector
 
