@@ -16,8 +16,8 @@
   "editable": true,
   "gnetId": 249,
   "graphTooltip": 1,
-  "id": 3,
-  "iteration": 1558985623954,
+  "id": 4,
+  "iteration": 1559053628547,
   "links": [
     {
       "asDropdown": true,
@@ -73,7 +73,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "namedprocess_namegroup_num_procs{groupname=~\"$processes\"}",
+          "expr": "topk(10, namedprocess_namegroup_num_procs{groupname=~\"$processes\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{groupname}}",
@@ -86,7 +86,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "num processes",
+      "title": "Top 10 by number of process",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -165,20 +165,18 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(namedprocess_namegroup_cpu_seconds_total{groupname=~\"$processes\"}[$interval])",
+          "expr": "topk(10, sum((irate(namedprocess_namegroup_cpu_seconds_total{groupname=~\"$processes\"}[5m]))) by (groupname))",
           "format": "time_series",
-          "intervalFactor": 2,
+          "intervalFactor": 1,
           "legendFormat": "{{groupname}}",
-          "metric": "process_namegroup_cpu_seconds_total",
-          "refId": "A",
-          "step": 10
+          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "cpu",
+      "title": "Top 10 CPU users",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -195,10 +193,11 @@
       },
       "yaxes": [
         {
-          "format": "s",
+          "decimals": 0,
+          "format": "percentunit",
           "label": null,
           "logBase": 1,
-          "max": null,
+          "max": "1",
           "min": 0,
           "show": true
         },
@@ -257,7 +256,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(namedprocess_namegroup_read_bytes_total{groupname=~\"$processes\"}[$interval])",
+          "expr": "topk(10, increase(namedprocess_namegroup_read_bytes_total{groupname=~\"$processes\"}[5m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{groupname}}",
@@ -270,7 +269,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "read bytes",
+      "title": "Top 10 disk readers",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -349,7 +348,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(namedprocess_namegroup_write_bytes_total{groupname=~\"$processes\"}[$interval])",
+          "expr": "topk(10, increase(namedprocess_namegroup_write_bytes_total{groupname=~\"$processes\"}[5m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{groupname}}",
@@ -362,7 +361,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "write bytes",
+      "title": "Top 10 disk writers",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -441,7 +440,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"resident\"}",
+          "expr": "topk(10, namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"resident\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{groupname}}",
@@ -454,7 +453,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "resident memory",
+      "title": "Top 10 resident memory consumers",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -533,7 +532,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"virtual\"}",
+          "expr": "topk(10, namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"swapped\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{groupname}}",
@@ -546,7 +545,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "virtual memory",
+      "title": "virtual Top 10 swap consumers",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -594,82 +593,6 @@
   "templating": {
     "list": [
       {
-        "auto": false,
-        "auto_count": 30,
-        "auto_min": "10s",
-        "current": {
-          "text": "10m",
-          "value": "10m"
-        },
-        "datasource": null,
-        "hide": 0,
-        "includeAll": false,
-        "label": "",
-        "multi": false,
-        "name": "interval",
-        "options": [
-          {
-            "selected": false,
-            "text": "1m",
-            "value": "1m"
-          },
-          {
-            "selected": false,
-            "text": "5m",
-            "value": "5m"
-          },
-          {
-            "selected": true,
-            "text": "10m",
-            "value": "10m"
-          },
-          {
-            "selected": false,
-            "text": "30m",
-            "value": "30m"
-          },
-          {
-            "selected": false,
-            "text": "1h",
-            "value": "1h"
-          },
-          {
-            "selected": false,
-            "text": "6h",
-            "value": "6h"
-          },
-          {
-            "selected": false,
-            "text": "12h",
-            "value": "12h"
-          },
-          {
-            "selected": false,
-            "text": "1d",
-            "value": "1d"
-          },
-          {
-            "selected": false,
-            "text": "7d",
-            "value": "7d"
-          },
-          {
-            "selected": false,
-            "text": "14d",
-            "value": "14d"
-          },
-          {
-            "selected": false,
-            "text": "30d",
-            "value": "30d"
-          }
-        ],
-        "query": "1m,5m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
-        "refresh": 2,
-        "skipUrlSync": false,
-        "type": "interval"
-      },
-      {
         "allValue": ".+",
         "current": {
           "text": "All",
@@ -697,7 +620,7 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -727,6 +650,6 @@
   },
   "timezone": "browser",
   "title": "Process monitoring",
-  "uid": "lOXQMRMZk",
+  "uid": "lOXQMRMZ1",
   "version": 1
 }

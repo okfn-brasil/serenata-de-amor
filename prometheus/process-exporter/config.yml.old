@@ -1,0 +1,18 @@
+process_names:
+  - comm:
+    - python
+    - prometheus
+    - postgres
+    - grafana-server
+    - docker-compose
+    - docker-proxy
+    - elm-make
+    - firewalld
+    - memcached
+    - process-exporte
+    - rabbitmq-server
+  - exe:
+    - /sbin/upstart
+    cmdline:
+    - --user
+    name: upstart:-user

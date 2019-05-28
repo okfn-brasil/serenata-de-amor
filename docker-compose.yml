@@ -38,6 +38,7 @@ services:
     - 9090:9090
     links:
     - node_exporter:node_exporter
+    - process_exporter:process_exporter
 
   grafana:
     image: arthursens/serenata-grafana
@@ -48,6 +49,14 @@ services:
 
   node_exporter:
     image: prom/node-exporter
+
+  process_exporter:
+    image: ncabatoff/process-exporter
+    privileged: yes
+    volumes: 
+    - /proc:/host/proc
+    - ./prometheus/process-exporter:/config
+    command: --procfs /host/proc -config.path /config/config.yml
 
   tasks:
     command: ["newrelic-admin", "run-program", "celery", "worker", "--app", "jarbas"]
