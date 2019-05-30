@@ -14,66 +14,6 @@ import Reimbursement.Company.Model exposing (Activity, Company, Model)
 import Reimbursement.Company.Update exposing (Msg)
 
 
-{-| Generates a link to a Google Street View image:
-
-    streetImageUrl (Just "foobar") 42 3 "3.14" "1.99" 1
-    --> "https://maps.googleapis.com/maps/api/streetview?size=42x3&location=3.14%2C1.99&fov=90&heading=1&pitch=10&key=foobar"
-
-    streetImageUrl Nothing 42 3 "3.14" "1.99" 1
-    --> "https://maps.googleapis.com/maps/api/streetview?size=42x3&location=3.14%2C1.99&fov=90&heading=1&pitch=10&key="
-
--}
-streetImageUrl : Maybe String -> Int -> Int -> String -> String -> Int -> String
-streetImageUrl apiKey width height latitude longitude heading =
-    url
-        "https://maps.googleapis.com/maps/api/streetview"
-        [ ( "size", (toString width) ++ "x" ++ (toString height) )
-        , ( "location", latitude ++ "," ++ longitude )
-        , ( "fov", "90" )
-        , ( "heading", toString heading )
-        , ( "pitch", "10" )
-        , ( "key", Maybe.withDefault "" apiKey )
-        ]
-
-
-streetImageTag : Maybe String -> Maybe String -> Maybe String -> Int -> Html.Html Msg
-streetImageTag apiKey latitude longitude heading =
-    case latitude of
-        Just lat ->
-            case longitude of
-                Just long ->
-                    let
-                        source =
-                            streetImageUrl apiKey 640 400 lat long heading
-
-                        css =
-                            [ ( "width", "50%" )
-                            , ( "display", "inline-block" )
-                            , ( "margin", "1rem 0 0 0" )
-                            ]
-                    in
-                        a
-                            [ href source, target "_blank" ]
-                            [ img [ src source, style css ] [] ]
-
-                Nothing ->
-                    text ""
-
-        Nothing ->
-            text ""
-
-
-viewImage : Maybe String -> Company -> Html.Html Msg
-viewImage apiKey company =
-    let
-        images =
-            List.map
-                (streetImageTag apiKey company.latitude company.longitude)
-                [ 90, 180, 270, 360 ]
-    in
-        div [] images
-
-
 viewDate : Language -> Maybe Date.Date -> String
 viewDate lang maybeDate =
     case maybeDate of
@@ -151,7 +91,6 @@ viewCompany lang apiKey company =
                 [ icon
                 , text title
                 , location
-                , viewImage apiKey company
                 ]
             , Options.styled div [] (rows ++ activities)
             , Options.styled
