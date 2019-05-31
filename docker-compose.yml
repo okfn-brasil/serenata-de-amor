@@ -40,6 +40,7 @@ services:
     - node_exporter:node_exporter
     - process_exporter:process_exporter
     - postgres_exporter:postgres_exporter
+    - bi_exporter:bi_exporter
 
   grafana:
     image: arthursens/serenata-grafana
@@ -68,7 +69,20 @@ services:
     - postgres:postgres
     volumes:
     - ./prometheus/postgres-exporter:/prometheus
-    command: --extend.query-path /prometheus/queries.yml
+    command: --extend.query-path /prometheus/monitoring.yml
+
+  bi_exporter:
+    image: wrouesnel/postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: postgres://jarbas:mysecretpassword@postgres/jarbas?sslmode=disable
+    links:
+    - postgres:postgres
+    volumes:
+    - ./prometheus/postgres-exporter:/prometheus
+    command: --disable-default-metrics --extend.query-path /prometheus/businessInteligence.yml
+    ports:
+    - 9187:9187
+
 
   tasks:
     command: ["newrelic-admin", "run-program", "celery", "worker", "--app", "jarbas"]

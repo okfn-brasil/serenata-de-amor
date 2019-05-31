@@ -9,7 +9,8 @@ alerting:
     scheme: http
     timeout: 10s
 scrape_configs:
-- job_name: prometheus
+
+- job_name: monitoring
   honor_timestamps: true
   scrape_interval: 15s
   scrape_timeout: 10s
@@ -21,3 +22,14 @@ scrape_configs:
     - node_exporter:9100
     - process_exporter:9256
     - postgres_exporter:9187
+
+
+- job_name: businessInteligence
+  honor_timestamps: true
+  scrape_interval: 1d
+  scrape_timeout: 30m
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+  - targets:
+    - bi_exporter:9187
