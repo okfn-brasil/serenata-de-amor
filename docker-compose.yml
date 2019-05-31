@@ -39,11 +39,13 @@ services:
     links:
     - node_exporter:node_exporter
     - process_exporter:process_exporter
+    - postgres_exporter:postgres_exporter
 
   grafana:
     image: arthursens/serenata-grafana
     links:
     - prometheus:prometheus
+    - postgres:postgres
     ports:
     - 3000:3000
 
@@ -57,6 +59,16 @@ services:
     - /proc:/host/proc
     - ./prometheus/process-exporter:/config
     command: --procfs /host/proc -config.path /config/config.yml
+
+  postgres_exporter:
+    image: wrouesnel/postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: postgres://jarbas:mysecretpassword@postgres/jarbas?sslmode=disable
+    links:
+    - postgres:postgres
+    volumes:
+    - ./prometheus/postgres-exporter:/prometheus
+    command: --extend.query-path /prometheus/queries.yml
 
   tasks:
     command: ["newrelic-admin", "run-program", "celery", "worker", "--app", "jarbas"]

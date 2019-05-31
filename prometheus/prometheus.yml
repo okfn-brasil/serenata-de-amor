@@ -20,3 +20,4 @@ scrape_configs:
     - localhost:9090
     - node_exporter:9100
     - process_exporter:9256
+    - postgres_exporter:9187

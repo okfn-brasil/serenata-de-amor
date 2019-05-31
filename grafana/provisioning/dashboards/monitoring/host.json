@@ -18,105 +18,8 @@
   "editable": true,
   "gnetId": 405,
   "graphTooltip": 0,
-  "iteration": 1558976031695,
   "links": [],
   "panels": [
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#d44a3a",
-        "rgba(237, 129, 40, 0.89)",
-        "#299c46"
-      ],
-      "datasource": "Prometheus",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "hideTimeOverride": true,
-      "id": 64,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": "node",
-      "repeatDirection": "h",
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "expr": "up{instance=\"node_exporter:9100\"}",
-          "format": "time_series",
-          "instant": false,
-          "intervalFactor": 2,
-          "legendFormat": "node",
-          "refId": "A"
-        }
-      ],
-      "thresholds": "0.1,0.9",
-      "timeFrom": "30s",
-      "title": "",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        },
-        {
-          "op": "=",
-          "text": "Up",
-          "value": "1"
-        },
-        {
-          "op": "=",
-          "text": "Down",
-          "value": "0"
-        }
-      ],
-      "valueName": "avg"
-    },
     {
       "cacheTimeout": null,
       "colorBackground": false,
@@ -140,7 +43,7 @@
         "h": 4,
         "w": 7,
         "x": 0,
-        "y": 3
+        "y": 0
       },
       "id": 72,
       "interval": null,
@@ -216,9 +119,9 @@
         "rgba(50, 172, 45, 0.97)"
       ],
       "datasource": "Prometheus",
-      "decimals": 1,
-      "description": "",
-      "format": "s",
+      "editable": true,
+      "error": false,
+      "format": "decbytes",
       "gauge": {
         "maxValue": 100,
         "minValue": 0,
@@ -230,10 +133,9 @@
         "h": 4,
         "w": 4,
         "x": 8,
-        "y": 3
+        "y": 0
       },
-      "hideTimeOverride": true,
-      "id": 22,
+      "id": 80,
       "interval": null,
       "links": [],
       "mappingType": 1,
@@ -248,9 +150,9 @@
         }
       ],
       "maxDataPoints": 100,
-      "nullPointMode": "null",
+      "nullPointMode": "connected",
       "nullText": null,
-      "postfix": "s",
+      "postfix": "",
       "postfixFontSize": "50%",
       "prefix": "",
       "prefixFontSize": "50%",
@@ -261,6 +163,8 @@
           "to": "null"
         }
       ],
+      "repeat": null,
+      "repeatDirection": "h",
       "sparkline": {
         "fillColor": "rgba(31, 118, 189, 0.18)",
         "full": false,
@@ -270,19 +174,23 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "(node_time_seconds{instance=\"node_exporter:9100\"} - node_boot_time_seconds)",
+          "expr": "node_memory_MemTotal_bytes{instance=\"node_exporter:9100\"}",
           "format": "time_series",
           "instant": true,
+          "interval": "",
           "intervalFactor": 2,
+          "legendFormat": "",
+          "metric": "",
           "refId": "A",
-          "step": 1800
+          "step": 14400,
+          "target": ""
         }
       ],
       "thresholds": "",
-      "title": "Uptime",
+      "title": "Total memory",
       "transparent": true,
       "type": "singlestat",
-      "valueFontSize": "50%",
+      "valueFontSize": "80%",
       "valueMaps": [
         {
           "op": "=",
@@ -316,7 +224,7 @@
         "h": 4,
         "w": 4,
         "x": 12,
-        "y": 3
+        "y": 0
       },
       "id": 20,
       "interval": null,
@@ -407,7 +315,7 @@
         "h": 4,
         "w": 7,
         "x": 16,
-        "y": 3
+        "y": 0
       },
       "id": 24,
       "interval": null,
@@ -492,7 +400,7 @@
         "h": 4,
         "w": 3,
         "x": 0,
-        "y": 7
+        "y": 4
       },
       "id": 70,
       "interval": null,
@@ -580,7 +488,7 @@
         "h": 4,
         "w": 4,
         "x": 3,
-        "y": 7
+        "y": 4
       },
       "id": 68,
       "interval": null,
@@ -668,99 +576,8 @@
       "gridPos": {
         "h": 4,
         "w": 4,
-        "x": 8,
-        "y": 7
-      },
-      "id": 80,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": null,
-      "repeatDirection": "h",
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "expr": "node_memory_MemTotal_bytes{instance=\"node_exporter:9100\"}",
-          "format": "time_series",
-          "instant": true,
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "",
-          "metric": "",
-          "refId": "A",
-          "step": 14400,
-          "target": ""
-        }
-      ],
-      "thresholds": "",
-      "title": "Total memory",
-      "transparent": true,
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "rgba(245, 54, 54, 0.9)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(50, 172, 45, 0.97)"
-      ],
-      "datasource": "Prometheus",
-      "editable": true,
-      "error": false,
-      "format": "decbytes",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 12,
-        "y": 7
+        "x": 10,
+        "y": 4
       },
       "id": 82,
       "interval": null,
@@ -851,7 +668,7 @@
         "h": 4,
         "w": 4,
         "x": 16,
-        "y": 7
+        "y": 4
       },
       "id": 28,
       "interval": null,
@@ -937,7 +754,7 @@
         "h": 4,
         "w": 3,
         "x": 20,
-        "y": 7
+        "y": 4
       },
       "id": 78,
       "interval": null,
@@ -1016,7 +833,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 11
+        "y": 8
       },
       "id": 38,
       "legend": {
@@ -1110,7 +927,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 11
+        "y": 8
       },
       "id": 46,
       "legend": {
@@ -1209,7 +1026,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 15
       },
       "id": 42,
       "legend": {
@@ -1305,7 +1122,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 18
+        "y": 15
       },
       "id": 50,
       "legend": {
@@ -1401,7 +1218,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 26
+        "y": 23
       },
       "id": 54,
       "legend": {
@@ -1507,7 +1324,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 26
+        "y": 23
       },
       "id": 60,
       "legend": {
@@ -1614,7 +1431,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 32
       },
       "id": 74,
       "legend": {
