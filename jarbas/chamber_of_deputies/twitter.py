@@ -34,6 +34,7 @@ class Twitter:
     def queryset(self):
         kwargs = {
             'issue_date__gte': datetime.now() - timedelta(days=365 * 2),
+            'issue_date__lte': datetime.now() - timedelta(days=91),
             'suspicions__meal_price_outlier': True,
             'tweet': None,
         }
