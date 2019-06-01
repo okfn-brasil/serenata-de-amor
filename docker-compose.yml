@@ -79,9 +79,7 @@ services:
     - postgres:postgres
     volumes:
     - ./prometheus/postgres-exporter:/prometheus
-    command: --disable-default-metrics --extend.query-path /prometheus/businessInteligence.yml
-    ports:
-    - 9187:9187
+    command: --disable-default-metrics --disable-settings-metrics --extend.query-path /prometheus/businessInteligence.yml
 
 
   tasks:

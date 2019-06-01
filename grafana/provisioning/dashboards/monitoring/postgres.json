@@ -16,7 +16,6 @@
   "editable": true,
   "gnetId": 6742,
   "graphTooltip": 0,
-  "iteration": 1559324631606,
   "links": [],
   "panels": [
     {
@@ -80,7 +79,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "pg_static",
+          "expr": "pg_static{instance=\"postgres_exporter:9187\"}",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
