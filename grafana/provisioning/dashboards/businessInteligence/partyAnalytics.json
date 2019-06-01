@@ -15,8 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 6,
-  "iteration": 1559418934375,
+  "iteration": 1559428778068,
   "links": [],
   "panels": [
     {
@@ -81,7 +80,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+          "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -133,7 +132,7 @@
           },
           "gridPos": {
             "h": 4,
-            "w": 12,
+            "w": 24,
             "x": 0,
             "y": 5
           },
@@ -170,8 +169,8 @@
           "scopedVars": {
             "congressperson": {
               "selected": false,
-              "text": "ADELMO CARNEIRO LEÃO",
-              "value": "ADELMO CARNEIRO LEÃO"
+              "text": "ABEL MESQUITA JR.",
+              "value": "ABEL MESQUITA JR."
             }
           },
           "sparkline": {
@@ -183,101 +182,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
-              "format": "time_series",
-              "intervalFactor": 1,
-              "refId": "A"
-            }
-          ],
-          "thresholds": "",
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "$congressperson",
-          "type": "singlestat",
-          "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "avg"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "#299c46",
-            "rgba(237, 129, 40, 0.89)",
-            "#d44a3a"
-          ],
-          "datasource": "Prometheus",
-          "decimals": 2,
-          "format": "none",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 12,
-            "x": 12,
-            "y": 5
-          },
-          "id": 28,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "R$ ",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "repeat": null,
-          "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
-          "repeatPanelId": 4,
-          "scopedVars": {
-            "congressperson": {
-              "selected": false,
-              "text": "AFONSO FLORENCE",
-              "value": "AFONSO FLORENCE"
-            }
-          },
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -383,7 +288,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -429,7 +334,7 @@
             "x": 12,
             "y": 6
           },
-          "id": 29,
+          "id": 92,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -459,7 +364,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778060,
           "repeatPanelId": 27,
           "scopedVars": {
             "subquota": {
@@ -477,7 +382,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -583,7 +488,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -629,7 +534,7 @@
             "x": 6,
             "y": 7
           },
-          "id": 30,
+          "id": 93,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -659,7 +564,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778066,
           "repeatPanelId": 19,
           "scopedVars": {
             "supplier": {
@@ -677,7 +582,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -723,7 +628,7 @@
             "x": 12,
             "y": 7
           },
-          "id": 31,
+          "id": 94,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -753,7 +658,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778066,
           "repeatPanelId": 19,
           "scopedVars": {
             "supplier": {
@@ -771,7 +676,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -817,7 +722,7 @@
             "x": 18,
             "y": 7
           },
-          "id": 32,
+          "id": 95,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -847,7 +752,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778066,
           "repeatPanelId": 19,
           "scopedVars": {
             "supplier": {
@@ -865,7 +770,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -911,7 +816,7 @@
             "x": 0,
             "y": 11
           },
-          "id": 33,
+          "id": 96,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -941,7 +846,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778066,
           "repeatPanelId": 19,
           "scopedVars": {
             "supplier": {
@@ -959,7 +864,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -1005,7 +910,7 @@
             "x": 6,
             "y": 11
           },
-          "id": 34,
+          "id": 97,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -1035,7 +940,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778066,
           "repeatPanelId": 19,
           "scopedVars": {
             "supplier": {
@@ -1053,7 +958,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -1099,7 +1004,7 @@
             "x": 12,
             "y": 11
           },
-          "id": 35,
+          "id": 98,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -1129,7 +1034,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778066,
           "repeatPanelId": 19,
           "scopedVars": {
             "supplier": {
@@ -1147,7 +1052,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -1193,7 +1098,7 @@
             "x": 18,
             "y": 11
           },
-          "id": 36,
+          "id": 99,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -1223,7 +1128,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778066,
           "repeatPanelId": 19,
           "scopedVars": {
             "supplier": {
@@ -1241,7 +1146,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -1287,7 +1192,7 @@
             "x": 0,
             "y": 15
           },
-          "id": 37,
+          "id": 100,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -1317,7 +1222,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778066,
           "repeatPanelId": 19,
           "scopedVars": {
             "supplier": {
@@ -1335,7 +1240,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -1381,7 +1286,7 @@
             "x": 6,
             "y": 15
           },
-          "id": 38,
+          "id": 101,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -1411,7 +1316,7 @@
           ],
           "repeat": null,
           "repeatDirection": "h",
-          "repeatIteration": 1559418934373,
+          "repeatIteration": 1559428778066,
           "repeatPanelId": 19,
           "scopedVars": {
             "supplier": {
@@ -1429,7 +1334,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -1462,6 +1367,1722 @@
         "x": 0,
         "y": 7
       },
+      "id": 89,
+      "panels": [
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 12,
+            "x": 0,
+            "y": 8
+          },
+          "id": 91,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": "state",
+          "repeatDirection": "h",
+          "scopedVars": {
+            "state": {
+              "selected": false,
+              "text": "MG",
+              "value": "MG"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$state",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 12,
+            "x": 12,
+            "y": 8
+          },
+          "id": 102,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 91,
+          "scopedVars": {
+            "state": {
+              "selected": false,
+              "text": "BA",
+              "value": "BA"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$state",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        }
+      ],
+      "title": "Reimbursements by federal state",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 40,
+      "panels": [
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 0,
+            "y": 9
+          },
+          "id": 42,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": "month",
+          "repeatDirection": "h",
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "3",
+              "value": "3"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 6,
+            "y": 9
+          },
+          "id": 103,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "MARCH",
+              "value": "MARCH"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 12,
+            "y": 9
+          },
+          "id": 104,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "4",
+              "value": "4"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 18,
+            "y": 9
+          },
+          "id": 105,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "APRIL",
+              "value": "APRIL"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 0,
+            "y": 13
+          },
+          "id": 106,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "6",
+              "value": "6"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 6,
+            "y": 13
+          },
+          "id": 107,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "JUNE",
+              "value": "JUNE"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 12,
+            "y": 13
+          },
+          "id": 108,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "8",
+              "value": "8"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 18,
+            "y": 13
+          },
+          "id": 109,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "AUGUST",
+              "value": "AUGUST"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 0,
+            "y": 17
+          },
+          "id": 110,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "7",
+              "value": "7"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 6,
+            "y": 17
+          },
+          "id": 111,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "JULY",
+              "value": "JULY"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 12,
+            "y": 17
+          },
+          "id": 112,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "1",
+              "value": "1"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 18,
+            "y": 17
+          },
+          "id": 113,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "JANUARY",
+              "value": "JANUARY"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 0,
+            "y": 21
+          },
+          "id": 114,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "2",
+              "value": "2"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 6,
+            "y": 21
+          },
+          "id": 115,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "FEBRUARY",
+              "value": "FEBRUARY"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 12,
+            "y": 21
+          },
+          "id": 116,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "5",
+              "value": "5"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "#299c46",
+            "rgba(237, 129, 40, 0.89)",
+            "#d44a3a"
+          ],
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 18,
+            "y": 21
+          },
+          "id": 117,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "R$ ",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "repeat": null,
+          "repeatDirection": "h",
+          "repeatIteration": 1559428778066,
+          "repeatPanelId": 42,
+          "scopedVars": {
+            "month": {
+              "selected": false,
+              "text": "MAY",
+              "value": "MAY"
+            }
+          },
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\"}) > 0",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "$month",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        }
+      ],
+      "title": "Reimbursements by month",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
       "id": 13,
       "panels": [
         {
@@ -1487,7 +3108,7 @@
             "h": 4,
             "w": 24,
             "x": 0,
-            "y": 8
+            "y": 10
           },
           "id": 7,
           "interval": null,
@@ -1535,7 +3156,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\"}) > 0",
+              "expr": "sum(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", congressperson_name=~\"$congressperson\", year=~\"$year\", supplier=~\"$supplier\", subquota_description=~\"$subquota\", month=~\"$month\", state=~\"$state\"}) > 0",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -1653,6 +3274,33 @@
           ]
         },
         "datasource": "Prometheus",
+        "definition": "label_values(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\"}, month)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "month",
+        "multi": true,
+        "name": "month",
+        "options": [],
+        "query": "label_values(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\"}, month)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Prometheus",
         "definition": "label_values(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\"}, subquota_description)",
         "hide": 0,
         "includeAll": true,
@@ -1697,6 +3345,33 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", subquota_description=~\"$subquota\"}, state)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "state",
+        "multi": true,
+        "name": "state",
+        "options": [],
+        "query": "label_values(chamber_of_deputies_reimbursement_total_net_value{party=\"$party\", subquota_description=~\"$subquota\"}, state)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
       }
     ]
   },
@@ -1732,5 +3407,5 @@
   "timezone": "",
   "title": "Reimbursements analytics",
   "uid": "ecOrj5MZz",
-  "version": 6
+  "version": 1
 }

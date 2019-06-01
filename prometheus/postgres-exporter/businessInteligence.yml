@@ -1,5 +1,5 @@
 chamber_of_deputies_reimbursement:
-  query: "select distinct id, year, month, state, party, subquota_description, supplier, congressperson_name, total_net_value from chamber_of_deputies_reimbursement"
+  query: "select distinct id, year, case when month = 1 then 'JANUARY' when month = 2 then 'FEBRUARY' when month = 3 then 'MARCH' when month = 4 then 'APRIL' when month = 5 then 'MAY' when month = 6 then 'JUNE' when month = 7 then 'JULY' when month = 8 then 'AUGUST' when month = 9 then 'SEPTEMBER' when month = 10 then 'OCTOBER' when month = 11 then 'NOVEMBER' when month = 12 then 'DECEMBER' end as month , state, party, subquota_description, supplier, congressperson_name, total_net_value from chamber_of_deputies_reimbursement"
   metrics:
     - id:
         usage: "LABEL"
