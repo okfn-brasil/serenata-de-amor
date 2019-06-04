@@ -12,7 +12,7 @@ chamber_of_deputies_reimbursement:
         description: "Month that the reimbursement was made"
     - state:
         usage: "LABEL"
-        description: "Federal state that the reimbursement was made"
+        description: "Federal state which has elected the deputie claiming the reimbursement"
     - party:
         usage: "LABEL"
         description: "Party that the deputie is related to"
