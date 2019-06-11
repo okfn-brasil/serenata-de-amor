@@ -107,12 +107,12 @@ And your dashboards at http://localhost:3000/dashboards
 
 ## Contributing
 
-It's quite simple to contribute to our grafana! You just need to add your new dashboard's JSON to the correct [provisioning folder](dashboards/).
+It's quite simple to contribute to our grafana! You just need to add your new dashboard's JSON to the correct [provisioning folder](provisioning/dashboards).
 
 
-If you want to use Prometheus to monitor a service of Serenata that is not monitored yet, you can create a new dashboard with the collected metrics and add it's JSON to the [monitoring folder](dashboards/monitoring/).
+If you want to use Prometheus to monitor a service of Serenata that is not monitored yet, you can create a new dashboard with the collected metrics and add it's JSON to the [monitoring folder](provisioning/dashboards/monitoring).
 
-For dashboards that focus on reimbursement analytics, add their JSON at the [business inteligence folder](dashboards/businessInteligence/).
+For dashboards that focus on reimbursement analytics, add their JSON at the [business inteligence folder](provisioning/dashboards/businessInteligence).
 
 If you are wondering if you need to code the whole JSON... no, you don't need to do that!
 
