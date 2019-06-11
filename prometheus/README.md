@@ -167,7 +167,7 @@ docker-compose run --rm django python manage.py companies /mnt/data/companies_sa
 
 Now everything is setup and we just gotta wait to prometheus to scrape our exporter.
 
-You can see your configuration and targets at http://localhost:9090/configuration and http://localhost:9090/target respectively.
+You can see your configuration and targets at http://localhost:9090/config and http://localhost:9090/targets respectively.
 
 When looking at your targets, you will see `UP` Status if our prometheus have already scraped metrics at the configured addresses, `DOWN` if it couldn't scrape anything at the configured address and `UNKNOWN` if it still haven't tried to scrape yet. If you've configured your bi exporter scrape interval with a long time, it will take a while for it's status to change.
 
