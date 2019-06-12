@@ -101,6 +101,7 @@ docker compose up -d
 
 Your grafana will be available at http://localhost:3000
 And your dashboards at http://localhost:3000/dashboards
+You can login into grafana with the credentials *admin/admin*
 
 > PS: Sometimes dashboards take some time to load. If they are not there, wait 5 to 10 minutes for them to load.
 
