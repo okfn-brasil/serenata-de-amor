@@ -105,7 +105,15 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
                 social_media.facebook_page, fb_img
             )
 
-        return mark_safe(f'{tw_link} {fb_link}')
+        insta_link = ''
+        insta_img = '/static/image/instagram-icon.png'
+        insta_profile = social_media.instagram_profile
+        if insta_profile:
+            insta_link = '<a href="http://instagram.com/{}"><img src="{}" width="16"></a>'.format(
+                insta_profile, insta_img
+            )
+
+        return mark_safe(f'{tw_link} {fb_link} {insta_link}')
 
     social_profile.short_description = 'Social'
 
