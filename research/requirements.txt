@@ -4,7 +4,7 @@ beautifulsoup4==4.8.0
 geopy==1.20.0
 grequests==0.4.0
 humanize==0.5.1
-numpy==1.16.2
+numpy==1.17.0
 pandas==0.24.1
 python-decouple==3.1
 requests==2.22.0
