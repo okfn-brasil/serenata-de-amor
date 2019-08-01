@@ -1,6 +1,6 @@
 Django==2.2.4
 brazilnum==0.8.8
-celery==4.2.1
+celery==4.3.0
 dj-database-url==0.5.0
 django-assets==0.12
 django-bulk-update==2.2.0
