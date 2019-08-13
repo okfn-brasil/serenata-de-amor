@@ -120,7 +120,10 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     def receipt_link(self, obj):
         if not obj.receipt_url:
             return ''
-        return mark_safe(f'<a target="_blank" href="{obj.receipt_url}">📃</a>')
+        image_src = '/static/image/receipt_icon.png'
+        image = '<img src="{}">'.format(image_src)
+
+        return mark_safe('<a target="_blank" href="{}">{}</a>'.format(obj.receipt_url, image))
 
     receipt_link.short_description = ''
 
