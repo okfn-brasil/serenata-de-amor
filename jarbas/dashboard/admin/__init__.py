@@ -79,8 +79,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     def jarbas(self, obj):
         base_url = '/layers/#/documentId/{}/'
         url = base_url.format(obj.document_id)
-        image_src = '/static/favicon/favicon-16x16.png'
-        image = '<img alt="Ver no Jarbas" src="{}">'.format(image_src)
+        image = '<img alt="Ver no Jarbas" src="/static/favicon/favicon-16x16.png">'
         return mark_safe('<a href="{}">{}</a>'.format(url, image))
 
     jarbas.short_description = ''
@@ -120,7 +119,8 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     def receipt_link(self, obj):
         if not obj.receipt_url:
             return ''
-        return mark_safe(f'<a target="_blank" href="{obj.receipt_url}">📃</a>')
+        image = '<img src="/static/image/receipt_icon.png">'
+        return mark_safe('<a target="_blank" href="{}">{}</a>'.format(obj.receipt_url, image))
 
     receipt_link.short_description = ''
 
