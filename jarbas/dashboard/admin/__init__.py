@@ -79,8 +79,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     def jarbas(self, obj):
         base_url = '/layers/#/documentId/{}/'
         url = base_url.format(obj.document_id)
-        image_src = '/static/favicon/favicon-16x16.png'
-        image = '<img alt="Ver no Jarbas" src="{}">'.format(image_src)
+        image = '<img alt="Ver no Jarbas" src="/static/favicon/favicon-16x16.png">'
         return mark_safe('<a href="{}">{}</a>'.format(url, image))
 
     jarbas.short_description = ''
