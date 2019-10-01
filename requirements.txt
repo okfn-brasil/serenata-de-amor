@@ -11,7 +11,7 @@ django-test-without-migrations==0.6
 djangorestframework==3.10.3
 freezegun==0.3.12
 gunicorn==19.9.0
-newrelic==4.14.0.115
+newrelic==5.0.2.126
 psycopg2-binary==2.7.7
 python-decouple==3.1
 python-memcached==1.59
