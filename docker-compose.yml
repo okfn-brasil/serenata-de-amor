@@ -43,3 +43,15 @@ services:
     hostname: tasks
     image: serenata/django
     restart: always
+
+  beat:
+    command: ["newrelic-admin", "run-program", "celery", "beat", "--app", "jarbas"]
+    depends_on:
+      - queue
+    env_file:
+      - .env
+    environment:
+      - NEW_RELIC_APP_NAME=Jarbas (Beat); Jarbas (Combined)
+    hostname: beat
+    image: serenata/django
+    restart: always
