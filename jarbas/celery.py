@@ -2,6 +2,7 @@ import os
 from celery import Celery
 from celery.schedules import crontab
 
+from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jarbas.settings')
 
@@ -20,7 +21,14 @@ def setup_periodic_tasks(sender, **kwargs):
         management.call_command('searchvector')
         print('Searchvector is done')
 
-    sender.add_periodic_task(
-        crontab(minute='0', hour='2', day_of_month='*/2'),
-        searchvector.s(),
-    )
+    if settings.SCHEDULE_SEARCHVECTOR:
+        sender.add_periodic_task(
+            crontab(
+                minute=settings.SCHEDULE_SEARCHVECTOR_CRON_MINUTE,
+                hour=settings.SCHEDULE_SEARCHVECTOR_CRON_HOUR,
+                day_of_week=settings.SCHEDULE_SEARCHVECTOR_CRON_DAY_OF_WEEK,
+                day_of_month=settings.SCHEDULE_SEARCHVECTOR_CRON_DAY_OF_MONTH,
+                month_of_year=settings.SCHEDULE_SEARCHVECTOR_CRON_MONTH_OF_YEAR,
+            ),
+            searchvector.s(),
+        )
