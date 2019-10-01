@@ -16,7 +16,9 @@ def setup_periodic_tasks(sender, **kwargs):
 
     @app.task(ignore_result=True)
     def searchvector():
+        print('Running searchvector...')
         management.call_command('searchvector')
+        print('Searchvector is done')
 
     sender.add_periodic_task(
         crontab(minute='0', hour='2', day_of_month='*/2'),
