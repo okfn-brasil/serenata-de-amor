@@ -1,8 +1,11 @@
+import logging
 import os
 from celery import Celery
 from celery.schedules import crontab
 
 from django.conf import settings
+
+logger = logging.getLogger('celery')
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jarbas.settings')
 
@@ -17,9 +20,9 @@ def setup_periodic_tasks(sender, **kwargs):
 
     @app.task(ignore_result=True)
     def searchvector():
-        print('Running searchvector...')
+        logger.info('Running searchvector...')
         management.call_command('searchvector')
-        print('Searchvector is done')
+        logger.info('Searchvector is done')
 
     if settings.SCHEDULE_SEARCHVECTOR:
         sender.add_periodic_task(
