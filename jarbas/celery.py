@@ -24,14 +24,16 @@ def setup_periodic_tasks(sender, **kwargs):
         management.call_command('searchvector')
         logger.info('Searchvector is done')
 
-    if settings.SCHEDULE_SEARCHVECTOR:
-        sender.add_periodic_task(
-            crontab(
-                minute=settings.SCHEDULE_SEARCHVECTOR_CRON_MINUTE,
-                hour=settings.SCHEDULE_SEARCHVECTOR_CRON_HOUR,
-                day_of_week=settings.SCHEDULE_SEARCHVECTOR_CRON_DAY_OF_WEEK,
-                day_of_month=settings.SCHEDULE_SEARCHVECTOR_CRON_DAY_OF_MONTH,
-                month_of_year=settings.SCHEDULE_SEARCHVECTOR_CRON_MONTH_OF_YEAR,
-            ),
-            searchvector.s(),
-        )
+    if not settings.SCHEDULE_SEARCHVECTOR:
+        return
+
+    sender.add_periodic_task(
+        crontab(
+            minute=settings.SCHEDULE_SEARCHVECTOR_CRON_MINUTE,
+            hour=settings.SCHEDULE_SEARCHVECTOR_CRON_HOUR,
+            day_of_week=settings.SCHEDULE_SEARCHVECTOR_CRON_DAY_OF_WEEK,
+            day_of_month=settings.SCHEDULE_SEARCHVECTOR_CRON_DAY_OF_MONTH,
+            month_of_year=settings.SCHEDULE_SEARCHVECTOR_CRON_MONTH_OF_YEAR,
+        ),
+        searchvector.s(),
+    )
