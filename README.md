@@ -83,3 +83,4 @@ Make sure you have read the _Tech crash course_ on this page. Next, check out ou
 ## Acknowledgments
 
 [![Open Knowledge Brasil](docs/okbr.png)](https://br.okfn.org) [![Digital Ocean](docs/digitalocean.png)](https://digitalocean.com)
+Commit some new text.
