@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 from django.test import TestCase
 
 from jarbas.chamber_of_deputies.models import Reimbursement
-from jarbas.dashboard.admin import ReimbursementModelAdmin
+from jarbas.dashboard.admin import ChamberOfDeputiesReimbursementModelAdmin
 from jarbas.dashboard.admin.list_filters import SubquotaListFilter
 from jarbas.dashboard.admin.widgets import ReceiptUrlWidget, SubquotaWidget, SuspiciousWidget
 
@@ -17,7 +17,7 @@ class TestDashboardSite(TestCase):
 
     def setUp(self):
         self.requests = map(Request, ('GET', 'POST', 'PUT', 'PATCH', 'DELETE'))
-        self.ma = ReimbursementModelAdmin(Reimbursement, 'dashboard')
+        self.ma = ChamberOfDeputiesReimbursementModelAdmin(Reimbursement, 'dashboard')
 
     def test_has_add_permission(self):
         permissions = map(self.ma.has_add_permission, self.requests)

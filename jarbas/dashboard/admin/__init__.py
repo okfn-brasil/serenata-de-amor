@@ -14,6 +14,10 @@ from jarbas.chamber_of_deputies.models import (
     ReimbursementSummary,
     SocialMedia,
 )
+
+from jarbas.federal_senate.models import (
+    Reimbursement as FederalSenateReimbursement,
+)
 from jarbas.chamber_of_deputies.serializers import clean_cnpj_cpf
 from jarbas.dashboard.admin import list_filters, widgets
 from jarbas.dashboard.admin.paginators import CachedCountPaginator
@@ -27,7 +31,56 @@ CUSTOM_WIDGETS = ('receipt_url', 'subquota_description', 'suspicions')
 READONLY_FIELDS = (f.name for f in ALL_FIELDS if f.name not in CUSTOM_WIDGETS)
 
 
-class ReimbursementModelAdmin(PublicAdminModelAdmin):
+class ReimbursementAdmin(PublicAdminModelAdmin):
+
+    def short_document_id(self, obj):
+        return obj.document_id
+
+    short_document_id.short_description = 'Reembolso'
+
+    def suspicious(self, obj):
+        return obj.suspicions is not None
+
+    suspicious.short_description = 'suspeito'
+    suspicious.boolean = True
+
+    def supplier_info(self, obj):
+        return mark_safe(f'{obj.supplier}<br>{self._format_document(obj)}')
+
+    supplier_info.short_description = 'Fornecedor'
+
+    def _format_document(self, obj):
+        if obj.cnpj_cpf:
+            if len(obj.cnpj_cpf) == 14:
+                return format_cnpj(obj.cnpj_cpf)
+
+            if len(obj.cnpj_cpf) == 11:
+                return format_cpf(obj.cnpj_cpf)
+
+            return obj.cnpj_cpf
+
+    def _format_currency(self, value):
+        return 'R$ {:.2f}'.format(value).replace('.', ',')     
+
+
+class FederalSenateReimbursementAdmin(ReimbursementAdmin):
+    list_display = (
+        'short_document_id',
+        'congressperson_name',
+        'year',
+        'expense_type',
+        'supplier_info',
+        'value',
+        'suspicious',
+    )
+
+    def value(self, obj):
+        return self._format_currency(obj.reimbursement_value)
+
+    value.short_description = 'valor'
+
+
+class ChamberOfDeputiesReimbursementModelAdmin(ReimbursementAdmin):
 
     list_display = (
         'short_document_id',
@@ -60,21 +113,6 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     readonly_fields = tuple(READONLY_FIELDS)
     list_select_related = ('tweet',)
     paginator = CachedCountPaginator
-
-    def _format_document(self, obj):
-        if obj.cnpj_cpf:
-            if len(obj.cnpj_cpf) == 14:
-                return format_cnpj(obj.cnpj_cpf)
-
-            if len(obj.cnpj_cpf) == 11:
-                return format_cpf(obj.cnpj_cpf)
-
-            return obj.cnpj_cpf
-
-    def supplier_info(self, obj):
-        return mark_safe(f'{obj.supplier}<br>{self._format_document(obj)}')
-
-    supplier_info.short_description = 'Fornecedor'
 
     def jarbas(self, obj):
         base_url = '/layers/#/documentId/{}/'
@@ -124,12 +162,6 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
 
     receipt_link.short_description = ''
 
-    def suspicious(self, obj):
-        return obj.suspicions is not None
-
-    suspicious.short_description = 'suspeito'
-    suspicious.boolean = True
-
     def has_receipt_url(self, obj):
         return obj.receipt_url is not None
 
@@ -137,15 +169,10 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
     has_receipt_url.boolean = True
 
     def value(self, obj):
-        return 'R$ {:.2f}'.format(obj.total_net_value).replace('.', ',')
+        return self._format_currency(obj.total_net_value)
 
     value.short_description = 'valor'
     value.admin_order_field = 'total_net_value'
-
-    def short_document_id(self, obj):
-        return obj.document_id
-
-    short_document_id.short_description = 'Reembolso'
 
     def subquota_translated(self, obj):
         return Subquotas.pt_br(obj.subquota_description)
@@ -167,7 +194,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
         return super().formfield_for_dbfield(db_field, **kwargs)
 
     def get_search_results(self, request, queryset, search_term):
-        queryset, distinct = super(ReimbursementModelAdmin, self) \
+        queryset, distinct = super(ChamberOfDeputiesReimbursementModelAdmin, self) \
             .get_search_results(request, queryset, None)
 
         if search_term:
@@ -307,5 +334,12 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
         return response
 
 
-public_admin.register(Reimbursement, ReimbursementModelAdmin)
+public_admin.register(
+    Reimbursement,
+    ChamberOfDeputiesReimbursementModelAdmin
+)
+public_admin.register(
+    FederalSenateReimbursement,
+    FederalSenateReimbursementAdmin
+)
 public_admin.register(ReimbursementSummary, ReimbursementSummaryModelAdmin)
