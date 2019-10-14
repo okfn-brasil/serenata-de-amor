@@ -63,7 +63,7 @@ Roughly once a month, we manually run Rosie and update Jarbas. A few times per y
 
 ### Where
 
-Jarbas is running in [Digital Ocean](https://digitalocean.com) droplets, and deployed using the [Docker Cloud](https://cloud.docker.com/) architecture.
+Jarbas is running in [Digital Ocean](https://www.digitalocean.com) droplets, and deployed using the [Docker Cloud](https://cloud.docker.com/) architecture.
 
 ### Why
 
@@ -80,6 +80,6 @@ Make sure you have read the _Tech crash course_ on this page. Next, check out ou
 * Follow, share and interact with us [on Facebook](https://fb.com/operacaoserenatadeamor)
 * Follow, retweet and join [Rosie on Twitter](https://twitter.com/RosieDaSerenata) to interact with your favourite congresspeople
 
-## Acknowledgments
+## Acknowledgment
 
-[![Open Knowledge Brasil](docs/okbr.png)](https://br.okfn.org) [![Digital Ocean](docs/digitalocean.png)](https://digitalocean.com)
+[![Open Knowledge Brasil](docs/okbr.png)](https://br.okfn.org) [![Digital Ocean](docs/digitalocean.png)](https://www.digitalocean.com)
