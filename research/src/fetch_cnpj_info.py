@@ -13,7 +13,6 @@ import requests
 import requests.exceptions
 import re
 import logging
-import json
 from datetime import datetime, timedelta
 
 LOGGER_NAME = 'fetch_cnpj'
