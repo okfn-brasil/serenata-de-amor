@@ -2,9 +2,7 @@ import os
 import unicodedata
 from argparse import ArgumentParser
 from datetime import date
-
 import grequests
-import numpy as np
 import pandas as pd
 
 from serenata_toolbox.datasets import Datasets
