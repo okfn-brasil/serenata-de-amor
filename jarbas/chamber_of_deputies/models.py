@@ -20,15 +20,30 @@ class SocialMedia(models.Model):
 
 
 class Receipt:
+    ELETRONIC_RECEIPT_TYPE = 4
 
-    def __init__(self, year, applicant_id, document_id):
+    def __init__(self, year, applicant_id, document_id, document_type):
         self.year = year
         self.applicant_id = applicant_id
         self.document_id = document_id
+        self.document_type = document_type
 
     @property
     def url(self):
+        if self.document_type == self.ELETRONIC_RECEIPT_TYPE:
+            return self.electronic_url()
+
+        return self.pdf_url()
+
+    def electronic_url(self):
+        return (
+            'https://www.camara.leg.br/cota-parlamentar/'
+            'nota-fiscal-eletronica?ideDocumentoFiscal={}'
+        ).format(self.document_id)
+
+    def pdf_url(self):
         args = (self.applicant_id, self.year, self.document_id)
+
         return (
             'http://www.camara.gov.br/'
             'cota-parlamentar/documentos/publ/{}/{}/{}.pdf'
@@ -107,7 +122,7 @@ class Reimbursement(models.Model):
         if self.receipt_fetched and not force:
             return None
 
-        receipt = Receipt(self.year, self.applicant_id, self.document_id)
+        receipt = Receipt(self.year, self.applicant_id, self.document_id, self.document_type)
         if receipt.exists:
             self.receipt_url = receipt.url
         self.receipt_fetched = True

@@ -22,3 +22,9 @@ expenseMadeAbroad =
     TranslationSet
         "Expense made abroad"
         "Despesa no exterior"
+
+electronicReceipt : TranslationSet
+electronicReceipt =
+    TranslationSet
+        "Electronic receipt"
+        "Nota fiscal eletrônica"
