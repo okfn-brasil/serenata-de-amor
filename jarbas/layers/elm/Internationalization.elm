@@ -348,6 +348,9 @@ translate lang trans =
                         2 ->
                             DocumentType.expenseMadeAbroad
 
+                        4 ->
+                            DocumentType.electronicReceipt
+
                         _ ->
                             Common.empty
     in

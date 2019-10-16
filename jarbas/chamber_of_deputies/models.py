@@ -31,11 +31,11 @@ class Receipt:
     @property
     def url(self):
         if self.document_type == self.ELETRONIC_RECEIPT_TYPE:
-            return self.eletronic_url()
+            return self.electronic_url()
 
         return self.pdf_url()
 
-    def eletronic_url(self):
+    def electronic_url(self):
         return (
             'https://www.camara.leg.br/cota-parlamentar/'
             'nota-fiscal-eletronica?ideDocumentoFiscal={}'
@@ -48,7 +48,6 @@ class Receipt:
             'http://www.camara.gov.br/'
             'cota-parlamentar/documentos/publ/{}/{}/{}.pdf'
         ).format(*args)
-
 
     @property
     def exists(self):
