@@ -37,3 +37,8 @@ services:
     restart: "no"
     volumes:
       - .:/code
+
+  beat:
+    restart: "no"
+    volumes:
+      - .:/code

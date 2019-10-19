@@ -191,6 +191,15 @@ instructions](https://python-twitter.readthedocs.io/en/latest/getting_started.ht
 * `LETSENCRYPT_EMAIL` (_str_) Email used to create the HTTPS certificate at Let's Encrypt
 * `HTTPS_METHOD` (_str_) if set to `noredirect` does **not** redirect from HTTP to HTTPS (default: `redirect`)
 
+##### Searchvector schedule
+
+* `SCHEDULE_SEARCHVECTOR` (_bool_) Enable searchvector scheduling
+* `SCHEDULE_SEARCHVECTOR_CRON_MINUTE` (_str_) Minute
+* `SCHEDULE_SEARCHVECTOR_CRON_HOUR` (_str_) Hour
+* `SCHEDULE_SEARCHVECTOR_CRON_DAY_OF_WEEK` (_str_) Day of week
+* `SCHEDULE_SEARCHVECTOR_CRON_DAY_OF_MONTH` (_str_) Day of month
+* `SCHEDULE_SEARCHVECTOR_CRON_MONTH_OF_YEAR` (_str_) Month of year
+
 ### Using Docker
 
 You must first install [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)
