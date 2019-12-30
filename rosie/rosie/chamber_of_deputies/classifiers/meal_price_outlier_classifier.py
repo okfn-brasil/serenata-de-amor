@@ -84,7 +84,7 @@ class MealPriceOutlierClassifier(TransformerMixin):
     def __applicable_rows(self, X):
         return (X['category'] == 'Meal') & \
             (X['recipient_id'].str.len() == 14) & \
-            (~X['recipient'].apply(self.__normalize_string).str.contains(self.HOTEL_REGEX))
+            (~X['recipient'].fillna('').apply(self.__normalize_string).str.contains(self.HOTEL_REGEX))
 
     def __applicable_company_rows(self, companies):
         return (companies['congresspeople'] > 3) & (companies['records'] > 20)
