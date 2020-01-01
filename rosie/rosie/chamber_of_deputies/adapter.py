@@ -89,7 +89,7 @@ class Adapter:
             try:
                 Reimbursements(year, self.path)()
             except HTTPError as e:
-                self.log.error(f'Could not update Reimbursement from year {year}: {e} - {e.filename}')
+                self.log.error(f'Could not update Reimbursements from year {year}: {e} - {e.filename}')
 
     def prepare_dataset(self, df):
         self.rename_categories(df)
