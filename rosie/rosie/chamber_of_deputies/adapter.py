@@ -6,6 +6,7 @@ from re import match
 
 import numpy as np
 import pandas as pd
+from urllib.error import HTTPError
 
 from serenata_toolbox.chamber_of_deputies.reimbursements import Reimbursements
 from serenata_toolbox.datasets import fetch
@@ -85,7 +86,10 @@ class Adapter:
 
         for year in years:
             self.log.info(f'Updating reimbursements from {year}')
-            Reimbursements(year, self.path)()
+            try:
+                Reimbursements(year, self.path)()
+            except HTTPError as e:
+                self.log.error(f'Could not update Reimbursements from year {year}: {e} - {e.filename}')
 
     def prepare_dataset(self, df):
         self.rename_categories(df)
