@@ -7,6 +7,6 @@ humanize==0.5.1
 numpy==1.16.2
 pandas==0.24.1
 python-decouple==3.3
-requests==2.21.0
+requests==2.22.0
 serenata-toolbox  # pyup: ignore
 tqdm==4.31.1
