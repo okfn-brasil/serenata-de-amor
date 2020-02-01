@@ -6,7 +6,7 @@ django-assets==0.12
 django-bulk-update==2.2.0
 django-cors-middleware==1.5.0
 django-debug-toolbar==2.2
-django-extensions==2.1.6
+django-extensions==2.2.6
 django-test-without-migrations==0.6
 djangorestframework==3.9.1
 freezegun==0.3.11
