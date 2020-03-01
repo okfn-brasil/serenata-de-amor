@@ -1,7 +1,7 @@
 aiofiles==0.4.0
 aiohttp==3.6.2
 beautifulsoup4==4.8.2
-geopy==1.18.1
+geopy==1.21.0
 grequests==0.3.0
 humanize==0.5.1
 numpy==1.16.2
