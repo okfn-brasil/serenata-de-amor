@@ -103,6 +103,13 @@
       environment:
         DATABASE_URL: "{{ lookup('env', 'DATABASE_URL') }}"
 
+    - name: run jarbas to rebuild the search vector
+      shell: python3 manage.py searchvector
+      args:
+        chdir: /opt/serenata-de-amor/
+      environment:
+        DATABASE_URL: "{{ lookup('env', 'DATABASE_URL') }}"
+
 - name: destroy instance
   hosts: 127.0.0.1
 
