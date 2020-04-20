@@ -124,7 +124,8 @@ class DocumentTypeListFilter(JarbasListFilter):
     options = (
         (0, 'Nota fiscal'),
         (1, 'Recibo simples'),
-        (2, 'Despesa no exterior')
+        (2, 'Despesa no exterior'),
+        (4, 'Recibo eletrônico')
     )
 
 
