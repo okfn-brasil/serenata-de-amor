@@ -548,7 +548,7 @@ viewReimbursements model =
     in
         if model.loading then
             text ""
-        else if searched then
+        else if total > 1 then
             grid [] (title :: cells)
         else
             grid [] cells
