@@ -82,11 +82,19 @@ viewCompany lang apiKey company =
         source =
             "http://www.receita.fazenda.gov.br/PessoaJuridica/CNPJ/cnpjreva/cnpjreva_solicitacao2.asp"
     in
-        div
-            []
+        Options.styled div
+            [ Options.css "background-color" "white"
+            , Options.css "border" "1px solid #e0e0e0"
+            , Options.css "border-radius" "4px"
+            , Options.css "margin-bottom" "16px"
+            , Options.css "padding" "16px"
+            ]
             [ Options.styled
                 p
-                [ Typography.subhead ]
+                [ Typography.subhead
+                , Options.css "border-bottom" "1px solid #e0e0e0"
+                , Options.css "padding-bottom" "8px"
+                ]
                 [ icon
                 , text title
                 , location
@@ -103,23 +111,16 @@ viewCompany lang apiKey company =
 
 viewRow : ( String, String ) -> Html.Html Msg
 viewRow ( label, value ) =
-    let
-        styles =
-            [ Options.css "display" "flex"
-            , Options.css "justify-content" "space-between"
-            , Options.css "align-items" "center"
-            ]
-
-        labelStyles =
-            Options.css "width" "30%" :: styles
-    in
-        Options.styled div
-            [ Options.css "display" "flex"
-            , Options.css "flex-direction" "row"
-            ]
-            [ Options.styled span (Typography.body2 :: labelStyles) [ text label ]
-            , Options.styled span (Typography.body1 :: styles) [ text value ]
-            ]
+    Options.styled div
+        [ Options.css "display" "grid"
+        , Options.css "grid-template-columns" "0.33fr 0.66fr"
+        , Options.css "grid-column-gap" "8px"
+        ]
+        [ Options.styled span
+          [ Typography.body2, Options.css "color" "#757575" ]
+          [ text label ]
+        , Options.styled span [ Typography.body1 ] [ text value ]
+        ]
 
 
 viewActivity : Activity -> Html.Html Msg
@@ -135,8 +136,8 @@ viewActivities ( label, activities ) =
                 |> List.intersperse (br [] [])
     in
         Options.styled div
-            []
-            [ Options.styled span [ Typography.body2 ] [ text label ]
+            [ Options.css "margin-top" "16px" ]
+            [ Options.styled span [ Typography.body2, Options.css "color" "#757575" ] [ text label ]
             , br [] []
             , Options.styled span [ Typography.body1 ] value
             ]
