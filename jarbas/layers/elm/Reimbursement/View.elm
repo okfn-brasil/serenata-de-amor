@@ -468,11 +468,6 @@ viewReimbursement lang index reimbursement =
             CompanyView.view reimbursement.supplierInfo
                 |> Html.map (CompanyMsg index)
 
-        supplierTitle =
-            Options.styled p
-                [ Typography.headline ]
-                [ text "" ]
-
         sameDay : Html Msg
         sameDay =
             SameDay.view reimbursement.sameDay
@@ -506,7 +501,7 @@ viewReimbursement lang index reimbursement =
             , sameSubquota
             ]
         , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
-            [ Options.styled div [] [ supplierTitle, supplier ] ]
+            [ Options.styled div [] [ supplier ] ]
         ]
 
 
