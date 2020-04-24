@@ -13,7 +13,6 @@ import Http
 import Internationalization exposing (translate)
 import Internationalization.Types exposing (Language(..), TranslationId(..))
 import Material.Button as Button
-import Material.Color as Color
 import Material.Grid exposing (Device(..), cell, grid, size)
 import Material.Icon as Icon
 import Material.List as List
@@ -461,7 +460,7 @@ viewReimbursement lang index reimbursement =
 
         title =
             Options.styled p
-                [ Typography.headline, Color.text Color.primary ]
+                [ Typography.headline ]
                 [ (translate lang ReimbursementTitle) ++ (toString reimbursement.documentId) |> text ]
 
         supplier =
@@ -487,11 +486,11 @@ viewReimbursement lang index reimbursement =
                     [ text (translate lang ReimbursementChamberOfDeputies) ]
                 ]
     in
-        [ cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
-            [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title ] ]
-        , cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
+        [ cell [ size Desktop 6, size Tablet 4, size Phone 4 ]
+            [ title ]
+        , cell [ size Desktop 6, size Tablet 4, size Phone 4 ]
             [ Options.styled div
-                [ Options.css "margin-top" "3rem", Typography.right ]
+                [ Typography.right ]
                 [ tweet, receipt, mapButton ]
             ]
         , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]

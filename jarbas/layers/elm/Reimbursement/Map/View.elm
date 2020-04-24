@@ -27,7 +27,7 @@ view model =
                                 Mdl
                                 [ 0 ]
                                 model.mdl
-                                [ Button.minifab ]
+                                [ Button.minifab, Button.primary ]
                                 [ Icon.i "place"
                                 , text (translate model.lang Map)
                                 ]
