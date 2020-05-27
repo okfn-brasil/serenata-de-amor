@@ -23,7 +23,7 @@ view model =
                     Mdl
                     [ 1 ]
                     model.mdl
-                    [ Button.minifab ]
+                    [ Button.minifab, Button.primary ]
                     [ Icon.i "share"
                     , text (translate model.lang RosiesTweet)
                     ]

@@ -13,7 +13,6 @@ import Http
 import Internationalization exposing (translate)
 import Internationalization.Types exposing (Language(..), TranslationId(..))
 import Material.Button as Button
-import Material.Color as Color
 import Material.Grid exposing (Device(..), cell, grid, size)
 import Material.Icon as Icon
 import Material.List as List
@@ -239,23 +238,16 @@ viewError lang error =
 
 viewReimbursementBlockLine : Language -> Field -> Html Msg
 viewReimbursementBlockLine lang field =
-    let
-        styles =
-            [ Options.css "display" "flex"
-            , Options.css "justify-content" "space-between"
-            , Options.css "align-items" "center"
-            ]
-
-        labelStyles =
-            Options.css "width" "30%" :: styles
-    in
-        Options.styled div
-            [ Options.css "display" "flex"
-            , Options.css "flex-direction" "row"
-            ]
-            [ Options.styled span (Typography.body2 :: labelStyles) [ text <| Fields.getLabelTranslation lang field ]
-            , Options.styled span (Typography.body1 :: styles) [ text <| Fields.getValue field ]
-            ]
+    Options.styled div
+        [ Options.css "display" "grid"
+        , Options.css "grid-template-columns" "0.33fr 0.66fr"
+        , Options.css "grid-column-gap" "8px"
+        ]
+        [ Options.styled span
+          [ Typography.body2, Options.css "color" "#757575" ]
+          [ text <| Fields.getLabelTranslation lang field ]
+        , Options.styled span [ Typography.body1 ] [ text <| Fields.getValue field ]
+        ]
 
 
 viewSummaryPs : Language -> Reimbursement -> Html Msg
@@ -322,9 +314,18 @@ viewReimbursementBlock lang reimbursement ( title, icon, fields ) =
             else
                 text ""
     in
-        div []
+        Options.styled div
+            [ Options.css "background-color" "white"
+            , Options.css "border" "1px solid #e0e0e0"
+            , Options.css "border-radius" "4px"
+            , Options.css "margin-bottom" "16px"
+            , Options.css "padding" "16px"
+            ]
             [ Options.styled p
-                [ Typography.subhead ]
+                [ Typography.subhead
+                , Options.css "border-bottom" "1px solid #e0e0e0"
+                , Options.css "padding-bottom" "8px"
+                ]
                 [ iconTag, text (" " ++ title) ]
             , List.ul [] (List.map (viewReimbursementBlockLine lang) fields)
             , ps
@@ -459,17 +460,12 @@ viewReimbursement lang index reimbursement =
 
         title =
             Options.styled p
-                [ Typography.headline, Color.text Color.primary ]
+                [ Typography.headline ]
                 [ (translate lang ReimbursementTitle) ++ (toString reimbursement.documentId) |> text ]
 
         supplier =
             CompanyView.view reimbursement.supplierInfo
                 |> Html.map (CompanyMsg index)
-
-        supplierTitle =
-            Options.styled p
-                [ Typography.headline ]
-                [ text "" ]
 
         sameDay : Html Msg
         sameDay =
@@ -490,11 +486,11 @@ viewReimbursement lang index reimbursement =
                     [ text (translate lang ReimbursementChamberOfDeputies) ]
                 ]
     in
-        [ cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
-            [ Options.styled div [ Options.css "margin-top" "3rem" ] [ title ] ]
-        , cell [ size Desktop 6, size Tablet 4, size Phone 2 ]
+        [ cell [ size Desktop 6, size Tablet 4, size Phone 4 ]
+            [ title ]
+        , cell [ size Desktop 6, size Tablet 4, size Phone 4 ]
             [ Options.styled div
-                [ Options.css "margin-top" "3rem", Typography.right ]
+                [ Typography.right ]
                 [ tweet, receipt, mapButton ]
             ]
         , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
@@ -504,7 +500,7 @@ viewReimbursement lang index reimbursement =
             , sameSubquota
             ]
         , cell [ size Desktop 6, size Tablet 8, size Phone 4 ]
-            [ Options.styled div [] [ supplierTitle, supplier ] ]
+            [ Options.styled div [] [ supplier ] ]
         ]
 
 
@@ -537,7 +533,7 @@ viewReimbursements model =
         title =
             cell [ size Desktop 12, size Tablet 8, size Phone 4 ]
                 [ Options.styled div
-                    [ Typography.center, Typography.display1 ]
+                    [ Typography.center, Typography.body1 ]
                     [ results |> text ]
                 ]
 
@@ -551,7 +547,7 @@ viewReimbursements model =
     in
         if model.loading then
             text ""
-        else if searched then
+        else if total > 1 then
             grid [] (title :: cells)
         else
             grid [] cells
@@ -563,7 +559,7 @@ viewReimbursements model =
 
 view : Model -> Html Msg
 view model =
-    div []
+    Options.styled div [ Options.css "background-color" "#fafafa" ]
         [ SearchView.view model
         , viewReimbursements model
         ]

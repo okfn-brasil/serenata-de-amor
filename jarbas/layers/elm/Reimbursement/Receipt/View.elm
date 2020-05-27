@@ -22,7 +22,7 @@ view model =
                     Mdl
                     [ 1 ]
                     model.mdl
-                    [ Button.minifab ]
+                    [ Button.minifab, Button.primary ]
                     [ Icon.i "receipt"
                     , text (translate model.lang ReceiptAvailable)
                     ]
@@ -46,6 +46,7 @@ view model =
                     [ 0 ]
                     model.mdl
                     [ Button.minifab
+                    , Button.primary
                     , Button.onClick (SearchReceipt model.reimbursement)
                     , Options.cs "receipt fetch-receipt"
                     ]

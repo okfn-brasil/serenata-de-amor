@@ -86,16 +86,24 @@ view model title =
     if Array.isEmpty model.results.reimbursements then
         text ""
     else
-        div []
+        Options.styled div
+            [ Options.css "background-color" "white"
+            , Options.css "border" "1px solid #e0e0e0"
+            , Options.css "border-radius" "4px"
+            , Options.css "margin-bottom" "16px"
+            , Options.css "padding" "16px"
+            ]
             [ Options.styled
                 p
                 [ Typography.subhead
-                , Options.css "margin-top" "2em"
+                , Options.css "border-bottom" "1px solid #e0e0e0"
+                , Options.css "padding-bottom" "8px"
+                , Options.css "margin-bottom" "24px"
                 ]
                 [ Icon.view
                     "today"
                     [ Options.css "transform" "translateY(0.4rem)" ]
-                , text title
+                , text (" " ++ title)
                 ]
             , model.results.reimbursements
                 |> Array.toIndexedList
