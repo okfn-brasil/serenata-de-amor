@@ -8,13 +8,11 @@ import numpy as np
 import os.path
 import sys
 import pandas as pd
-import shutil
 import requests
 import requests.exceptions
 import re
 import logging
-import json
-from datetime import datetime, timedelta
+from datetime import datetime
 
 LOGGER_NAME = 'fetch_cnpj'
 TEMP_DATASET_PATH = os.path.join('data', 'companies-partial.xz')
