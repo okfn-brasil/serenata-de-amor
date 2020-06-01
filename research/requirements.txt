@@ -5,7 +5,7 @@ geopy==1.22.0
 grequests==0.6.0
 humanize==2.4.0
 numpy==1.18.4
-pandas==0.24.1
+pandas==1.0.4
 python-decouple==3.3
 requests==2.23.0
 serenata-toolbox  # pyup: ignore
