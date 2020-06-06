@@ -13,6 +13,7 @@ class SocialMedia(models.Model):
     twitter_profile = models.CharField(max_length=255, blank=True, default='')
     secondary_twitter_profile = models.CharField(max_length=255, blank=True, default='')
     facebook_page = models.CharField(max_length=255, blank=True, default='')
+    instagram_profile = models.CharField(max_length=255, blank=True, default='')
 
     @property
     def twitter(self):
