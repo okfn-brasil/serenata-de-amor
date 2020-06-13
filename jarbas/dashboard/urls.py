@@ -1,6 +1,6 @@
 from django.urls import path
 
-from jarbas.public_admin.sites import public_admin
+from jarbas.dashboard.admin import public_admin
 
 
 urlpatterns = [

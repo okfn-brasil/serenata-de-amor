@@ -8,6 +8,8 @@ from django.core.cache import cache
 from django.db.models import Count, F, Sum
 from django.db.models.functions import Concat
 from django.utils.safestring import mark_safe
+from public_admin.admin import PublicModelAdmin
+from public_admin.sites import PublicAdminSite, PublicApp
 
 from jarbas.chamber_of_deputies.models import (
     Reimbursement,
@@ -18,8 +20,6 @@ from jarbas.chamber_of_deputies.serializers import clean_cnpj_cpf
 from jarbas.dashboard.admin import list_filters, widgets
 from jarbas.dashboard.admin.paginators import CachedCountPaginator
 from jarbas.dashboard.admin.subquotas import Subquotas
-from jarbas.public_admin.admin import PublicAdminModelAdmin
-from jarbas.public_admin.sites import public_admin
 
 
 ALL_FIELDS = sorted(Reimbursement._meta.fields, key=lambda f: f.verbose_name)
@@ -27,7 +27,7 @@ CUSTOM_WIDGETS = ('receipt_url', 'subquota_description', 'suspicions')
 READONLY_FIELDS = (f.name for f in ALL_FIELDS if f.name not in CUSTOM_WIDGETS)
 
 
-class ReimbursementModelAdmin(PublicAdminModelAdmin):
+class ReimbursementModelAdmin(PublicModelAdmin):
 
     list_display = (
         'short_document_id',
@@ -183,7 +183,7 @@ class ReimbursementModelAdmin(PublicAdminModelAdmin):
         return queryset, distinct
 
 
-class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
+class ReimbursementSummaryModelAdmin(PublicModelAdmin):
     change_list_template = 'dashboard/reimbursement_summary_change_list.html'
     list_filter = (
         list_filters.SuspiciousListFilter,
@@ -307,5 +307,13 @@ class ReimbursementSummaryModelAdmin(PublicAdminModelAdmin):
         return response
 
 
+class JarbasPublicAdminSite(PublicAdminSite):
+    site_title = 'Dashboard'
+    site_header = 'Jarbas Dashboard'
+    index_title = 'Jarbas'
+
+
+public_app = PublicApp('chamber_of_deputies', ('reimbursement',))
+public_admin = JarbasPublicAdminSite("dashboard", public_app)
 public_admin.register(Reimbursement, ReimbursementModelAdmin)
 public_admin.register(ReimbursementSummary, ReimbursementSummaryModelAdmin)
