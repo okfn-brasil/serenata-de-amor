@@ -43,7 +43,6 @@ class TestAdapter(TestCase):
             adapter.log.disabled = True
             self.dataset = adapter.dataset
 
-
     def test_load_all_years(self):
         self.assertEqual(6, len(self.dataset))
 
@@ -68,6 +67,14 @@ class TestAdapter(TestCase):
     def test_is_party_expense_category(self):
         party_expenses = self.dataset[self.dataset.is_party_expense == True]
         self.assertEqual(1, len(party_expenses))
+
+    @freeze_time('2019-02-10')
+    def test_match_starting_year(self):
+        adapter = Adapter(self.temp_path)
+        adapter.STARTING_YEAR = 2018
+        self.assertEqual(adapter.match_starting_year('reimbursements-2017.csv'), False)
+        self.assertEqual(adapter.match_starting_year('reimbursements-2018.csv'), True)
+        self.assertEqual(adapter.match_starting_year('reimbursements-2019.csv'), True)
 
     @freeze_time('2010-11-12')
     @patch('rosie.chamber_of_deputies.adapter.fetch')
