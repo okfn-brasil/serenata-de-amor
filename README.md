@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/travis/okfn-brasil/serenata-de-amor/master.svg)](https://travis-ci.org/okfn-brasil/serenata-de-amor)
+[![Build Status](https://img.shields.io/travis/okfn-brasil/serenata-de-amor/main.svg)](https://travis-ci.org/okfn-brasil/serenata-de-amor)
 [![Code Climate](https://img.shields.io/codeclimate/maintainability-percentage/okfn-brasil/serenata-de-amor.svg)](https://codeclimate.com/github/okfn-brasil/serenata-de-amor)
 [![Test Coverage](https://img.shields.io/codeclimate/coverage/okfn-brasil/serenata-de-amor.svg)](https://codeclimate.com/github/okfn-brasil/serenata-de-amor/test_coverage)
 [![Donate](https://img.shields.io/badge/donate-apoia.se-EB4A3B.svg)](https://apoia.se/serenata)
