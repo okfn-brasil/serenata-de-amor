@@ -33,6 +33,14 @@ $ conda activate serenata
 $ pip install -r requirements.txt
 ```
 
+Alternatively, without Anaconda, all the dependencies can be installed using the command below:
+
+```console
+$ python3 -m venv serenata
+$ source serenata/bin/activate
+$ pip install -r requirements-without-conda.txt
+```
+
 #### Running
 
 

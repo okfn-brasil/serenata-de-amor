@@ -1,0 +1,7 @@
+-r requirements.txt
+brutils==1.0.1
+docopt==0.6.2
+geopy==1.23.0
+pandas==1.1.1
+scikit-learn==0.20.4
+serenata_toolbox==15.1.6
