@@ -1,6 +1,6 @@
 brutils==1.0.1
 docopt==0.6.2
-freezegun==0.3.11
+freezegun==0.3.15
 geopy==1.18.1
 ipdb==0.13.3
 numpy==1.16.2
