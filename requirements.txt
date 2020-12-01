@@ -12,7 +12,7 @@ djangorestframework==3.12.2
 freezegun==1.0.0
 gunicorn==20.0.4
 newrelic==5.22.1.152
-psycopg2-binary==2.7.7
+psycopg2-binary==2.8.6
 python-decouple==3.1
 python-memcached==1.59
 python-twitter==3.5
