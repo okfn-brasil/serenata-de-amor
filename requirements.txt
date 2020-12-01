@@ -8,7 +8,7 @@ django-cors-middleware==1.5.0
 django-debug-toolbar==3.1.1
 django-extensions==3.1.0
 django-test-without-migrations==0.6
-djangorestframework==3.9.1
+djangorestframework==3.12.2
 freezegun==0.3.11
 gunicorn==19.9.0
 newrelic==4.14.0.115
