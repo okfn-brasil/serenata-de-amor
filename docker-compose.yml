@@ -25,7 +25,6 @@ services:
     restart: on-failure
 
   rosie:
-    build: rosie/
     image: serenata/rosie
 
   tasks:
