@@ -2,7 +2,7 @@ import logging
 import os
 from datetime import date
 from pathlib import Path
-from re import match
+import re
 
 import numpy as np
 import pandas as pd
@@ -14,9 +14,7 @@ from serenata_toolbox.datasets import fetch
 
 class Adapter:
 
-    STARTING_YEAR = 2009
     COMPANIES_DATASET = '2016-09-03-companies.xz'
-    REIMBURSEMENTS_PATTERN = r'reimbursements-\d{4}\.csv'
     RENAME_COLUMNS = {
         'subquota_description': 'category',
         'total_net_value': 'net_value',
@@ -30,9 +28,12 @@ class Adapter:
         'subquota_number': np.str
     }
 
-    def __init__(self, path):
+    def __init__(self, path, starting_year):
         self.path = path
+        self.starting_year = starting_year
         self.log = logging.getLogger(__name__)
+        next_year = date.today().year + 1
+        self.years = range(self.starting_year, next_year)
 
     @property
     def dataset(self):
@@ -57,11 +58,11 @@ class Adapter:
 
     @property
     def reimbursements(self):
-        df = pd.DataFrame()
+        years_pattern = ",".join(map(str, list(self.years)))
         paths = (
-            str(path) for path in Path(self.path).glob('*.csv')
-            if match(self.REIMBURSEMENTS_PATTERN, path.name)
+            str(path) for path in Path(self.path).glob(f"*reimbursements-[{years_pattern}]*.csv")
         )
+        df = pd.DataFrame()
 
         for path in paths:
             self.log.info(f'Loading reimbursements from {path}')
@@ -77,14 +78,12 @@ class Adapter:
     def update_companies(self):
         self.log.info('Updating companies')
         os.makedirs(self.path, exist_ok=True)
-        fetch(self.COMPANIES_DATASET, self.path)
+        file_name = f"{self.path}/{self.COMPANIES_DATASET}"
+        if not os.path.isfile(file_name):
+            fetch(self.COMPANIES_DATASET, self.path)
 
-    def update_reimbursements(self, years=None):
-        if not years:
-            next_year = date.today().year + 1
-            years = range(self.STARTING_YEAR, next_year)
-
-        for year in years:
+    def update_reimbursements(self):
+        for year in self.years:
             self.log.info(f'Updating reimbursements from {year}')
             try:
                 Reimbursements(year, self.path)()
