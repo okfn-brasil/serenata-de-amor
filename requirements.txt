@@ -13,7 +13,7 @@ freezegun==1.1.0
 gunicorn==20.1.0
 newrelic==6.4.0.157
 psycopg2-binary==2.8.6
-python-decouple==3.1
+python-decouple==3.4
 python-memcached==1.59
 python-twitter==3.5
 reprint==0.5.1 # pyup: ignore
