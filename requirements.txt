@@ -20,4 +20,4 @@ reprint==0.5.1 # pyup: ignore
 requests==2.27.1
 rows==0.4.1
 tqdm==4.62.3
-whitenoise==4.1.2
+whitenoise==5.3.0
