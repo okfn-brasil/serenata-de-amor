@@ -1,5 +1,5 @@
 aiofiles==0.8.0
-aiohttp==3.5.4
+aiohttp==3.8.1
 beautifulsoup4==4.7.1
 geopy==1.18.1
 grequests==0.3.0
