@@ -3,7 +3,7 @@ aiohttp==3.8.1
 beautifulsoup4==4.10.0
 geopy==2.2.0
 grequests==0.6.0
-humanize==0.5.1
+humanize==4.0.0
 numpy==1.16.2
 pandas==0.24.1
 python-decouple==3.6
