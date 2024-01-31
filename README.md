@@ -9,7 +9,8 @@
 2. [**Tech** crash course into Operação Serenata de Amor](#tech-crash-course-into-operação-serenata-de-amor)
 3. [Contributing with code and tech skills](#contributing-with-code-and-tech-skills)
 4. [Supporting](#supporting)
-5. [Acknowledgments](#acknowledgments)
+5. [Update](#update)
+6. [Acknowledgments](#acknowledgments)
 
 ## Non-tech crash course into Operação Serenata de Amor
 
@@ -79,6 +80,12 @@ Make sure you have read the _Tech crash course_ on this page. Next, check out ou
 * Donate via Bitcoin to [`1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b`](https://blockchain.info/address/1Gbvfjmjvur7qwbwNFdPSNDgx66KSdVB5b)
 * Follow, share and interact with us [on Facebook](https://fb.com/operacaoserenatadeamor)
 * Follow, retweet and join [Rosie on Twitter](https://twitter.com/RosieDaSerenata) to interact with your favourite congresspeople
+
+## Update
+
+Operation Serenata de Amor expanded into new projects. Because of this, Rosie, Jarbas and the infrastructure in general are receiving updates less frequently. If you have experience and want to help us resolve bugs faster or propose improvements, join our [Discord](https://go.ok.org.br/discord) and let's talk about the project! On the other hand, if you are looking for an active community to collaborate with, we invite you to discover the [Querido Diário project](https://github.com/okfn-brasil/querido-diario).
+
+Finally, if you want to know more details about Serenata's current situation, you can consult this text (in Portuguese) available on [Apoia.se](https://apoia.se/serenata/contents/view/Por-onde-anda-a-Operacao-Serenata-de-Amor-w9FjFX-az).
 
 ## Acknowledgments
 
