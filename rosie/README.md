@@ -9,10 +9,15 @@ A Python application reading receipts from the Quota for Exercising Parliamentar
 #### Running
 
 ```console
-$ docker run --rm -v /tmp/serenata-data:/tmp/serenata-data serenata/rosie python rosie.py run <module-name>
+$ docker build . -t serenata/rosie
+$ docker run --rm \
+             -v /tmp/serenata-data:/tmp/serenata-data \
+             -v rosie_output_backup:/home/test_user:rw \
+             serenata/rosie \
+             rosie.py run <module-name> --output /home/test_user [--last_years=10]
 ```
 
-`<module-name>` might be either `chamber_of_deputies` or `federal_senate`. After running it, check your `/tmp/serenata-data/` directory in you host machine for `suspicions.xz`. It's a compacted CSV with all the irregularities Rosie was able to find.
+`<module-name>` might be either `chamber_of_deputies` or `federal_senate`. After running it, check your `/home/test_user/` directory in you host machine for `suspicions.xz`. It's a compacted CSV with all the irregularities Rosie was able to find.
 
 #### Testing
 

@@ -14,8 +14,9 @@ COLUMNS = {
 
 class Adapter:
 
-    def __init__(self, path):
+    def __init__(self, path, starting_year):
         self.path = path
+        self.starting_year = starting_year
 
     @property
     def dataset(self):

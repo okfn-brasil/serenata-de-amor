@@ -5,15 +5,18 @@ I'm a proof-of-concept for the usage of artificial intelligence for social
 control of public administration.
 
 Usage:
-  rosie.py run (chamber_of_deputies|federal_senate) [--output=<directory>]
+  rosie.py run (chamber_of_deputies|federal_senate) [--output=<directory>] [--last_years=<x>]
   rosie.py test [chamber_of_deputies|federal_senate|core]
 
 Options:
-  --help                Show this screen
-  --output=<directory>  Output directory [default: /tmp/serenata-data]
+  --help                 Show this screen
+  --output=<directory>   Output directory  [default: /tmp/serenata-data]
+  --last_years=<x>       Only last X years
 """
 import os
 import unittest
+import logging
+from datetime import date
 
 from docopt import docopt
 
@@ -21,6 +24,7 @@ import rosie
 import rosie.chamber_of_deputies
 import rosie.federal_senate
 
+log = logging.getLogger('rosie')
 
 def get_module(arguments):
     modules = ('chamber_of_deputies', 'federal_senate', 'core')
@@ -29,9 +33,9 @@ def get_module(arguments):
             return module
 
 
-def run(module, directory):
+def run(module, directory, starting_year):
     module = getattr(rosie, module)
-    module.main(directory)
+    module.main(starting_year=starting_year, target_directory=directory)
 
 
 def test(module=None):
@@ -47,6 +51,11 @@ def test(module=None):
     if not result.wasSuccessful():
         exit(1)
 
+def get_starting_year(last_years):
+    if last_years:
+        return date.today().year - int(last_years) + 1
+    else:
+        return 2009
 
 def main():
     arguments = docopt(__doc__)
@@ -57,8 +66,11 @@ def main():
 
     if arguments['run']:
         module = module if module != 'core' else None
-        run(module, arguments['--output'])
+        starting_year = get_starting_year(arguments['--last_years'])
+        log.info(f'Running from {starting_year}')
+        run(module, arguments['--output'], starting_year)
 
+    log.info('done')
 
 if __name__ == '__main__':
     main()
